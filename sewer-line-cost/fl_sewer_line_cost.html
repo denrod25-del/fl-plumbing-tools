@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Sewer Line Repair &amp; Replacement Cost Calculator — Trenchless, Spot Repair &amp; Camera Inspection Prices</title>
+<meta name="description" content="Calculate Florida sewer line repair and replacement costs. Trenchless CIPP lining, pipe bursting, spot repair, and camera inspection prices for South FL high water table, clay/Orangeburg pipe, and root intrusion. Serving South FL, Tampa Bay, Orlando, Jacksonville &amp; Panhandle.">
+<style>
+:root{
+  --bg:#0A0E1A;--c1:#0F1629;--c2:#141929;
+  --bl:#00B4FF;--gd:#F4B942;--or:#F97316;
+  --rd:#EF4444;--gn:#22C55E;--tl:#14B8A6;
+  --tx:#E2E8F0;--mu:#94A3B8;
+  --bdr:rgba(255,255,255,.08);--r:10px;--rs:6px
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;padding-bottom:80px}
+
+/* HEADER */
+.hdr{background:var(--c1);border-bottom:2px solid var(--gd);padding:18px 16px;text-align:center}
+.hdr h1{font-size:1.25rem;color:var(--gd);margin-bottom:4px;line-height:1.3}
+.hdr p{color:var(--mu);font-size:.82rem}
+.hdr a{color:var(--bl);text-decoration:none;font-weight:700}
+.hdr a:hover{text-decoration:underline}
+
+/* TABS */
+.tabs{display:flex;background:var(--c1);border-bottom:2px solid var(--bdr);overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:100}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:90px;padding:12px 6px;background:none;border:none;color:var(--mu);font-size:.74rem;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;white-space:nowrap;text-align:center;font-family:inherit}
+.tab.on{color:var(--gd);border-bottom-color:var(--gd)}
+.tab:hover:not(.on){color:var(--tx)}
+
+/* PANES */
+.pane{display:none;padding:14px 14px 0;max-width:500px;margin:0 auto}
+.pane.on{display:block}
+
+/* SECTION */
+.sec{margin-bottom:16px}
+.sec-ttl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin-bottom:9px}
+
+/* TILE GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+
+/* TILES */
+.tile{background:var(--c2);border:2px solid var(--bdr);border-radius:var(--rs);padding:9px 10px;cursor:pointer;transition:border-color .18s,background .18s,color .18s;font-size:.79rem;color:var(--tx);text-align:left;line-height:1.3;user-select:none;position:relative}
+.tile:hover{border-color:rgba(0,180,255,.3)}
+.tile.on{border-color:var(--bl);background:rgba(0,180,255,.08);color:var(--bl)}
+.tile.on-g{border-color:var(--gd);background:rgba(244,185,66,.07);color:var(--gd)}
+.tile .ico{font-size:.95rem;display:block;margin-bottom:2px}
+.tile.sm{padding:7px 6px;text-align:center;font-size:.76rem}
+.tile.sm .sub{font-size:.65rem;color:var(--mu);display:block;margin-top:1px}
+
+/* CARDS */
+.card{background:var(--c2);border:1px solid var(--bdr);border-radius:var(--r);padding:13px;margin-bottom:11px}
+.card.gd{border-color:rgba(244,185,66,.4);background:rgba(244,185,66,.05)}
+.card.rd{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+.card.or{border-color:rgba(249,115,22,.45);background:rgba(249,115,22,.06)}
+.card.tl{border-color:rgba(20,184,166,.45);background:rgba(20,184,166,.06)}
+.card.gn{border-color:rgba(34,197,94,.45);background:rgba(34,197,94,.06)}
+.card h4{font-size:.86rem;font-weight:700;margin-bottom:5px}
+.card h4.gd{color:var(--gd)}.card h4.rd{color:var(--rd)}.card h4.or{color:var(--or)}.card h4.tl{color:var(--tl)}.card h4.gn{color:var(--gn)}
+.card p,.card li{font-size:.81rem;color:var(--mu);line-height:1.55}
+.card ul{padding-left:15px;margin-top:4px}
+.card ul li{margin-bottom:2px}
+
+/* TOTAL BOX */
+.tot{background:var(--c1);border:2px solid var(--gd);border-radius:var(--r);padding:15px;text-align:center;margin-bottom:13px}
+.tot-lbl{font-size:.69rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin-bottom:4px}
+.tot-num{font-size:1.7rem;font-weight:800;color:var(--gd);line-height:1.2}
+.tot-note{font-size:.71rem;color:var(--mu);margin-top:5px}
+
+/* BREAKDOWN TABLE */
+table.bk{width:100%;border-collapse:collapse;font-size:.8rem}
+table.bk th{text-align:left;color:var(--mu);font-size:.69rem;text-transform:uppercase;letter-spacing:.06em;padding:5px 2px;border-bottom:1px solid var(--bdr)}
+table.bk td{padding:6px 2px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+table.bk td:last-child{text-align:right;color:var(--bl);font-weight:600;white-space:nowrap}
+table.bk tr.sum td{border-top:2px solid var(--gd);border-bottom:none;padding-top:8px;color:var(--gd);font-weight:700}
+
+/* COMPARISON TABLE */
+table.cmp{width:100%;border-collapse:collapse;font-size:.79rem}
+table.cmp th{background:rgba(255,255,255,.04);color:var(--mu);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;padding:7px 6px}
+table.cmp th:first-child{text-align:left}
+table.cmp td{padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.04)}
+table.cmp td:not(:first-child){text-align:center}
+.cg{color:var(--gn)}.cr{color:var(--rd)}.cy{color:#EAB308}
+
+/* VERDICT */
+.verdict{border-radius:var(--r);padding:13px;text-align:center;font-weight:700;font-size:.9rem;transition:all .3s;margin:11px 0;border:2px solid transparent}
+.verdict.ok{background:rgba(34,197,94,.1);border-color:var(--gn);color:var(--gn)}
+.verdict.warn{background:rgba(234,179,8,.1);border-color:#EAB308;color:#EAB308}
+.verdict.bad{background:rgba(239,68,68,.1);border-color:var(--rd);color:var(--rd)}
+.verdict.idle{background:rgba(148,163,184,.05);border-color:var(--bdr);color:var(--mu)}
+
+/* CHECKLIST ITEMS */
+.ci{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;background:var(--c2);border:1px solid var(--bdr);border-radius:var(--rs);margin-bottom:6px;cursor:pointer;transition:border-color .15s}
+.ci:hover{border-color:rgba(0,180,255,.25)}
+.ci.on{border-color:var(--bl);background:rgba(0,180,255,.05)}
+.ci input[type=checkbox]{flex-shrink:0;width:15px;height:15px;margin-top:3px;accent-color:var(--bl);cursor:pointer}
+.ci .ct{font-size:.82rem;line-height:1.4}
+.ci .cs{font-size:.69rem;margin-top:2px}
+
+/* MAINTENANCE ITEMS */
+.mi{display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--c2);border:1px solid var(--bdr);border-radius:var(--rs);margin-bottom:5px;cursor:pointer;transition:.15s}
+.mi.done{opacity:.5}
+.mi.done .mt{text-decoration:line-through}
+.mi input[type=checkbox]{flex-shrink:0;width:15px;height:15px;accent-color:var(--gn);cursor:pointer}
+.mt{font-size:.81rem}
+
+/* PROGRESS BAR */
+.plbl{display:flex;justify-content:space-between;font-size:.72rem;color:var(--mu);margin-bottom:3px}
+.pwrap{background:var(--c2);border-radius:50px;height:7px;overflow:hidden;margin-bottom:10px}
+.pfill{height:100%;border-radius:50px;background:var(--bl);transition:width .4s,background .4s}
+
+/* SCORE BOX */
+.scorebox{display:flex;align-items:center;gap:12px;padding:12px;background:var(--c2);border:1px solid var(--bdr);border-radius:var(--r);margin:10px 0}
+.snum{font-size:2rem;font-weight:800;min-width:42px;transition:color .3s}
+.slbl{font-size:.81rem;color:var(--mu)}
+.sbadge{display:inline-block;padding:2px 10px;border-radius:50px;font-size:.68rem;font-weight:700;margin-top:3px}
+.b-ok{background:rgba(34,197,94,.15);color:var(--gn)}
+.b-mod{background:rgba(249,115,22,.15);color:var(--or)}
+.b-crit{background:rgba(239,68,68,.15);color:var(--rd)}
+
+/* SEASONAL CARDS */
+.scard{background:var(--c2);border-radius:var(--r);padding:13px;margin-bottom:9px;border-left:3px solid var(--bl)}
+.scard.dry{border-left-color:var(--gd)}
+.scard h4{font-size:.85rem;font-weight:700;margin-bottom:6px}
+.scard ul{list-style:disc;padding-left:15px;font-size:.8rem;color:var(--mu);line-height:1.6}
+
+/* EMERGENCY */
+.emerg{background:rgba(239,68,68,.09);border:2px solid var(--rd);border-radius:var(--r);padding:15px;text-align:center;margin:16px 0}
+.emerg h3{color:var(--rd);font-size:.93rem;font-weight:800;margin-bottom:7px}
+.emerg p{font-size:.81rem;color:var(--mu);margin-bottom:12px}
+.btn-em{display:inline-block;background:var(--rd);color:#fff;text-decoration:none;padding:10px 22px;border-radius:var(--rs);font-weight:700;font-size:.86rem;transition:opacity .2s}
+.btn-em:hover{opacity:.88}
+
+/* LEAD FORM */
+.form-wrap{background:var(--c1);border:1px solid var(--bdr);border-radius:var(--r);padding:15px;margin-top:6px;margin-bottom:14px}
+.form-wrap h3{font-size:.93rem;font-weight:700;color:var(--gd);margin-bottom:3px}
+.form-wrap .sub{font-size:.77rem;color:var(--mu);margin-bottom:13px}
+.fld{margin-bottom:9px}
+.fld label{display:block;font-size:.71rem;color:var(--mu);margin-bottom:3px}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--c2);border:1px solid var(--bdr);border-radius:var(--rs);padding:8px 11px;color:var(--tx);font-size:.83rem;outline:none;transition:border-color .2s;font-family:inherit}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--bl)}
+.fld select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
+.fld textarea{resize:vertical;min-height:60px}
+.btn-primary{width:100%;background:var(--gd);color:#0A0E1A;border:none;border-radius:var(--rs);padding:12px;font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;font-family:inherit}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-primary:active{transform:none;opacity:1}
+
+/* TOAST */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--gd);color:#0A0E1A;padding:11px 22px;border-radius:50px;font-weight:700;font-size:.85rem;z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:0 4px 24px rgba(244,185,66,.5);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* HIDDEN */
+.hidden{display:none!important}
+
+/* RESPONSIVE */
+@media(max-width:375px){
+  .g2{grid-template-columns:1fr}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .tot-num{font-size:1.4rem}
+  .tab{font-size:.67rem;padding:10px 4px}
+  .hdr h1{font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <h1>🔧 FL Sewer Line Cost Calculator</h1>
+  <p>Repair &amp; replacement estimates for Florida homeowners<br>
+  Emergency? Call <a href="tel:5615557473">(561) 555-PIPE</a></p>
+</div>
+
+<!-- TAB NAV -->
+<div class="tabs" role="tablist">
+  <button class="tab on" id="t0" onclick="sw(0)" role="tab" aria-selected="true">💰 Cost Calculator</button>
+  <button class="tab" id="t1" onclick="sw(1)" role="tab" aria-selected="false">🔍 Repair vs. Replace</button>
+  <button class="tab" id="t2" onclick="sw(2)" role="tab" aria-selected="false">🛡️ Maintenance</button>
+</div>
+
+
+<!-- ===== TAB 1: COST CALCULATOR ===== -->
+<div class="pane on" id="p0" role="tabpanel">
+
+  <!-- SERVICES -->
+  <div class="sec">
+    <div class="sec-ttl">Select Problems / Services (pick all that apply)</div>
+    <div class="g2" id="svc-grid">
+      <div class="tile" data-svc="camera" onclick="toggleSvc(this)"><span class="ico">📷</span>Sewer Camera Inspection</div>
+      <div class="tile" data-svc="clog" onclick="toggleSvc(this)"><span class="ico">💧</span>Clog / Blockage Clearing</div>
+      <div class="tile" data-svc="spot" onclick="toggleSvc(this)"><span class="ico">🔧</span>Spot Repair (Single Section)</div>
+      <div class="tile" data-svc="cipp" onclick="toggleSvc(this)"><span class="ico">🔄</span>Pipe Lining (CIPP Trenchless)</div>
+      <div class="tile" data-svc="burst" onclick="toggleSvc(this)"><span class="ico">💥</span>Pipe Bursting (Trenchless)</div>
+      <div class="tile" data-svc="trad" onclick="toggleSvc(this)"><span class="ico">⛏️</span>Full Traditional Replacement</div>
+      <div class="tile" data-svc="cleanout" onclick="toggleSvc(this)"><span class="ico">🔩</span>Cleanout Installation</div>
+      <div class="tile" data-svc="root" onclick="toggleSvc(this)"><span class="ico">🌳</span>Root Intrusion Treatment</div>
+    </div>
+  </div>
+
+  <!-- PIPE LENGTH -->
+  <div class="sec">
+    <div class="sec-ttl">Pipe Length (applies to per-foot services)</div>
+    <div class="g4" id="len-grid">
+      <div class="tile sm" data-len="25" onclick="selLen(this)">25 ft</div>
+      <div class="tile sm on-g" data-len="50" onclick="selLen(this)">50 ft</div>
+      <div class="tile sm" data-len="75" onclick="selLen(this)">75 ft</div>
+      <div class="tile sm" data-len="100" onclick="selLen(this)">100 ft+</div>
+    </div>
+  </div>
+
+  <!-- REGION -->
+  <div class="sec">
+    <div class="sec-ttl">Florida Region</div>
+    <div class="g2" id="reg-grid">
+      <div class="tile sm" data-reg="south" onclick="selReg(this)">South FL<span class="sub">1.15× multiplier</span></div>
+      <div class="tile sm on-g" data-reg="tampa" onclick="selReg(this)">Tampa Bay<span class="sub">1.0× base</span></div>
+      <div class="tile sm" data-reg="orlando" onclick="selReg(this)">Orlando<span class="sub">1.05× multiplier</span></div>
+      <div class="tile sm" data-reg="jax" onclick="selReg(this)">Jacksonville<span class="sub">0.95× multiplier</span></div>
+      <div class="tile sm" data-reg="panhandle" onclick="selReg(this)">Panhandle<span class="sub">0.90× multiplier</span></div>
+    </div>
+  </div>
+
+  <!-- ACCESS TYPE -->
+  <div class="sec">
+    <div class="sec-ttl">Access Type</div>
+    <div class="g3" id="acc-grid">
+      <div class="tile sm on-g" data-acc="yard" onclick="selAcc(this)">Standard Yard<span class="sub">Base price</span></div>
+      <div class="tile sm" data-acc="slab" onclick="selAcc(this)">Under Slab<span class="sub">+35%</span></div>
+      <div class="tile sm" data-acc="driveway" onclick="selAcc(this)">Driveway / Concrete<span class="sub">+25%</span></div>
+    </div>
+  </div>
+
+  <!-- COST OUTPUT -->
+  <div class="tot">
+    <div class="tot-lbl">Estimated Total Cost Range</div>
+    <div class="tot-num" id="tot-num">Select services above</div>
+    <div class="tot-note" id="tot-note">FL regional pricing · Not a final quote</div>
+  </div>
+
+  <div class="card hidden" id="bk-card">
+    <table class="bk">
+      <thead><tr><th>Service</th><th style="text-align:right">Est. Range</th></tr></thead>
+      <tbody id="bk-body"></tbody>
+    </table>
+  </div>
+
+  <!-- CONDITIONAL: SLAB WARNING -->
+  <div class="card rd hidden" id="slab-warn">
+    <h4 class="rd">⚠️ Slab Access — Important Notice</h4>
+    <p>Under-slab sewer work requires jackhammering concrete — add 15–35% beyond our estimate. Florida Building Code (FBC) Chapter 47 and county health regulations may require permits for slab penetrations. Always verify with your county building department before proceeding.</p>
+  </div>
+
+  <!-- CONDITIONAL: HIGH WATER TABLE -->
+  <div class="card tl hidden" id="wt-card">
+    <h4 class="tl">🌊 FL High Water Table Advisory</h4>
+    <p>South Florida's high water table and sandy soil make trenchless methods (CIPP lining or pipe bursting) ideal — less disruption, lower risk of trench collapse during excavation, and faster project completion compared to traditional dig-and-replace.</p>
+  </div>
+
+  <!-- LEAD FORM 1 -->
+  <div class="form-wrap">
+    <h3>📞 Get Your Free FL Estimate</h3>
+    <div class="sub">A licensed Florida plumber will call within 2 hours — no obligation.</div>
+    <div class="fld"><label>Your Name</label><input type="text" id="f1-name" placeholder="Jane Smith" autocomplete="name"></div>
+    <div class="fld"><label>Phone Number</label><input type="tel" id="f1-phone" placeholder="(561) 555-PIPE" autocomplete="tel"></div>
+    <div class="fld"><label>Property Address / City</label><input type="text" id="f1-city" placeholder="123 Palm Ave, Boca Raton, FL" autocomplete="address-line1"></div>
+    <div class="fld"><label>Service Context</label><textarea id="f1-ctx" placeholder="Describe your sewer issue or services needed..."></textarea></div>
+    <button class="btn-primary" onclick="submitLead('f1')">Request Free Estimate →</button>
+  </div>
+
+</div><!-- /tab1 -->
+
+
+<!-- ===== TAB 2: REPAIR VS. REPLACE ===== -->
+<div class="pane" id="p1" role="tabpanel">
+
+  <!-- PIPE AGE -->
+  <div class="sec">
+    <div class="sec-ttl">Pipe Age</div>
+    <div class="g4" id="age-grid">
+      <div class="tile sm" data-age="u20" onclick="selAge(this)">&lt; 20 yrs</div>
+      <div class="tile sm" data-age="20" onclick="selAge(this)">20–40 yrs</div>
+      <div class="tile sm" data-age="40" onclick="selAge(this)">40–60 yrs</div>
+      <div class="tile sm" data-age="60p" onclick="selAge(this)">60+ yrs</div>
+    </div>
+  </div>
+
+  <!-- PIPE MATERIAL -->
+  <div class="sec">
+    <div class="sec-ttl">Pipe Material</div>
+    <div class="g2" id="mat-grid">
+      <div class="tile sm" data-mat="pvc" onclick="selMat(this)">🟢 PVC (Modern)</div>
+      <div class="tile sm" data-mat="abs" onclick="selMat(this)">⚫ ABS Plastic</div>
+      <div class="tile sm" data-mat="cast" onclick="selMat(this)">⚙️ Cast Iron</div>
+      <div class="tile sm" data-mat="clay" onclick="selMat(this)">🟤 Clay / Orangeburg</div>
+      <div class="tile sm" data-mat="galv" onclick="selMat(this)">🔩 Galvanized Steel</div>
+    </div>
+  </div>
+
+  <!-- SYMPTOM CHECKLIST -->
+  <div class="sec">
+    <div class="sec-ttl">Symptom Checklist — Check all that apply to your home</div>
+    <div id="chk-list">
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Recurring clogs (more than twice per year)<div class="cs" style="color:var(--or)">⚠ Moderate severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Multiple slow drains throughout the home<div class="cs" style="color:var(--or)">⚠ Moderate severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Sewage odors in yard or near foundation<div class="cs" style="color:var(--rd)">🔴 High severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Soggy, sunken, or unusually lush patches in lawn<div class="cs" style="color:var(--rd)">🔴 High severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Cracks in home foundation or flooring<div class="cs" style="color:var(--rd)">🔴 High severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Camera inspection revealed root intrusion<div class="cs" style="color:var(--or)">⚠ Moderate severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Camera showed offset, cracked, or separated joints<div class="cs" style="color:var(--or)">⚠ Moderate severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Camera showed corrosion or deterioration &gt;30%<div class="cs" style="color:var(--rd)">🔴 High severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Multiple prior repairs in the past 3 years<div class="cs" style="color:var(--or)">⚠ Moderate severity</div></div></label>
+      <label class="ci"><input type="checkbox" onchange="onChk(this)"><div class="ct">Pipe system is 40+ years old<div class="cs" style="color:var(--rd)">🔴 High severity</div></div></label>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="verdict idle" id="verdict">
+    Select pipe age, material, and symptoms above to see your recommendation
+  </div>
+
+  <!-- COST COMPARISON TABLE -->
+  <div class="card" style="margin-top:13px">
+    <h4 class="gd" style="margin-bottom:9px">Repair vs. Replacement: FL Cost &amp; Factor Comparison</h4>
+    <table class="cmp">
+      <thead>
+        <tr><th>Factor</th><th>Repair</th><th>Replace</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Typical FL cost</td><td class="cg">$800–$5K</td><td class="cr">$5K–$25K+</td></tr>
+        <tr><td>Yard disruption</td><td class="cg">Minimal</td><td class="cr">Significant</td></tr>
+        <tr><td>Completion time</td><td class="cg">1–2 days</td><td class="cy">3–7 days</td></tr>
+        <tr><td>Lifespan added</td><td class="cy">5–15 yrs</td><td class="cg">50–100 yrs</td></tr>
+        <tr><td>Best scenario</td><td>Local/isolated damage</td><td>System-wide wear</td></tr>
+        <tr><td>Trenchless option?</td><td class="cg">Yes — CIPP lining</td><td class="cg">Yes — pipe bursting</td></tr>
+        <tr><td>FL permit required?</td><td class="cy">Sometimes</td><td class="cr">Usually yes</td></tr>
+        <tr><td>High water table risk</td><td class="cg">Lower (trenchless)</td><td class="cr">Higher (excavation)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FL CLAY/ORANGEBURG WARNING -->
+  <div class="card or" id="clay-warn" style="display:none">
+    <h4 class="or">🟤 Clay / Orangeburg Pipe — FL Pre-1970 Alert</h4>
+    <p>Clay and Orangeburg (tar-fiber) pipes are common in Florida homes built before 1970. Orangeburg deteriorates rapidly in South FL's wet, acidic soil — crumbling from the inside out. Once deterioration begins, full replacement is almost always more cost-effective than repeated repairs.</p>
+  </div>
+
+  <div class="card tl">
+    <h4 class="tl">🌴 FL Root Intrusion — Palm, Fig &amp; Oak Trees</h4>
+    <p>South Florida's tropical landscaping — fig trees, live oaks, royal palms, and banyan trees — have aggressive root systems. If you have mature trees within 20 feet of your sewer line, annual root intrusion treatment and/or CIPP pipe lining is strongly recommended as a preventive measure.</p>
+  </div>
+
+  <div class="card">
+    <h4 style="color:var(--mu)">⚖️ Florida Statute Reference (Septic Systems)</h4>
+    <p>If your sewer connects to or transitions from a septic system, Florida Statutes §381.0065 governs septic system abandonment and central sewer connection requirements. Contact your county environmental health department <em>before</em> any major sewer work that may affect a septic system.</p>
+  </div>
+
+  <!-- LEAD FORM 2 -->
+  <div class="form-wrap">
+    <h3>📞 Get a Repair vs. Replace Assessment</h3>
+    <div class="sub">Camera inspection + professional recommendation — (561) 555-PIPE. We'll call within 2 hours.</div>
+    <div class="fld"><label>Your Name</label><input type="text" id="f2-name" placeholder="John Doe" autocomplete="name"></div>
+    <div class="fld"><label>Phone Number</label><input type="tel" id="f2-phone" placeholder="(561) 555-PIPE" autocomplete="tel"></div>
+    <div class="fld"><label>Address / City</label><input type="text" id="f2-city" placeholder="Fort Lauderdale, FL" autocomplete="address-line1"></div>
+    <div class="fld"><label>Notes / Questions</label><textarea id="f2-ctx" placeholder="Tell us about your sewer situation, pipe age, or any prior issues..."></textarea></div>
+    <button class="btn-primary" onclick="submitLead('f2')">Request Assessment Call →</button>
+  </div>
+
+</div><!-- /tab2 -->
+
+
+<!-- ===== TAB 3: MAINTENANCE & WARNING SIGNS ===== -->
+<div class="pane" id="p2" role="tabpanel">
+
+  <!-- WARNING SIGNS -->
+  <div class="sec">
+    <div class="sec-ttl">⚠️ Current Warning Signs — Check all present in your home</div>
+    <div id="warn-list">
+      <label class="ci"><input type="checkbox" data-wsev="2" onchange="onWarn()"><div class="ct">Gurgling or bubbling sounds from toilets or floor drains<div class="cs" style="color:var(--or)">Severity: Moderate</div></div></label>
+      <label class="ci"><input type="checkbox" data-wsev="2" onchange="onWarn()"><div class="ct">Water backs up in shower or tub when toilet is flushed<div class="cs" style="color:var(--or)">Severity: Moderate</div></div></label>
+      <label class="ci"><input type="checkbox" data-wsev="3" onchange="onWarn()"><div class="ct">Sewage or rotten-egg odor inside the home<div class="cs" style="color:var(--rd)">Severity: Critical</div></div></label>
+      <label class="ci"><input type="checkbox" data-wsev="3" onchange="onWarn()"><div class="ct">Raw sewage backup in sink, tub, toilet, or floor drain<div class="cs" style="color:var(--rd)">Severity: Critical — biohazard emergency</div></div></label>
+      <label class="ci"><input type="checkbox" data-wsev="1" onchange="onWarn()"><div class="ct">Single slow drain (just one fixture affected)<div class="cs" style="color:var(--gn)">Severity: Minor — likely localized clog</div></div></label>
+      <label class="ci"><input type="checkbox" data-wsev="2" onchange="onWarn()"><div class="ct">Unusually lush or green grass patches in yard<div class="cs" style="color:var(--or)">Severity: Moderate — possible sewer leak</div></div></label>
+      <label class="ci"><input type="checkbox" data-wsev="2" onchange="onWarn()"><div class="ct">Increased pest activity (rodents, roaches) near drains<div class="cs" style="color:var(--or)">Severity: Moderate — possible line breach</div></div></label>
+    </div>
+
+    <!-- SCORE DISPLAY -->
+    <div class="scorebox">
+      <div class="snum" id="snum" style="color:var(--gn)">0</div>
+      <div>
+        <div class="slbl" id="slbl">No warning signs detected — system looks healthy!</div>
+        <div><span class="sbadge b-ok" id="sbadge">MINOR / NONE</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FL SEASONAL MAINTENANCE -->
+  <div class="sec">
+    <div class="sec-ttl">🌴 Florida Seasonal Sewer Care</div>
+    <div class="scard">
+      <h4>🌧️ Wet Season Prep (May – October)</h4>
+      <ul>
+        <li>Schedule camera inspection <em>before</em> wet season — find cracks before groundwater infiltration</li>
+        <li>Clear root intrusion found in dry-season inspection</li>
+        <li>Check cleanout access points for debris, damage, or standing water</li>
+        <li>Inspect foundation grading to direct rainwater away from sewer path</li>
+        <li>Verify sump pump operation if you have one</li>
+      </ul>
+    </div>
+    <div class="scard dry">
+      <h4>☀️ Dry Season Maintenance (October – May)</h4>
+      <ul>
+        <li>Best time for trenchless repairs — lower water table reduces excavation complications</li>
+        <li>Annual hydro-jetting to clear accumulated grease and debris</li>
+        <li>Root treatment if mature trees are within 20 ft of sewer line</li>
+        <li>Check for ground settlement or depressions along sewer path</li>
+        <li>Ideal time for camera inspection if buying or selling a FL home</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- COST-SAVING TIPS -->
+  <div class="sec">
+    <div class="sec-ttl">💡 FL Homeowner Cost-Saving Tips</div>
+    <div class="card gd">
+      <h4 class="gd">📸 Camera Inspection Before Buying a FL Home</h4>
+      <p>Always budget $150–$350 for a sewer camera inspection when purchasing an older Florida property. Clay or Orangeburg pipes in pre-1970 homes can cost $8,000–$25,000 to replace. A $250 inspection is cheap insurance — make it a contingency in your purchase offer.</p>
+    </div>
+    <div class="card gn">
+      <h4 class="gn">🌿 Root Barriers for FL Landscaping</h4>
+      <p>Installing root barriers ($200–$800) when planting fig trees, live oaks, royal palms, or magnolias near your sewer line can prevent $3,000–$12,000 in future root intrusion repairs. Ask your landscaper to design around the sewer path.</p>
+    </div>
+    <div class="card tl">
+      <h4 class="tl">🍳 Grease Disposal in Florida's Warm Climate</h4>
+      <p>FL's year-round heat accelerates grease solidification inside pipes — especially in older cast iron and clay lines. Never pour cooking oil, bacon grease, or fats down drains. Use sealed containers for disposal. Grease buildup is the leading cause of residential sewer blockages statewide.</p>
+    </div>
+  </div>
+
+  <!-- ANNUAL MAINTENANCE CHECKLIST -->
+  <div class="sec">
+    <div class="sec-ttl">✅ Annual Sewer Maintenance Checklist</div>
+    <div class="plbl"><span>Annual Progress</span><span id="m-pct">0 / 10 complete</span></div>
+    <div class="pwrap"><div class="pfill" id="m-prog" style="width:0%"></div></div>
+    <div id="maint-list">
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Schedule annual sewer camera inspection</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Hydro-jet main sewer line (clear debris &amp; grease)</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Root intrusion treatment (if trees within 20 ft)</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Inspect and clear all indoor cleanout caps</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Check yard for wet spots, depressions, or sinkholes</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Test all drains for speed — time a slow-fill bucket</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Dispose of all fats, oils, and grease properly (no drains)</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Flush only toilet paper — no "flushable" wipes or hygiene products</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Check for sewage odors near foundation or vents</div></label>
+      <label class="mi" onclick="onMaint(this)"><input type="checkbox"><div class="mt">Document all plumbing repairs and camera results for records</div></label>
+    </div>
+  </div>
+
+  <!-- EMERGENCY CARD -->
+  <div class="emerg">
+    <h3>🚨 Sewage Backup Inside Home — Call Immediately</h3>
+    <p>A sewage backup is a biohazard emergency. Do <strong>NOT</strong> use any drains, sinks, or flush toilets. Evacuate the affected area. Raw sewage contains harmful pathogens. Call now for 24/7 emergency response.</p>
+    <a class="btn-em" href="tel:5615557473">📞 (561) 555-PIPE — 24/7 Emergency</a>
+  </div>
+
+  <!-- LEAD FORM 3 -->
+  <div class="form-wrap">
+    <h3>📅 Schedule Maintenance Inspection</h3>
+    <div class="sub">Protect your FL home — camera inspection from $150. We'll call within 2 hours.</div>
+    <div class="fld"><label>Your Name</label><input type="text" id="f3-name" placeholder="Maria Garcia" autocomplete="name"></div>
+    <div class="fld"><label>Phone Number</label><input type="tel" id="f3-phone" placeholder="(561) 555-PIPE" autocomplete="tel"></div>
+    <div class="fld"><label>Property Address / City</label><input type="text" id="f3-city" placeholder="Miami, FL 33101" autocomplete="address-line1"></div>
+    <div class="fld"><label>Best Time to Call</label>
+      <select id="f3-time">
+        <option value="am">Morning (8am – 12pm)</option>
+        <option value="pm">Afternoon (12pm – 5pm)</option>
+        <option value="eve">Evening (5pm – 7pm)</option>
+        <option value="any">Any time is fine</option>
+      </select>
+    </div>
+    <div class="fld"><label>Notes</label><textarea id="f3-ctx" placeholder="Describe any current symptoms or maintenance needs..."></textarea></div>
+    <button class="btn-primary" onclick="submitLead('f3')">Schedule Inspection Call →</button>
+  </div>
+
+</div><!-- /tab3 -->
+
+<!-- TOAST -->
+<div class="toast" id="toast" aria-live="polite">We'll call you within 2 hours! 🏠</div>
+
+<script>
+/* ============================================================
+   FL SEWER LINE COST CALCULATOR
+   All functions kept ≤ 60 lines. XSS-safe: textContent only.
+   esc() included per spec for any future string interpolation.
+   ============================================================ */
+
+// ── STATE ──────────────────────────────────────────────────────
+const S = {
+  svcs: new Set(),     // selected service IDs
+  len: 50,             // pipe length in ft
+  reg: 'tampa',        // region key
+  acc: 'yard',         // access type key
+  age: null,           // pipe age key (tab2)
+  mat: null,           // pipe material key (tab2)
+  chkCnt: 0            // symptom count (tab2)
+};
+
+// ── COST DATA ──────────────────────────────────────────────────
+const SVCS = {
+  camera:  { n: 'Camera Inspection',               lo: 150,  hi: 350,  flat: true  },
+  clog:    { n: 'Clog Clearing (Hydro-Jetting)',    lo: 300,  hi: 600,  flat: true  },
+  spot:    { n: 'Spot Repair (Single Section)',      lo: 800,  hi: 2500, flat: true  },
+  cipp:    { n: 'CIPP Pipe Lining',                 lo: 80,   hi: 250,  flat: false },
+  burst:   { n: 'Pipe Bursting (Trenchless)',        lo: 60,   hi: 200,  flat: false },
+  trad:    { n: 'Traditional Replacement',           lo: 50,   hi: 250,  flat: false },
+  cleanout:{ n: 'Cleanout Installation',             lo: 400,  hi: 1200, flat: true  },
+  root:    { n: 'Root Intrusion Treatment',          lo: 200,  hi: 500,  flat: true  }
+};
+
+const RMULT = { south: 1.15, tampa: 1.0, orlando: 1.05, jax: 0.95, panhandle: 0.90 };
+const AMULT = { yard: 1.0, slab: 1.35, driveway: 1.25 };
+const RNAME = { south: 'South FL', tampa: 'Tampa Bay', orlando: 'Orlando', jax: 'Jacksonville', panhandle: 'Panhandle' };
+const ANAME = { yard: 'Std. Yard', slab: 'Under Slab', driveway: 'Under Driveway' };
+
+// ── UTILITIES ──────────────────────────────────────────────────
+function esc(s) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(String(s)));
+  return d.innerHTML;
+}
+
+function fmt(n) {
+  if (n >= 1000) {
+    const k = n / 1000;
+    return '$' + (k % 1 === 0 ? k.toFixed(0) : k.toFixed(1)) + 'K';
+  }
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function fmtR(lo, hi) { return fmt(lo) + ' – ' + fmt(hi); }
+
+// ── TABS ───────────────────────────────────────────────────────
+function sw(n) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('on', i === n);
+    t.setAttribute('aria-selected', i === n ? 'true' : 'false');
+  });
+  document.querySelectorAll('.pane').forEach((p, i) => {
+    p.classList.toggle('on', i === n);
+  });
+}
+
+// ── TAB 1: SELECTORS ──────────────────────────────────────────
+function toggleSvc(el) {
+  const id = el.dataset.svc;
+  if (S.svcs.has(id)) { S.svcs.delete(id); el.classList.remove('on'); }
+  else                 { S.svcs.add(id);    el.classList.add('on');    }
+  calcAndRender();
+  prefillCtx();
+}
+
+function clearGrid(id) {
+  document.querySelectorAll('#' + id + ' .tile').forEach(t => t.classList.remove('on-g', 'on'));
+}
+
+function selLen(el) {
+  clearGrid('len-grid'); el.classList.add('on-g');
+  S.len = parseInt(el.dataset.len, 10);
+  calcAndRender(); prefillCtx();
+}
+
+function selReg(el) {
+  clearGrid('reg-grid'); el.classList.add('on-g');
+  S.reg = el.dataset.reg;
+  calcAndRender();
+}
+
+function selAcc(el) {
+  clearGrid('acc-grid'); el.classList.add('on-g');
+  S.acc = el.dataset.acc;
+  calcAndRender();
+  updateConditionals();
+}
+
+// ── COST CALCULATION ──────────────────────────────────────────
+function calcAndRender() {
+  const rm = RMULT[S.reg] || 1.0;
+  const am = AMULT[S.acc] || 1.0;
+  let tlo = 0, thi = 0;
+  const rows = [];
+
+  S.svcs.forEach(id => {
+    const sv = SVCS[id]; if (!sv) return;
+    let lo = sv.lo, hi = sv.hi;
+    if (!sv.flat) { lo *= S.len; hi *= S.len; }
+    lo = Math.round(lo * rm * am);
+    hi = Math.round(hi * rm * am);
+    tlo += lo; thi += hi;
+    rows.push({ name: sv.n, lo, hi, flat: sv.flat });
+  });
+
+  renderTotal(tlo, thi, rows);
+  updateConditionals();
+}
+
+function renderTotal(tlo, thi, rows) {
+  const numEl  = document.getElementById('tot-num');
+  const noteEl = document.getElementById('tot-note');
+  const bkCard = document.getElementById('bk-card');
+  const tbody  = document.getElementById('bk-body');
+
+  if (!rows.length) {
+    numEl.textContent  = 'Select services above';
+    noteEl.textContent = 'FL regional pricing · Not a final quote';
+    bkCard.classList.add('hidden');
+    return;
+  }
+
+  numEl.textContent  = fmtR(tlo, thi);
+  noteEl.textContent = RNAME[S.reg] + ' pricing · ' + ANAME[S.acc] + ' access · Not a final quote';
+  bkCard.classList.remove('hidden');
+
+  // Use createTextNode — XSS-safe
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const tr  = document.createElement('tr');
+    const td1 = document.createElement('td');
+    const td2 = document.createElement('td');
+    const label = r.flat ? r.name : r.name + ' (' + S.len + ' ft)';
+    td1.textContent = label;
+    td2.textContent = fmtR(r.lo, r.hi);
+    tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+  });
+
+  if (rows.length > 1) {
+    const tr  = document.createElement('tr'); tr.className = 'sum';
+    const td1 = document.createElement('td'); td1.textContent = 'Total Estimate';
+    const td2 = document.createElement('td'); td2.textContent = fmtR(tlo, thi);
+    tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+  }
+}
+
+function updateConditionals() {
+  const slabWarn = document.getElementById('slab-warn');
+  const wtCard   = document.getElementById('wt-card');
+  slabWarn.classList.toggle('hidden', S.acc !== 'slab');
+  const showWT = S.reg === 'south' || S.svcs.has('cipp') || S.svcs.has('burst');
+  wtCard.classList.toggle('hidden', !showWT);
+}
+
+function prefillCtx() {
+  const el = document.getElementById('f1-ctx');
+  if (!el || S.svcs.size === 0) return;
+  const names = [];
+  S.svcs.forEach(id => { if (SVCS[id]) names.push(SVCS[id].n); });
+  el.placeholder = 'Services: ' + names.join(', ') + '. Approx ' + S.len + ' ft pipe. ' + RNAME[S.reg] + ' area.';
+}
+
+// ── TAB 2: REPAIR VS REPLACE ──────────────────────────────────
+function selAge(el) {
+  clearGrid('age-grid'); el.classList.add('on-g');
+  S.age = el.dataset.age;
+  updateVerdict();
+}
+
+function selMat(el) {
+  clearGrid('mat-grid'); el.classList.add('on-g');
+  S.mat = el.dataset.mat;
+  document.getElementById('clay-warn').style.display = (S.mat === 'clay') ? '' : 'none';
+  updateVerdict();
+}
+
+function onChk(cb) {
+  cb.closest('.ci').classList.toggle('on', cb.checked);
+  S.chkCnt = document.querySelectorAll('#chk-list input:checked').length;
+  updateVerdict();
+}
+
+function updateVerdict() {
+  const n = S.chkCnt;
+  const vc = document.getElementById('verdict');
+  vc.className = 'verdict';
+  let cls = 'idle', txt = 'Select pipe age, material, and symptoms above to see your recommendation';
+
+  if (n > 0 || S.age || S.mat) {
+    let score = n;
+    if (S.age === '60p') score += 2;
+    else if (S.age === '40') score += 1;
+    if (S.mat === 'clay' || S.mat === 'galv') score += 2;
+    else if (S.mat === 'cast') score += 1;
+
+    if (score <= 2) {
+      cls = 'ok';
+      txt = '✅ Repair is likely sufficient — ' + n + ' symptom' + (n !== 1 ? 's' : '') + ' flagged. Get a camera inspection to confirm.';
+    } else if (score <= 5) {
+      cls = 'warn';
+      txt = '⚠️ Borderline — camera inspection strongly recommended first. ' + n + ' symptom' + (n !== 1 ? 's' : '') + ' flagged.';
+    } else {
+      cls = 'bad';
+      txt = '🔴 Replacement recommended — ' + n + ' symptom' + (n !== 1 ? 's' : '') + ' flagged. Contact a licensed FL plumber.';
+    }
+  }
+
+  vc.classList.add(cls);
+  vc.textContent = txt;
+}
+
+// ── TAB 3: WARNING SCORE ──────────────────────────────────────
+function onWarn() {
+  const items = document.querySelectorAll('#warn-list input[data-wsev]');
+  let score = 0;
+  items.forEach(cb => {
+    if (cb.checked) {
+      score += parseInt(cb.dataset.wsev || 1, 10);
+      cb.closest('.ci').classList.add('on');
+    } else {
+      cb.closest('.ci').classList.remove('on');
+    }
+  });
+
+  const numEl   = document.getElementById('snum');
+  const lblEl   = document.getElementById('slbl');
+  const badgeEl = document.getElementById('sbadge');
+  numEl.textContent = score;
+
+  if (score === 0) {
+    numEl.style.color   = 'var(--gn)';
+    lblEl.textContent   = 'No warning signs detected — system looks healthy!';
+    badgeEl.textContent = 'MINOR / NONE';
+    badgeEl.className   = 'sbadge b-ok';
+  } else if (score <= 4) {
+    numEl.style.color   = 'var(--or)';
+    lblEl.textContent   = 'Moderate concern — monitor closely, schedule inspection soon.';
+    badgeEl.textContent = 'MODERATE';
+    badgeEl.className   = 'sbadge b-mod';
+  } else {
+    numEl.style.color   = 'var(--rd)';
+    lblEl.textContent   = 'Critical — professional inspection needed now. Call (561) 555-PIPE.';
+    badgeEl.textContent = 'CRITICAL';
+    badgeEl.className   = 'sbadge b-crit';
+  }
+}
+
+// ── MAINTENANCE CHECKLIST ─────────────────────────────────────
+function onMaint(el) {
+  // Prevent double-fire from label+checkbox
+  const cb = el.querySelector('input[type=checkbox]');
+  // Toggle is handled by native checkbox; read state after event bubbles
+  requestAnimationFrame(() => {
+    const checked = cb.checked;
+    el.classList.toggle('done', checked);
+    updateMaintProg();
+  });
+}
+
+function updateMaintProg() {
+  const all  = document.querySelectorAll('#maint-list .mi');
+  let done = 0;
+  all.forEach(it => { if (it.querySelector('input').checked) done++; });
+  const pct  = Math.round((done / all.length) * 100);
+  const fill = document.getElementById('m-prog');
+  fill.style.width = pct + '%';
+  fill.style.background = pct >= 80 ? 'var(--gn)' : pct >= 50 ? 'var(--bl)' : 'var(--or)';
+  document.getElementById('m-pct').textContent = done + ' / ' + all.length + ' complete';
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+let _toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 3800);
+}
+
+// ── LEAD FORM SUBMIT ──────────────────────────────────────────
+function submitLead(formId) {
+  showToast("We'll call you within 2 hours! 🏠");
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+(function init() {
+  calcAndRender();
+  updateVerdict();
+  onWarn();
+  updateMaintProg();
+  // Clay warn hidden by default (no mat selected)
+  document.getElementById('clay-warn').style.display = 'none';
+})();
+</script>
+</body>
+</html>
