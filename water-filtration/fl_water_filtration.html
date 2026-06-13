@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Whole-House Water Filtration Cost Guide</title>
+<style>
+:root {
+  --bg:#0A0E1A; --card:#0F1629; --card2:#141929;
+  --blue:#00B4FF; --gold:#F4B942; --orange:#F97316;
+  --red:#EF4444; --green:#22C55E; --teal:#14B8A6;
+  --text:#E2E8F0; --muted:#94A3B8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:16px}
+h1{font-size:1.2rem;font-weight:700;color:var(--blue);margin-bottom:4px}
+.sub{font-size:.8rem;color:var(--muted);margin-bottom:16px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;position:sticky;top:0;z-index:10;background:var(--bg);padding:8px 0}
+.tab{flex:1;padding:8px 4px;border:1.5px solid #1E293B;border-radius:8px;background:var(--card);color:var(--muted);font-size:.75rem;font-weight:600;cursor:pointer;text-align:center;transition:.2s}
+.tab.active{border-color:var(--blue);color:var(--blue);background:#0F1F35}
+.card{background:var(--card);border:1px solid #1E293B;border-radius:12px;padding:16px;margin-bottom:12px}
+.card h3{font-size:.9rem;font-weight:700;margin-bottom:8px}
+.card p,.card li{font-size:.82rem;color:var(--muted);line-height:1.5}
+.card ul{padding-left:16px;margin-top:6px}
+.step-label{font-size:.7rem;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{background:var(--card2);border:1.5px solid #1E293B;border-radius:8px;padding:10px 12px;cursor:pointer;font-size:.82rem;transition:.2s;text-align:left}
+.opt:hover,.opt.sel{border-color:var(--blue);color:var(--blue);background:#0A1628}
+.rec-badge{font-size:.65rem;background:var(--blue);color:#000;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:12px;transition:.2s}
+.btn-gold{background:var(--gold);color:#000}
+.btn-blue{background:var(--blue);color:#000}
+.btn-out{background:transparent;border:1.5px solid var(--muted);color:var(--muted);margin-top:8px}
+.result-card{border-radius:12px;padding:14px;margin-bottom:10px}
+.rc-cost{background:linear-gradient(135deg,#0F1629,#141929);border:1.5px solid var(--blue)}
+.rc-gold{background:#1A1400;border:1.5px solid var(--gold)}
+.rc-teal{background:#001A18;border:1.5px solid var(--teal)}
+.rc-orange{background:#1A0D00;border:1.5px solid var(--orange)}
+.rc-cost .label,.rc-gold .label{color:var(--gold)}
+.rc-teal .label{color:var(--teal)}
+.rc-orange .label{color:var(--orange)}
+.label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.cost-num{font-size:1.6rem;font-weight:800;color:var(--blue)}
+.cost-desc{font-size:.75rem;color:var(--muted);margin-top:2px}
+.fact-card{background:var(--card);border-left:3px solid var(--blue);border-radius:8px;padding:12px;margin-bottom:10px}
+.fact-card h4{font-size:.82rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.fact-card p{font-size:.78rem;color:var(--muted);line-height:1.4}
+table{width:100%;border-collapse:collapse;font-size:.75rem;margin-top:8px}
+th{background:#0F1629;color:var(--blue);padding:6px 8px;text-align:left;border-bottom:1px solid #1E293B}
+td{padding:6px 8px;border-bottom:1px solid #0F1629;color:var(--muted);vertical-align:top}
+tr:nth-child(even) td{background:#0A0D16}
+.progress-bar{height:8px;background:#1E293B;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:var(--blue);border-radius:4px;transition:.3s}
+.progress-label{font-size:.72rem;color:var(--muted);margin-bottom:12px}
+.chk-item{display:flex;align-items:flex-start;gap:10px;padding:10px;background:var(--card);border:1px solid #1E293B;border-radius:8px;margin-bottom:6px;cursor:pointer;transition:.2s}
+.chk-item.done{border-color:var(--blue);background:#091520}
+.chk-box{width:20px;height:20px;border:2px solid var(--muted);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:.2s}
+.chk-item.done .chk-box{background:var(--blue);border-color:var(--blue);color:#000}
+.chk-text{font-size:.8rem;line-height:1.3;color:var(--muted)}
+.chk-item.done .chk-text{color:var(--text)}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.form-group input{width:100%;padding:10px 12px;background:var(--card2);border:1.5px solid #1E293B;border-radius:8px;color:var(--text);font-size:.9rem}
+.form-group input:focus{outline:none;border-color:var(--blue)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:#000;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.9rem;transition:.4s;z-index:999;opacity:0}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.sep{height:1px;background:#1E293B;margin:12px 0}
+.hidden{display:none}
+@media(max-width:375px){.cost-num{font-size:1.3rem}.tabs{gap:2px}.tab{font-size:.68rem;padding:7px 2px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>💧 FL Water Filtration Cost Guide</h1>
+  <p class="sub">Whole-house & point-of-use systems — Florida pricing 2024</p>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab(0)">💰 Cost Calc</button>
+    <button class="tab" onclick="showTab(1)">📖 FL Guide</button>
+    <button class="tab" onclick="showTab(2)">✅ Checklist</button>
+  </div>
+
+  <!-- TAB 0: COST CALC -->
+  <div id="tab0">
+    <div class="card" id="wizard">
+      <div id="step0">
+        <div class="step-label">Step 1 of 4 — Primary water issue</div>
+        <div class="opts">
+          <button class="opt" onclick="pick(0,'issue','hard')">💦 Hard water / scale buildup<br><small style="color:var(--muted)">spots on dishes, dry skin, fixtures</small></button>
+          <button class="opt" onclick="pick(0,'issue','sulfur')">🦨 Sulfur smell / "rotten egg" odor<br><small style="color:var(--muted)">Broward, Pasco, Hillsborough</small></button>
+          <button class="opt" onclick="pick(0,'issue','chlorine')">🏊 Chlorine taste / smell<br><small style="color:var(--muted)">municipal water treatment</small></button>
+          <button class="opt" onclick="pick(0,'issue','iron')">🔴 Iron / rust staining<br><small style="color:var(--muted)">orange stains in sinks, toilets</small></button>
+          <button class="opt" onclick="pick(0,'issue','multi')">⚗️ Multiple issues / comprehensive<br><small style="color:var(--muted)">address several contaminants</small></button>
+          <button class="opt" onclick="pick(0,'issue','well')">🌊 Well water treatment<br><small style="color:var(--muted)">coliform, sediment, minerals</small></button>
+        </div>
+      </div>
+      <div id="step1" class="hidden">
+        <div class="step-label">Step 2 of 4 — System type</div>
+        <div class="opts" id="sysOpts"></div>
+      </div>
+      <div id="step2" class="hidden">
+        <div class="step-label">Step 3 of 4 — Home size</div>
+        <div class="opts">
+          <button class="opt" onclick="pick(2,'size','small')">🏠 Small — 1–2 bedrooms, under 1,500 sq ft</button>
+          <button class="opt" onclick="pick(2,'size','medium')">🏡 Medium — 3 bedrooms, 1,500–2,500 sq ft</button>
+          <button class="opt" onclick="pick(2,'size','large')">🏘️ Large — 4+ bedrooms or 2,500+ sq ft</button>
+        </div>
+      </div>
+      <div id="step3" class="hidden">
+        <div class="step-label">Step 4 of 4 — FL region</div>
+        <div class="opts">
+          <button class="opt" onclick="pick(3,'region','south')">🌴 South FL — Miami-Dade, Broward, Palm Beach</button>
+          <button class="opt" onclick="pick(3,'region','tampa')">⛅ Tampa Bay — Hillsborough, Pinellas, Pasco</button>
+          <button class="opt" onclick="pick(3,'region','jax')">🌲 Jacksonville / NE Florida</button>
+          <button class="opt" onclick="pick(3,'region','swfl')">🦩 SW Florida — Sarasota, Naples, Fort Myers</button>
+          <button class="opt" onclick="pick(3,'region','panhandle')">🌊 Panhandle — Pensacola, Panama City</button>
+        </div>
+      </div>
+    </div>
+    <div id="results" class="hidden"></div>
+    <div id="leadForm0" class="hidden">
+      <div class="card">
+        <h3 style="color:var(--gold);margin-bottom:12px">📞 Get a Free Water Test Quote</h3>
+        <div class="form-group"><label>Your name</label><input type="text" id="n0" placeholder="Jane Smith"></div>
+        <div class="form-group"><label>Phone number</label><input type="tel" id="p0" placeholder="(561) 555-PIPE"></div>
+        <button class="btn btn-gold" onclick="submitLead('n0','p0')">Get a Free Water Test Quote</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1: FL GUIDE -->
+  <div id="tab1" class="hidden">
+    <div class="fact-card">
+      <h4>🌊 The Floridan Aquifer — Your Water Source</h4>
+      <p>FL's water comes from one of the world's most productive aquifers, but naturally high in hardness minerals (calcium, magnesium), sulfur compounds, and iron. FL homeowners spend more per capita on in-home water treatment than any other Southern state.</p>
+    </div>
+    <div class="fact-card">
+      <h4>🦨 Sulfur Odor — Broward & Pasco Are Worst</h4>
+      <p>H2S levels of 0.1–0.5 mg/L are common in these aquifer-fed systems. The "rotten egg" smell is strongest in the morning when water has sat in pipes overnight. Carbon filters don't remove H2S — an oxidizing filter is required.</p>
+    </div>
+    <div class="fact-card">
+      <h4>💎 Hard Water by FL Region</h4>
+      <p>SW FL (Naples) 300–400 mg/L — hardest in state. South FL (Miami-Dade/Broward) 200–280 mg/L. Tampa Bay 150–220 mg/L. Jacksonville/NE FL 80–120 mg/L (softer). Hard water shortens water heater lifespan from 12 to 7–8 years.</p>
+    </div>
+    <div class="fact-card">
+      <h4>⚠️ PFAS Contamination in FL</h4>
+      <p>Per- and polyfluoroalkyl substances ("forever chemicals") detected near FL military bases (Pensacola, Tyndall, Jacksonville NAS). EPA's 2024 MCL of 4 ppt for PFOA/PFOS requires treatment in affected areas. Reverse osmosis removes &gt;90% of PFAS.</p>
+    </div>
+    <div class="fact-card">
+      <h4>📄 FL DEP MCL Standards & Your CCR</h4>
+      <p>FL adopts EPA Maximum Contaminant Levels. Your utility must provide an annual Consumer Confidence Report (CCR). Review your CCR before selecting a filtration system — target the specific contaminants present in your water.</p>
+    </div>
+
+    <div class="card">
+      <h3>FL Water Issues — Treatment Guide</h3>
+      <table>
+        <thead><tr><th>Issue</th><th>FL Regions</th><th>Best System</th><th>Cost Range</th></tr></thead>
+        <tbody>
+          <tr><td>Hard water</td><td>SW FL, South FL</td><td>Water softener</td><td>$800–2,800</td></tr>
+          <tr><td>Sulfur odor</td><td>Pasco, Hillsborough, Polk</td><td>Oxidizing filter</td><td>$800–2,400</td></tr>
+          <tr><td>Chlorine taste</td><td>All municipal</td><td>Carbon filter</td><td>$500–1,600</td></tr>
+          <tr><td>Iron staining</td><td>North FL, wells</td><td>Iron filter</td><td>$1,000–2,400</td></tr>
+          <tr><td>Bacteria (well)</td><td>Rural FL</td><td>UV + sediment</td><td>$700–1,500</td></tr>
+          <tr><td>PFAS / VOCs</td><td>Near mil. bases</td><td>RO system</td><td>$3,000–10,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Under-Sink RO vs. Whole-House RO</h3>
+      <table>
+        <thead><tr><th>Feature</th><th>Under-Sink RO</th><th>Whole-House RO</th></tr></thead>
+        <tbody>
+          <tr><td>Coverage</td><td>One faucet</td><td>Entire home</td></tr>
+          <tr><td>Cost</td><td>$300–800</td><td>$3,000–10,000</td></tr>
+          <tr><td>Waste water</td><td>3:1 ratio</td><td>2:1 ratio</td></tr>
+          <tr><td>Flow rate</td><td>50–75 GPD</td><td>Full house pressure</td></tr>
+          <tr><td>Best for</td><td>Drinking water</td><td>PFAS / high TDS</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="result-card rc-teal">
+      <div class="label">🏚️ Well Water Warning</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">FL has 1.2 million private wells not regulated by FL DEP. Well water should be tested annually for coliform bacteria, nitrates, pH, hardness, iron, and H2S. A UV system is strongly recommended for any FL well water supply.</p>
+    </div>
+    <div class="result-card rc-orange">
+      <div class="label">🔥 Water Heater Efficiency</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">Hard water scale reduces water heater element efficiency by up to 29% per DOE studies. A water softener before your water heater can add 3–5 years to its lifespan and save $100–200/year in energy costs.</p>
+    </div>
+
+    <div id="leadForm1">
+      <div class="card">
+        <h3 style="color:var(--gold);margin-bottom:12px">📞 Get a Free Water Test Quote</h3>
+        <div class="form-group"><label>Your name</label><input type="text" id="n1" placeholder="Jane Smith"></div>
+        <div class="form-group"><label>Phone number</label><input type="tel" id="p1" placeholder="(561) 555-PIPE"></div>
+        <button class="btn btn-gold" onclick="submitLead('n1','p1')">Get a Free Water Test Quote</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: CHECKLIST -->
+  <div id="tab2" class="hidden">
+    <div class="card">
+      <h3 style="margin-bottom:8px">Water Filtration Installation Checklist</h3>
+      <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progLabel">0 of 12 complete</div>
+      <div id="chklist"></div>
+    </div>
+
+    <div class="result-card rc-gold">
+      <div class="label">📋 FL Licensing Requirement</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">Whole-house water treatment installation requires a FL-licensed plumber (FS 489). The plumber must pull a permit for any work involving the main water supply line or water heater connections. Verify license at myfloridalicense.com.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--gold);margin-bottom:12px">📞 Get a Free Water Test Quote</h3>
+      <div class="form-group"><label>Your name</label><input type="text" id="n2" placeholder="Jane Smith"></div>
+      <div class="form-group"><label>Phone number</label><input type="tel" id="p2" placeholder="(561) 555-PIPE"></div>
+      <button class="btn btn-gold" onclick="submitLead('n2','p2')">Get a Free Water Test Quote</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const S = {tab:0, issue:'', sys:'', size:'', region:'', checks:new Array(12).fill(false)};
+
+const COSTS = {
+  softener:{small:[800,1500],medium:[1000,2000],large:[1200,2800]},
+  carbon:{small:[500,900],medium:[700,1200],large:[900,1600]},
+  sulfur:{small:[800,1400],medium:[1000,1800],large:[1200,2400]},
+  uv:{small:[500,1200],medium:[500,1200],large:[500,1200]},
+  ro_sink:{small:[300,800],medium:[300,800],large:[300,800]},
+  ro_whole:{small:[3000,5000],medium:[4000,7000],large:[5500,10000]}
+};
+
+const MULT = {south:1.15,tampa:1.0,jax:0.93,swfl:1.12,panhandle:0.90};
+
+const SYS_BY_ISSUE = {
+  hard:['softener','carbon','uv','ro_sink','ro_whole'],
+  sulfur:['sulfur','carbon','uv','ro_sink','ro_whole'],
+  chlorine:['carbon','softener','uv','ro_sink','ro_whole'],
+  iron:['sulfur','softener','carbon','uv','ro_whole'],
+  multi:['ro_whole','softener','sulfur','carbon','uv','ro_sink'],
+  well:['uv','softener','sulfur','carbon','ro_whole','ro_sink']
+};
+
+const SYS_LABELS = {
+  softener:'💧 Water softener (ion exchange)',
+  carbon:'🌿 Carbon whole-house filter',
+  sulfur:'🔩 Sulfur / iron oxidizing filter',
+  uv:'☀️ UV purification system',
+  ro_sink:'🚰 Reverse osmosis (under-sink)',
+  ro_whole:'🏭 Whole-house RO / multi-stage'
+};
+
+const RECOMMEND = {
+  hard:'softener', sulfur:'sulfur', chlorine:'carbon',
+  iron:'sulfur', multi:'ro_whole', well:'uv'
+};
+
+function showTab(n) {
+  S.tab = n;
+  [0,1,2].forEach(i => {
+    document.getElementById('tab'+i).classList.toggle('hidden', i!==n);
+    document.querySelectorAll('.tab')[i].classList.toggle('active', i===n);
+  });
+}
+
+function pick(step, key, val) {
+  S[key] = val;
+  if (step === 0) {
+    document.getElementById('step0').classList.add('hidden');
+    buildSysOpts();
+    document.getElementById('step1').classList.remove('hidden');
+  } else if (step === 1) {
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+  } else if (step === 2) {
+    document.getElementById('step2').classList.add('hidden');
+    document.getElementById('step3').classList.remove('hidden');
+  } else {
+    showResults();
+  }
+}
+
+function buildSysOpts() {
+  const opts = SYS_BY_ISSUE[S.issue] || Object.keys(SYS_LABELS);
+  const rec = RECOMMEND[S.issue];
+  const el = document.getElementById('sysOpts');
+  el.innerHTML = '';
+  opts.forEach(k => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.onclick = () => pick(1,'sys',k);
+    const badge = k === rec ? '<span class="rec-badge">⭐ Recommended</span>' : '';
+    b.innerHTML = esc(SYS_LABELS[k]) + badge;
+    el.appendChild(b);
+  });
+}
+
+function showResults() {
+  const m = MULT[S.region] || 1;
+  const base = COSTS[S.sys];
+  if (!base) return;
+  const sz = S.size || 'medium';
+  const [lo, hi] = base[sz];
+  const rlo = Math.round(lo * m / 50) * 50;
+  const rhi = Math.round(hi * m / 50) * 50;
+  const fmt = n => '$' + n.toLocaleString();
+
+  document.getElementById('wizard').classList.add('hidden');
+  const r = document.getElementById('results');
+  r.classList.remove('hidden');
+
+  let html = `<div class="result-card rc-cost">
+    <div class="label">Estimated Installation Cost</div>
+    <div class="cost-num">${esc(fmt(rlo))} – ${esc(fmt(rhi))}</div>
+    <div class="cost-desc">${esc(SYS_LABELS[S.sys])} · ${esc(sz)} home · ${esc(regionLabel())} · includes labor</div>
+  </div>`;
+
+  html += `<div class="result-card rc-gold">
+    <div class="label">🔧 Annual Maintenance Cost</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:4px">Whole-house filters: annual media/filter replacement $50–300/yr. Water softeners: salt refill every 1–3 months ($20–50). UV systems: lamp replacement annually $80–120. Professional service contract: $150–300/yr keeps your system at peak efficiency.</p>
+  </div>`;
+
+  if (S.issue === 'hard' || S.sys === 'softener') {
+    html += `<div class="result-card rc-teal">
+      <div class="label">💎 FL Hard Water Map</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">SW FL (Naples, Fort Myers) 300–400 mg/L — hardest in state. South FL 200–280 mg/L. Tampa Bay 150–220 mg/L. Hard water reduces appliance lifespan by 30–50% and water heater efficiency by up to 29%.</p>
+    </div>`;
+  }
+
+  if (S.issue === 'sulfur' || S.issue === 'iron') {
+    html += `<div class="result-card rc-orange">
+      <div class="label">🦨 FL Sulfur / Iron Source</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">FL's sulfur odor comes from naturally occurring H2S in the Floridan Aquifer — especially Pasco, Hillsborough, and Polk counties. Oxidizing filters (greensand, Birm) are most effective. Carbon filters mask the smell but don't remove H2S.</p>
+    </div>`;
+  }
+
+  if (S.issue === 'well' || S.sys === 'uv') {
+    html += `<div class="result-card rc-teal">
+      <div class="label">🌊 Well Water — Test First</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">FL has 1.2 million private wells unregulated by FL DEP. Test annually for coliform bacteria, nitrates, pH, hardness, iron, and H2S before selecting a system. UV purification is strongly recommended for any FL well supply.</p>
+    </div>`;
+  }
+
+  r.innerHTML = html;
+  document.getElementById('leadForm0').classList.remove('hidden');
+}
+
+function regionLabel() {
+  const m = {south:'South FL',tampa:'Tampa Bay',jax:'Jacksonville/NE FL',swfl:'SW Florida',panhandle:'Panhandle'};
+  return m[S.region] || 'FL';
+}
+
+const CHECKS = [
+  'FL Consumer Confidence Report (CCR) reviewed — know what\'s in your water',
+  'Water test completed if on well (coliform, nitrates, hardness, iron, H2S)',
+  'Primary water issue identified based on test results (not just symptoms)',
+  'System type selected to match confirmed contaminants',
+  'FL-licensed plumber hired for installation (verify FS 489 at myfloridalicense.com)',
+  'Installation location confirmed (water main entry, bypass valve clearance)',
+  'System installed and bypass valve configured for service isolation',
+  'Initial water test after installation — confirm contaminants reduced',
+  'Flow rate tested — whole-house systems must not reduce pressure below 40 PSI',
+  'Filter media / salt stocked for first 6 months of service',
+  'Annual service calendar set — filter changes, media refresh, UV lamp replacement',
+  'Water heater checked for scale — consider flushing after softener install'
+];
+
+function buildChecklist() {
+  const el = document.getElementById('chklist');
+  if (el.children.length) return;
+  CHECKS.forEach((txt, i) => {
+    const d = document.createElement('div');
+    d.className = 'chk-item' + (S.checks[i] ? ' done' : '');
+    d.onclick = () => toggleCheck(i);
+    d.innerHTML = `<div class="chk-box">${S.checks[i]?'✓':''}</div><div class="chk-text">${esc(txt)}</div>`;
+    el.appendChild(d);
+  });
+  updateProgress();
+}
+
+function toggleCheck(i) {
+  S.checks[i] = !S.checks[i];
+  const items = document.querySelectorAll('.chk-item');
+  items[i].classList.toggle('done', S.checks[i]);
+  items[i].querySelector('.chk-box').textContent = S.checks[i] ? '✓' : '';
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = S.checks.filter(Boolean).length;
+  const pct = Math.round(done / 12 * 100);
+  const fill = document.getElementById('progFill');
+  const label = document.getElementById('progLabel');
+  if (fill) fill.style.width = pct + '%';
+  if (label) { label.textContent = ''; label.appendChild(document.createTextNode(done + ' of 12 complete')); }
+}
+
+function submitLead(nId, pId) {
+  const name = document.getElementById(nId).value.trim();
+  const phone = document.getElementById(pId).value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+document.addEventListener('DOMContentLoaded', () => buildChecklist());
+
+const _origShowTab = showTab;
+window.showTab = function(n) {
+  _origShowTab(n);
+  if (n === 2) buildChecklist();
+};
+</script>
+</body>
+</html>
