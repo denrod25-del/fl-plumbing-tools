@@ -1,7 +1,7 @@
 # FL Plumbing Lead-Gen Tools
 
 **70 interactive cost calculators** for Florida homeowners.
-Each tool: 3-tab interface (Cost Calc · FL Guide · Checklist), mobile-first, zero dependencies.
+Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
 
@@ -79,4 +79,4 @@ Each tool: 3-tab interface (Cost Calc · FL Guide · Checklist), mobile-first, z
 - [FL Whole Home Repipe Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/whole-home-repipe/fl_whole_home_repipe.html)
 
 ---
-Built with Claude · FL 2024
+Built with Claude * FL 2024
