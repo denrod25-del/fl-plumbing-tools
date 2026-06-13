@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Water Pressure Diagnostic Tool — High &amp; Low Pressure, PRV Installation Guide</title>
+<meta name="description" content="Diagnose low or high water pressure in your Florida home. PRV installation guide, galvanized pipe pressure loss, and South FL utility over-pressure explained.">
+<meta name="keywords" content="low water pressure Florida, high water pressure Florida home, water pressure problems Florida, PRV Florida, pressure reducing valve Florida, water pressure booster Florida">
+<style>
+:root{--navy:#0A0E1A;--navy-mid:#141828;--navy-lt:#1E2438;--blue:#00B4FF;--blue-dk:#0090CC;--gold:#F4B942;--gold-dk:#C9900F;--red:#E84040;--orange:#F06020;--green:#3DBE6A;--text:#E8ECF4;--muted:#8896B0;--border:#252C44}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--navy);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;line-height:1.55;min-height:100vh}
+a{color:var(--blue)}
+
+/* HEADER */
+.hdr{background:var(--navy-mid);border-bottom:2px solid var(--blue);padding:1rem 1.25rem;text-align:center}
+.hdr h1{font-size:1.2rem;font-weight:800;letter-spacing:-.01em}
+.hdr p{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+
+/* TABS */
+.tabs{display:flex;background:var(--navy-mid);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-btn{flex:1;min-width:110px;padding:.7rem .75rem;background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-pane{display:none;padding:1.25rem;max-width:820px;margin:0 auto}
+.tab-pane.active{display:block}
+
+/* STEP LABELS */
+.step-lbl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--blue);margin-bottom:.6rem}
+
+/* PRESSURE TILES */
+.p-tiles{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:1.25rem}
+.p-tile{border:2px solid var(--border);border-radius:12px;padding:1.4rem 1rem;cursor:pointer;text-align:center;background:var(--navy-lt);transition:border-color .18s,background .18s;user-select:none}
+.p-tile:hover{border-color:var(--blue)}
+.p-tile.sel-low{border-color:var(--blue);background:rgba(0,180,255,.1)}
+.p-tile.sel-high{border-color:var(--red);background:rgba(232,64,64,.1)}
+.ti{font-size:2.2rem;display:block;margin-bottom:.4rem}
+.tl{font-size:.95rem;font-weight:800;display:block}
+.td{font-size:.75rem;color:var(--muted);display:block;margin-top:.2rem}
+
+/* STEP CARD */
+.scard{background:var(--navy-lt);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin-bottom:.875rem}
+.cbgrid{display:grid;gap:.25rem}
+.cbitem{display:flex;align-items:flex-start;gap:.65rem;padding:.45rem .6rem;border-radius:6px;cursor:pointer;transition:background .15s}
+.cbitem:hover{background:rgba(0,180,255,.07)}
+.cbitem input[type=checkbox]{width:17px;height:17px;accent-color:var(--blue);flex-shrink:0;margin-top:.15rem;cursor:pointer}
+.cbitem span{font-size:.875rem;cursor:pointer}
+
+/* DIAGNOSE BTN */
+.diag-btn{display:block;width:100%;padding:.95rem;background:var(--blue);color:#000;border:none;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:1.1rem;transition:background .18s,transform .15s}
+.diag-btn:hover{background:var(--blue-dk);transform:translateY(-1px)}
+
+/* RESULT SECTION */
+.result-sec{display:none;margin-top:1.5rem}
+.result-sec.on{display:block}
+.result-badge{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--blue);margin-bottom:.75rem}
+.rcard{background:var(--navy-lt);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1rem}
+.rhead{padding:.875rem 1.1rem;display:flex;align-items:center;gap:.65rem}
+.rhead.hi{background:rgba(232,64,64,.14);border-bottom:1px solid rgba(232,64,64,.3)}
+.rhead.lo{background:rgba(0,180,255,.09);border-bottom:1px solid rgba(0,180,255,.2)}
+.rhead.wn{background:rgba(240,96,32,.13);border-bottom:1px solid rgba(240,96,32,.28)}
+.badge{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;padding:.18rem .55rem;border-radius:4px;flex-shrink:0}
+.bdg-hi{background:var(--red);color:#fff}
+.bdg-lo{background:var(--blue);color:#000}
+.bdg-wn{background:var(--orange);color:#fff}
+.rtitle{font-size:.9rem;font-weight:700}
+.rbody{padding:1.1rem}
+.cause-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin-bottom:.4rem}
+.causes{list-style:none;margin-bottom:.875rem}
+.causes li{display:flex;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.865rem}
+.causes li:last-child{border-bottom:none}
+.cnum{color:var(--blue);font-weight:800;flex-shrink:0}
+.fix-box{background:rgba(0,180,255,.05);border-left:3px solid var(--blue);padding:.7rem .875rem;border-radius:0 6px 6px 0;font-size:.855rem;margin-bottom:.75rem}
+.cost-box{background:rgba(244,185,66,.07);border:1px solid rgba(244,185,66,.28);border-radius:6px;padding:.7rem .875rem}
+.cost-lbl{color:var(--gold);font-weight:800;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem}
+.cost-val{font-size:.855rem}
+
+/* PRESSURE GUIDE */
+.pguide{background:var(--navy-lt);border:2px solid var(--gold);border-radius:12px;padding:1.2rem;margin-top:1.75rem}
+.pguide-title{color:var(--gold);font-weight:800;font-size:.9rem;margin-bottom:.6rem}
+.pguide p{font-size:.82rem;color:var(--muted);margin-bottom:.75rem}
+.steps{list-style:none;margin-bottom:.875rem}
+.steps li{display:flex;gap:.65rem;padding:.3rem 0;font-size:.865rem;align-items:flex-start}
+.snum{width:21px;height:21px;background:var(--gold);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;margin-top:.1rem}
+.psi-tbl{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:.75rem}
+.psi-tbl th{text-align:left;padding:.45rem .65rem;border-bottom:2px solid var(--border);color:var(--muted);font-size:.7rem;text-transform:uppercase}
+.psi-tbl td{padding:.45rem .65rem;border-bottom:1px solid var(--border)}
+.p-norm{color:var(--green);font-weight:700}
+.p-low{color:var(--blue);font-weight:700}
+.p-high{color:var(--orange);font-weight:700}
+.p-danger{color:var(--red);font-weight:700}
+.alert-box{background:rgba(232,64,64,.07);border:1px solid rgba(232,64,64,.28);border-radius:8px;padding:.875rem;font-size:.855rem;margin-top:.875rem}
+.alert-box strong{color:var(--red)}
+
+/* LEAD FORM */
+.lform{background:var(--navy-mid);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin-top:1.75rem}
+.lform-title{font-size:.95rem;font-weight:800;margin-bottom:.2rem}
+.lform-sub{font-size:.82rem;color:var(--muted);margin-bottom:1.1rem}
+.fg{display:grid;gap:.65rem}
+@media(min-width:480px){.fg{grid-template-columns:1fr 1fr}.full{grid-column:1/-1}}
+.ff label{display:block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.28rem}
+.ff input,.ff select{width:100%;padding:.58rem .8rem;background:var(--navy-lt);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.875rem;outline:none;transition:border-color .18s;-webkit-appearance:none}
+.ff input:focus,.ff select:focus{border-color:var(--blue)}
+.ff select option{background:var(--navy-lt)}
+.fsub{width:100%;padding:.8rem;background:var(--gold);color:#000;border:none;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;margin-top:.2rem;transition:background .18s}
+.fsub:hover{background:var(--gold-dk)}
+.fsub:disabled{background:#555;color:#999;cursor:not-allowed}
+
+/* TAB 2 - INFO */
+.callout{background:rgba(244,185,66,.07);border:2px solid var(--gold);border-radius:10px;padding:1.1rem;margin-bottom:1.25rem}
+.callout-title{color:var(--gold);font-weight:800;margin-bottom:.4rem;font-size:.9rem}
+.callout p{font-size:.865rem}
+.info-h2{font-size:1rem;font-weight:800;color:var(--gold);margin-bottom:.7rem;padding-bottom:.45rem;border-bottom:1px solid var(--border)}
+.iblock{background:var(--navy-lt);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin-bottom:.875rem;font-size:.875rem}
+.iblock p+p{margin-top:.6rem}
+.iblock strong{color:var(--blue)}
+.iblock .note{margin-top:.65rem;padding:.65rem .75rem;background:rgba(0,180,255,.05);border-radius:6px;font-size:.84rem}
+.warn-box{background:rgba(240,96,32,.09);border:1px solid rgba(240,96,32,.35);border-radius:8px;padding:.95rem;margin-bottom:.875rem}
+.warn-title{color:var(--orange);font-weight:800;margin-bottom:.4rem;font-size:.85rem}
+.warn-list{list-style:none;margin-top:.5rem}
+.warn-list li{display:flex;gap:.45rem;padding:.28rem 0;font-size:.855rem}
+.warn-list li::before{content:"⚠";color:var(--orange);flex-shrink:0}
+.detail-list{list-style:none;font-size:.855rem}
+.detail-list li{padding:.28rem 0;border-bottom:1px solid var(--border);display:flex;gap:.4rem}
+.detail-list li:last-child{border-bottom:none}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.84rem;margin-top:.75rem}
+.cmp-tbl th{background:var(--navy-lt);padding:.65rem .75rem;text-align:left;border:1px solid var(--border);font-size:.75rem;color:var(--muted)}
+.cmp-tbl th:nth-child(2){color:var(--red)}
+.cmp-tbl th:nth-child(3){color:var(--blue)}
+.cmp-tbl td{padding:.55rem .75rem;border:1px solid var(--border);vertical-align:top}
+.cmp-tbl tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+
+/* TAB 3 - FL FACTS */
+.fact{background:var(--navy-lt);border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:1.1rem;margin-bottom:.875rem}
+.fact-n{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:.3rem}
+.fact-t{font-size:.9rem;font-weight:800;margin-bottom:.45rem}
+.fact-b{font-size:.855rem;color:var(--muted)}
+.fact-b em{color:var(--text);font-style:normal}
+.pipe-wrap{overflow-x:auto;margin:.75rem 0}
+.pipe-tbl{width:100%;border-collapse:collapse;font-size:.78rem;white-space:nowrap}
+.pipe-tbl th{background:var(--navy-lt);padding:.55rem .7rem;text-align:left;border:1px solid var(--border);font-size:.7rem;color:var(--muted)}
+.pipe-tbl td{padding:.55rem .7rem;border:1px solid var(--border);vertical-align:top;white-space:normal}
+.safe{color:var(--green);font-weight:700}
+.caution{color:var(--orange);font-weight:700}
+.danger{color:var(--red);font-weight:700}
+.ann-check{background:var(--navy-lt);border:2px solid var(--blue);border-radius:12px;padding:1.2rem;margin:1.5rem 0}
+.ann-title{color:var(--blue);font-weight:800;font-size:.9rem;margin-bottom:.45rem}
+.ann-body{font-size:.855rem;margin-bottom:.875rem}
+.psi-chips{display:flex;gap:.75rem;flex-wrap:wrap}
+.chip{flex:1;min-width:110px;padding:.65rem;border-radius:8px;text-align:center}
+.chip-v{font-size:1.05rem;font-weight:800;display:block}
+.chip-l{font-size:.7rem;color:var(--muted);margin-top:.15rem;display:block}
+.wtc{background:var(--navy-lt);border:1px solid var(--border);border-radius:10px;padding:1.1rem;margin-bottom:1.5rem}
+.wtc-title{font-weight:800;font-size:.9rem;margin-bottom:.2rem}
+.wtc-sub{font-size:.82rem;color:var(--muted);margin-bottom:.6rem}
+.call-list{list-style:none}
+.call-list li{display:flex;gap:.45rem;padding:.3rem 0;font-size:.855rem}
+.call-list li::before{content:"📞";flex-shrink:0}
+
+/* INFO SECTION WRAPPER */
+.info-sec{margin-bottom:1.75rem}
+
+/* UTILS */
+.mt1{margin-top:.5rem}.mt2{margin-top:1rem}.mt3{margin-top:1.5rem}
+.sec-title{font-size:1rem;font-weight:800;margin-bottom:.5rem}
+.sec-sub{font-size:.855rem;color:var(--muted);margin-bottom:1.1rem}
+@media(max-width:480px){.p-tiles{grid-template-columns:1fr}.cmp-tbl th,.cmp-tbl td{font-size:.75rem;padding:.4rem .5rem}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <h1>🔧 Florida Water Pressure Diagnostic Tool</h1>
+  <p>High &amp; Low Pressure · PRV Guide · South FL Utility Over-Pressure · Galvanized Pipe</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="goTab('t1',this)">🔍 Diagnose Problem</button>
+  <button class="tab-btn" onclick="goTab('t2',this)">🔧 PRV &amp; Booster Guide</button>
+  <button class="tab-btn" onclick="goTab('t3',this)">🌴 FL Pressure Facts</button>
+</nav>
+
+<!-- ===== TAB 1 ===== -->
+<div id="t1" class="tab-pane active">
+  <p class="sec-sub mt2" style="margin-top:.9rem">Describe your pressure problem — we'll identify the likely cause and fix path.</p>
+
+  <div class="step-lbl">Step 1 — What type of pressure issue?</div>
+  <div class="p-tiles">
+    <div class="p-tile" data-pt="low" onclick="pickPressure(this)">
+      <span class="ti">📉</span>
+      <span class="tl">LOW Pressure</span>
+      <span class="td">Not enough flow, weak pressure</span>
+    </div>
+    <div class="p-tile" data-pt="high" onclick="pickPressure(this)">
+      <span class="ti">📈</span>
+      <span class="tl">HIGH Pressure</span>
+      <span class="td">Too much pressure, banging pipes, worn fixtures</span>
+    </div>
+  </div>
+
+  <div class="scard">
+    <div class="step-lbl">Step 2 — Where is the problem? (select all that apply)</div>
+    <div class="cbgrid" id="locs">
+      <label class="cbitem"><input type="checkbox" value="whole_house"><span>Whole house — all fixtures affected</span></label>
+      <label class="cbitem"><input type="checkbox" value="one_fixture"><span>One specific fixture (sink, shower, toilet, etc.)</span></label>
+      <label class="cbitem"><input type="checkbox" value="hot_only"><span>Hot water only</span></label>
+      <label class="cbitem"><input type="checkbox" value="cold_only"><span>Cold water only</span></label>
+      <label class="cbitem"><input type="checkbox" value="multi_sim"><span>Only when multiple fixtures run simultaneously</span></label>
+      <label class="cbitem"><input type="checkbox" value="outdoor"><span>Outdoor hose bib / irrigation only</span></label>
+      <label class="cbitem"><input type="checkbox" value="gradual"><span>Gradually getting worse over time</span></label>
+    </div>
+  </div>
+
+  <div class="scard">
+    <div class="step-lbl">Step 3 — Additional symptoms (select all that apply)</div>
+    <div class="cbgrid" id="syms">
+      <label class="cbitem"><input type="checkbox" value="hammer"><span>Water hammer — banging/thudding pipes when shutting off faucet</span></label>
+      <label class="cbitem"><input type="checkbox" value="drip"><span>Fixtures dripping or running after shutting off</span></label>
+      <label class="cbitem"><input type="checkbox" value="tpv"><span>Water heater T&amp;P relief valve has discharged or drips</span></label>
+      <label class="cbitem"><input type="checkbox" value="short_life"><span>Unusually short shower head or faucet life</span></label>
+      <label class="cbitem"><input type="checkbox" value="toilet_run"><span>Toilets running constantly</span></label>
+      <label class="cbitem"><input type="checkbox" value="vibration"><span>Visible pipe vibration</span></label>
+      <label class="cbitem"><input type="checkbox" value="pulse"><span>Water spurts or pulses instead of steady flow</span></label>
+      <label class="cbitem"><input type="checkbox" value="meter"><span>Water meter shows usage when all fixtures are off</span></label>
+    </div>
+  </div>
+
+  <button class="diag-btn" onclick="runDiag()">Diagnose My Water Pressure →</button>
+
+  <div id="rSec" class="result-sec">
+    <div class="result-badge">⚡ Your Diagnosis</div>
+    <div id="rCards"></div>
+  </div>
+
+  <!-- PRESSURE GUIDE -->
+  <div class="pguide">
+    <div class="pguide-title">📏 How to Measure Your Water Pressure at Home</div>
+    <p>Equipment: Pressure gauge with hose bib connection (~$15 at any hardware store)</p>
+    <ol class="steps">
+      <li><span class="snum">1</span><span>Attach gauge to any outdoor hose bib</span></li>
+      <li><span class="snum">2</span><span>Turn off all water inside the house</span></li>
+      <li><span class="snum">3</span><span>Open the hose bib fully</span></li>
+      <li><span class="snum">4</span><span>Read the gauge — this is your static pressure</span></li>
+    </ol>
+    <table class="psi-tbl">
+      <thead><tr><th>Reading</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>Under 40 psi</td><td class="p-low">⬇ LOW</td><td>Investigate cause; call utility if whole-house low</td></tr>
+        <tr><td>40–80 psi</td><td class="p-norm">✓ NORMAL</td><td>Healthy range — no action needed</td></tr>
+        <tr><td>80–100 psi</td><td class="p-high">⬆ HIGH</td><td>PRV recommended; check if existing PRV has failed</td></tr>
+        <tr><td>Over 100 psi</td><td class="p-danger">⚠ VERY HIGH</td><td>PRV required immediately — risk of pipe failure and appliance damage</td></tr>
+      </tbody>
+    </table>
+    <div class="alert-box">
+      <strong>If your pressure is over 80 psi and you don't have a PRV</strong> — this is the most common preventable plumbing problem in South Florida. A PRV is a one-time cost that protects your water heater, faucets, toilets, dishwasher, washing machine, and pipes.
+    </div>
+  </div>
+
+  <!-- LEAD FORM 1 -->
+  <div class="lform">
+    <div class="lform-title">Get a Free Water Pressure Assessment</div>
+    <div class="lform-sub">Palm Beach · Broward · Miami-Dade · Treasure Coast</div>
+    <div class="fg">
+      <div class="ff"><label>Your Name</label><input type="text" placeholder="First &amp; Last Name"></div>
+      <div class="ff"><label>Phone Number</label><input type="tel" placeholder="(561) 000-0000"></div>
+      <div class="ff"><label>Pressure Issue</label><select><option value="">Select type…</option><option>Low pressure</option><option>High pressure</option><option>Water hammer</option><option>Not sure</option></select></div>
+      <div class="ff"><label>ZIP Code</label><input type="text" placeholder="33401" maxlength="5"></div>
+      <div class="ff full"><label>Urgency</label><select><option value="">Select urgency…</option><option>Urgent — need help today</option><option>This week</option><option>Getting quotes</option><option>Just exploring options</option></select></div>
+    </div>
+    <button class="fsub" onclick="submitForm(this)">Request Free Assessment →</button>
+  </div>
+</div><!-- /t1 -->
+
+<!-- ===== TAB 2 ===== -->
+<div id="t2" class="tab-pane">
+  <div style="margin-top:.9rem"></div>
+  <div class="callout">
+    <div class="callout-title">🔑 South FL Homeowner Alert</div>
+    <p>South Florida utility pressure commonly runs 80–100 psi — well above the safe 40–80 psi range. A Pressure Reducing Valve (PRV) is the single most protective plumbing investment for most FL homes. Without one, every appliance and fixture in your home wears out faster and you risk slab leaks from over-pressurized copper lines.</p>
+  </div>
+
+  <!-- PRV -->
+  <div class="info-sec">
+    <div class="info-h2">Pressure Reducing Valve (PRV)</div>
+
+    <div class="iblock">
+      <p><strong>What it is:</strong> A mechanical valve installed on the main supply line (typically in the garage or utility room) that reduces high incoming pressure to a safe, preset level.</p>
+      <p><strong>How it works:</strong> The valve has an adjustable spring-loaded diaphragm. Water enters at high pressure, the diaphragm limits flow, and water exits at the set pressure — typically 55–65 psi. A lock nut holds the adjustment in place.</p>
+    </div>
+
+    <div class="iblock">
+      <p style="font-weight:700;margin-bottom:.45rem">🔍 Does My Home Have a PRV?</p>
+      <p>Look on the main water supply pipe where it enters the home — typically in the garage, utility room, or near the water heater. A PRV looks like a <strong>bell-shaped or globe-shaped brass fitting</strong>, about 4–6 inches long, with an adjustment screw on top. If you have one, there may also be a pressure gauge mounted downstream.</p>
+      <div class="note"><strong>FL homes that often DON'T have a PRV:</strong> Built before 1980 (PRVs weren't standard); homes with supply modifications by unlicensed workers; newer construction in low-pressure utility service areas.</div>
+    </div>
+
+    <div class="warn-box">
+      <div class="warn-title">⚠ Signs Your PRV Has Failed</div>
+      <ul class="warn-list">
+        <li>T&amp;P valve on water heater dripping or having discharged</li>
+        <li>Sudden pressure increase after years of normal operation</li>
+        <li>New banging or rattling in pipes</li>
+        <li>Pressure gauge reads over 80 psi even though PRV is installed</li>
+        <li>PRV is over 10–15 years old (typical lifespan)</li>
+      </ul>
+    </div>
+
+    <div class="iblock">
+      <p style="font-weight:700;margin-bottom:.5rem">📋 PRV Installation Details</p>
+      <ul class="detail-list">
+        <li><span>⏱</span><span>Requires main water shutoff; takes 2–4 hours for a licensed plumber</span></li>
+        <li><span>📊</span><span>Should include a downstream pressure gauge so you can monitor it annually</span></li>
+        <li><span>📜</span><span>FL permit may be required depending on county (Palm Beach, Broward commonly require it)</span></li>
+        <li><span>⚙</span><span>Recommended set pressure: 55–65 psi for most South FL homes</span></li>
+        <li><span>💰</span><span><strong>Cost: $200–$500 installed</strong> (varies by access difficulty and existing piping)</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EXPANSION TANK -->
+  <div class="info-sec">
+    <div class="info-h2">Thermal Expansion Tank</div>
+    <div class="warn-box">
+      <div class="warn-title">⚠ FL Code Requirement — Often Missing in Older Homes</div>
+      <p style="font-size:.855rem">If your home has a water heater and a PRV, FL plumbing code requires a <strong style="color:var(--orange)">thermal expansion tank</strong> on the cold water supply to the water heater. The PRV creates a "closed system" — when water heats up and expands by ~2%, that pressure has nowhere to go. The expansion tank provides a cushion to absorb it.</p>
+      <p style="font-size:.855rem;margin-top:.5rem"><strong style="color:var(--orange)">Signs it's missing or failed:</strong> T&amp;P valve dripping; pressure cycling noise from water heater; PRV body dripping. Cost to add: $150–$300.</p>
+    </div>
+  </div>
+
+  <!-- BOOSTER -->
+  <div class="info-sec">
+    <div class="info-h2">Pressure Booster Pump</div>
+    <div class="iblock">
+      <p><strong>When it's needed:</strong> Homes where utility pressure is under 40 psi; multi-story homes where upper-floor pressure is inadequate; homes with very long supply runs; FL homes on reclaimed irrigation water with a separate low-pressure supply line.</p>
+      <p><strong>How it works:</strong> An electric pump with a pressure tank and pressure switch. Water enters at low pressure, the pump raises it to the set level (typically 60–65 psi), and the pressure tank stores a small reserve so the pump doesn't cycle on for every small draw.</p>
+    </div>
+    <div class="iblock">
+      <p style="font-weight:700;margin-bottom:.45rem">📍 Common FL Use Cases</p>
+      <ul class="detail-list">
+        <li><span>•</span><span>Older homes in areas with aging or undersized water mains</span></li>
+        <li><span>•</span><span>Homes at the end of a long utility supply branch</span></li>
+        <li><span>•</span><span>Multi-story homes with inadequate upper-floor pressure</span></li>
+        <li><span>•</span><span>Homes transitioning to reclaimed irrigation water</span></li>
+      </ul>
+      <p style="margin-top:.65rem;font-size:.855rem"><strong>Installation note:</strong> Requires licensed electrician or plumber; pump must be protected from FL flooding in ground-level utility rooms. Permits almost always required.</p>
+      <p style="margin-top:.45rem;font-size:.855rem">💰 <strong>Cost: $800–$2,500 installed</strong> depending on system capacity</p>
+    </div>
+  </div>
+
+  <!-- COMPARE TABLE -->
+  <div class="info-sec">
+    <div class="info-h2">PRV vs. Pressure Booster — Side by Side</div>
+    <table class="cmp-tbl">
+      <thead><tr><th></th><th>PRV</th><th>Pressure Booster</th></tr></thead>
+      <tbody>
+        <tr><td>Problem it solves</td><td>High pressure</td><td>Low pressure</td></tr>
+        <tr><td>FL frequency</td><td>Very common</td><td>Less common</td></tr>
+        <tr><td>Installed cost</td><td>$200–$500</td><td>$800–$2,500</td></tr>
+        <tr><td>Permits required</td><td>Sometimes</td><td>Almost always</td></tr>
+        <tr><td>Maintenance</td><td>Inspect annually; replace every 10–15 yrs</td><td>Annual inspection; pump service every 5 yrs</td></tr>
+        <tr><td>DIY-friendly</td><td>Not recommended</td><td>Not recommended</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- LEAD FORM 2 -->
+  <div class="lform">
+    <div class="lform-title">Get a PRV or Pressure Booster Quote</div>
+    <div class="lform-sub">PRV installation · Pressure boosters · Expansion tanks — Palm Beach &amp; Broward</div>
+    <div class="fg">
+      <div class="ff"><label>Your Name</label><input type="text" placeholder="First &amp; Last Name"></div>
+      <div class="ff"><label>Phone Number</label><input type="tel" placeholder="(561) 000-0000"></div>
+      <div class="ff"><label>Service Needed</label><select><option value="">Select service…</option><option>PRV installation (new)</option><option>PRV replacement</option><option>Pressure booster system</option><option>Expansion tank</option><option>Not sure — need assessment</option></select></div>
+      <div class="ff"><label>ZIP Code</label><input type="text" placeholder="33401" maxlength="5"></div>
+      <div class="ff"><label>Home Age</label><select><option value="">Select…</option><option>Pre-1980</option><option>1980–2000</option><option>2000–2015</option><option>2015 or newer</option></select></div>
+      <div class="ff"><label>Urgency</label><select><option value="">Select urgency…</option><option>Urgent — today</option><option>This week</option><option>Getting quotes</option></select></div>
+    </div>
+    <button class="fsub" onclick="submitForm(this)">Request Quote →</button>
+  </div>
+</div><!-- /t2 -->
+
+<!-- ===== TAB 3 ===== -->
+<div id="t3" class="tab-pane">
+  <div style="margin-top:.9rem"></div>
+  <div class="sec-title">Why Water Pressure Problems Are Different in South Florida</div>
+  <p class="sec-sub">5 FL-specific facts every homeowner should know</p>
+
+  <div class="fact">
+    <div class="fact-n">Fact 1</div>
+    <div class="fact-t">South FL Utility Over-Pressure Is the Norm</div>
+    <p class="fact-b">The South Florida Water Management District infrastructure delivers water at high pressure to maintain flow across flat terrain. <em>Utility pressure at the meter commonly exceeds 80 psi in Palm Beach and Broward counties.</em> This isn't a utility error — it's how the system was designed. It's your responsibility as a homeowner to install a PRV to protect your plumbing from incoming over-pressure.</p>
+  </div>
+
+  <div class="fact">
+    <div class="fact-n">Fact 2</div>
+    <div class="fact-t">Galvanized Pipe = Steadily Declining Pressure</div>
+    <p class="fact-b">Homes built between 1940–1985 in Florida often have galvanized steel supply pipes. Unlike copper or PVC, galvanized steel corrodes from the inside, and the corrosion builds up year after year, shrinking the interior diameter and reducing flow. <em>If your pressure has been slowly declining over years, galvanized pipe is likely the cause. The only permanent fix is whole-home repipe.</em></p>
+    <p class="fact-b" style="margin-top:.45rem"><em>Timeline: Galvanized pipes in FL typically need replacement at 40–60 years of age.</em></p>
+  </div>
+
+  <div class="fact">
+    <div class="fact-n">Fact 3</div>
+    <div class="fact-t">Slab Construction Hides Pressure Problems</div>
+    <p class="fact-b">Most FL homes are on slab foundations with supply pipes run through the concrete. When pressure problems develop in slab lines, they're invisible until a leak occurs. <em>Slab leaks from pinhole corrosion — caused by high pressure combined with FL's chloraminated water — can run for months before detection. Annual pressure checks help catch issues before they become costly slab leaks.</em></p>
+  </div>
+
+  <div class="fact">
+    <div class="fact-n">Fact 4</div>
+    <div class="fact-t">Thermal Expansion Is a Real Risk in Closed Systems</div>
+    <p class="fact-b">Since 2009, FL Plumbing Code requires thermal expansion tanks on new water heater installations when a PRV creates a closed system. Many older homes don't have one. <em>Without it, as water heats and expands by ~2%, pressure spikes can reach 150 psi inside the water heater — causing T&amp;P valve activation, pipe damage, and premature water heater failure.</em></p>
+  </div>
+
+  <div class="fact">
+    <div class="fact-n">Fact 5</div>
+    <div class="fact-t">Irrigation vs. Domestic Pressure: Different Needs</div>
+    <p class="fact-b">Many FL homes have two supply connections: domestic (house) and irrigation. <em>Domestic supply benefits from a PRV set to 55–65 psi. Irrigation systems work best at 40–65 psi</em> — some have their own PRV at the backflow preventer. High-pressure irrigation causes misting (water waste) and premature head wear. Low-pressure irrigation causes dry spots. Separate pressure management for each system is ideal.</p>
+  </div>
+
+  <!-- PIPE TABLE -->
+  <div class="sec-title" style="margin-top:1.5rem">Pipe Material Pressure Tolerance Guide</div>
+  <div class="pipe-wrap">
+    <table class="pipe-tbl">
+      <thead>
+        <tr><th>Pipe Material</th><th>Normal Range</th><th>Max Safe</th><th>FL Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Copper (type L)</td><td>40–80 psi</td><td class="caution">100 psi</td><td>Susceptible to pinhole leaks from high pressure + chloramines</td></tr>
+        <tr><td>CPVC</td><td>40–80 psi</td><td class="caution">100 psi</td><td>Becomes brittle in FL sun if exposed; check for hairline cracks</td></tr>
+        <tr><td>PEX</td><td>40–80 psi</td><td class="safe">160 psi</td><td>Most pressure-tolerant; top recommendation for FL repiping</td></tr>
+        <tr><td>Galvanized steel</td><td>40–80 psi (when new)</td><td class="danger">Declining</td><td>Corrodes internally; interior diameter shrinks with age</td></tr>
+        <tr><td>PVC schedule 40</td><td>40–80 psi</td><td class="safe">280 psi</td><td>Safe but not rated for hot water supply lines</td></tr>
+        <tr><td>Polybutylene</td><td colspan="2" style="color:var(--red);font-weight:700">Not recommended</td><td>FL insurance exclusions common; fails unpredictably</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ANNUAL CHECK -->
+  <div class="ann-check">
+    <div class="ann-title">📅 Annual Pressure Check — Every FL Homeowner Should Do This</div>
+    <div class="ann-body">A pressure gauge costs $15 at any hardware store. Every FL homeowner should check their water pressure once a year. Attach it to a hose bib, turn off all water inside, open the bib, and read the gauge. If it reads over 80 psi — you need a PRV. If it reads under 40 psi — something has changed, investigate.</div>
+    <div class="psi-chips">
+      <div class="chip" style="background:rgba(232,64,64,.12)"><span class="chip-v" style="color:var(--red)">Over 80 psi</span><span class="chip-l">You need a PRV</span></div>
+      <div class="chip" style="background:rgba(0,180,255,.1)"><span class="chip-v" style="color:var(--blue)">Under 40 psi</span><span class="chip-l">Investigate cause</span></div>
+      <div class="chip" style="background:rgba(61,190,106,.1)"><span class="chip-v" style="color:var(--green)">40–80 psi</span><span class="chip-l">You're in range</span></div>
+    </div>
+  </div>
+
+  <!-- WHEN TO CALL -->
+  <div class="wtc">
+    <div class="wtc-title">When to Call a Plumber</div>
+    <div class="wtc-sub">Don't wait on any of these warning signs:</div>
+    <ul class="call-list">
+      <li>Pressure reading over 80 psi (PRV installation needed)</li>
+      <li>Pressure has dropped significantly from the previous year</li>
+      <li>T&amp;P valve on water heater discharging or dripping</li>
+      <li>Water hammer that doesn't resolve after pressure adjustment</li>
+      <li>Pressure fluctuates or pulses (pump or PRV issue)</li>
+      <li>Any pressure problem in a home with slab plumbing</li>
+    </ul>
+  </div>
+
+  <!-- LEAD FORM 3 -->
+  <div class="lform">
+    <div class="lform-title">Schedule a Pressure Inspection</div>
+    <div class="lform-sub">PRV installation · Pressure boosters · Galvanized repipe · Pressure diagnostics — Palm Beach &amp; Broward</div>
+    <div class="fg">
+      <div class="ff"><label>Your Name</label><input type="text" placeholder="First &amp; Last Name"></div>
+      <div class="ff"><label>Phone Number</label><input type="tel" placeholder="(561) 000-0000"></div>
+      <div class="ff"><label>Pressure Type</label><select><option value="">Select…</option><option>High pressure</option><option>Low pressure</option><option>Not sure</option></select></div>
+      <div class="ff"><label>ZIP Code</label><input type="text" placeholder="33401" maxlength="5"></div>
+      <div class="ff"><label>Home Age</label><select><option value="">Select…</option><option>Pre-1980</option><option>1980–2000</option><option>2000+</option></select></div>
+      <div class="ff"><label>Urgency</label><select><option value="">Select urgency…</option><option>Urgent — today</option><option>This week</option><option>Getting quotes</option></select></div>
+    </div>
+    <button class="fsub" onclick="submitForm(this)">Schedule Inspection →</button>
+  </div>
+</div><!-- /t3 -->
+
+<script>
+// ── TAB NAVIGATION ──────────────────────────────────────────
+function goTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── PRESSURE TYPE SELECTION ─────────────────────────────────
+function pickPressure(tile) {
+  document.querySelectorAll('.p-tile').forEach(function(t){
+    t.classList.remove('sel-low','sel-high');
+  });
+  var pt = tile.getAttribute('data-pt');
+  tile.classList.add(pt === 'low' ? 'sel-low' : 'sel-high');
+}
+
+// ── DIAGNOSIS DATA ──────────────────────────────────────────
+var diagData = {
+  high_whole: {
+    cls: 'hi', badge: 'bdg-hi', badgeTxt: 'Urgent Action',
+    title: 'HIGH PRESSURE — Whole House',
+    causes: [
+      'South FL utility commonly delivers 80–100 psi — above the safe 40–80 psi range for home plumbing',
+      'No PRV (Pressure Reducing Valve) installed, or existing PRV has failed',
+      'High pressure accelerates wear on faucet seats, toilet fill valves, dishwasher solenoids, and washing machine hoses',
+      'Sustained over-pressure causes T&P valve activation on water heater and pinhole leaks in copper pipe'
+    ],
+    fix: 'Install a Pressure Reducing Valve (PRV) on the main supply line, set to 55–65 psi. If a PRV is already installed, test downstream pressure — it may have failed. Also confirm a thermal expansion tank is installed on the water heater.',
+    cost: 'New PRV installation: $200–$500 &nbsp;|&nbsp; PRV replacement: $200–$400 &nbsp;|&nbsp; Expansion tank (if needed): $150–$300'
+  },
+  low_whole: {
+    cls: 'lo', badge: 'bdg-lo', badgeTxt: 'Investigate',
+    title: 'LOW PRESSURE — Whole House',
+    causes: [
+      'Closed or partially closed main shutoff valve — check both the meter valve and the house-side shutoff',
+      'PRV failure — when a PRV diaphragm fails, it can cause low pressure or restrict flow throughout the house',
+      'Galvanized pipe interior corrosion — in homes built before 1985, galvanized supply pipes corrode from the inside, shrinking flow capacity. Gradual worsening over years is the hallmark.',
+      'Water main pressure issue — if neighbors also have low pressure, call your utility',
+      'Meter restriction — rarely, the meter itself restricts flow; the utility can test this at no cost'
+    ],
+    fix: 'Check all shutoff valves first (free). Test static pressure at hose bib with a gauge. If 45+ psi, a failing PRV or interior pipe restriction is likely. If under 40 psi, call utility first, then a plumber.',
+    cost: 'PRV replacement: $200–$500 &nbsp;|&nbsp; Galvanized repipe: $8,000–$15,000 &nbsp;|&nbsp; Pressure booster: $800–$2,500'
+  },
+  low_hot: {
+    cls: 'lo', badge: 'bdg-lo', badgeTxt: 'Water Heater',
+    title: 'LOW PRESSURE — Hot Water Only',
+    causes: [
+      'Sediment buildup inside water heater restricts flow (very common in FL\'s hard water areas)',
+      'Hot water shutoff valve at water heater partially closed',
+      'Tankless water heater flow sensor or inlet filter blockage',
+      'Corrosion or restriction in hot water supply lines'
+    ],
+    fix: 'First, verify the hot water shutoff valve at the water heater is fully open. If it is — sediment buildup is likely. Flush or descale the heater. For tankless units, clean the inlet filter and check the flow sensor.',
+    cost: 'Water heater flush/descale: $150–$300 &nbsp;|&nbsp; Water heater replacement: $800–$2,500'
+  },
+  low_fix: {
+    cls: 'lo', badge: 'bdg-lo', badgeTxt: 'Often DIY Fix',
+    title: 'LOW PRESSURE — One Fixture',
+    causes: [
+      'Aerator clogged — FL hard water deposits minerals in aerator screens quickly. This is the most common single-fixture cause.',
+      'Shower head clogged with mineral scale — very common in South FL\'s hard water areas',
+      'Supply stop valve under sink or behind fixture is partially closed',
+      'Single-fixture supply line restriction or damage'
+    ],
+    fix: 'Start free: remove the aerator (counter-clockwise, hand-tight), soak in white vinegar 30 min, reinstall. For shower heads, soak overnight in vinegar. Check the supply stop valve under the fixture. If pressure is still low after both — call a plumber for supply line inspection.',
+    cost: 'New aerator: $5–$15 (DIY) &nbsp;|&nbsp; New shower head: $20–$100 (DIY) &nbsp;|&nbsp; Plumber supply line repair: $200–$600'
+  },
+  low_multi: {
+    cls: 'lo', badge: 'bdg-lo', badgeTxt: 'Supply Sizing',
+    title: 'LOW PRESSURE — Multiple Simultaneous Fixtures',
+    causes: [
+      'Undersized main supply line — many FL homes from 1970s–1990s used 3/4" main with 1/2" branches. Adequate then, undersized for today\'s multi-fixture demands.',
+      'Utility pressure may be borderline — sufficient for single fixtures but drops when multiple run simultaneously',
+      'Galvanized pipe reducing overall flow capacity through accumulated interior corrosion'
+    ],
+    fix: 'Have a plumber assess incoming pressure and supply pipe sizing. A pressure booster pump often resolves the simultaneous-use problem without full repipe. If galvanized pipes are present, repipe may ultimately be necessary for a permanent fix.',
+    cost: 'Pressure booster: $800–$2,500 &nbsp;|&nbsp; Partial repipe: $2,000–$6,000 &nbsp;|&nbsp; Full repipe: $8,000–$15,000'
+  },
+  water_hammer: {
+    cls: 'wn', badge: 'bdg-wn', badgeTxt: 'Pipe Protection',
+    title: 'WATER HAMMER',
+    causes: [
+      'High water pressure — the #1 cause in FL. Pressure over 80 psi dramatically amplifies water hammer shockwaves.',
+      'Fast-closing solenoid valves in washing machine or dishwasher creating pressure shocks',
+      'Missing or waterlogged air chambers or water hammer arrestors',
+      'Loose pipe strapping inside walls allowing pipes to move and bang'
+    ],
+    fix: 'If pressure is over 80 psi, install a PRV — this alone often eliminates water hammer. Also install water hammer arrestors at washing machine hose connections ($15–$30 DIY). If hammer is violent, comes from inside walls, or has persisted for years, call a plumber — loose pipe strapping may need repair.',
+    cost: 'Water hammer arrestors (DIY): $30–$100 &nbsp;|&nbsp; PRV installation: $200–$500 &nbsp;|&nbsp; Plumber pipe assessment: $150–$300'
+  },
+  meter_leak: {
+    cls: 'wn', badge: 'bdg-wn', badgeTxt: 'Check for Leak',
+    title: 'METER RUNNING WITH ALL FIXTURES OFF — Possible Leak',
+    causes: [
+      'Active leak somewhere in the supply system — slab leak, hidden pipe leak, or leaking irrigation valve',
+      'Running toilet with faulty flapper (can be hard to hear)',
+      'Leaking irrigation system zone valve',
+      'Slab supply leak — very common in FL given high pressure + copper pipe + chloraminated water'
+    ],
+    fix: 'Turn off every fixture, valve, and appliance. If the meter dial still moves — you have an active leak. Check all toilets (add food coloring to tank — if color appears in bowl, flapper is leaking). Check irrigation controller. If still unexplained, call a plumber for leak detection.',
+    cost: 'Toilet flapper (DIY): $10–$20 &nbsp;|&nbsp; Plumber leak detection: $200–$500 &nbsp;|&nbsp; Slab leak repair: $2,000–$8,000+'
+  }
+};
+
+// ── RUN DIAGNOSIS ───────────────────────────────────────────
+function runDiag() {
+  var tile = document.querySelector('.p-tile.sel-low, .p-tile.sel-high');
+  if (!tile) { alert('Please select Low or High pressure in Step 1 first.'); return; }
+
+  var pt = tile.getAttribute('data-pt');
+  var locs = Array.from(document.querySelectorAll('#locs input:checked')).map(function(el){return el.value});
+  var syms = Array.from(document.querySelectorAll('#syms input:checked')).map(function(el){return el.value});
+
+  var keys = [];
+
+  if (pt === 'high') {
+    keys.push('high_whole');
+  } else {
+    // LOW — determine subtype by location priority
+    if (locs.includes('hot_only')) {
+      keys.push('low_hot');
+    } else if (locs.includes('one_fixture')) {
+      keys.push('low_fix');
+    } else if (locs.includes('multi_sim')) {
+      keys.push('low_multi');
+    } else {
+      keys.push('low_whole');
+    }
+  }
+
+  // Secondary diagnoses from symptoms
+  if (syms.includes('hammer') || syms.includes('vibration')) {
+    if (!keys.includes('water_hammer')) keys.push('water_hammer');
+  }
+  if (syms.includes('meter')) {
+    keys.push('meter_leak');
+  }
+
+  // Build result cards
+  var html = keys.map(function(k) {
+    var d = diagData[k];
+    if (!d) return '';
+    var causesHtml = d.causes.map(function(c, i) {
+      return '<li><span class="cnum">' + (i+1) + '.</span><span>' + c + '</span></li>';
+    }).join('');
+    return '<div class="rcard">' +
+      '<div class="rhead ' + d.cls + '">' +
+        '<span class="badge ' + d.badge + '">' + d.badgeTxt + '</span>' +
+        '<span class="rtitle">' + d.title + '</span>' +
+      '</div>' +
+      '<div class="rbody">' +
+        '<div class="cause-lbl">Likely Causes (FL frequency order)</div>' +
+        '<ul class="causes">' + causesHtml + '</ul>' +
+        '<div class="cause-lbl">Fix Path</div>' +
+        '<div class="fix-box">' + d.fix + '</div>' +
+        '<div class="cost-box"><div class="cost-lbl">Estimated Cost Range</div><div class="cost-val">' + d.cost + '</div></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('rCards').innerHTML = html;
+  var sec = document.getElementById('rSec');
+  sec.classList.add('on');
+  setTimeout(function(){ sec.scrollIntoView({behavior:'smooth',block:'start'}); }, 60);
+}
+
+// ── FORM SUBMIT (UI ONLY) ───────────────────────────────────
+function submitForm(btn) {
+  btn.textContent = '✓ Request Received — We\'ll Call You Shortly';
+  btn.style.background = 'var(--green)';
+  btn.style.color = '#fff';
+  btn.disabled = true;
+}
+</script>
+</body>
+</html>
