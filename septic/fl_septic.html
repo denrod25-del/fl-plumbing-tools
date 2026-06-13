@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Septic Tank Pumping & Inspection Cost Guide</title>
+<style>
+:root {
+  --bg:#0A0E1A; --card:#0F1629; --card2:#141929;
+  --blue:#00B4FF; --gold:#F4B942; --orange:#F97316;
+  --red:#EF4444; --green:#22C55E; --teal:#14B8A6;
+  --text:#E2E8F0; --muted:#94A3B8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:16px}
+h1{font-size:1.2rem;font-weight:700;color:var(--teal);margin-bottom:4px}
+.sub{font-size:.8rem;color:var(--muted);margin-bottom:16px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;position:sticky;top:0;z-index:10;background:var(--bg);padding:8px 0}
+.tab{flex:1;padding:8px 4px;border:1.5px solid #1E293B;border-radius:8px;background:var(--card);color:var(--muted);font-size:.75rem;font-weight:600;cursor:pointer;text-align:center;transition:.2s}
+.tab.active{border-color:var(--teal);color:var(--teal);background:#001510}
+.card{background:var(--card);border:1px solid #1E293B;border-radius:12px;padding:16px;margin-bottom:12px}
+.card h3{font-size:.9rem;font-weight:700;margin-bottom:8px}
+.card p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.step-label{font-size:.7rem;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{background:var(--card2);border:1.5px solid #1E293B;border-radius:8px;padding:10px 12px;cursor:pointer;font-size:.82rem;transition:.2s;text-align:left}
+.opt:hover,.opt.sel{border-color:var(--teal);color:var(--teal);background:#001510}
+.btn-gold{width:100%;padding:14px;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;background:var(--gold);color:#000}
+.result-card{border-radius:12px;padding:14px;margin-bottom:10px}
+.rc-cost{background:linear-gradient(135deg,#0F1629,#141929);border:1.5px solid var(--blue)}
+.rc-gold{background:#1A1400;border:1.5px solid var(--gold)}
+.rc-teal{background:#001A18;border:1.5px solid var(--teal)}
+.rc-orange{background:#1A0D00;border:1.5px solid var(--orange)}
+.rc-red{background:#1A0000;border:1.5px solid var(--red)}
+.label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.rc-cost .label{color:var(--gold)} .rc-gold .label{color:var(--gold)} .rc-teal .label{color:var(--teal)} .rc-orange .label{color:var(--orange)} .rc-red .label{color:var(--red)}
+.cost-num{font-size:1.6rem;font-weight:800;color:var(--blue)}
+.cost-desc{font-size:.75rem;color:var(--muted);margin-top:2px}
+.fact-card{background:var(--card);border-left:3px solid var(--teal);border-radius:8px;padding:12px;margin-bottom:10px}
+.fact-card h4{font-size:.82rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.fact-card p{font-size:.78rem;color:var(--muted);line-height:1.4}
+table{width:100%;border-collapse:collapse;font-size:.75rem;margin-top:8px}
+th{background:#0F1629;color:var(--teal);padding:6px 8px;text-align:left;border-bottom:1px solid #1E293B}
+td{padding:6px 8px;border-bottom:1px solid #0F1629;color:var(--muted);vertical-align:top}
+tr:nth-child(even) td{background:#0A0D16}
+.progress-bar{height:8px;background:#1E293B;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:var(--teal);border-radius:4px;transition:.3s}
+.progress-label{font-size:.72rem;color:var(--muted);margin-bottom:12px}
+.chk-item{display:flex;align-items:flex-start;gap:10px;padding:10px;background:var(--card);border:1px solid #1E293B;border-radius:8px;margin-bottom:6px;cursor:pointer;transition:.2s}
+.chk-item.done{border-color:var(--teal);background:#001510}
+.chk-box{width:20px;height:20px;border:2px solid var(--muted);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:.2s}
+.chk-item.done .chk-box{background:var(--teal);border-color:var(--teal);color:#000}
+.chk-text{font-size:.8rem;line-height:1.3;color:var(--muted)}
+.chk-item.done .chk-text{color:var(--text)}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.form-group input{width:100%;padding:10px 12px;background:var(--card2);border:1.5px solid #1E293B;border-radius:8px;color:var(--text);font-size:.9rem}
+.form-group input:focus{outline:none;border-color:var(--teal)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:#000;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.9rem;transition:.4s;z-index:999;opacity:0}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.hidden{display:none}
+@media(max-width:375px){.cost-num{font-size:1.3rem}.tabs{gap:2px}.tab{font-size:.68rem;padding:7px 2px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🪣 FL Septic Tank Cost Guide</h1>
+  <p class="sub">Pumping, inspection & repair — Florida pricing 2024</p>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab(0)">💰 Cost Calc</button>
+    <button class="tab" onclick="showTab(1)">📖 FL Guide</button>
+    <button class="tab" onclick="showTab(2)">✅ Checklist</button>
+  </div>
+
+  <!-- TAB 0 -->
+  <div id="tab0">
+    <div class="card" id="wizard">
+      <div id="step0">
+        <div class="step-label">Step 1 of 4 — System type</div>
+        <div class="opts">
+          <button class="opt" onclick="pick(0,'sysType','conv')">🏠 Conventional gravity system<br><small style="color:var(--muted)">most FL homes built pre-2000</small></button>
+          <button class="opt" onclick="pick(0,'sysType','atu')">⚙️ Aerobic Treatment Unit (ATU)<br><small style="color:var(--muted)">required in some FL counties, has spray heads</small></button>
+          <button class="opt" onclick="pick(0,'sysType','mound')">⛰️ Mound system<br><small style="color:var(--muted)">elevated drainfield for high water table</small></button>
+          <button class="opt" onclick="pick(0,'sysType','unknown')">❓ Not sure / need inspection<br><small style="color:var(--muted)">determine system type during service</small></button>
+        </div>
+      </div>
+      <div id="step1" class="hidden">
+        <div class="step-label">Step 2 of 4 — Tank size</div>
+        <div class="opts">
+          <button class="opt" onclick="pick(1,'tankSize','s900')">🏡 900–1,000 gallon<br><small style="color:var(--muted)">1–2 bedroom home</small></button>
+          <button class="opt" onclick="pick(1,'tankSize','s1250')">🏘️ 1,250 gallon<br><small style="color:var(--muted)">3 bedroom home — most common in FL</small></button>
+          <button class="opt" onclick="pick(1,'tankSize','s1500')">🏠 1,500 gallon<br><small style="color:var(--muted)">4 bedroom home</small></button>
+          <button class="opt" onclick="pick(1,'tankSize','s2000')">🏗️ 2,000+ gallon<br><small style="color:var(--muted)">large home or commercial</small></button>
+        </div>
+      </div>
+      <div id="step2" class="hidden">
+        <div class="step-label">Step 3 of 4 — Service needed</div>
+        <div class="opts">
+          <button class="opt" onclick="pick(2,'service','pump')">🚛 Routine pumping only<br><small style="color:var(--muted)">maintenance, no known problems</small></button>
+          <button class="opt" onclick="pick(2,'service','pump_inspect')">🔍 Pumping + inspection<br><small style="color:var(--muted)">recommended before purchase or every 3–5 yrs</small></button>
+          <button class="opt" onclick="pick(2,'service','assess')">🌿 Drainfield assessment<br><small style="color:var(--muted)">slow flush, wet spots in yard</small></button>
+          <button class="opt" onclick="pick(2,'service','repair')">🛠️ System repair<br><small style="color:var(--muted)">broken baffle, clogged distribution box</small></button>
+          <button class="opt" onclick="pick(2,'service','replace')">♻️ Drainfield replacement<br><small style="color:var(--muted)">system failure, complete replacement</small></button>
+        </div>
+      </div>
+      <div id="step3" class="hidden">
+        <div class="step-label">Step 4 of 4 — FL region</div>
+        <div class="opts">
+          <button class="opt" onclick="pick(3,'region','south')">🌴 South FL — Miami-Dade, Broward, Palm Beach</button>
+          <button class="opt" onclick="pick(3,'region','tampa')">⛅ Tampa Bay — Hillsborough, Pinellas, Pasco</button>
+          <button class="opt" onclick="pick(3,'region','jax')">🌲 Jacksonville / NE Florida</button>
+          <button class="opt" onclick="pick(3,'region','swfl')">🦩 SW Florida — Sarasota, Naples, Fort Myers</button>
+          <button class="opt" onclick="pick(3,'region','panhandle')">🌊 Panhandle — Pensacola, Panama City</button>
+        </div>
+      </div>
+    </div>
+    <div id="results" class="hidden"></div>
+    <div id="leadForm0" class="hidden">
+      <div class="card">
+        <h3 style="color:var(--gold);margin-bottom:12px">📞 Book Septic Service</h3>
+        <div class="form-group"><label>Your name</label><input type="text" id="n0" placeholder="Jane Smith"></div>
+        <div class="form-group"><label>Phone number</label><input type="tel" id="p0" placeholder="(561) 555-PIPE"></div>
+        <button class="btn-gold" onclick="submitLead('n0','p0')">Book Septic Service</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1 -->
+  <div id="tab1" class="hidden">
+    <div class="fact-card">
+      <h4>🗺️ FL Has 2.6 Million Septic Systems</h4>
+      <p>More than any state except Texas. Over 30% of FL properties rely on on-site septic — primarily rural counties, the Panhandle, and outer suburbs. FL DEP estimates 30% of these systems are overdue for service.</p>
+    </div>
+    <div class="fact-card">
+      <h4>🌊 High Water Table — FL's Biggest Septic Challenge</h4>
+      <p>FL's water table sits 2–8 ft deep in South FL and 4–15 ft in Central FL, limiting drainfield effectiveness and causing faster system failure than national averages. Mound systems and ATUs are required in many FL DEP jurisdictions.</p>
+    </div>
+    <div class="fact-card">
+      <h4>🏠 FL Septic Inspection at Time of Sale</h4>
+      <p>FS 381.0065 requires a septic inspection as part of the FL real estate disclosure process. Buyers who skip this risk inheriting a failing system. Drainfield replacement costs $5,000–18,000+. Request a written inspection report from your FL DEP-licensed contractor.</p>
+    </div>
+    <div class="fact-card">
+      <h4>💧 Nitrogen Contamination & FL Springs</h4>
+      <p>FL springs and waterways are under stress from septic system nitrogen discharge. FL's septic upgrade program targets systems within 500 ft of impaired waters. Some FL counties offer sewer connection rebates. FL DEP OSTDS database tracks all permitted systems.</p>
+    </div>
+    <div class="fact-card">
+      <h4>⚙️ ATU Annual Service Contracts — Required by Law</h4>
+      <p>Aerobic Treatment Units (common in Pinellas, Pasco, Hillsborough as a permit condition) require state-mandated annual service contracts. Skipping the contract is a code violation and risks permit revocation and fines from FL DEP.</p>
+    </div>
+
+    <div class="card">
+      <h3>FL Septic System Types Comparison</h3>
+      <table>
+        <thead><tr><th>Type</th><th>Install Cost</th><th>Lifespan</th><th>Water Table</th></tr></thead>
+        <tbody>
+          <tr><td>Conventional</td><td>$5,000–15,000</td><td>25–40 yr</td><td>Moderate</td></tr>
+          <tr><td>Aerobic (ATU)</td><td>$8,000–20,000</td><td>20–30 yr</td><td>High ✓</td></tr>
+          <tr><td>Mound system</td><td>$10,000–25,000</td><td>20–35 yr</td><td>High ✓</td></tr>
+          <tr><td>Low-Pressure Dosing</td><td>$7,000–18,000</td><td>20–30 yr</td><td>High ✓</td></tr>
+          <tr><td>Drip Irrigation</td><td>$12,000–30,000</td><td>20–30 yr</td><td>Very High ✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Recommended Pumping Frequency (FL)</h3>
+      <table>
+        <thead><tr><th>Household</th><th>Tank Size</th><th>Interval</th></tr></thead>
+        <tbody>
+          <tr><td>1–2 people</td><td>900–1,000 gal</td><td>Every 5 years</td></tr>
+          <tr><td>3–4 people</td><td>1,250 gal</td><td>Every 3–4 years</td></tr>
+          <tr><td>5–6 people</td><td>1,500 gal</td><td>Every 2–3 years</td></tr>
+          <tr><td>7+ people</td><td>2,000+ gal</td><td>Every 1–2 years</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="result-card rc-red">
+      <div class="label">🚨 Signs of System Failure</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">Sewage odor indoors or outdoors, wet spots over drainfield, gurgling drains, sewage backup in lowest fixture. Call immediately — FL Statute 381.0065 classifies sewage surfacing as a public health violation requiring emergency response.</p>
+    </div>
+    <div class="result-card rc-teal">
+      <div class="label">📋 FL DEP Licensing</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">Septic contractors in FL must hold a Septic Tank Contractor license (FS 489.552). Verify at myfloridalicense.com before any septic work. Unlicensed work is uninsured, unpermitted, and illegal in FL.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--gold);margin-bottom:12px">📞 Book Septic Service</h3>
+      <div class="form-group"><label>Your name</label><input type="text" id="n1" placeholder="Jane Smith"></div>
+      <div class="form-group"><label>Phone number</label><input type="tel" id="p1" placeholder="(561) 555-PIPE"></div>
+      <button class="btn-gold" onclick="submitLead('n1','p1')">Book Septic Service</button>
+    </div>
+  </div>
+
+  <!-- TAB 2 -->
+  <div id="tab2" class="hidden">
+    <div class="card">
+      <h3 style="margin-bottom:8px">Septic Service Checklist</h3>
+      <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progLabel">0 of 12 complete</div>
+      <div id="chklist"></div>
+    </div>
+
+    <div class="result-card rc-gold">
+      <div class="label">📋 FL Pumping Law — FS 381.0065</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">FL recommends septic pumping every 3–5 years. A septic inspection is required at time of sale (FS 381.0065). Keep all service receipts — required for property sale disclosure in FL. Some FL counties require permits for all septic work.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--gold);margin-bottom:12px">📞 Book Septic Service</h3>
+      <div class="form-group"><label>Your name</label><input type="text" id="n2" placeholder="Jane Smith"></div>
+      <div class="form-group"><label>Phone number</label><input type="tel" id="p2" placeholder="(561) 555-PIPE"></div>
+      <button class="btn-gold" onclick="submitLead('n2','p2')">Book Septic Service</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const S = {tab:0, sysType:'', tankSize:'', service:'', region:'', checks:new Array(12).fill(false)};
+
+const PUMP_COSTS = {s900:[300,500], s1250:[350,600], s1500:[400,700], s2000:[500,900]};
+const SVC_EXTRA = {pump:[0,0], pump_inspect:[150,350], assess:[200,500], repair:[500,2000], replace:[5000,18000]};
+const MULT = {south:1.22, tampa:1.0, jax:0.92, swfl:1.15, panhandle:0.88};
+
+const SVC_LABELS = {
+  pump:'Routine pumping', pump_inspect:'Pumping + inspection',
+  assess:'Drainfield assessment', repair:'System repair', replace:'Drainfield replacement'
+};
+
+const TANK_LABELS = {s900:'900–1,000 gal', s1250:'1,250 gal', s1500:'1,500 gal', s2000:'2,000+ gal'};
+
+function showTab(n) {
+  S.tab = n;
+  [0,1,2].forEach(i => {
+    document.getElementById('tab'+i).classList.toggle('hidden', i!==n);
+    document.querySelectorAll('.tab')[i].classList.toggle('active', i===n);
+  });
+  if (n===2) buildChecklist();
+}
+
+function pick(step, key, val) {
+  S[key] = val;
+  if (step < 3) {
+    document.getElementById('step'+step).classList.add('hidden');
+    document.getElementById('step'+(step+1)).classList.remove('hidden');
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  const m = MULT[S.region] || 1;
+  const pump = PUMP_COSTS[S.tankSize] || PUMP_COSTS.s1250;
+  const extra = SVC_EXTRA[S.service] || [0,0];
+
+  let lo, hi;
+  if (S.service === 'assess' || S.service === 'repair' || S.service === 'replace') {
+    lo = extra[0]; hi = extra[1];
+  } else {
+    lo = pump[0] + extra[0]; hi = pump[1] + extra[1];
+  }
+
+  const rlo = Math.round(lo * m / 50) * 50;
+  const rhi = Math.round(hi * m / 50) * 50;
+  const fmt = n => '$' + n.toLocaleString();
+  const rNames = {south:'South FL',tampa:'Tampa Bay',jax:'Jacksonville/NE FL',swfl:'SW Florida',panhandle:'Panhandle'};
+  const rName = rNames[S.region] || 'FL';
+  const svcName = SVC_LABELS[S.service] || S.service;
+  const tankName = TANK_LABELS[S.tankSize] || '';
+
+  document.getElementById('wizard').classList.add('hidden');
+  const r = document.getElementById('results');
+  r.classList.remove('hidden');
+
+  let html = `<div class="result-card rc-cost">
+    <div class="label">Estimated Cost</div>
+    <div class="cost-num">${esc(fmt(rlo))} – ${esc(fmt(rhi))}</div>
+    <div class="cost-desc">${esc(svcName)}${tankName ? ' · ' + tankName : ''} · ${esc(rName)}</div>
+  </div>`;
+
+  html += `<div class="result-card rc-gold">
+    <div class="label">📋 FL Inspection Law — FS 381.0065</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:4px">FL recommends septic pumping every 3–5 years and requires inspection at time of property sale. Keep your service receipt — it's required for the FL real estate disclosure. ATU systems require annual service contracts by law.</p>
+  </div>`;
+
+  if (S.service === 'assess' || S.service === 'repair' || S.service === 'replace') {
+    html += `<div class="result-card rc-orange">
+      <div class="label">⚠️ Drainfield Warning</div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:4px">FL's high water table makes drainfield failure more common than in most states. Signs: wet patches over drainfield, sewage odor in yard, multiple slow drains. Call within 48 hours of sewage surfacing — FL Statute 381.0065 classifies this as a public health violation.</p>
+    </div>`;
+  }
+
+  html += `<div class="result-card rc-teal">
+    <div class="label">⏱️ System Life Expectancy</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:4px">Well-maintained FL septic systems last 20–40 years. Neglected systems fail in 10–15 years. Pumping every 3 years is the single highest-impact maintenance action. ATU systems require annual professional service to maintain FL DEP compliance.</p>
+  </div>`;
+
+  r.innerHTML = html;
+  document.getElementById('leadForm0').classList.remove('hidden');
+}
+
+const CHECKS = [
+  'System type confirmed — check FL DEP OSTDS database or permit records',
+  'Tank location found — permit records, probe, or professional locate service',
+  'Access risers clear and accessible for service truck',
+  'FL DEP licensed septic contractor hired (verify FS 489.552 at myfloridalicense.com)',
+  'Last pump date confirmed — schedule if more than 3 years ago',
+  'Pumping completed — tank solids and scum layer fully removed',
+  'Baffle inspection passed — inlet and outlet baffles intact',
+  'Distribution box or dosing system inspected and clear',
+  'Drainfield walked — no wet spots, sewage odor, or surface effluent',
+  'ATU annual service contract active if applicable (required by FL DEP)',
+  'Pumping receipt kept — required for FL property sale disclosure',
+  'Next service date calendared (3–5 years, or annually for ATU)'
+];
+
+function buildChecklist() {
+  const el = document.getElementById('chklist');
+  if (el.children.length) return;
+  CHECKS.forEach((txt, i) => {
+    const d = document.createElement('div');
+    d.className = 'chk-item' + (S.checks[i] ? ' done' : '');
+    d.onclick = () => toggleCheck(i);
+    d.innerHTML = `<div class="chk-box">${S.checks[i]?'✓':''}</div><div class="chk-text">${esc(txt)}</div>`;
+    el.appendChild(d);
+  });
+  updateProgress();
+}
+
+function toggleCheck(i) {
+  S.checks[i] = !S.checks[i];
+  const items = document.querySelectorAll('.chk-item');
+  items[i].classList.toggle('done', S.checks[i]);
+  items[i].querySelector('.chk-box').textContent = S.checks[i] ? '✓' : '';
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = S.checks.filter(Boolean).length;
+  const fill = document.getElementById('progFill');
+  const label = document.getElementById('progLabel');
+  if (fill) fill.style.width = Math.round(done/12*100)+'%';
+  if (label) { label.textContent=''; label.appendChild(document.createTextNode(done+' of 12 complete')); }
+}
+
+function submitLead(nId, pId) {
+  const name = document.getElementById(nId).value.trim();
+  const phone = document.getElementById(pId).value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
