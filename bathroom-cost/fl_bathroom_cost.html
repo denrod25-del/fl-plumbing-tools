@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Bathroom Plumbing Cost Estimator — Rough-In, Remodel &amp; Add a Bathroom Prices 2024</title>
+<meta name="description" content="Free Florida bathroom plumbing cost calculator. Estimate half bath, full bath, master bath &amp; new bathroom addition costs by FL county. Permit info included.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0E1A;--c1:#0F1629;--c2:#141929;
+  --blue:#00B4FF;--gold:#F4B942;--orange:#F97316;
+  --red:#EF4444;--green:#22C55E;--teal:#14B8A6;
+  --text:#E2E8F0;--muted:#94A3B8;--border:#1E2A4A;
+  --radius:12px;--max:480px
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;font-size:15px;line-height:1.5}
+
+/* Header */
+.hdr{background:var(--c1);border-bottom:2px solid var(--blue);padding:13px 16px;text-align:center}
+.hdr-title{font-size:1.1rem;font-weight:800;color:var(--blue);letter-spacing:-.02em}
+.hdr-sub{font-size:.77rem;color:var(--muted);margin-top:2px}
+
+/* Tab Nav */
+.tab-nav{display:flex;background:var(--c1);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+.tab-btn{flex:1;padding:11px 4px;font-size:.7rem;font-weight:700;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;letter-spacing:.03em;text-transform:uppercase;transition:color .18s,border-color .18s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* Layout */
+.wrap{max-width:var(--max);margin:0 auto;padding:14px 14px 44px}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* Wizard steps */
+.step{display:none}.step.active{display:block}
+
+/* Progress dots */
+.prog{display:flex;justify-content:center;gap:7px;margin-bottom:14px}
+.pd{width:9px;height:9px;border-radius:50%;background:var(--border);transition:background .22s}
+.pd.done{background:var(--blue)}.pd.cur{background:var(--gold)}
+
+/* Step header */
+.s-head{text-align:center;margin-bottom:14px}
+.s-num{display:inline-block;background:rgba(0,180,255,.12);color:var(--blue);font-size:.67rem;font-weight:800;padding:2px 10px;border-radius:20px;border:1px solid rgba(0,180,255,.25);margin-bottom:8px;letter-spacing:.06em}
+.s-title{font-size:1.05rem;font-weight:800;margin-bottom:3px}
+.s-desc{font-size:.81rem;color:var(--muted)}
+
+/* Tiles */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.tiles.col1{grid-template-columns:1fr}
+.tile{background:var(--c2);border:2px solid var(--border);border-radius:var(--radius);padding:11px 12px;cursor:pointer;text-align:left;color:var(--text);transition:border-color .18s,background .18s;display:block;width:100%;font-family:inherit}
+.tile:hover{border-color:rgba(0,180,255,.55);background:#0c1430}
+.tile.sel{border-color:var(--blue);background:#03152e}
+.tile .ico{font-size:1.4rem;display:block;margin-bottom:3px}
+.tile .lbl{font-weight:700;display:block;font-size:.88rem}
+.tile .dsc{font-size:.72rem;color:var(--muted);display:block;margin-top:2px;line-height:1.4}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:9px;font-size:.9rem;font-weight:700;cursor:pointer;border:none;transition:filter .18s,opacity .18s;font-family:inherit}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn-gold{background:var(--gold);color:#000}
+.btn-gold:not(:disabled):hover{filter:brightness(1.1)}
+.btn-out{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
+.btn-out:hover{border-color:var(--blue);color:var(--text)}
+.btn-bl{width:100%}
+.nav2{display:flex;gap:8px;margin-top:8px}.nav2 .btn{flex:1}
+
+/* Cards */
+.card{background:var(--c1);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.card-gold{background:#110d02;border-color:#6b4e10}
+.card-red{background:#130505;border-color:#6b1010}
+.card-blue{background:#020e1b;border-color:#0a385a}
+.card-lime{background:#091202;border-color:#274808}
+
+/* Results headline */
+.res-head{text-align:center;padding:14px 0 16px}
+.res-range{display:block;font-size:1.65rem;font-weight:900;color:var(--gold);line-height:1.1;letter-spacing:-.03em}
+.res-lbl{font-size:.78rem;color:var(--muted);margin-top:6px;display:block}
+.res-meta{font-size:.74rem;color:var(--teal);margin-top:3px;display:block}
+
+/* Breakdown table */
+.bk-tbl{width:100%;border-collapse:collapse;font-size:.83rem}
+.bk-tbl th{text-align:left;padding:7px 8px;color:var(--muted);font-weight:600;font-size:.71rem;border-bottom:1px solid var(--border)}
+.bk-tbl td{padding:8px;border-bottom:1px solid var(--border)}
+.bk-tbl tr:last-child td{border-bottom:none}
+.c-blue{color:var(--blue)}.c-green{color:var(--green)}.c-gold{color:var(--gold)}
+
+/* Section titles */
+.sec{font-size:.88rem;font-weight:800;margin:14px 0 8px;color:var(--text);display:flex;align-items:center;gap:7px}
+.sec::before{content:'';display:block;width:3px;height:13px;background:var(--blue);border-radius:2px;flex-shrink:0}
+
+/* Accordion */
+.acc{background:var(--c2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:6px}
+.acc-h{padding:11px 13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.86rem;transition:background .18s;-webkit-tap-highlight-color:transparent}
+.acc-h:hover{background:#16203a}
+.acc-arr{color:var(--blue);font-size:.73rem;transition:transform .25s;flex-shrink:0}
+.acc-arr.op{transform:rotate(180deg)}
+.acc-b{max-height:0;overflow:hidden;transition:max-height .32s ease,padding .32s ease;font-size:.81rem;color:var(--muted);line-height:1.68;padding:0 13px}
+.acc-b.op{max-height:340px;padding:0 13px 13px}
+
+/* Fixture table */
+.fx-tbl{width:100%;border-collapse:collapse;font-size:.77rem}
+.fx-tbl th{text-align:left;padding:7px 5px;color:var(--muted);font-weight:600;font-size:.69rem;border-bottom:1px solid var(--border)}
+.fx-tbl td{padding:7px 5px;border-bottom:1px solid var(--border)}
+.fx-tbl tr:last-child td{border-bottom:none}
+.fx-tbl td:first-child{font-weight:700;color:var(--text)}
+.p-lo{color:#6ee7b7}.p-mid{color:var(--blue)}.p-hi{color:var(--gold)}
+
+/* Checklist */
+.ck-item{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:.82rem;-webkit-tap-highlight-color:transparent}
+.ck-item:last-child{border-bottom:none}
+.ck-box{width:18px;height:18px;min-width:18px;border:2px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:all .18s;margin-top:1px;flex-shrink:0}
+.ck-box.chk{background:var(--green);border-color:var(--green)}
+.ck-box.chk::after{content:'✓';font-size:.65rem;color:#000;font-weight:900}
+.ck-txt{flex:1;line-height:1.45;transition:color .18s}
+.ck-txt.chk{color:var(--muted);text-decoration:line-through}
+
+/* Permit / county tables */
+.pt{width:100%;border-collapse:collapse;font-size:.79rem}
+.pt th{text-align:left;padding:7px 6px;color:var(--muted);font-weight:600;font-size:.69rem;border-bottom:1px solid var(--border)}
+.pt td{padding:7px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
+.pt tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.67rem;font-weight:700;white-space:nowrap}
+.b-green{background:#0a2e18;color:var(--green);border:1px solid #1a5028}
+.b-red{background:#2e0a0a;color:var(--red);border:1px solid #501a1a}
+.b-orange{background:#2e1a0a;color:var(--orange);border:1px solid #503010}
+
+/* Timeline grid */
+.tl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.tl-card{background:var(--c2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
+.tl-dur{display:block;font-size:1rem;font-weight:800;color:var(--blue);margin-bottom:4px}
+.tl-lbl{display:block;font-size:.71rem;color:var(--muted);line-height:1.45}
+
+/* Lead form */
+.lf-wrap{background:var(--c1);border:1px solid var(--border);border-radius:var(--radius);padding:15px;margin-bottom:10px}
+.lf-title{font-size:.97rem;font-weight:800;color:var(--gold);margin-bottom:4px}
+.lf-sub{font-size:.78rem;color:var(--muted);margin-bottom:12px}
+.fg{margin-bottom:9px}
+.fg label{display:block;font-size:.71rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--c2);border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--text);font-size:.88rem;font-family:inherit;transition:border-color .18s;outline:none;-webkit-appearance:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue)}
+.fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M0 0l5 7 5-7z' fill='%2394A3B8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
+.fg select option{background:var(--c2);color:var(--text)}
+.fg textarea{resize:vertical;min-height:68px}
+.ph-cta{text-align:center;margin-top:10px;font-size:.81rem;color:var(--muted)}
+.ph-cta a{color:var(--gold);font-weight:700;text-decoration:none}
+
+/* Back button */
+.back-btn{background:none;border:none;color:var(--blue);font-size:.79rem;cursor:pointer;padding:2px 0;display:inline-flex;align-items:center;gap:4px;margin-bottom:10px;font-family:inherit}
+.back-btn:hover{color:var(--text)}
+
+/* FL card rows */
+.fl-row{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem;color:var(--muted);line-height:1.58}
+.fl-row:last-child{border-bottom:none}
+.fl-row strong{color:var(--text)}
+
+/* Divider */
+.div{height:1px;background:var(--border);margin:14px 0}
+
+/* Toast */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--gold);color:#000;padding:11px 24px;border-radius:8px;font-weight:800;font-size:.88rem;z-index:999;opacity:0;transition:all .33s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.45)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:379px){
+  .tiles{grid-template-columns:1fr}
+  .tl-grid{grid-template-columns:1fr}
+  .res-range{font-size:1.35rem}
+  .pt th:nth-child(3),.pt td:nth-child(3){display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-title">🚿 FL Bathroom Plumbing Cost Guide</div>
+  <div class="hdr-sub">Licensed FL Plumbers &nbsp;·&nbsp; Free Estimates &nbsp;·&nbsp; All Counties</div>
+</header>
+
+<nav class="tab-nav" role="tablist" aria-label="Main navigation">
+  <button class="tab-btn active" onclick="showTab(0)" role="tab" aria-selected="true">💰 Estimator</button>
+  <button class="tab-btn" onclick="showTab(1)" role="tab" aria-selected="false">🔧 Scope Details</button>
+  <button class="tab-btn" onclick="showTab(2)" role="tab" aria-selected="false">📋 Permits</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ════════════════════════════════════
+     TAB 1 — COST ESTIMATOR
+════════════════════════════════════ -->
+<section id="tab-0" class="tab-panel active" role="tabpanel">
+
+  <!-- Step 1: Bath Type -->
+  <div id="s1" class="step active">
+    <div class="prog">
+      <div class="pd cur"></div><div class="pd"></div><div class="pd"></div>
+    </div>
+    <div class="s-head">
+      <div class="s-num">STEP 1 OF 3</div>
+      <h2 class="s-title">Select Bathroom Type</h2>
+      <p class="s-desc">What kind of bathroom plumbing project do you need?</p>
+    </div>
+    <div class="tiles" id="bath-tiles">
+      <button class="tile" data-val="half" onclick="pickTile(this,'bath')">
+        <span class="ico">🚿</span>
+        <span class="lbl">Half Bath</span>
+        <span class="dsc">Toilet + sink only</span>
+      </button>
+      <button class="tile" data-val="full" onclick="pickTile(this,'bath')">
+        <span class="ico">🛁</span>
+        <span class="lbl">Full Bath</span>
+        <span class="dsc">Toilet + sink + tub/shower</span>
+      </button>
+      <button class="tile" data-val="master" onclick="pickTile(this,'bath')">
+        <span class="ico">♟️</span>
+        <span class="lbl">Master Bath</span>
+        <span class="dsc">Dual sinks + tub + shower</span>
+      </button>
+      <button class="tile" data-val="add" onclick="pickTile(this,'bath')">
+        <span class="ico">➕</span>
+        <span class="lbl">Add a Bathroom</span>
+        <span class="dsc">New rough-in, no existing plumbing</span>
+      </button>
+      <button class="tile" data-val="gut" onclick="pickTile(this,'bath')" style="grid-column:1/-1">
+        <span class="ico">🔄</span>
+        <span class="lbl">Full Gut &amp; Replumb</span>
+        <span class="dsc">Existing bath — replace all plumbing</span>
+      </button>
+    </div>
+    <button class="btn btn-gold btn-bl" id="s1-nxt" onclick="goStep(2)" disabled>Continue →</button>
+  </div>
+
+  <!-- Step 2: FL Region -->
+  <div id="s2" class="step">
+    <div class="prog">
+      <div class="pd done"></div><div class="pd cur"></div><div class="pd"></div>
+    </div>
+    <div class="s-head">
+      <div class="s-num">STEP 2 OF 3</div>
+      <h2 class="s-title">Your FL Region</h2>
+      <p class="s-desc">Labor costs vary significantly across Florida</p>
+    </div>
+    <div class="tiles col1" id="region-tiles">
+      <button class="tile" data-val="south" onclick="pickTile(this,'region')">
+        <span class="ico">🌴</span><span class="lbl">South FL</span>
+        <span class="dsc">Miami · Palm Beach · Broward</span>
+      </button>
+      <button class="tile" data-val="central" onclick="pickTile(this,'region')">
+        <span class="ico">🏰</span><span class="lbl">Central FL</span>
+        <span class="dsc">Orlando · Kissimmee · Ocala</span>
+      </button>
+      <button class="tile" data-val="tampa" onclick="pickTile(this,'region')">
+        <span class="ico">⚡</span><span class="lbl">Tampa Bay</span>
+        <span class="dsc">Tampa · St. Pete · Sarasota</span>
+      </button>
+      <button class="tile" data-val="northeast" onclick="pickTile(this,'region')">
+        <span class="ico">🌊</span><span class="lbl">Northeast FL</span>
+        <span class="dsc">Jacksonville · Gainesville</span>
+      </button>
+      <button class="tile" data-val="panhandle" onclick="pickTile(this,'region')">
+        <span class="ico">🌅</span><span class="lbl">Panhandle</span>
+        <span class="dsc">Pensacola · Tallahassee · Panama City</span>
+      </button>
+    </div>
+    <div class="nav2">
+      <button class="btn btn-out" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-gold" id="s2-nxt" onclick="goStep(3)" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Scope -->
+  <div id="s3" class="step">
+    <div class="prog">
+      <div class="pd done"></div><div class="pd done"></div><div class="pd cur"></div>
+    </div>
+    <div class="s-head">
+      <div class="s-num">STEP 3 OF 3</div>
+      <h2 class="s-title">Scope of Work</h2>
+      <p class="s-desc">Select the level of plumbing work needed</p>
+    </div>
+    <div class="tiles col1" id="scope-tiles">
+      <button class="tile" data-val="fixtures" onclick="pickTile(this,'scope')">
+        <span class="ico">🔩</span>
+        <span class="lbl">Fixtures Only</span>
+        <span class="dsc">Swap existing fixtures — plumbing stays in place</span>
+      </button>
+      <button class="tile" data-val="roughin" onclick="pickTile(this,'scope')">
+        <span class="ico">🔧</span>
+        <span class="lbl">Rough-In + Fixtures</span>
+        <span class="dsc">New rough-in plumbing + full fixture installation</span>
+      </button>
+      <button class="tile" data-val="fullreno" onclick="pickTile(this,'scope')">
+        <span class="ico">🏗️</span>
+        <span class="lbl">Full Plumbing + Renovation</span>
+        <span class="dsc">All plumbing work + complete bathroom renovation</span>
+      </button>
+      <button class="tile" data-val="newaddition" onclick="pickTile(this,'scope')">
+        <span class="ico">🏠</span>
+        <span class="lbl">Rough-In for New Addition</span>
+        <span class="dsc">New bathroom added to existing home footprint</span>
+      </button>
+    </div>
+    <div class="nav2">
+      <button class="btn btn-out" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-gold" id="s3-nxt" onclick="runEstimate()" disabled>Get My Estimate →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Results -->
+  <div id="s4" class="step">
+    <button class="back-btn" onclick="goStep(3)">← Edit Selections</button>
+    <div id="res-out"></div>
+    <div class="lf-wrap">
+      <div class="lf-title">🎯 Get an Exact Quote</div>
+      <div class="lf-sub">A licensed FL plumber will call you within 2 hours</div>
+      <form onsubmit="doSubmit(event)">
+        <div class="fg"><label>Your Name</label><input type="text" placeholder="John Smith" required autocomplete="name"></div>
+        <div class="fg"><label>Phone</label><input type="tel" placeholder="(561) 555-PIPE" required autocomplete="tel"></div>
+        <div class="fg"><label>City or ZIP</label><input type="text" placeholder="Boca Raton, FL 33431" autocomplete="postal-code"></div>
+        <div class="fg"><label>Project Details</label><textarea placeholder="Any additional info about your project..."></textarea></div>
+        <button type="submit" class="btn btn-gold btn-bl">Request Free Estimate</button>
+      </form>
+      <div class="ph-cta">Or call now: <a href="tel:5615557473">(561) 555-PIPE</a></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════
+     TAB 2 — SCOPE DETAILS
+════════════════════════════════════ -->
+<section id="tab-1" class="tab-panel" role="tabpanel">
+
+  <div class="sec">What's Included in Rough-In</div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="togAcc('a1')">🔩 Drain Lines (ABS/PVC) <span class="acc-arr" id="arr-a1">▼</span></div>
+    <div class="acc-b" id="a1">FL plumbers use ABS or Schedule 40 PVC drain lines. Minimum 3" for toilets, 1.5"–2" for sinks and tubs. Code requires a minimum slope of ¼" per linear foot toward the main stack. PVC is preferred in FL for its excellent corrosion resistance in humid, mineral-rich water conditions. All joints must be solvent-welded and air-tested before inspection. Cleanout access required per FL Building Code.</div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="togAcc('a2')">💧 Supply Lines — PEX-A Recommended <span class="acc-arr" id="arr-a2">▼</span></div>
+    <div class="acc-b" id="a2">PEX-A tubing is strongly recommended in FL. More flexible than copper, handles occasional freeze events in North FL, and resists corrosion from FL's hard, mineral-heavy water. Standard sizing: ½" to fixtures, ¾" main trunk lines. Color-coded per code: red = hot, blue = cold. Manifold systems allow per-fixture isolation without cutting walls — ideal for hurricane prep and leak management.</div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="togAcc('a3')">🌬️ Vent Stack Connections <span class="acc-arr" id="arr-a3">▼</span></div>
+    <div class="acc-b" id="a3">FL Building Code requires all fixtures to be properly vented to prevent trap siphoning and sewer gas infiltration. Air Admittance Valves (AAVs) are permitted in FL for certain applications where roof penetration is impractical. Primary vents must extend through the roof with proper flashing — critical in FL's high-rainfall climate. Typical 2"–3" PVC vent stack connection at the main soil stack.</div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="togAcc('a4')">🔐 Per-Fixture Shut-Off Valves <span class="acc-arr" id="arr-a4">▼</span></div>
+    <div class="acc-b" id="a4">Florida Building Code requires individual quarter-turn ball valves at every fixture (toilet, sink, shower supply lines). Ball valves are preferred over gate valves — they seal completely and don't corrode internally over time. Essential for hurricane prep: you can isolate individual fixtures without shutting off the whole house. Standard installations include angle stops at toilet and vanity, inline shutoffs for shower supplies.</div>
+  </div>
+
+  <div class="acc">
+    <div class="acc-h" onclick="togAcc('a5')">♨️ Pressure Balancing — FL FBC 2017+ <span class="acc-arr" id="arr-a5">▼</span></div>
+    <div class="acc-b" id="a5">Florida Building Code (2017+) mandates pressure-balancing or thermostatic mixing valves in all showers and tub/shower combinations. Must maintain set temperature within ±3°F when demand fluctuates. Prevents dangerous scalding when a toilet flushes mid-shower. Adds $150–$400 to shower valve line item. Thermostatic valves cost more but allow precise preset temperature controls — highly recommended for master baths.</div>
+  </div>
+
+  <div class="sec">Fixture Cost Reference (Installed, FL Labor)</div>
+  <div class="card" style="padding:8px 6px">
+    <table class="fx-tbl">
+      <thead>
+        <tr>
+          <th>Fixture</th>
+          <th class="p-lo">Entry Level</th>
+          <th class="p-mid">Mid-Range</th>
+          <th class="p-hi">High-End</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Toilet</td><td class="p-lo">$350–$550</td><td class="p-mid">$600–$900</td><td class="p-hi">$1,200–$2,500</td></tr>
+        <tr><td>Vanity + Sink</td><td class="p-lo">$450–$750</td><td class="p-mid">$800–$1,500</td><td class="p-hi">$2,000–$6,000</td></tr>
+        <tr><td>Tub</td><td class="p-lo">$600–$1,000</td><td class="p-mid">$1,200–$2,500</td><td class="p-hi">$3,500–$8,000</td></tr>
+        <tr><td>Shower (tile)</td><td class="p-lo">$2,500–$4,500</td><td class="p-mid">$5,000–$9,000</td><td class="p-hi">$12,000–$25,000</td></tr>
+        <tr><td>Faucet Set</td><td class="p-lo">$200–$400</td><td class="p-mid">$500–$900</td><td class="p-hi">$1,200–$3,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec">FL-Specific Considerations</div>
+  <div class="card card-blue">
+    <div class="fl-row"><strong>Hard Water Damage</strong> — FL water is mineral-heavy. Chrome fixtures pit and discolor within 2–3 years. Brushed nickel, oil-rubbed bronze, or PVD-coated brass finishes hold up far longer. Consider adding a water softener rough-in loop while walls are open during any renovation.</div>
+    <div class="fl-row"><strong>Ventilation Required by Code</strong> — FL Building Code R303.3 mandates mechanical ventilation in all bathrooms lacking operable windows. Minimum 50 CFM fan; upgrade to 80–110 CFM for master baths. Mold risk is extremely high in FL without proper airflow. ENERGY STAR fans are strongly preferred in humid climates.</div>
+    <div class="fl-row"><strong>Concrete Slab Penetrations</strong> — Most FL homes are slab-on-grade construction. Any new bathroom addition or drain line rerouting requires saw-cutting the concrete slab ($800–$2,000 add-on). Budget for concrete patch and skim coat before any tile or flooring installation.</div>
+    <div class="fl-row"><strong>Hurricane &amp; Flood Prep</strong> — Install accessible main water shutoffs. Check your FEMA flood zone designation — AE/VE zones affect permit requirements, elevation requirements for water heaters, and homeowner's insurance costs. Factor into planning before breaking ground.</div>
+  </div>
+
+  <div class="sec">Contractor Vetting Checklist</div>
+  <div class="card">
+    <p style="font-size:.74rem;color:var(--muted);margin-bottom:10px">Click each item to mark complete before hiring any FL plumber</p>
+    <div id="ck-list"></div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════
+     TAB 3 — PERMIT & TIMELINE GUIDE
+════════════════════════════════════ -->
+<section id="tab-2" class="tab-panel" role="tabpanel">
+
+  <div class="sec">Permit Requirements by Project Type</div>
+  <div class="card" style="padding:8px 6px">
+    <table class="pt">
+      <thead>
+        <tr><th>Project Type</th><th>Permit?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Fixture swap (like-for-like)</td><td><span class="badge b-green">Typically Not Required</span></td></tr>
+        <tr><td>Faucet / toilet replacement</td><td><span class="badge b-green">No Permit Needed</span></td></tr>
+        <tr><td>New rough-in / Add bathroom</td><td><span class="badge b-red">Permit Required</span></td></tr>
+        <tr><td>Full gut &amp; replumb</td><td><span class="badge b-red">Permit Required</span></td></tr>
+        <tr><td>Water heater replacement</td><td><span class="badge b-orange">Permit Required</span></td></tr>
+        <tr><td>Drain line rerouting</td><td><span class="badge b-red">Permit Required</span></td></tr>
+        <tr><td>Water softener installation</td><td><span class="badge b-orange">Varies by County</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card card-gold" style="margin-bottom:10px">
+    <div style="font-size:.84rem;font-weight:700;color:var(--gold);margin-bottom:5px">⚠️ FL Permit Important Notice</div>
+    <div style="font-size:.79rem;color:#c5981e;line-height:1.68">FL requires permits for new rough-in and full gut-replumb. Typical permit cost: <strong style="color:var(--gold)">$150–$600</strong>. Add <strong style="color:var(--gold)">10–15 working days</strong> for permit approval and inspection scheduling. <strong style="color:#f0d060">Never let a contractor skip the permit</strong> — unpermitted work triggers required demolition on discovery and must be disclosed at resale under Florida law.</div>
+  </div>
+
+  <div class="sec">County Permit Fee Reference</div>
+  <div class="card" style="padding:8px 6px">
+    <table class="pt">
+      <thead>
+        <tr><th>FL County</th><th>Permit Range</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Miami-Dade</td><td>$200–$600</td><td style="color:var(--muted);font-size:.72rem">Online portal avail.</td></tr>
+        <tr><td>Broward</td><td>$175–$500</td><td style="color:var(--muted);font-size:.72rem">Sub-permit per trade</td></tr>
+        <tr><td>Palm Beach</td><td>$150–$450</td><td style="color:var(--muted);font-size:.72rem">Varies by city</td></tr>
+        <tr><td>Hillsborough</td><td>$150–$400</td><td style="color:var(--muted);font-size:.72rem">Incl. inspection fee</td></tr>
+        <tr><td>Orange</td><td>$175–$450</td><td style="color:var(--muted);font-size:.72rem">Fast-track available</td></tr>
+        <tr><td>Duval</td><td>$100–$350</td><td style="color:var(--muted);font-size:.72rem">Lower cost area</td></tr>
+        <tr><td>Pinellas</td><td>$150–$400</td><td style="color:var(--muted);font-size:.72rem">Online permits</td></tr>
+        <tr><td>Collier</td><td>$200–$550</td><td style="color:var(--muted);font-size:.72rem">Growth surcharges</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec">Project Timelines</div>
+  <div class="tl-grid">
+    <div class="tl-card">
+      <span class="tl-dur">1–2 Days</span>
+      <span class="tl-lbl">Fixtures Only</span>
+    </div>
+    <div class="tl-card">
+      <span class="tl-dur">3–5 Days</span>
+      <span class="tl-lbl">Rough-In + Fixtures (existing bath)</span>
+    </div>
+    <div class="tl-card">
+      <span class="tl-dur">2–4 Weeks</span>
+      <span class="tl-lbl">Add New Bathroom (incl. concrete + permit)</span>
+    </div>
+    <div class="tl-card">
+      <span class="tl-dur">1–2 Weeks</span>
+      <span class="tl-lbl">Full Gut &amp; Replumb</span>
+    </div>
+  </div>
+
+  <div class="card card-lime" style="margin-bottom:14px">
+    <div style="font-size:.84rem;font-weight:700;color:#a3e635;margin-bottom:5px">💰 FL Bathroom Addition ROI</div>
+    <div style="font-size:.79rem;color:#84cc16;line-height:1.68"><strong style="color:#d9f99d">Florida ranks #3 in the US for bathroom addition ROI.</strong> Average project cost: $14,000–$28,000. Average resale value added: $22,000–$40,000. Material cost recovery: 75–85%. With FL's competitive real estate market, adding a bathroom is consistently one of the strongest home improvement investments available.</div>
+  </div>
+
+  <div class="div"></div>
+
+  <div class="lf-wrap">
+    <div class="lf-title">📞 Ready for Your Estimate?</div>
+    <div class="lf-sub">We'll have a licensed FL plumber call you today</div>
+    <form onsubmit="doSubmit(event)">
+      <div class="fg"><label>Your Name</label><input type="text" placeholder="Jane Smith" required autocomplete="name"></div>
+      <div class="fg"><label>Phone</label><input type="tel" placeholder="(561) 555-PIPE" required autocomplete="tel"></div>
+      <div class="fg"><label>City / ZIP</label><input type="text" placeholder="Tampa, FL 33602" autocomplete="postal-code"></div>
+      <div class="fg">
+        <label>Project Type</label>
+        <select>
+          <option value="">Select project type...</option>
+          <option>Half Bath — Fixtures Only</option>
+          <option>Half Bath — Rough-In + Fixtures</option>
+          <option>Full Bath — Fixtures Only</option>
+          <option>Full Bath — Rough-In + Fixtures</option>
+          <option>Master Bath — Fixtures Only</option>
+          <option>Master Bath — Rough-In + Fixtures</option>
+          <option>Add a New Bathroom</option>
+          <option>Full Gut &amp; Replumb</option>
+        </select>
+      </div>
+      <div class="fg"><label>Project Details</label><textarea placeholder="Tell us about your project, timeline, or any questions..."></textarea></div>
+      <button type="submit" class="btn btn-gold btn-bl">Request Free Estimate</button>
+    </form>
+    <div class="ph-cta">Call now: <a href="tel:5615557473">(561) 555-PIPE</a></div>
+  </div>
+
+</section>
+</div><!-- /.wrap -->
+
+<div id="toast" role="alert" aria-live="polite">✓ We'll call you within 2 hours!</div>
+
+<script>
+/* ── STATE ── */
+var S = { tab:0, step:1, bath:null, region:null, scope:null };
+
+/* ── PRICING MATRIX ── */
+var BASE = {
+  'half-fixtures':   [600,  1200],
+  'half-roughin':    [2500, 4500],
+  'full-fixtures':   [1200, 2400],
+  'full-roughin':    [4500, 8000],
+  'master-fixtures': [2500, 5000],
+  'master-roughin':  [7000, 14000],
+  'add-bathroom':    [8000, 18000],
+  'gut-replumb':     [5000, 12000]
+};
+
+/* Region multipliers */
+var RMX = { south:1.25, central:1.05, tampa:1.10, northeast:0.95, panhandle:0.90 };
+var RLB = {
+  south:'South FL (Miami/Palm Beach/Broward)',
+  central:'Central FL (Orlando/Kissimmee)',
+  tampa:'Tampa Bay (Tampa/St. Pete/Sarasota)',
+  northeast:'Northeast FL (Jacksonville/Gainesville)',
+  panhandle:'Panhandle (Pensacola/Tallahassee)'
+};
+
+/* Scope multipliers */
+var SMX = { fixtures:1.0, roughin:1.0, fullreno:1.35, newaddition:1.20 };
+var SLB = {
+  fixtures:'Fixtures Only',
+  roughin:'Rough-In + Fixtures',
+  fullreno:'Full Renovation',
+  newaddition:'New Addition'
+};
+
+/* Bath type labels */
+var BLB = {
+  half:'Half Bath', full:'Full Bath', master:'Master Bath',
+  add:'Add a Bathroom', gut:'Full Gut & Replumb'
+};
+
+/* Contractor checklist items */
+var CHKS = [
+  'Verify FL contractor license at MyFloridaLicense.com — confirm it is active before signing',
+  'Confirm FL-certified plumber (statewide) vs. registered plumber (county-limited only)',
+  'Verify they will pull all permits themselves — never let homeowner pull permits for contractor work',
+  'Request written scope of work with full line-item cost breakdown before signing any contract',
+  'Request certificate of liability insurance + active workers\' compensation certificate (COI)',
+  'Obtain a signed lien waiver on project completion before making final payment',
+  'Never pay more than 30% upfront — Florida Statutes limit contractor deposits on most jobs',
+  'Request 3 references for similar FL bathroom plumbing work completed within the past 2 years'
+];
+
+/* ── XSS SANITIZER ── */
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = String(s == null ? '' : s);
+  return d.innerHTML;
+}
+
+/* ── TAB SWITCHING ── */
+function showTab(n) {
+  S.tab = n;
+  document.querySelectorAll('.tab-panel').forEach(function(p, i) {
+    p.classList.toggle('active', i === n);
+  });
+  document.querySelectorAll('.tab-btn').forEach(function(b, i) {
+    b.classList.toggle('active', i === n);
+    b.setAttribute('aria-selected', String(i === n));
+  });
+}
+
+/* ── WIZARD STEP NAVIGATION ── */
+function goStep(n) {
+  S.step = n;
+  for (var i = 1; i <= 4; i++) {
+    var el = document.getElementById('s' + i);
+    if (el) el.classList.toggle('active', i === n);
+  }
+}
+
+/* ── TILE SELECTION ── */
+function pickTile(el, group) {
+  var parent = el.parentNode;
+  parent.querySelectorAll('.tile').forEach(function(t) { t.classList.remove('sel'); });
+  el.classList.add('sel');
+  var v = el.dataset.val;
+  if (group === 'bath')   { S.bath   = v; unlockBtn('s1-nxt'); }
+  if (group === 'region') { S.region = v; unlockBtn('s2-nxt'); }
+  if (group === 'scope')  { S.scope  = v; unlockBtn('s3-nxt'); }
+}
+
+function unlockBtn(id) {
+  var b = document.getElementById(id);
+  if (b) b.disabled = false;
+}
+
+/* ── COST CALCULATION HELPERS ── */
+function getCostKey() {
+  if (S.bath === 'add') return 'add-bathroom';
+  if (S.bath === 'gut') return 'gut-replumb';
+  var base = (S.scope === 'fixtures') ? 'fixtures' : 'roughin';
+  return S.bath + '-' + base;
+}
+
+function getScopeMx() {
+  if (S.bath === 'add') return SMX.newaddition;
+  if (S.bath === 'gut') return SMX.fullreno;
+  return SMX[S.scope] || 1.0;
+}
+
+function applyMx(arr) {
+  var r = RMX[S.region] || 1.0;
+  var s = getScopeMx();
+  return [
+    Math.round(arr[0] * r * s / 50) * 50,
+    Math.round(arr[1] * r * s / 50) * 50
+  ];
+}
+
+function calcBreakdown(tot) {
+  var lo = tot[0], hi = tot[1];
+  var needPermit = S.bath === 'add' || S.bath === 'gut' ||
+    S.scope === 'roughin' || S.scope === 'fullreno' || S.scope === 'newaddition';
+  return {
+    labor:   [Math.round(lo * .52), Math.round(hi * .54)],
+    matl:    [Math.round(lo * .36), Math.round(hi * .38)],
+    permits: needPermit ? [150, 600] : [0, 0]
+  };
+}
+
+/* ── NUMBER FORMAT ── */
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+/* ── DISPLAY SCOPE LABEL ── */
+function getDispScope() {
+  if (S.bath === 'add') return SLB.newaddition;
+  if (S.bath === 'gut') return SLB.fullreno;
+  return SLB[S.scope] || '';
+}
+
+/* ── RUN ESTIMATE → SHOW RESULTS ── */
+function runEstimate() {
+  var key = getCostKey();
+  var tot = applyMx(BASE[key]);
+  var bd  = calcBreakdown(tot);
+  document.getElementById('res-out').innerHTML = buildResultHtml(tot, bd);
+  goStep(4);
+}
+
+/* ── BUILD RESULT HTML ── */
+function buildResultHtml(tot, bd) {
+  var h = '<div class="res-head">';
+  h += '<span class="res-range">' + esc(fmt(tot[0])) + ' &ndash; ' + esc(fmt(tot[1])) + '</span>';
+  h += '<span class="res-lbl">estimated for your project in ' + esc(RLB[S.region]) + '</span>';
+  h += '<span class="res-meta">' + esc(BLB[S.bath]) + ' &nbsp;&middot;&nbsp; ' + esc(getDispScope()) + '</span>';
+  h += '</div>';
+  h += '<div class="card" style="padding:8px;margin-bottom:10px">';
+  h += '<table class="bk-tbl"><thead><tr><th>Cost Category</th><th>Estimated Range</th></tr></thead><tbody>';
+  h += '<tr><td class="c-blue">🔨 Labor</td><td class="c-blue">' + esc(fmt(bd.labor[0])) + ' – ' + esc(fmt(bd.labor[1])) + '</td></tr>';
+  h += '<tr><td class="c-green">🔩 Materials</td><td class="c-green">' + esc(fmt(bd.matl[0])) + ' – ' + esc(fmt(bd.matl[1])) + '</td></tr>';
+  if (bd.permits[1] > 0) {
+    h += '<tr><td class="c-gold">📋 Permits &amp; Fees</td><td class="c-gold">' + esc(fmt(bd.permits[0])) + ' – ' + esc(fmt(bd.permits[1])) + '</td></tr>';
+  }
+  h += '</tbody></table></div>';
+  h += buildAlertCards();
+  return h;
+}
+
+/* ── BUILD ALERT CARDS FOR RESULTS ── */
+function buildAlertCards() {
+  var h = '';
+  var needPermit = S.bath === 'add' || S.bath === 'gut' ||
+    S.scope === 'roughin' || S.scope === 'fullreno' || S.scope === 'newaddition';
+  if (needPermit) {
+    h += '<div class="card card-gold" style="margin-bottom:10px">';
+    h += '<div style="font-size:.82rem;font-weight:700;color:var(--gold);margin-bottom:5px">📋 FL Permit Required</div>';
+    h += '<div style="font-size:.79rem;color:#c5981e;line-height:1.65">FL requires permits for new rough-in and full gut-replumb. ';
+    h += 'Typical permit: <strong style="color:var(--gold)">$150–$600</strong>. Add <strong style="color:var(--gold)">10–15 working days</strong> for permit approval and inspections.</div></div>';
+  }
+  if (S.bath === 'add') {
+    h += '<div class="card card-red" style="margin-bottom:10px">';
+    h += '<div style="font-size:.82rem;font-weight:700;color:var(--red);margin-bottom:5px">⚠️ Concrete Slab Work Required</div>';
+    h += '<div style="font-size:.79rem;color:#f87171;line-height:1.65">New bathroom rough-in requires cutting the concrete slab in most FL homes. ';
+    h += 'Factor in <strong>$800–$2,000</strong> for saw-cutting and patching — this is not included in the estimate above.</div></div>';
+    h += '<div class="card card-lime" style="margin-bottom:10px">';
+    h += '<div style="font-size:.82rem;font-weight:700;color:#a3e635;margin-bottom:5px">💰 Strong Resale Value Boost</div>';
+    h += '<div style="font-size:.79rem;color:#84cc16;line-height:1.65">Adding a bathroom increases FL home resale value by <strong style="color:#d9f99d">$25,000–$45,000</strong>. ';
+    h += 'Material cost recovery: ~75–85%. One of the best ROI home improvements in FL real estate.</div></div>';
+  }
+  return h;
+}
+
+/* ── ACCORDION (one open at a time) ── */
+function togAcc(id) {
+  var body = document.getElementById(id);
+  var arr  = document.getElementById('arr-' + id);
+  var wasOpen = body.classList.contains('op');
+  document.querySelectorAll('.acc-b').forEach(function(b) { b.classList.remove('op'); });
+  document.querySelectorAll('.acc-arr').forEach(function(a) { a.classList.remove('op'); });
+  if (!wasOpen) { body.classList.add('op'); arr.classList.add('op'); }
+}
+
+/* ── BUILD CHECKLIST (DOM, no innerHTML with user data) ── */
+function buildChecklist() {
+  var container = document.getElementById('ck-list');
+  if (!container) return;
+  var frag = document.createDocumentFragment();
+  CHKS.forEach(function(txt) {
+    var row = document.createElement('div');
+    row.className = 'ck-item';
+    var box = document.createElement('div');
+    box.className = 'ck-box';
+    var label = document.createElement('div');
+    label.className = 'ck-txt';
+    label.textContent = txt;
+    row.onclick = function() {
+      box.classList.toggle('chk');
+      label.classList.toggle('chk');
+    };
+    row.appendChild(box);
+    row.appendChild(label);
+    frag.appendChild(row);
+  });
+  container.appendChild(frag);
+}
+
+/* ── FORM SUBMIT (show toast, no network call) ── */
+function doSubmit(e) {
+  e.preventDefault();
+  var t = document.getElementById('toast');
+  t.classList.add('on');
+  setTimeout(function() { t.classList.remove('on'); }, 3400);
+}
+
+/* ── INIT ── */
+buildChecklist();
+</script>
+</body>
+</html>
