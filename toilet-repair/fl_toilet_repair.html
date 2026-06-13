@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Toilet Repair vs. Replace Calculator — Repair Costs, Symptoms &amp; When to Upgrade</title>
+<meta name="description" content="Free Florida toilet repair vs. replace calculator. Enter your symptoms to get repair cost estimates, replacement prices, and expert advice from a licensed FL plumber.">
+<style>
+:root{
+  --bg:#0A0E1A;--card:#0F1629;--card2:#141929;
+  --blue:#00B4FF;--gold:#F4B942;--orange:#F97316;
+  --red:#EF4444;--green:#22C55E;--teal:#14B8A6;
+  --text:#E2E8F0;--muted:#94A3B8;--border:#1E2A44;
+  --max:480px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+/* header */
+.hdr{background:var(--card);border-bottom:2px solid var(--blue);padding:14px 12px;text-align:center;position:sticky;top:0;z-index:100}
+.hdr h1{font-size:17px;font-weight:700;color:var(--blue);line-height:1.3}
+.hdr p{font-size:12px;color:var(--muted);margin-top:3px}
+
+/* tabs */
+.tabs{display:flex;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tb{flex:1;min-width:90px;padding:12px 6px;background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;-webkit-tap-highlight-color:transparent}
+.tb.on{color:var(--blue);border-bottom-color:var(--blue)}
+.tb:hover{color:var(--text)}
+
+/* panels + wizard */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 12px 44px}
+.panel{display:none;padding-top:18px}
+.panel.on{display:block}
+.ws{display:none}
+.ws.on{display:block}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+.c-b{border-color:var(--blue);background:rgba(0,180,255,.05)}
+.c-g{border-color:var(--gold);background:rgba(244,185,66,.05)}
+.c-r{border-color:var(--red);background:rgba(239,68,68,.05)}
+.c-gr{border-color:var(--green);background:rgba(34,197,94,.05)}
+.c-t{border-color:var(--teal);background:rgba(20,184,166,.05)}
+.c-o{border-color:var(--orange);background:rgba(249,115,22,.05)}
+
+/* section titles */
+.st{font-size:13px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.c-g .st{color:var(--gold)}
+.c-r .st{color:var(--red)}
+.c-gr .st{color:var(--green)}
+.c-t .st{color:var(--teal)}
+.c-o .st{color:var(--orange)}
+
+/* tile grids */
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.tg4{grid-template-columns:repeat(4,1fr)}
+.tile{background:var(--card2);border:2px solid var(--border);border-radius:10px;padding:10px 7px;cursor:pointer;text-align:center;font-size:12px;color:var(--text);transition:.15s;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.tile:hover{border-color:var(--blue)}
+.tile.sel{border-color:var(--blue);background:rgba(0,180,255,.14);color:#fff}
+.tile.sel-g{border-color:var(--gold);background:rgba(244,185,66,.14)}
+.tile .em{font-size:20px;display:block;margin-bottom:4px}
+.tile .lb{line-height:1.3}
+
+/* step progress bar */
+.sbar{display:flex;align-items:center;gap:5px;margin-bottom:18px}
+.sdot{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0}
+.sdot.act{background:var(--blue);color:#000}
+.sdot.dn{background:var(--green);color:#fff}
+.sln{flex:1;height:2px;background:var(--border)}
+.sln.dn{background:var(--green)}
+
+/* buttons */
+.btn{display:block;width:100%;padding:13px;border-radius:10px;border:none;font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:.15s}
+.btn:active{transform:scale(.98)}
+.btn-b{background:var(--blue);color:#000}
+.btn-g{background:var(--gold);color:#000}
+.bbk{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0;margin-bottom:14px;display:flex;align-items:center;gap:5px;-webkit-tap-highlight-color:transparent}
+.bbk:hover{color:var(--text)}
+.bsm{display:inline-block;padding:9px 16px;font-size:13px;width:auto;border-radius:8px;border:none;font-weight:700;cursor:pointer;text-decoration:none}
+
+/* result badge */
+.rbdg{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:50px;font-weight:700;font-size:14px;margin-bottom:10px}
+.rb-gr{background:rgba(34,197,94,.12);color:var(--green);border:1px solid var(--green)}
+.rb-g{background:rgba(244,185,66,.12);color:var(--gold);border:1px solid var(--gold)}
+.rb-r{background:rgba(239,68,68,.12);color:var(--red);border:1px solid var(--red)}
+
+/* cost tables */
+.ct{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.ct th{text-align:left;padding:7px 9px;background:rgba(255,255,255,.03);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.ct td{padding:7px 9px;border-top:1px solid var(--border);vertical-align:top}
+.ct tr:hover td{background:rgba(255,255,255,.02)}
+.gh{color:var(--gold);font-weight:600}
+
+/* problem table */
+.pt{width:100%;border-collapse:collapse;font-size:12px}
+.pt th{padding:7px 7px;text-align:left;background:rgba(255,255,255,.03);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.pt td{padding:7px 7px;border-top:1px solid var(--border);vertical-align:top;line-height:1.4}
+.td{color:var(--green);font-weight:600;font-size:11px}
+.tc{color:var(--orange);font-weight:600;font-size:11px}
+
+/* forms */
+.fg{margin-bottom:11px}
+.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600}
+.fi,.fta{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 11px;color:var(--text);font-size:14px;font-family:inherit;-webkit-appearance:none;transition:.2s}
+.fi:focus,.fta:focus{outline:none;border-color:var(--blue)}
+.fta{resize:vertical;min-height:74px}
+.fi::placeholder,.fta::placeholder{color:var(--muted)}
+
+/* toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--gold);color:#000;padding:13px 22px;border-radius:50px;font-weight:700;font-size:14px;z-index:9999;transition:transform .3s ease;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.45)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* checklist */
+.cli{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cli:last-child{border-bottom:none}
+.cb{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s;margin-top:2px}
+.cli.ck .cb{background:var(--green);border-color:var(--green)}
+.ci{display:none;font-size:12px;color:#fff;font-weight:700}
+.cli.ck .ci{display:block}
+.ct2{font-size:13px;line-height:1.4}
+.cli.ck .ct2{text-decoration:line-through;color:var(--muted)}
+
+/* progress bar */
+.pbw{background:var(--border);border-radius:50px;height:7px;margin:10px 0 4px;overflow:hidden}
+.pbf{height:100%;background:var(--green);border-radius:50px;transition:width .3s}
+.pbl{font-size:12px;color:var(--muted);text-align:right}
+
+/* ASCII diagram */
+.asc{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:'Courier New',monospace;font-size:11px;color:var(--teal);line-height:1.5;margin:10px 0;overflow-x:auto;white-space:pre}
+
+/* step list (DIY) */
+.slw{display:flex;gap:11px;margin-bottom:13px}
+.sln2{width:27px;height:27px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;flex-shrink:0}
+.slc strong{color:var(--text);font-size:13px;display:block}
+.slc p{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.4}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.25);border-radius:50px;padding:3px 9px;font-size:11px;color:var(--blue)}
+
+/* responsive */
+@media(max-width:380px){
+  .tg4{grid-template-columns:1fr 1fr}
+  .pt{font-size:11px}
+  .ct{font-size:12px}
+  .hdr h1{font-size:15px}
+}
+@media(min-width:481px){
+  .wrap{padding:0 0 44px}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>🚽 FL Toilet Repair vs. Replace Calculator</h1>
+  <p>Licensed FL Plumbers &nbsp;·&nbsp; (561) 555-PIPE &nbsp;·&nbsp; Free Estimates</p>
+</div>
+
+<div class="tabs" role="tablist">
+  <button class="tb on" onclick="showTab(0)" role="tab" aria-selected="true">🔧 Repair/Replace</button>
+  <button class="tb" onclick="showTab(1)" role="tab" aria-selected="false">🛠️ DIY Guide</button>
+  <button class="tb" onclick="showTab(2)" role="tab" aria-selected="false">🛒 Buying Guide</button>
+</div>
+
+<div class="wrap">
+
+  <!-- ═══════════════ PANEL 0 — WIZARD ═══════════════ -->
+  <div class="panel on" id="p0">
+
+    <!-- STEP 1: SYMPTOMS -->
+    <div class="ws on" id="s1">
+      <div class="sbar">
+        <div class="sdot act">1</div>
+        <div class="sln"></div>
+        <div class="sdot">2</div>
+        <div class="sln"></div>
+        <div class="sdot">3</div>
+      </div>
+      <div class="card">
+        <div class="st">Step 1 — Toilet Symptoms</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:13px">Check all that apply to your toilet:</p>
+        <div class="tg" id="symGrid"></div>
+        <p id="symCount" style="font-size:12px;color:var(--muted);margin-top:9px;text-align:center">0 symptoms selected</p>
+      </div>
+      <button class="btn btn-b" onclick="goStep(2)">Next: Toilet Details &rarr;</button>
+    </div>
+
+    <!-- STEP 2: DETAILS -->
+    <div class="ws" id="s2">
+      <div class="sbar">
+        <div class="sdot dn">&#10003;</div>
+        <div class="sln dn"></div>
+        <div class="sdot act">2</div>
+        <div class="sln"></div>
+        <div class="sdot">3</div>
+      </div>
+      <button class="bbk" onclick="goStep(1)">&#8592; Back</button>
+      <div class="card">
+        <div class="st">Toilet Age</div>
+        <div class="tg tg4" id="ageGrid"></div>
+      </div>
+      <div class="card">
+        <div class="st">Toilet Type / GPF</div>
+        <div class="tg" id="typeGrid"></div>
+      </div>
+      <button class="btn btn-b" onclick="calcResult()">Get My Recommendation &rarr;</button>
+    </div>
+
+    <!-- STEP 3: RESULTS -->
+    <div class="ws" id="s3">
+      <button class="bbk" onclick="goStep(2)">&#8592; Back to Details</button>
+      <div id="resultOut"></div>
+    </div>
+
+  </div><!-- /p0 -->
+
+  <!-- ═══════════════ PANEL 1 — DIY GUIDE ═══════════════ -->
+  <div class="panel" id="p1">
+
+    <div class="card c-b">
+      <div class="st">Running Toilet Fix Guide</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Follow these steps before calling a plumber:</p>
+      <div class="asc">       TANK (lid removed)
+  ┌─────────────────────┐
+  │  [Float Cup/Ball]   │
+  │        │            │
+  │  ┌─ Fill Valve ─┐   │
+  │  │  (left side) │   │
+  │  └──────────────┘   │
+  │                     │
+  │  ┌── Overflow Tube ─┤ ← water level here
+  │  └─────────────────┤
+  │                     │
+  │  ~~~~~~ Chain ~~~~~ │
+  │  [  F L A P P E R ] │ ← rubber seal
+  └─────────────────────┘
+       FLUSH VALVE SEAT</div>
+      <div id="diySteps"></div>
+    </div>
+
+    <div class="card c-o">
+      <div class="st">&#9888;&#65039; When to Stop DIYing</div>
+      <ul style="font-size:13px;line-height:1.9;padding-left:16px">
+        <li>Cracked porcelain on tank or bowl &mdash; replace immediately</li>
+        <li>Water on floor around base &mdash; wax ring failure, stop using the toilet</li>
+        <li>Three or more failed repair attempts on the same issue</li>
+        <li>Toilet still wobbles after tightening floor bolts &mdash; possible subfloor damage</li>
+        <li>Sewage smell from bowl area &mdash; vent stack or wax ring issue</li>
+      </ul>
+      <div style="margin-top:13px">
+        <a href="tel:5615557473" class="btn-g bsm" style="text-decoration:none">&#128222; Call (561) 555-PIPE Now</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="st">Common FL Toilet Problems Reference</div>
+      <div style="overflow-x:auto">
+        <table class="pt">
+          <thead>
+            <tr><th>Problem</th><th>Likely Cause</th><th>DIY Fix</th><th>Call Plumber?</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Running constantly</td>
+              <td>Worn flapper or fill valve</td>
+              <td><span class="td">&#10003; DIY</span><br>$8&ndash;$20 part</td>
+              <td>If still runs after flapper swap</td>
+            </tr>
+            <tr>
+              <td>Rocking / wobble</td>
+              <td>Loose bolts or wax ring</td>
+              <td><span class="td">Tighten bolts first</span></td>
+              <td><span class="tc">&#9889; Call</span> if continues &mdash; floor damage risk</td>
+            </tr>
+            <tr>
+              <td>Slow flush</td>
+              <td>Partial clog or low water</td>
+              <td><span class="td">&#10003; Adjust float</span> or auger</td>
+              <td>If auger doesn&rsquo;t clear in 2 tries</td>
+            </tr>
+            <tr>
+              <td>Leaking base</td>
+              <td>Wax ring failure</td>
+              <td><span class="tc">Don&rsquo;t delay</span></td>
+              <td><span class="tc">&#9889; Always call</span> &mdash; subfloor damage</td>
+            </tr>
+            <tr>
+              <td>Phantom flush</td>
+              <td>Flapper or fill valve</td>
+              <td><span class="td">&#10003; Dye test first,</span><br>then swap flapper</td>
+              <td>If dye test is negative</td>
+            </tr>
+            <tr>
+              <td>Loud fill noise</td>
+              <td>Worn fill valve / pressure</td>
+              <td><span class="td">&#10003; Replace fill valve</span></td>
+              <td>If water hammer persists</td>
+            </tr>
+            <tr>
+              <td>Frequent clogs</td>
+              <td>Low flush or drain issue</td>
+              <td><span class="td">Plunger / auger</span></td>
+              <td><span class="tc">&#9889; Call</span> if 2+ per month</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card c-t">
+      <div class="st">&#128167; FL Hard Water Impact</div>
+      <p style="font-size:13px;line-height:1.6;margin-bottom:11px">
+        Florida&rsquo;s hard water (<strong>150&ndash;350&nbsp;mg/L</strong>) causes mineral buildup in fill valves,
+        flush jets, and flappers &mdash; shortening component life by up to <strong>~30%</strong> compared to soft-water areas.
+      </p>
+      <p style="font-size:13px;line-height:1.6;margin-bottom:11px">
+        <strong>Annual maintenance tip:</strong> Clean flush jets under the rim with a bent wire.
+        Pour 1 cup white vinegar down the overflow tube overnight to dissolve fill valve mineral deposits.
+      </p>
+      <div style="background:rgba(20,184,166,.1);border-radius:8px;padding:11px;font-size:12px;color:var(--teal)">
+        &#128300; If your FL water utility reports hardness &gt; 200&nbsp;mg/L, replace fill valves
+        proactively every <strong>5&ndash;7&nbsp;yrs</strong> (vs. 8&ndash;10&nbsp;yrs in soft-water areas).
+        Consider a fill valve with a built-in filtration screen.
+      </div>
+    </div>
+
+    <div class="card c-g">
+      <div class="st">&#128197; Schedule a Toilet Inspection</div>
+      <form onsubmit="subForm(event)">
+        <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" placeholder="Jane Smith" autocomplete="name" required></div>
+        <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" placeholder="(561) 555-0000" autocomplete="tel" required></div>
+        <div class="fg"><label class="fl">City / ZIP</label><input class="fi" type="text" placeholder="Boca Raton, FL 33431" autocomplete="postal-code"></div>
+        <div class="fg"><label class="fl">Describe the issue</label><textarea class="fta" placeholder="e.g., toilet has been running for 3 days after I replaced the flapper..."></textarea></div>
+        <button type="submit" class="btn btn-g">Schedule My Inspection</button>
+      </form>
+    </div>
+
+  </div><!-- /p1 -->
+
+  <!-- ═══════════════ PANEL 2 — BUYING GUIDE ═══════════════ -->
+  <div class="panel" id="p2">
+
+    <div class="card">
+      <div class="st">Florida Toilet Selection Guide</div>
+      <div style="overflow-x:auto">
+        <table class="ct">
+          <thead><tr><th>Type</th><th>GPF</th><th>FL Code</th><th>Installed $</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Standard 2-piece</strong><br><span style="color:var(--muted);font-size:11px">Most common, easy repairs</span></td>
+              <td>1.28&ndash;1.6</td><td style="color:var(--green)">&#10003; Yes</td><td class="gh">$350&ndash;$550</td>
+            </tr>
+            <tr>
+              <td><strong>Comfort Height (ADA)</strong><br><span style="color:var(--muted);font-size:11px">17&ndash;19&rdquo; seat, great for 45+</span></td>
+              <td>1.28</td><td style="color:var(--green)">&#10003; Yes</td><td class="gh">$500&ndash;$900</td>
+            </tr>
+            <tr>
+              <td><strong>Dual-Flush</strong><br><span style="color:var(--muted);font-size:11px">Best FL water savings</span></td>
+              <td>0.8&nbsp;/&nbsp;1.28</td><td style="color:var(--green)">&#10003; Yes</td><td class="gh">$600&ndash;$1,000</td>
+            </tr>
+            <tr>
+              <td><strong>Pressure-Assist</strong><br><span style="color:var(--muted);font-size:11px">Powerful flush, louder</span></td>
+              <td>1.0&ndash;1.28</td><td style="color:var(--green)">&#10003; Yes</td><td class="gh">$700&ndash;$1,200</td>
+            </tr>
+            <tr>
+              <td><strong>Wall-Hung</strong><br><span style="color:var(--muted);font-size:11px">Hidden tank, modern look</span></td>
+              <td>0.8&ndash;1.28</td><td style="color:var(--green)">&#10003; Yes</td><td class="gh">$1,400&ndash;$2,500</td>
+            </tr>
+            <tr>
+              <td><strong>Smart / Bidet Combo</strong><br><span style="color:var(--muted);font-size:11px">Luxury, heated seat</span></td>
+              <td>1.28</td><td style="color:var(--green)">&#10003; Yes</td><td class="gh">$2,000&ndash;$5,000+</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card c-b">
+      <div class="st">Quick Comparison Notes</div>
+      <div style="font-size:12px;line-height:1.8">
+        <p style="margin-bottom:7px"><strong style="color:var(--blue)">Standard 2-piece</strong> &mdash; Best value; parts at any FL hardware store. Ideal for rentals and builder-grade installs.</p>
+        <p style="margin-bottom:7px"><strong style="color:var(--blue)">Comfort Height</strong> &mdash; ADA-compliant at 17&ndash;19&rdquo;. Increasingly standard in new FL construction. Best choice for adults 45+.</p>
+        <p style="margin-bottom:7px"><strong style="color:var(--blue)">Dual-Flush</strong> &mdash; Half-flush (0.8&nbsp;gpf) for liquids, full flush (1.28&nbsp;gpf) for solids. Best long-term FL water savings; ideal for conservation districts.</p>
+        <p style="margin-bottom:7px"><strong style="color:var(--blue)">Pressure-Assist</strong> &mdash; Compressed air boosts flush. Great for older FL drain lines prone to partial clogs. Noticeably louder than gravity-fed.</p>
+        <p><strong style="color:var(--blue)">Wall-Hung</strong> &mdash; Tank hides inside wall cavity. Easier floor cleaning; needs in-wall carrier frame. Higher install cost, sleek result.</p>
+      </div>
+    </div>
+
+    <div class="card c-g">
+      <div class="st">&#128176; FL Rebate Opportunities</div>
+      <p style="font-size:13px;line-height:1.6;margin-bottom:11px">
+        Several Florida water utilities offer <strong>$50&ndash;$150 rebates</strong> for WaterSense-certified
+        high-efficiency toilet (HET) upgrades:
+      </p>
+      <div style="font-size:12px;line-height:2">
+        <div>&#127754; <strong>JEA (Jacksonville)</strong> &mdash; HET rebate program, requires 1.28&nbsp;gpf max</div>
+        <div>&#127754; <strong>SFWMD</strong> &mdash; South FL Water Management District conservation programs</div>
+        <div>&#127754; <strong>Tampa Bay Water</strong> &mdash; Check with your local utility for current offers</div>
+        <div>&#127754; <strong>Palm Beach County Water Utilities</strong> &mdash; WaterSense-certified rebates available</div>
+      </div>
+      <div style="background:rgba(244,185,66,.1);border-radius:8px;padding:10px;margin-top:11px;font-size:12px;color:var(--gold)">
+        &#128161; Ask your plumber to confirm WaterSense certification before purchase.
+        Rebates typically require purchase receipt plus proof of installation by a licensed FL contractor.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="st">Toilet Brands &mdash; Consumer Reference</div>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:11px;font-style:italic">Consumer information only &mdash; no brand endorsement implied.</p>
+      <div style="overflow-x:auto">
+        <table class="ct">
+          <thead><tr><th>Brand</th><th>Flush Score</th><th>Warranty</th><th>FL Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Toto</strong></td>
+              <td>&#11088;&#11088;&#11088;&#11088;&#11088;<br><span style="font-size:10px;color:var(--muted)">Industry leader</span></td>
+              <td>1-yr limited<br><span style="font-size:10px;color:var(--muted)">+ lifetime china</span></td>
+              <td style="font-size:11px">Wide FL dealer network; Tornado Flush performs well against hard-water mineral buildup</td>
+            </tr>
+            <tr>
+              <td><strong>Kohler</strong></td>
+              <td>&#11088;&#11088;&#11088;&#11088;&#189;<br><span style="font-size:10px;color:var(--muted)">Strong performer</span></td>
+              <td>1-yr limited<br><span style="font-size:10px;color:var(--muted)">+ lifetime china</span></td>
+              <td style="font-size:11px">Parts stocked at FL Home Depot/Lowe&rsquo;s; strong ADA-friendly lineup</td>
+            </tr>
+            <tr>
+              <td><strong>American Standard</strong></td>
+              <td>&#11088;&#11088;&#11088;&#11088;<br><span style="font-size:10px;color:var(--muted)">Good value</span></td>
+              <td>1-yr limited<br><span style="font-size:10px;color:var(--muted)">+ lifetime china</span></td>
+              <td style="font-size:11px">Most common in FL stock builds; Champion 4 is clog-resistant for older drain lines</td>
+            </tr>
+            <tr>
+              <td><strong>Mansfield</strong></td>
+              <td>&#11088;&#11088;&#11088;&#189;<br><span style="font-size:10px;color:var(--muted)">Budget-friendly</span></td>
+              <td>1-yr limited</td>
+              <td style="font-size:11px">Common in FL rental &amp; builder-grade; parts available at local supply houses</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card c-t">
+      <div class="st">&#10003; Annual Toilet Maintenance Checklist</div>
+      <div class="pbw"><div class="pbf" id="pbf" style="width:0%"></div></div>
+      <p class="pbl" id="pbl">0 / 10 completed</p>
+      <div id="cklist"></div>
+    </div>
+
+    <div class="card c-g">
+      <div class="st">&#128701; Ready for a New Toilet? Get Your Free Estimate</div>
+      <form onsubmit="subForm(event)">
+        <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" placeholder="John Smith" autocomplete="name" required></div>
+        <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" placeholder="(561) 555-0000" autocomplete="tel" required></div>
+        <div class="fg"><label class="fl">City / ZIP</label><input class="fi" type="text" placeholder="West Palm Beach, FL 33401" autocomplete="postal-code"></div>
+        <div class="fg"><label class="fl">Toilet type interested in</label><textarea class="fta" placeholder="e.g., comfort-height dual-flush to replace a 20-year-old toilet..."></textarea></div>
+        <button type="submit" class="btn btn-g">Request Free Estimate</button>
+      </form>
+    </div>
+
+  </div><!-- /p2 -->
+
+</div><!-- /wrap -->
+
+<div class="toast" id="toast">&#127881; We&rsquo;ll call you within 2 hours!</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+var S = { syms: {}, age: null, type: null };
+
+// ── XSS Safety ────────────────────────────────────────────────────────────────
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = String(s || '');
+  return d.innerHTML;
+}
+
+// ── Data ──────────────────────────────────────────────────────────────────────
+var SYMS = [
+  {id:'run',  em:'💧', lb:'Runs constantly / phantom flushes'},
+  {id:'rock', em:'🪑', lb:'Rocks or wobbles'},
+  {id:'leak', em:'💦', lb:'Leaks at base'},
+  {id:'clog', em:'🚫', lb:'Clogs frequently (2+/month)'},
+  {id:'loud', em:'🔊', lb:'Loud fill / water hammer'},
+  {id:'slow', em:'⚡', lb:'Slow or weak flush'},
+  {id:'rpt',  em:'🔧', lb:'Already repaired multiple times'},
+  {id:'old',  em:'📅', lb:'Over 15 years old'},
+  {id:'bill', em:'💰', lb:'High water bill'}
+];
+
+var AGES = [
+  {id:'u5',    lb:'Under 5 yrs'},
+  {id:'a515',  lb:'5–15 yrs'},
+  {id:'a1525', lb:'15–25 yrs'},
+  {id:'o25',   lb:'Over 25 yrs'}
+];
+
+var TYPES = [
+  {id:'std',   lb:'Standard 1.6 gpf'},
+  {id:'old35', lb:'Older 3.5–7 gpf'},
+  {id:'lf',    lb:'Low-flow / HET'},
+  {id:'unk',   lb:'Unknown'}
+];
+
+var CKS = [
+  'Perform annual dye test for flapper leaks',
+  'Clean flush jets with white vinegar',
+  'Inspect wax ring area for moisture',
+  'Exercise (open/close) shut-off valve',
+  'Check fill valve for mineral buildup',
+  'Verify tank floor bolts are snug',
+  'Inspect tank lid for cracks',
+  'Check supply line for corrosion',
+  'Test flush handle and trip lever',
+  'Confirm toilet meets 1.28 gpf FL code'
+];
+
+var DIYS = [
+  {t:'Lift the tank lid',
+   p:'Set it gently on a flat surface. Tank water is clean — no worries. Now you can see all the components.'},
+  {t:'Inspect the flapper',
+   p:'The rubber seal at the tank bottom. Press down on it — if running stops immediately, the flapper is worn. Replace for $8–$15 at any hardware store.'},
+  {t:'Check the fill valve',
+   p:'Tall mechanism on the left side. Water should stop about 1" below the overflow tube. If water reaches the overflow tube, the fill valve needs adjustment or replacement ($15–$20 part).'},
+  {t:'Adjust the float',
+   p:'Ball float or cup float attached to fill valve. Adjust down if water level is at overflow tube height. Many fill valves have a screw adjuster; others use a pinch-clip on the float arm.'},
+  {t:'Perform the dye test',
+   p:'Drop 3–4 drops of food coloring in the tank. Wait 15 minutes without flushing. If color appears in the bowl, your flapper is leaking slowly — replace it.'}
+];
+
+// ── Render Functions ──────────────────────────────────────────────────────────
+function renderSymptoms() {
+  var h = '';
+  SYMS.forEach(function(s) {
+    h += '<div class="tile" id="t-' + s.id + '" onclick="togSym(\'' + s.id + '\')">'
+      + '<span class="em">' + s.em + '</span>'
+      + '<span class="lb">' + esc(s.lb) + '</span></div>';
+  });
+  document.getElementById('symGrid').innerHTML = h;
+}
+
+function renderAgeType() {
+  var ah = '', th = '';
+  AGES.forEach(function(a) {
+    ah += '<div class="tile" id="a-' + a.id + '" onclick="selAge(\'' + a.id + '\')">'
+      + '<span class="lb" style="font-size:13px;font-weight:600">' + esc(a.lb) + '</span></div>';
+  });
+  TYPES.forEach(function(t) {
+    th += '<div class="tile" id="ty-' + t.id + '" onclick="selType(\'' + t.id + '\')">'
+      + '<span class="lb" style="font-size:13px;font-weight:600">' + esc(t.lb) + '</span></div>';
+  });
+  document.getElementById('ageGrid').innerHTML = ah;
+  document.getElementById('typeGrid').innerHTML = th;
+}
+
+function renderDIYSteps() {
+  var h = '';
+  DIYS.forEach(function(s, i) {
+    h += '<div class="slw"><div class="sln2">' + (i + 1) + '</div>'
+      + '<div class="slc"><strong>' + esc(s.t) + '</strong><p>' + esc(s.p) + '</p></div></div>';
+  });
+  document.getElementById('diySteps').innerHTML = h;
+}
+
+function renderChecklist() {
+  var h = '';
+  CKS.forEach(function(item, i) {
+    h += '<div class="cli" id="ck-' + i + '" onclick="togCk(' + i + ')">'
+      + '<div class="cb"><span class="ci">&#10003;</span></div>'
+      + '<span class="ct2">' + esc(item) + '</span></div>';
+  });
+  document.getElementById('cklist').innerHTML = h;
+}
+
+// ── Interactions ──────────────────────────────────────────────────────────────
+function togSym(id) {
+  S.syms[id] = !S.syms[id];
+  document.getElementById('t-' + id).classList.toggle('sel', !!S.syms[id]);
+  var n = Object.values(S.syms).filter(Boolean).length;
+  document.getElementById('symCount').textContent = n + ' symptom' + (n !== 1 ? 's' : '') + ' selected';
+}
+
+function selAge(id) {
+  S.age = id;
+  AGES.forEach(function(a) {
+    var el = document.getElementById('a-' + a.id);
+    if (el) el.classList.toggle('sel-g', a.id === id);
+  });
+}
+
+function selType(id) {
+  S.type = id;
+  TYPES.forEach(function(t) {
+    var el = document.getElementById('ty-' + t.id);
+    if (el) el.classList.toggle('sel-g', t.id === id);
+  });
+}
+
+function togCk(i) {
+  document.getElementById('ck-' + i).classList.toggle('ck');
+  var done = document.querySelectorAll('.cli.ck').length;
+  var pct = Math.round(done / CKS.length * 100);
+  document.getElementById('pbf').style.width = pct + '%';
+  document.getElementById('pbl').textContent = done + ' / ' + CKS.length + ' completed';
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function goStep(n) {
+  document.querySelectorAll('.ws').forEach(function(el) { el.classList.remove('on'); });
+  document.getElementById('s' + n).classList.add('on');
+  window.scrollTo(0, 0);
+}
+
+function showTab(n) {
+  document.querySelectorAll('.panel').forEach(function(p, i) { p.classList.toggle('on', i === n); });
+  document.querySelectorAll('.tb').forEach(function(b, i) {
+    b.classList.toggle('on', i === n);
+    b.setAttribute('aria-selected', String(i === n));
+  });
+  window.scrollTo(0, 0);
+}
+
+// ── Score Engine ──────────────────────────────────────────────────────────────
+function calcResult() {
+  var n = Object.values(S.syms).filter(Boolean).length;
+  var lvl;
+  if (n >= 4 || S.age === 'o25' || S.type === 'old35') { lvl = 'replace'; }
+  else if (n >= 2 || S.age === 'a1525')                 { lvl = 'border'; }
+  else                                                   { lvl = 'repair'; }
+  var sel = SYMS.filter(function(s) { return S.syms[s.id]; });
+  renderResult(lvl, sel);
+  goStep(3);
+}
+
+// ── Result Card Builders ──────────────────────────────────────────────────────
+function buildRepairTable() {
+  return '<div class="card"><div class="st">Repair Cost Estimates (FL Labor Included)</div>'
+    + '<table class="ct"><thead><tr><th>Repair Type</th><th>Typical Cost</th></tr></thead><tbody>'
+    + '<tr><td>Flapper replacement</td><td class="gh">$85&ndash;$150</td></tr>'
+    + '<tr><td>Fill valve replacement</td><td class="gh">$100&ndash;$175</td></tr>'
+    + '<tr><td>Wax ring / wobble fix</td><td class="gh">$175&ndash;$275</td></tr>'
+    + '<tr><td>Handle / flush valve</td><td class="gh">$95&ndash;$175</td></tr>'
+    + '<tr><td>Complete rebuild kit</td><td class="gh">$200&ndash;$350</td></tr>'
+    + '</tbody></table></div>';
+}
+
+function buildReplaceTable() {
+  return '<div class="card"><div class="st">Replacement Cost Estimates (Installed)</div>'
+    + '<table class="ct"><thead><tr><th>Toilet Type</th><th>Installed Price</th></tr></thead><tbody>'
+    + '<tr><td>Basic (2-piece, installed)</td><td class="gh">$350&ndash;$550</td></tr>'
+    + '<tr><td>Mid-range / comfort height</td><td class="gh">$550&ndash;$900</td></tr>'
+    + '<tr><td>Dual-flush / comfort height</td><td class="gh">$700&ndash;$1,200</td></tr>'
+    + '<tr><td>Wall-hung</td><td class="gh">$1,400&ndash;$2,500</td></tr>'
+    + '</tbody></table></div>';
+}
+
+function buildWaterCard() {
+  return '<div class="card c-g"><div class="st">&#128167; FL Water Savings</div>'
+    + '<p style="font-size:13px;line-height:1.6">Upgrading from a <strong>3.5&nbsp;gpf</strong> to a <strong>1.28&nbsp;gpf</strong> toilet saves approximately <strong>5,500&nbsp;gallons/year</strong> per FL usage averages.</p>'
+    + '<div style="background:rgba(244,185,66,.1);border-radius:8px;padding:11px;margin-top:10px;font-size:12px">'
+    + '5,500&nbsp;gal &times; $0.008/gal avg FL rate&nbsp;= <strong style="color:var(--gold)">~$44/yr saved</strong><br>'
+    + 'Dual-flush toilet: <strong style="color:var(--gold)">$80&ndash;$120/yr savings</strong> for a FL family of&nbsp;4.'
+    + '</div></div>';
+}
+
+function buildCodeCard() {
+  return '<div class="card c-b"><div class="st">&#128203; FL Building Code Note</div>'
+    + '<p style="font-size:13px;line-height:1.6">'
+    + '<strong>FL Building Code requires 1.28&nbsp;gpf maximum</strong> for new toilet installations. '
+    + '1.6&nbsp;gpf is still legal for like-for-like replacements in existing bathrooms &mdash; but 1.28&nbsp;gpf '
+    + 'is now the standard for all new FL construction.</p></div>';
+}
+
+function buildLeadForm(summ) {
+  return '<div class="card c-r"><div class="st">&#128222; Get a Free Repair or Replacement Quote</div>'
+    + '<p style="font-size:13px;color:var(--muted);margin-bottom:14px">We&rsquo;ll call you within 2 hours &mdash; licensed FL plumbers, flat-rate estimates.</p>'
+    + '<form onsubmit="subForm(event)">'
+    + '<div class="fg"><label class="fl">Your Name</label>'
+    + '<input class="fi" type="text" placeholder="Jane Smith" autocomplete="name" required></div>'
+    + '<div class="fg"><label class="fl">Phone Number</label>'
+    + '<input class="fi" type="tel" placeholder="(561) 555-0000" autocomplete="tel" required></div>'
+    + '<div class="fg"><label class="fl">City / ZIP</label>'
+    + '<input class="fi" type="text" placeholder="Boca Raton, FL 33431"></div>'
+    + '<div class="fg"><label class="fl">Your Symptoms (pre-filled from wizard)</label>'
+    + '<textarea class="fta">' + esc(summ) + '</textarea></div>'
+    + '<button type="submit" class="btn btn-g" style="font-size:15px">Request Free Estimate &mdash; Call Me Today</button>'
+    + '</form></div>';
+}
+
+function renderResult(lvl, sel) {
+  var CFG = {
+    repair:  {cls:'c-gr', bc:'rb-gr', icon:'&#9989;',  ttl:'Repair Recommended',
+      msg:'Your toilet shows minor issues that a targeted repair can resolve. <strong>Minor FL repairs typically cost $85&ndash;$250.</strong>'},
+    border:  {cls:'c-g',  bc:'rb-g',  icon:'&#9888;&#65039;', ttl:'Borderline &mdash; Assess Carefully',
+      msg:'At this symptom level, repeated repairs may exceed replacement cost within 2 years. A professional assessment is recommended.'},
+    replace: {cls:'c-r',  bc:'rb-r',  icon:'&#128308;', ttl:'Replacement Recommended',
+      msg:'Replacing is more cost-effective. A new FL-code-compliant <strong>1.28&nbsp;gpf</strong> toilet pays for itself in water savings and fewer repair calls.'}
+  };
+  var c = CFG[lvl];
+  var chips = sel.map(function(s) {
+    return '<span class="chip">' + s.em + ' ' + esc(s.lb) + '</span>';
+  }).join('');
+  var summ = sel.map(function(s) { return s.em + ' ' + s.lb; }).join(', ') || 'No symptoms selected';
+  var chipsHtml = sel.length
+    ? '<p style="font-size:11px;color:var(--muted);margin-top:10px;margin-bottom:5px">SYMPTOMS FLAGGED:</p><div class="chips">' + chips + '</div>'
+    : '';
+  var top = '<div class="card ' + c.cls + '"><div class="rbdg ' + c.bc + '">' + c.icon + ' ' + c.ttl + '</div>'
+    + '<p style="font-size:13px;line-height:1.6">' + c.msg + '</p>' + chipsHtml + '</div>';
+  document.getElementById('resultOut').innerHTML = top + buildRepairTable() + buildReplaceTable() + buildWaterCard() + buildCodeCard() + buildLeadForm(summ);
+}
+
+// ── Form Submit ───────────────────────────────────────────────────────────────
+function subForm(e) {
+  e.preventDefault();
+  var t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  renderSymptoms();
+  renderAgeType();
+  renderDIYSteps();
+  renderChecklist();
+});
+</script>
+</body>
+</html>
