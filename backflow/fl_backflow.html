@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Backflow Preventer Testing &amp; Certification Guide | Florida Plumbing</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#e2e8f0;font-family:system-ui,-apple-system,sans-serif;min-height:100vh;padding:16px}
+h1{font-size:1.4rem;font-weight:700;color:#fff;text-align:center;margin-bottom:4px}
+.subtitle{text-align:center;color:#94a3b8;font-size:.85rem;margin-bottom:16px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;background:transparent;border:none;color:#94a3b8;font-size:.8rem;font-weight:600;border-radius:7px;cursor:pointer;transition:.2s}
+.tab.active{background:#141929;color:#00B4FF}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:14px}
+.card-gold{background:linear-gradient(135deg,#1a1400,#141929);border:1px solid #F4B94240;border-radius:12px;padding:16px;margin-bottom:14px}
+.card-orange{background:linear-gradient(135deg,#1a0a00,#141929);border:1px solid #F9731640;border-radius:12px;padding:16px;margin-bottom:14px}
+.card-teal{background:linear-gradient(135deg,#001a18,#141929);border:1px solid #14B8A640;border-radius:12px;padding:16px;margin-bottom:14px}
+.card-blue{background:linear-gradient(135deg,#001020,#141929);border:1px solid #00B4FF40;border-radius:12px;padding:16px;margin-bottom:14px}
+h2{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:10px}
+h3{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.gold{color:#F4B942}.blue{color:#00B4FF}.orange{color:#F97316}.teal{color:#14B8A6}.red{color:#EF4444}.green{color:#22C55E}
+p{font-size:.87rem;color:#cbd5e1;line-height:1.5}
+.step-label{font-size:.78rem;font-weight:600;color:#00B4FF;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.step-q{font-size:.97rem;font-weight:700;color:#fff;margin-bottom:12px}
+.tiles{display:grid;gap:8px}
+.tile{background:#141929;border:2px solid #1e293b;border-radius:10px;padding:12px 14px;cursor:pointer;transition:.2s;text-align:left}
+.tile:hover{border-color:#00B4FF50}
+.tile.sel{border-color:#00B4FF;background:#0d1f33}
+.tile-title{font-size:.88rem;font-weight:600;color:#e2e8f0}
+.tile-sub{font-size:.77rem;color:#64748b;margin-top:2px}
+.btn{display:block;width:100%;padding:13px;background:#00B4FF;color:#0A0E1A;font-weight:700;font-size:.93rem;border:none;border-radius:10px;cursor:pointer;margin-top:10px;transition:.2s}
+.btn:hover{background:#0099dd}
+.btn-back{background:#1e293b;color:#94a3b8;margin-bottom:6px}
+.btn-back:hover{background:#263044}
+.result-header{font-size:1.1rem;font-weight:700;color:#F4B942;margin-bottom:12px}
+.cost-line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e293b}
+.cost-line:last-child{border:none}
+.cost-label{font-size:.85rem;color:#cbd5e1}
+.cost-value{font-size:.93rem;font-weight:700;color:#F4B942}
+.progress-wrap{background:#1e293b;border-radius:999px;height:8px;margin:10px 0 4px}
+.progress-bar{height:8px;border-radius:999px;background:linear-gradient(90deg,#14B8A6,#00B4FF);transition:width .4s}
+.progress-label{font-size:.75rem;color:#64748b;text-align:right}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #1e293b;cursor:pointer}
+.check-item:last-child{border:none}
+.check-box{width:20px;height:20px;border-radius:5px;border:2px solid #14B8A6;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.done{background:#14B8A6;border-color:#14B8A6}
+.check-text{font-size:.84rem;color:#cbd5e1;line-height:1.4}
+.check-text.done{text-decoration:line-through;color:#64748b}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th{background:#0d1624;color:#94a3b8;padding:8px 6px;text-align:left;font-weight:600;border-bottom:1px solid #1e293b}
+td{padding:7px 6px;border-bottom:1px solid #0F1629;color:#cbd5e1}
+tr:nth-child(even) td{background:#0a0f1e}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:4px}
+.form-group input{width:100%;background:#141929;border:1px solid #1e293b;border-radius:8px;padding:10px 12px;color:#e2e8f0;font-size:.9rem;outline:none}
+.form-group input:focus{border-color:#00B4FF}
+.toast{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.9rem;z-index:999;box-shadow:0 4px 24px rgba(244,185,66,.4)}
+.fact-card{background:#141929;border-left:3px solid #00B4FF;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:10px}
+.fact-num{font-size:.75rem;font-weight:700;color:#00B4FF;text-transform:uppercase;margin-bottom:2px}
+.fact-text{font-size:.84rem;color:#cbd5e1;line-height:1.45}
+.proc-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px}
+.proc-icon{font-size:1.5rem;margin-bottom:6px}
+.proc-title{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:4px}
+.proc-body{font-size:.82rem;color:#94a3b8;line-height:1.45}
+.section-title{font-size:.8rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.07em;margin:16px 0 8px}
+.step-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.step-dots{display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:#1e293b}
+.dot.active{background:#00B4FF}
+.dot.done{background:#22C55E}
+</style>
+</head>
+<body>
+<div id="toast" class="toast">We'll call you within 2 hours!</div>
+
+<h1>🚰 FL Backflow Preventer Guide</h1>
+<p class="subtitle">Testing, Certification &amp; Compliance — Florida Plumbing</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab(0)">💰 Cost Calc</button>
+  <button class="tab" onclick="switchTab(1)">📖 FL Guide</button>
+  <button class="tab" onclick="switchTab(2)">✅ Checklist</button>
+</div>
+
+<!-- TAB 1 -->
+<div id="panel0" class="panel active">
+<div id="wizard">
+  <!-- Step 1 -->
+  <div id="s1" class="card">
+    <div class="step-nav">
+      <div class="step-label">Step 1 of 4</div>
+      <div class="step-dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div class="step-q">What type of backflow preventer do you have?</div>
+    <div class="tiles">
+      <div class="tile" onclick="pick('device','rpz',this)"><div class="tile-title">RPZ — Reduced Pressure Zone</div><div class="tile-sub">Highest protection — required for commercial, chemicals, irrigation with fertilizers</div></div>
+      <div class="tile" onclick="pick('device','dcva',this)"><div class="tile-title">DCVA — Double Check Valve Assembly</div><div class="tile-sub">Fire sprinklers, multi-family, general commercial applications</div></div>
+      <div class="tile" onclick="pick('device','pvb',this)"><div class="tile-title">PVB — Pressure Vacuum Breaker</div><div class="tile-sub">Residential irrigation — most common in FL homes</div></div>
+      <div class="tile" onclick="pick('device','avb',this)"><div class="tile-title">AVB — Atmospheric Vacuum Breaker</div><div class="tile-sub">Low-hazard residential, individual zone protection</div></div>
+      <div class="tile" onclick="pick('device','assess',this)"><div class="tile-title">Need Assessment</div><div class="tile-sub">Not sure what I have or if one is required</div></div>
+    </div>
+    <button class="btn" id="next1" style="display:none" onclick="goStep(2)">Next →</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div id="s2" class="card" style="display:none">
+    <div class="step-nav">
+      <div class="step-label">Step 2 of 4</div>
+      <div class="step-dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div class="step-q">What type of installation?</div>
+    <div class="tiles">
+      <div class="tile" onclick="pick('install','res',this)"><div class="tile-title">🏠 Residential Irrigation</div><div class="tile-sub">Home sprinkler system, hose connection</div></div>
+      <div class="tile" onclick="pick('install','com_irr',this)"><div class="tile-title">🌿 Commercial Irrigation</div><div class="tile-sub">Business landscape, HOA common areas, golf course</div></div>
+      <div class="tile" onclick="pick('install','com_bld',this)"><div class="tile-title">🏢 Commercial Building</div><div class="tile-sub">Office, retail, hotel — main water service protection</div></div>
+      <div class="tile" onclick="pick('install','rest',this)"><div class="tile-title">🍽️ Restaurant / Food Service</div><div class="tile-sub">Health department requires annual testing documentation</div></div>
+      <div class="tile" onclick="pick('install','ind',this)"><div class="tile-title">🏭 Industrial / Specialty</div><div class="tile-sub">Chemical handling, medical, high-hazard applications</div></div>
+    </div>
+    <button class="btn btn-back" onclick="goStep(1)">← Back</button>
+    <button class="btn" id="next2" style="display:none" onclick="goStep(3)">Next →</button>
+  </div>
+
+  <!-- Step 3 -->
+  <div id="s3" class="card" style="display:none">
+    <div class="step-nav">
+      <div class="step-label">Step 3 of 4</div>
+      <div class="step-dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+    </div>
+    <div class="step-q">What service do you need?</div>
+    <div class="tiles">
+      <div class="tile" onclick="pick('service','test',this)"><div class="tile-title">🧪 Annual Test Only</div><div class="tile-sub">Device passed last year — just need certified test &amp; paperwork</div></div>
+      <div class="tile" onclick="pick('service','test_repair',this)"><div class="tile-title">🔧 Test + Minor Repair</div><div class="tile-sub">Expect device may need parts — seals, springs, disc replacement</div></div>
+      <div class="tile" onclick="pick('service','rebuild',this)"><div class="tile-title">🔩 Test + Rebuild</div><div class="tile-sub">Device failed last year or hasn't been serviced in years</div></div>
+      <div class="tile" onclick="pick('service','new',this)"><div class="tile-title">🆕 New Installation</div><div class="tile-sub">Adding a backflow preventer where none exists</div></div>
+      <div class="tile" onclick="pick('service','replace',this)"><div class="tile-title">🔄 Full Replacement</div><div class="tile-sub">Device is corroded, cracked, or beyond repair</div></div>
+    </div>
+    <button class="btn btn-back" onclick="goStep(2)">← Back</button>
+    <button class="btn" id="next3" style="display:none" onclick="goStep(4)">Next →</button>
+  </div>
+
+  <!-- Step 4 -->
+  <div id="s4" class="card" style="display:none">
+    <div class="step-nav">
+      <div class="step-label">Step 4 of 4</div>
+      <div class="step-dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+    </div>
+    <div class="step-q">Where in Florida?</div>
+    <div class="tiles">
+      <div class="tile" onclick="pick('region','south',this)"><div class="tile-title">South FL</div><div class="tile-sub">Miami-Dade / Broward / Palm Beach</div></div>
+      <div class="tile" onclick="pick('region','tampa',this)"><div class="tile-title">Tampa Bay</div><div class="tile-sub">Hillsborough / Pinellas / Pasco</div></div>
+      <div class="tile" onclick="pick('region','jax',this)"><div class="tile-title">Jacksonville / NE FL</div><div class="tile-sub">Duval / St Johns / Clay</div></div>
+      <div class="tile" onclick="pick('region','swfl',this)"><div class="tile-title">SW FL</div><div class="tile-sub">Collier / Lee / Charlotte</div></div>
+      <div class="tile" onclick="pick('region','panhandle',this)"><div class="tile-title">Panhandle</div><div class="tile-sub">Pensacola / Tallahassee / Panama City</div></div>
+    </div>
+    <button class="btn btn-back" onclick="goStep(3)">← Back</button>
+    <button class="btn" id="next4" style="display:none" onclick="showResults()">See My Estimate →</button>
+  </div>
+</div>
+
+<!-- Results -->
+<div id="results" style="display:none">
+  <div class="card-gold">
+    <div class="result-header">💰 Your Estimate</div>
+    <div id="result-body"></div>
+  </div>
+  <div id="result-cards"></div>
+  <div class="card">
+    <h3 style="color:#e2e8f0;margin-bottom:10px">📞 Schedule Service</h3>
+    <p style="margin-bottom:12px;font-size:.82rem">FL certified testers — we file the paperwork with your utility. Same-week appointments available.</p>
+    <div class="form-group"><label>Your Name</label><input type="text" id="r-name" placeholder="John Smith"></div>
+    <div class="form-group"><label>Phone Number</label><input type="tel" id="r-phone" placeholder="(561) 555-PIPE"></div>
+    <button class="btn" onclick="submitForm()">Book Certified Tester</button>
+  </div>
+  <button class="btn btn-back" onclick="resetWizard()" style="margin-top:4px">← Start Over</button>
+</div>
+</div>
+
+<!-- TAB 2 -->
+<div id="panel1" class="panel">
+  <div class="card-blue"><h2 class="blue">5 FL Backflow Facts Property Owners Must Know</h2></div>
+
+  <div class="fact-card">
+    <div class="fact-num">Fact 1 — Florida Leads the Nation in Irrigation Systems</div>
+    <div class="fact-text">Florida has over 4 million irrigation systems — more than any other state. Every one connected to a public water supply must have a backflow preventer to protect drinking water from chemical fertilizers, pesticides, and biological contaminants. Florida Administrative Code (FAC) 62-555.360 mandates this statewide.</div>
+  </div>
+  <div class="fact-card">
+    <div class="fact-num">Fact 2 — Annual Testing Is Legally Required</div>
+    <div class="fact-text">FAC 62-555.360 requires annual testing of all backflow prevention assemblies connected to FL public water systems. Tests must be performed by a state-certified backflow tester. Results must be filed with your local utility within their specified deadline (typically 30–90 days of the anniversary date). Non-compliance can result in fines and service interruption.</div>
+  </div>
+  <div class="fact-card">
+    <div class="fact-num">Fact 3 — Hard Water Accelerates Device Failure in FL</div>
+    <div class="fact-text">Florida's hard water (100–350 mg/L calcium carbonate) causes mineral deposits that clog check valves, stiffen springs, and corrode elastomer seals inside backflow preventers. South FL devices serving hard water areas may require rebuild or replacement in 5–8 years vs. the 10–15 year lifespan in soft water regions. Annual testing catches deterioration before failure.</div>
+  </div>
+  <div class="fact-card">
+    <div class="fact-num">Fact 4 — South FL Utilities Have the Strictest Enforcement</div>
+    <div class="fact-text">Miami-Dade Water and Sewer, Broward County, and Palm Beach utilities are among the most aggressively enforcing FAC 62-555.360. Service shutoffs for non-testing are actively executed. Restoration fees average $150–250 plus all back-testing costs. The enforcement contrast with rural North FL utilities (where compliance is largely voluntary) is stark.</div>
+  </div>
+  <div class="fact-card">
+    <div class="fact-num">Fact 5 — FL Plumbing Code Section 608 Governs Installations</div>
+    <div class="fact-text">Florida Plumbing Code Section 608 (based on IPC Chapter 6) specifies which backflow protection is required for each hazard level. A licensed FL plumber must install or replace backflow preventers. Improper device selection — for example installing a PVB where an RPZ is required — is a code violation regardless of whether it was tested and certified.</div>
+  </div>
+
+  <div class="section-title">Backflow Device Comparison</div>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Device</th><th>Hazard Level</th><th>Annual Test?</th><th>FL Common Use</th><th>Cost Range</th></tr></thead>
+      <tbody>
+        <tr><td>RPZ</td><td class="red">High</td><td class="orange">Yes — required</td><td>Commercial irrigation, chemicals</td><td>$500–1,400 installed</td></tr>
+        <tr><td>DCVA</td><td class="orange">Medium-High</td><td class="orange">Yes — required</td><td>Fire suppression, multi-family</td><td>$350–800 installed</td></tr>
+        <tr><td>PVB</td><td class="orange">Medium</td><td class="orange">Yes — required</td><td>Residential irrigation</td><td>$200–500 installed</td></tr>
+        <tr><td>AVB</td><td class="green">Low</td><td class="green">No (not an assembly)</td><td>Individual hose bib</td><td>$15–50 DIY</td></tr>
+        <tr><td>RPDA</td><td class="red">High</td><td class="orange">Yes — required</td><td>Large commercial, fire w/ additives</td><td>$800–2,500 installed</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">FL Utility Enforcement Overview</div>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Utility</th><th>Enforcement</th><th>Testing Deadline</th><th>Shutoff?</th></tr></thead>
+      <tbody>
+        <tr><td>Miami-Dade Water &amp; Sewer</td><td class="red">Strict</td><td>Anniversary + 30 days</td><td class="red">Yes</td></tr>
+        <tr><td>Broward County</td><td class="red">Strict</td><td>Annual + 60 days</td><td class="red">Yes</td></tr>
+        <tr><td>Palm Beach Utilities</td><td class="orange">Moderate</td><td>Annual + 90 days</td><td class="orange">Warning first</td></tr>
+        <tr><td>Tampa Bay Water / TBW</td><td class="orange">Moderate</td><td>Annual + 90 days</td><td class="orange">Warning first</td></tr>
+        <tr><td>JEA (Jacksonville)</td><td class="green">Light</td><td>Annual</td><td class="green">Rare</td></tr>
+        <tr><td>Rural/County utilities</td><td class="green">Light</td><td>Self-reported</td><td class="green">Rarely</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card-orange">
+    <h3 class="orange">⚠️ Non-Compliance Consequences</h3>
+    <p>Missing annual testing deadlines can result in: water service shutoff ($150–250 restoration fee), utility fines ($50–500/day in some jurisdictions), health department citation for food service businesses, and loss of irrigation permit. File your test results promptly — late testing still incurs fees in most FL counties.</p>
+  </div>
+
+  <div class="card-teal">
+    <h3 class="teal">📋 FAC 62-555.360 Quick Reference</h3>
+    <p style="margin-bottom:6px">Key requirements of Florida's backflow prevention rule:</p>
+    <p style="font-size:.82rem">• All assemblies (RPZ, DCVA, PVB) must be tested annually by a FL-certified tester<br>• Test results must be filed with the serving utility within their specified timeframe<br>• Devices that fail must be repaired or replaced within 30 days<br>• Only FL-licensed plumbers may install or replace backflow assemblies<br>• AVBs (non-assemblies) are exempt from annual testing requirement</p>
+  </div>
+
+  <div class="card">
+    <h3 style="color:#e2e8f0;margin-bottom:10px">📞 Schedule Your Annual Test</h3>
+    <div class="form-group"><label>Your Name</label><input type="text" id="g-name" placeholder="John Smith"></div>
+    <div class="form-group"><label>Phone Number</label><input type="tel" id="g-phone" placeholder="(561) 555-PIPE"></div>
+    <button class="btn" onclick="submitForm()">Book Certified Tester</button>
+  </div>
+</div>
+
+<!-- TAB 3 -->
+<div id="panel2" class="panel">
+  <div class="card-teal"><h2 class="teal">Backflow Testing &amp; Compliance Process</h2><p>5 steps from scheduling to certification filed.</p></div>
+
+  <div class="proc-card">
+    <div class="proc-icon">📍</div>
+    <div class="proc-title">Step 1: Locate Your Device</div>
+    <div class="proc-body">Backflow preventers are typically found: in the irrigation controller box or adjacent valve box (residential), at the point where the irrigation supply tees off from the main (1–3 ft above grade), or in the mechanical room of commercial buildings. Look for a device with two shutoff valves and two test ports (cocks). If you can't find it, your plumber can locate it during service.</div>
+  </div>
+  <div class="proc-card">
+    <div class="proc-icon">📅</div>
+    <div class="proc-title">Step 2: Schedule Before Your Deadline</div>
+    <div class="proc-body">Your utility assigned a testing anniversary date — it's printed on your last test report or your utility bill. Schedule at least 2–3 weeks before your deadline. FL utilities begin enforcement 30–90 days after the due date. Most FL certified testers offer same-week scheduling. Only hire a FL-certified tester (verify certification at myfloridalicense.com or your utility's approved tester list).</div>
+  </div>
+  <div class="proc-card">
+    <div class="proc-icon">🧪</div>
+    <div class="proc-title">Step 3: What Happens During the Test</div>
+    <div class="proc-body">The certified tester attaches differential pressure gauges to the test cocks and reads the pressure differential across each check valve. For an RPZ, they also verify the relief valve opens under proper conditions. The test takes 20–40 minutes. Water service to the zone tested will be briefly interrupted. You do not need to be present — just provide access to the device location.</div>
+  </div>
+  <div class="proc-card">
+    <div class="proc-icon">🔧</div>
+    <div class="proc-title">Step 4: If It Fails</div>
+    <div class="proc-body"><strong style="color:#e2e8f0">Minor failure:</strong> Worn seals, weak springs, sticky disc — tester can rebuild on-site for $150–350 in parts and labor, then retest immediately.<br><br><strong style="color:#e2e8f0">Major failure:</strong> Cracked body, corroded internals beyond rebuild — FL FAC requires repair or replacement within 30 days. Your tester should document the failure reason and provide a written quote.<br><br>Do NOT leave a failed device unreported — that's a code violation in FL.</div>
+  </div>
+  <div class="proc-card">
+    <div class="proc-icon">📄</div>
+    <div class="proc-title">Step 5: Certification Filing</div>
+    <div class="proc-body">After a passing test, your certified tester completes a FL Uniform Test Report form. This is filed with your utility — a reputable tester does this for you. Request a copy for your records. Most FL utilities process electronically within 2–5 business days. If using an irrigation permit service or HOA, they may also require a copy. Keep all test reports for at least 3 years.</div>
+  </div>
+
+  <div class="card-gold">
+    <h3 class="gold">📋 FL Annual Testing Law</h3>
+    <p>FAC 62-555.360 requires annual testing of all backflow prevention assemblies connected to FL public water. Non-compliance can result in fines and service interruption. Only FL-certified testers may perform legally recognized tests. Verify your tester at myfloridalicense.com.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="color:#e2e8f0;margin-bottom:6px">12-Point Compliance Checklist</h3>
+    <div class="progress-wrap"><div class="progress-bar" id="pbar" style="width:0%"></div></div>
+    <div class="progress-label" id="plabel">0 of 12 complete</div>
+    <div id="checklist">
+      <div class="check-item" onclick="toggleCheck(this,0)"><div class="check-box"></div><div class="check-text">Located your backflow preventer and confirmed device type (RPZ/DCVA/PVB)</div></div>
+      <div class="check-item" onclick="toggleCheck(this,1)"><div class="check-box"></div><div class="check-text">Found your testing anniversary date from last report or utility bill</div></div>
+      <div class="check-item" onclick="toggleCheck(this,2)"><div class="check-box"></div><div class="check-text">Verified tester certification at myfloridalicense.com</div></div>
+      <div class="check-item" onclick="toggleCheck(this,3)"><div class="check-box"></div><div class="check-text">Scheduled FL-certified tester at least 2 weeks before deadline</div></div>
+      <div class="check-item" onclick="toggleCheck(this,4)"><div class="check-box"></div><div class="check-text">Provided access to device location for tester</div></div>
+      <div class="check-item" onclick="toggleCheck(this,5)"><div class="check-box"></div><div class="check-text">Annual test completed by certified tester</div></div>
+      <div class="check-item" onclick="toggleCheck(this,6)"><div class="check-box"></div><div class="check-text">Device PASSED — or repair/replacement completed within 30 days</div></div>
+      <div class="check-item" onclick="toggleCheck(this,7)"><div class="check-box"></div><div class="check-text">FL Uniform Test Report completed and signed by tester</div></div>
+      <div class="check-item" onclick="toggleCheck(this,8)"><div class="check-box"></div><div class="check-text">Test report filed with your utility by your deadline</div></div>
+      <div class="check-item" onclick="toggleCheck(this,9)"><div class="check-box"></div><div class="check-text">Copy of test report kept for your records (keep 3 years)</div></div>
+      <div class="check-item" onclick="toggleCheck(this,10)"><div class="check-box"></div><div class="check-text">Food service / restaurant: copy filed with health department</div></div>
+      <div class="check-item" onclick="toggleCheck(this,11)"><div class="check-box"></div><div class="check-text">Next year's testing date calendared — schedule reminder set</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="color:#e2e8f0;margin-bottom:10px">📞 Book Your Test Today</h3>
+    <div class="form-group"><label>Your Name</label><input type="text" id="c-name" placeholder="John Smith"></div>
+    <div class="form-group"><label>Phone Number</label><input type="tel" id="c-phone" placeholder="(561) 555-PIPE"></div>
+    <button class="btn" onclick="submitForm()">Schedule Certified Test</button>
+  </div>
+</div>
+
+<script>
+const S={tab:0,device:null,install:null,service:null,region:null,checks:new Array(12).fill(false)};
+const RMULT={south:1.18,tampa:1.0,jax:0.93,swfl:1.10,panhandle:0.90};
+const RNAME={south:'South FL',tampa:'Tampa Bay',jax:'Jacksonville/NE FL',swfl:'SW FL',panhandle:'Panhandle'};
+
+const COSTS={
+  rpz:{test:{lo:75,hi:150},test_repair:{lo:150,hi:350},rebuild:{lo:250,hi:600},new:{lo:500,hi:1200},replace:{lo:600,hi:1400}},
+  dcva:{test:{lo:60,hi:120},test_repair:{lo:130,hi:300},rebuild:{lo:200,hi:500},new:{lo:350,hi:800},replace:{lo:400,hi:900}},
+  pvb:{test:{lo:50,hi:100},test_repair:{lo:100,hi:250},rebuild:{lo:175,hi:400},new:{lo:200,hi:500},replace:{lo:250,hi:600}},
+  avb:{test:{lo:40,hi:80},test_repair:{lo:80,hi:200},rebuild:{lo:150,hi:300},new:{lo:100,hi:250},replace:{lo:120,hi:300}},
+  assess:{test:{lo:75,hi:200},test_repair:{lo:150,hi:400},rebuild:{lo:250,hi:600},new:{lo:400,hi:1200},replace:{lo:500,hi:1400}}
+};
+
+function switchTab(n){
+  S.tab=n;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+}
+
+function pick(key,val,el){
+  S[key]=val;
+  el.closest('.tiles').querySelectorAll('.tile').forEach(t=>t.classList.remove('sel'));
+  el.classList.add('sel');
+  const map={device:'next1',install:'next2',service:'next3',region:'next4'};
+  const btn=document.getElementById(map[key]);
+  if(btn) btn.style.display='block';
+}
+
+function goStep(n){
+  for(let i=1;i<=4;i++){
+    const el=document.getElementById('s'+i);
+    if(el) el.style.display=i===n?'block':'none';
+  }
+}
+
+function fmt(n,m){return '$'+Math.round(n*m/25)*25;}
+
+function showResults(){
+  if(!S.device||!S.install||!S.service||!S.region) return;
+  const m=RMULT[S.region];
+  const deviceKey=S.device;
+  const svcKey=S.service;
+  const c=COSTS[deviceKey][svcKey];
+
+  const deviceLabel={rpz:'RPZ — Reduced Pressure Zone',dcva:'DCVA — Double Check Valve',pvb:'PVB — Pressure Vacuum Breaker',avb:'AVB — Atmospheric Vacuum Breaker',assess:'Assessment + Service'}[deviceKey];
+  const installLabel={res:'Residential Irrigation',com_irr:'Commercial Irrigation',com_bld:'Commercial Building',rest:'Restaurant/Food Service',ind:'Industrial/Specialty'}[S.install];
+  const svcLabel={test:'Annual Test Only',test_repair:'Test + Minor Repair',rebuild:'Test + Rebuild',new:'New Installation',replace:'Full Replacement'}[svcKey];
+
+  const div=document.getElementById('result-body');
+  div.innerHTML='';
+  const lines=[
+    ['Device Type',deviceLabel],
+    ['Installation',installLabel],
+    ['Service',svcLabel],
+    ['Region',RNAME[S.region]],
+    ['Estimated Cost',fmt(c.lo,m)+' – '+fmt(c.hi,m)]
+  ];
+  lines.forEach(([l,v])=>{
+    const row=document.createElement('div');
+    row.className='cost-line';
+    const lbl=document.createElement('span');lbl.className='cost-label';lbl.textContent=l;
+    const val=document.createElement('span');val.className='cost-value';val.textContent=v;
+    row.appendChild(lbl);row.appendChild(val);div.appendChild(row);
+  });
+
+  const cards=document.getElementById('result-cards');
+  cards.innerHTML='';
+  const addCard=(cls,html)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=html;cards.appendChild(d);};
+
+  addCard('card-gold','<h3 class="gold">📅 FL Annual Testing Deadline</h3><p>Under FAC 62-555.360, your device must be tested annually by a FL-certified tester. South FL utilities (Miami-Dade, Broward) enforce this aggressively — late testing triggers service shutoff. File test results with your utility promptly.</p>');
+
+  if(S.service==='test_repair'||S.service==='rebuild'){
+    addCard('card-orange','<h3 class="orange">⚠️ 30-Day Repair Rule</h3><p>If your device fails its annual test, FL FAC requires repair or replacement within <strong>30 days</strong>. Operating with a known failed backflow preventer is a code violation. Your tester must report failure to the utility — don\'t delay repair.</p>');
+  }
+
+  addCard('card-teal','<h3 class="teal">📋 RPZ vs. FAC Requirements</h3><p>Florida requires RPZ assemblies for high-hazard cross-connections: irrigation systems using chemical injection, pools with water supply, dental/medical equipment, and any commercial application with chemicals. Installing a lower-rated device (PVB where RPZ is required) is a code violation even if the device passes its annual test.</p>');
+
+  document.getElementById('wizard').style.display='none';
+  document.getElementById('results').style.display='block';
+}
+
+function resetWizard(){
+  S.device=S.install=S.service=S.region=null;
+  document.getElementById('results').style.display='none';
+  document.getElementById('wizard').style.display='block';
+  goStep(1);
+  ['next1','next2','next3','next4'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  document.querySelectorAll('.tile').forEach(t=>t.classList.remove('sel'));
+}
+
+function toggleCheck(el,idx){
+  S.checks[idx]=!S.checks[idx];
+  el.querySelector('.check-box').classList.toggle('done',S.checks[idx]);
+  el.querySelector('.check-text').classList.toggle('done',S.checks[idx]);
+  const done=S.checks.filter(Boolean).length;
+  document.getElementById('pbar').style.width=Math.round(done/12*100)+'%';
+  document.getElementById('plabel').textContent=done+' of 12 complete';
+}
+
+function submitForm(){
+  const t=document.getElementById('toast');
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',3500);
+}
+</script>
+</body>
+</html>
