@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FL Plumbing Leak Detection Cost Guide — Tool #99</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0E1A;--card:#0F1629;--card2:#141929;
+  --blue:#00B4FF;--gold:#F4B942;--orange:#F97316;
+  --red:#EF4444;--green:#22C55E;--teal:#14B8A6;
+  --text:#E2E8F0;--muted:#94A3B8;
+  --border:#1e2a4a;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:3rem;
+  -webkit-font-smoothing:antialiased;
+}
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#0F1629 0%,#0c1122 100%);
+  padding:1.25rem 1rem 0.875rem;
+  border-bottom:2px solid var(--blue);
+  text-align:center;
+}
+header h1{font-size:1.1rem;color:var(--blue);font-weight:800;letter-spacing:-0.01em}
+header p{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;line-height:1.4}
+.header-pills{display:flex;justify-content:center;gap:0.4rem;margin-top:0.6rem;flex-wrap:wrap}
+.pill{
+  font-size:0.62rem;padding:0.2rem 0.55rem;border-radius:20px;font-weight:600;
+  background:rgba(0,180,255,0.12);color:var(--blue);border:1px solid rgba(0,180,255,0.25);
+}
+/* TABS */
+.tabs{
+  display:flex;background:var(--card);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+}
+.tab-btn{
+  flex:1;padding:0.75rem 0.25rem;background:none;border:none;
+  color:var(--muted);font-size:0.68rem;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .2s;
+  font-weight:600;font-family:inherit;line-height:1.2;
+}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-btn:hover:not(.active){color:var(--text)}
+.tab-content{display:none;padding:1rem}
+.tab-content.active{display:block}
+/* CARDS */
+.card{
+  background:var(--card);border-radius:12px;
+  padding:1rem;margin-bottom:0.75rem;
+  border:1px solid var(--border);
+}
+.card.blue  {border-color:var(--blue); background:rgba(0,180,255,.07)}
+.card.gold  {border-color:var(--gold); background:rgba(244,185,66,.07)}
+.card.orange{border-color:var(--orange);background:rgba(249,115,22,.07)}
+.card.red   {border-color:var(--red);  background:rgba(239,68,68,.07)}
+.card.green {border-color:var(--green);background:rgba(34,197,94,.07)}
+.card.teal  {border-color:var(--teal); background:rgba(20,184,166,.07)}
+.card-title{font-size:.85rem;font-weight:700;margin-bottom:.5rem}
+.card.blue  .card-title{color:var(--blue)}
+.card.gold  .card-title{color:var(--gold)}
+.card.orange .card-title{color:var(--orange)}
+.card.red   .card-title{color:var(--red)}
+.card.teal  .card-title{color:var(--teal)}
+.card.green .card-title{color:var(--green)}
+.card p,.card li{font-size:.79rem;color:var(--text);line-height:1.55}
+.card ul{padding-left:1.2rem;line-height:1.75}
+/* WIZARD */
+.wizard-step{display:none}
+.wizard-step.active{display:block}
+.step-dots{display:flex;justify-content:center;gap:.5rem;margin-bottom:1rem}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s}
+.dot.active{background:var(--blue)}
+.dot.done  {background:var(--green)}
+.step-title{font-size:.95rem;font-weight:700;text-align:center;margin-bottom:.35rem}
+.step-sub  {font-size:.73rem;color:var(--muted);text-align:center;margin-bottom:1rem}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.875rem}
+.opt-grid.col1{grid-template-columns:1fr}
+.opt-btn{
+  background:var(--card2);border:2px solid var(--border);border-radius:10px;
+  color:var(--text);padding:.7rem .5rem;font-size:.76rem;cursor:pointer;
+  text-align:center;transition:all .15s;font-weight:500;line-height:1.3;
+  font-family:inherit;
+}
+.opt-btn:hover{border-color:var(--blue);background:rgba(0,180,255,.09)}
+.opt-btn.sel {border-color:var(--blue);background:rgba(0,180,255,.15);color:var(--blue)}
+.opt-emoji{font-size:1.3rem;display:block;margin-bottom:.3rem}
+.opt-desc{font-size:.67rem;color:var(--muted);display:block;margin-top:.15rem}
+.wizard-nav{display:flex;gap:.5rem}
+/* BUTTONS */
+.btn{
+  padding:.72rem .875rem;border-radius:8px;font-size:.82rem;font-weight:600;
+  cursor:pointer;border:none;transition:all .15s;font-family:inherit;
+}
+.btn-primary{background:var(--blue);color:#fff;flex:1}
+.btn-primary:hover{background:#0099dd}
+.btn-primary:disabled{opacity:.38;cursor:not-allowed}
+.btn-back{background:var(--card2);color:var(--muted);border:1px solid var(--border);flex:0 0 auto}
+.btn-back:hover{color:var(--text)}
+.btn-gold{background:var(--gold);color:#0A0E1A;font-weight:700;width:100%;margin-top:.5rem}
+.btn-gold:hover{background:#e5a828}
+.btn-restart{
+  width:100%;background:none;border:1px solid var(--border);color:var(--muted);
+  font-size:.73rem;padding:.5rem;border-radius:6px;cursor:pointer;
+  margin-bottom:.875rem;font-family:inherit;transition:color .2s;
+}
+.btn-restart:hover{color:var(--text)}
+/* RESULTS */
+#results{display:none}
+.cost-range{
+  font-size:2.1rem;font-weight:800;color:var(--blue);
+  text-align:center;margin:.4rem 0;letter-spacing:-0.02em;
+}
+.cost-label{font-size:.72rem;color:var(--muted);text-align:center;margin-top:.1rem}
+.detect-tag{
+  font-size:.72rem;color:var(--teal);text-align:center;
+  margin-top:.4rem;font-style:italic;
+}
+.region-pill{
+  display:inline-block;font-size:.67rem;background:rgba(0,180,255,.12);
+  color:var(--blue);border:1px solid rgba(0,180,255,.2);
+  padding:.15rem .5rem;border-radius:12px;margin-top:.4rem;
+}
+/* LEAD FORM */
+.lead-form{
+  background:var(--card2);border-radius:12px;padding:1rem;
+  border:1px solid var(--gold);margin-top:1rem;
+}
+.lead-form h3{color:var(--gold);font-size:.88rem;margin-bottom:.75rem;font-weight:700}
+.fg{margin-bottom:.55rem}
+.fg label{display:block;font-size:.7rem;color:var(--muted);margin-bottom:.22rem;font-weight:500}
+.fg input,.fg select,.fg textarea{
+  width:100%;background:var(--card);border:1px solid var(--border);
+  border-radius:6px;color:var(--text);padding:.58rem .72rem;
+  font-size:.79rem;font-family:inherit;outline:none;transition:border-color .2s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue)}
+.fg select option{background:var(--card)}
+.fg textarea{resize:vertical;min-height:58px}
+.fg input.err{border-color:var(--red)}
+/* TABLES */
+.tbl-wrap{overflow-x:auto;margin:.5rem 0}
+.dtbl{width:100%;border-collapse:collapse;font-size:.69rem}
+.dtbl th{
+  background:#1e2a4a;color:var(--blue);padding:.45rem .4rem;
+  text-align:left;font-weight:600;white-space:nowrap;
+}
+.dtbl td{
+  padding:.42rem .4rem;border-bottom:1px solid var(--border);
+  color:var(--text);vertical-align:top;line-height:1.35;
+}
+.dtbl tr:nth-child(even) td{background:rgba(255,255,255,.025)}
+.tbl-label{color:var(--blue);font-size:.82rem;font-weight:700;margin:.875rem 0 .4rem}
+.tbl-label.orange{color:var(--orange)}
+/* CHECKLIST */
+.prog-wrap{margin-bottom:1rem}
+.prog-header{display:flex;justify-content:space-between;font-size:.73rem;color:var(--muted);margin-bottom:.35rem}
+.prog-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--teal);border-radius:3px;transition:width .35s ease;width:0}
+.ci{
+  display:flex;align-items:flex-start;gap:.7rem;padding:.68rem .75rem;
+  background:var(--card);border-radius:8px;margin-bottom:.45rem;
+  border:1px solid var(--border);cursor:pointer;transition:border-color .15s;
+}
+.ci:hover{border-color:var(--teal)}
+.ci.done{border-color:var(--teal);background:rgba(20,184,166,.06)}
+.cbox{
+  width:20px;height:20px;border-radius:4px;border:2px solid var(--border);
+  background:var(--card2);flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;font-size:.78rem;color:#fff;
+  transition:all .15s;margin-top:.1rem;
+}
+.ci.done .cbox{background:var(--teal);border-color:var(--teal)}
+.c-main{font-size:.79rem;color:var(--text);line-height:1.4;font-weight:500}
+.ci.done .c-main{color:var(--muted)}
+.c-note{font-size:.68rem;color:var(--muted);margin-top:.15rem;line-height:1.4}
+.badge{
+  display:inline-block;font-size:.62rem;padding:.13rem .38rem;
+  border-radius:4px;font-weight:600;margin-left:.3rem;vertical-align:middle;
+}
+.badge-b{background:rgba(0,180,255,.15);color:var(--blue)}
+.badge-o{background:rgba(249,115,22,.15);color:var(--orange)}
+.badge-g{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-r{background:rgba(239,68,68,.15);color:var(--red)}
+/* TOAST */
+.toast{
+  position:fixed;top:1rem;left:50%;
+  transform:translateX(-50%) translateY(-5rem);
+  background:var(--gold);color:#0A0E1A;padding:.75rem 1.25rem;
+  border-radius:8px;font-weight:700;font-size:.84rem;z-index:9999;
+  transition:transform .3s cubic-bezier(.22,1,.36,1);white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+/* MISC */
+hr{border:none;border-top:1px solid var(--border);margin:1rem 0}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>&#128295; FL Plumbing Leak Detection</h1>
+  <p>Cost Guide &amp; Resource Tool &#8212; Florida Licensed Plumbers<br>South FL &#183; Tampa Bay &#183; Jacksonville &#183; SW Florida &#183; Panhandle</p>
+  <div class="header-pills">
+    <span class="pill">FL-Licensed FS 489</span>
+    <span class="pill">Same-Day Response</span>
+    <span class="pill">Free Estimates</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(0)">&#128176; Cost Calc</button>
+  <button class="tab-btn" onclick="switchTab(1)">&#128214; FL Guide</button>
+  <button class="tab-btn" onclick="switchTab(2)">&#9989; Checklist</button>
+</div>
+
+<!-- TAB 0: COST CALCULATOR -->
+<div id="tab0" class="tab-content active">
+  <div id="wizard">
+    <div class="step-dots" id="stepDots"></div>
+
+    <!-- Step 1 -->
+    <div class="wizard-step active" id="step0">
+      <div class="step-title">Step 1 of 4 &#8212; What&#39;s Your Symptom?</div>
+      <div class="step-sub">Select the sign that best matches your situation</div>
+      <div class="opt-grid" id="symptomGrid"></div>
+      <div class="wizard-nav">
+        <button class="btn btn-primary" id="next0" onclick="goNext(0)" disabled>Next Step &#8594;</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="wizard-step" id="step1">
+      <div class="step-title">Step 2 of 4 &#8212; Leak Location</div>
+      <div class="step-sub">Where do you think the leak might be?</div>
+      <div class="opt-grid" id="locationGrid"></div>
+      <div class="wizard-nav">
+        <button class="btn btn-back" onclick="goBack(1)">&#8592; Back</button>
+        <button class="btn btn-primary" id="next1" onclick="goNext(1)" disabled>Next Step &#8594;</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="wizard-step" id="step2">
+      <div class="step-title">Step 3 of 4 &#8212; Home Age</div>
+      <div class="step-sub">Older homes have higher detection complexity &amp; cost</div>
+      <div class="opt-grid" id="ageGrid"></div>
+      <div class="wizard-nav">
+        <button class="btn btn-back" onclick="goBack(2)">&#8592; Back</button>
+        <button class="btn btn-primary" id="next2" onclick="goNext(2)" disabled>Next Step &#8594;</button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="wizard-step" id="step3">
+      <div class="step-title">Step 4 of 4 &#8212; Your FL Region</div>
+      <div class="step-sub">Costs vary by Florida market &#8212; select your area</div>
+      <div class="opt-grid col1" id="regionGrid"></div>
+      <div class="wizard-nav">
+        <button class="btn btn-back" onclick="goBack(3)">&#8592; Back</button>
+        <button class="btn btn-primary" id="next3" onclick="goNext(3)" disabled>Calculate Cost &#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <button class="btn-restart" onclick="restart()">&#8592; Start Over &#8212; Recalculate</button>
+
+    <div class="card blue">
+      <div class="card-title" id="ccTitle">&#128167; Leak Detection Estimate</div>
+      <div class="cost-range" id="costRange">&#8212;</div>
+      <div class="cost-label" id="costLabel">Detection cost estimate</div>
+      <div class="detect-tag" id="detectTag"></div>
+      <div style="text-align:center;margin-top:.35rem"><span class="region-pill" id="regionPill"></span></div>
+    </div>
+
+    <div class="card gold">
+      <div class="card-title">&#128167; FL Water Loss by the Numbers</div>
+      <ul>
+        <li>FL average household loses 10,000&#8211;20,000 gallons/year to leaks</li>
+        <li>At FL average water rate $4&#8211;7/1,000 gal = $40&#8211;$140/year minimum wasted</li>
+        <li>Slab leaks can lose 500+ gallons/day ($70&#8211;$150/month added to your bill)</li>
+        <li>Early detection typically costs 5&#8211;10&#215; less than delaying repair</li>
+      </ul>
+    </div>
+
+    <div class="card orange" id="slabAlert" style="display:none">
+      <div class="card-title">&#9888;&#65039; Slab Leak Alert &#8212; Act Within 48 Hours</div>
+      <p>FL&#39;s sandy soil and high water table accelerate copper pipe corrosion under slabs. Warning signs: warm spots on floor, cracked tile, mold smell, sound of running water with all fixtures off. Foundation damage from an untreated slab leak can exceed $15,000. <strong>Call a licensed plumber within 48 hours.</strong></p>
+    </div>
+
+    <div class="card teal">
+      <div class="card-title">&#127754; FL High Water Table Complication</div>
+      <p>FL&#39;s water table sits just 2&#8211;15 ft below the surface, making outdoor leak detection significantly harder. Saturated soil masks acoustic signatures from leaking pipes. Thermal imaging is more reliable in FL summer months due to ground temperature differential. Always hire a plumber with specific Florida soil experience.</p>
+    </div>
+
+    <div class="lead-form">
+      <h3>&#128222; Schedule Leak Detection</h3>
+      <div class="fg"><label>Your Name *</label>
+        <input type="text" id="f0n" placeholder="John Smith" autocomplete="name"></div>
+      <div class="fg"><label>Phone Number *</label>
+        <input type="tel" id="f0p" placeholder="(561) 555-PIPE" autocomplete="tel"></div>
+      <div class="fg"><label>Email (optional)</label>
+        <input type="email" id="f0e" placeholder="john@email.com" autocomplete="email"></div>
+      <div class="fg"><label>FL City / ZIP</label>
+        <input type="text" id="f0c" placeholder="Miami, FL 33101"></div>
+      <div class="fg"><label>Best Time to Call</label>
+        <select id="f0t">
+          <option value="">Select preferred time...</option>
+          <option>ASAP &#8212; This is an Emergency</option>
+          <option>Morning (8am&#8211;12pm)</option>
+          <option>Afternoon (12pm&#8211;5pm)</option>
+          <option>Evening (5pm&#8211;8pm)</option>
+          <option>Anytime Works</option>
+        </select></div>
+      <button class="btn btn-gold" onclick="submitLead('f0n','f0p')">Get Free Quote &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 1: FL GUIDE -->
+<div id="tab1" class="tab-content">
+
+  <div class="card gold">
+    <div class="card-title">&#128184; FL Leaks Cost More Than You Think</div>
+    <p>FL average household wastes 14,000 gallons/year to leaks (EPA data). At FL&#39;s average $5/1,000 gallons = $70/year minimum. But slab leaks and pipe leaks average <strong>$2,000&#8211;$8,000 in structural damage</strong> if undetected for 3+ months. Professional leak detection is cheap insurance &#8212; typically $150&#8211;$600 vs. thousands in repair costs.</p>
+  </div>
+
+  <div class="card teal">
+    <div class="card-title">&#127754; FL&#39;s High Water Table Problem</div>
+    <p>FL&#39;s water table sits 2&#8211;10 ft below the surface in South and Central FL &#8212; making outdoor leak detection much harder than in other states. Wet soil and hydrostatic pressure mask small leaks. Acoustic and electronic detection equipment must be specially calibrated to account for background water noise. Hiring a plumber with FL-specific experience is essential for accurate results.</p>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title">&#127968; Slab Leaks &#8212; FL&#39;s Unique Risk</div>
+    <p>FL homes are predominantly slab-on-grade construction. Copper pipes under slabs corrode 2&#8211;3&#215; faster in FL&#39;s acidic soil (pH 4.5&#8211;6.5 in many counties). FL slab leaks average <strong>$2,500&#8211;$10,000 to repair</strong>. Detection + repair together commonly runs $3,000&#8211;$12,000. Finding the leak early can save $5,000+ in foundation repair that becomes necessary if ignored.</p>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title">&#127946; Pool Leaks &#8212; FL&#39;s Hidden Drain</div>
+    <p>Florida has 1.5M+ residential pools &#8212; more than any other state. The average FL pool loses &#188; inch/day to normal evaporation. Losing more than &#189; inch/day indicates a leak. Pool leaks average <strong>$1,000&#8211;$3,500 to repair</strong>. <strong>DIY Bucket Test:</strong> Fill a bucket with pool water, set it on a step, mark both levels. Compare after 24 hours &#8212; if pool drops more than bucket, you have a leak.</p>
+  </div>
+
+  <div class="card green">
+    <div class="card-title">&#128202; When Your Water Bill Spikes</div>
+    <p>A FL water bill spiking 30%+ with no change in household usage is a near-certain indicator of a pressurized pipe leak. FL utilities allow <strong>one leak credit per year</strong> (requires licensed plumber repair receipt). South FL water districts may require leak disclosure. Pull your last 12 months of bills &#8212; compare usage to pinpoint when the leak started and how much water is being lost.</p>
+  </div>
+
+  <hr>
+
+  <div class="tbl-label">&#128300; Detection Methods Comparison</div>
+  <div class="card" style="padding:.5rem">
+    <div class="tbl-wrap">
+      <table class="dtbl">
+        <thead>
+          <tr><th>Method</th><th>Best For</th><th>Cost Range</th><th>Accuracy</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Electronic detection</td><td>Pressurized pipe leaks</td><td>$150&#8211;$400</td><td>High</td></tr>
+          <tr><td>Acoustic / ground mic</td><td>Underground pipe leaks</td><td>$200&#8211;$450</td><td>High</td></tr>
+          <tr><td>Thermal imaging</td><td>Wall &amp; ceiling leaks</td><td>$250&#8211;$500</td><td>Very High</td></tr>
+          <tr><td>Video camera</td><td>Drain &amp; sewer lines</td><td>$200&#8211;$400</td><td>Visual</td></tr>
+          <tr><td>Pressure test</td><td>Confirming leak presence</td><td>$100&#8211;$250</td><td>Confirms leak</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tbl-label orange">&#128681; FL Leak Red Flags &#8212; Know What to Look For</div>
+  <div class="card" style="padding:.5rem">
+    <div class="tbl-wrap">
+      <table class="dtbl">
+        <thead>
+          <tr><th>Sign</th><th>Likely Location</th><th>First Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Bill 30%+ higher</td><td>Pressurized supply pipe</td><td>Electronic detection</td></tr>
+          <tr><td>Warm floor area</td><td>Slab hot water line</td><td>Call immediately &#8212; slab leak</td></tr>
+          <tr><td>Wet yard (no rain)</td><td>Outdoor main or irrigation</td><td>Acoustic detection</td></tr>
+          <tr><td>Meter moving (all off)</td><td>Supply line leak</td><td>Pressure test first</td></tr>
+          <tr><td>Pool losing &gt;&#189;&quot;/day</td><td>Pool shell or fitting</td><td>Pool leak detection</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card red" style="margin-top:.75rem">
+    <div class="card-title">&#128680; Emergency Leak Signs &#8212; Act Immediately</div>
+    <ul>
+      <li>Water meter spinning with ALL fixtures off &#8594; shut main valve immediately</li>
+      <li>Wet ceiling actively spreading &#8594; call emergency line now</li>
+      <li>Bubbling paint or buckled flooring &#8594; hidden pipe may have burst</li>
+      <li>Sewage smell rising from floor &#8594; potential sewer line failure</li>
+    </ul>
+    <p style="margin-top:.6rem;color:var(--red);font-weight:600;font-size:.78rem">FL average water damage insurance claim: $15,000&#8211;$45,000. Shut off your main water supply first, then call your plumber.</p>
+  </div>
+
+  <div class="card teal" style="margin-top:.75rem">
+    <div class="card-title">&#127807; FL DEP Water Conservation Programs</div>
+    <p>Florida&#39;s water management districts &#8212; SFWMD (South FL), SWFWMD (Southwest FL), and SJRWMD (St. Johns River) &#8212; actively encourage leak detection and repair. Several districts offer rebate programs for replacing leaking irrigation systems. <strong>FL HB 1191</strong> requires sellers to disclose known water leaks at the time of property sale. Ask your district office about current conservation rebates before scheduling service.</p>
+  </div>
+
+  <div class="lead-form">
+    <h3>&#128222; Schedule Leak Detection</h3>
+    <div class="fg"><label>Your Name *</label>
+      <input type="text" id="f1n" placeholder="John Smith" autocomplete="name"></div>
+    <div class="fg"><label>Phone Number *</label>
+      <input type="tel" id="f1p" placeholder="(561) 555-PIPE" autocomplete="tel"></div>
+    <div class="fg"><label>FL City / ZIP</label>
+      <input type="text" id="f1c" placeholder="Miami, FL 33101"></div>
+    <div class="fg"><label>Describe Your Issue</label>
+      <textarea id="f1i" placeholder="Brief description of what you're experiencing..."></textarea></div>
+    <button class="btn btn-gold" onclick="submitLead('f1n','f1p')">Get Free Quote &#8594;</button>
+  </div>
+
+</div>
+
+<!-- TAB 2: CHECKLIST -->
+<div id="tab2" class="tab-content">
+
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span>FL Leak Prep Checklist</span>
+      <span id="progText">0 / 12 completed</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+  </div>
+
+  <div id="clItems"></div>
+
+  <div class="card gold" style="margin-top:.875rem">
+    <div class="card-title">&#128161; FL Leak Credit Tip &#8212; Save $100&#8211;$500</div>
+    <p>Most FL water utilities offer a <strong>one-time annual leak credit</strong> &#8212; typically 50% off the excess water charges caused by a confirmed leak. Requirements: (1) licensed plumber repair receipt showing the repair is complete, (2) billing comparison showing the spike vs. normal usage, (3) application submitted within 60 days of discovery. Contact your city or county utility billing department to apply &#8212; this single credit can save $100&#8211;$500 on your water bill.</p>
+  </div>
+
+  <div class="lead-form">
+    <h3>&#128222; Schedule Leak Detection</h3>
+    <div class="fg"><label>Your Name *</label>
+      <input type="text" id="f2n" placeholder="John Smith" autocomplete="name"></div>
+    <div class="fg"><label>Phone Number *</label>
+      <input type="tel" id="f2p" placeholder="(561) 555-PIPE" autocomplete="tel"></div>
+    <div class="fg"><label>FL City / ZIP</label>
+      <input type="text" id="f2c" placeholder="Miami, FL 33101"></div>
+    <div class="fg"><label>Best Time to Call</label>
+      <select id="f2t">
+        <option value="">Select preferred time...</option>
+        <option>ASAP &#8212; This is an Emergency</option>
+        <option>Morning (8am&#8211;12pm)</option>
+        <option>Afternoon (12pm&#8211;5pm)</option>
+        <option>Evening (5pm&#8211;8pm)</option>
+        <option>Anytime Works</option>
+      </select></div>
+    <button class="btn btn-gold" onclick="submitLead('f2n','f2p')">Get Free Quote &#8594;</button>
+  </div>
+
+</div>
+
+<div class="toast" id="mainToast">&#9989; We'll call you within 2 hours!</div>
+
+<script>
+/* XSS safety */
+const esc = s => String(s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+/* State */
+const S = {symptom:null,location:null,age:null,region:null,step:0};
+
+/* Data */
+const SYMPTOMS = [
+  {id:'bill_spike', e:'📈', l:'High Water Bill',    d:'Bill unexpectedly high'},
+  {id:'wet_spot',   e:'💦', l:'Wet Spot',           d:'Wet area in yard or floor'},
+  {id:'wall_damage',e:'🧱', l:'Wall Stains',        d:'Water stains on walls/ceiling'},
+  {id:'slab',       e:'🔥', l:'Slab Leak',          d:'Warm floor, cracked tile'},
+  {id:'pool',       e:'🏊', l:'Pool Losing Water',  d:'Pool level dropping'},
+  {id:'unknown',    e:'❓',       l:'Not Sure',           d:"Don't know where it is"}
+];
+const LOCATIONS = [
+  {id:'indoor',  e:'🏠', l:'Indoor',  d:'Inside the home'},
+  {id:'outdoor', e:'🌿', l:'Outdoor', d:'Yard or exterior'},
+  {id:'both',    e:'↔️', l:'Both',    d:'Inside and outside'},
+  {id:'unknown', e:'❓',       l:'Unknown', d:'Not sure'}
+];
+const AGES = [
+  {id:'pre1980',    e:'🏚️', l:'Pre-1980',    d:'Built before 1980'},
+  {id:'y1980_2000', e:'🏡',       l:'1980–2000', d:'Built 1980–2000'},
+  {id:'y2000_2015', e:'🏘️', l:'2000–2015', d:'Built 2000–2015'},
+  {id:'post2015',   e:'🆕',       l:'2015+',       d:'Built after 2015'}
+];
+const REGIONS = [
+  {id:'south',     e:'🌴', l:'South Florida',        d:'Miami / Broward / Palm Beach'},
+  {id:'tampa',     e:'⚓',       l:'Tampa Bay',            d:'Tampa / St. Pete / Clearwater'},
+  {id:'jax',       e:'🌉', l:'Jacksonville / NE FL', d:'Jacksonville area'},
+  {id:'swfl',      e:'🦩', l:'SW Florida',           d:'Sarasota / Naples / Fort Myers'},
+  {id:'panhandle', e:'🏖️', l:'Panhandle',     d:'Pensacola / Panama City'}
+];
+const COSTS = {
+  bill_spike:  {pre1980:[300,600],y1980_2000:[250,500],y2000_2015:[200,450],post2015:[150,350]},
+  wet_spot:    {pre1980:[200,450],y1980_2000:[175,400],y2000_2015:[150,350],post2015:[150,300]},
+  wall_damage: {pre1980:[350,650],y1980_2000:[300,550],y2000_2015:[250,500],post2015:[200,400]},
+  slab:        {pre1980:[450,800],y1980_2000:[400,700],y2000_2015:[350,650],post2015:[300,550]},
+  pool:        {pre1980:[200,500],y1980_2000:[200,450],y2000_2015:[175,400],post2015:[150,350]},
+  unknown:     {pre1980:[400,750],y1980_2000:[350,650],y2000_2015:[300,550],post2015:[250,450]}
+};
+const MULT = {south:1.18,tampa:1.0,jax:0.92,swfl:1.12,panhandle:0.90};
+const DETECT = {
+  bill_spike:  'Electronic + Acoustic Detection',
+  wet_spot:    'Acoustic + Ground Microphone Detection',
+  wall_damage: 'Thermal Imaging + Acoustic Detection',
+  slab:        'Electronic + Acoustic + Thermal (Slab-Specific Package)',
+  pool:        'Pool-Specific Dye & Pressure Test',
+  unknown:     'Full Inspection Package (All Methods)'
+};
+const CL = [
+  {t:'Water meter test performed',          n:'Turn off all fixtures — check if meter dial moves at all',                   b:''},
+  {t:'Meter reading baseline noted',         n:'Read meter, wait 1 hour with zero use, read again to measure loss',              b:''},
+  {t:'Main shut-off valve located',          n:'Know where it is and confirm it turns fully — stop water in an emergency',  b:'important'},
+  {t:'Water bill history reviewed',          n:'Gather last 12 months of bills to pinpoint when the spike started',              b:''},
+  {t:'All visible fixtures checked',         n:'Faucets, toilets, hose bibs, shower heads — look and listen for drips',    b:''},
+  {t:'Toilet dye test done',                 n:'Food coloring in tank: if color reaches bowl without flushing = flapper leak',   b:''},
+  {t:'Hot water lines assessed',             n:'Feel for warm floor spots — copper pipes in slab homes = slab leak risk',  b:'urgent'},
+  {t:'FL-licensed plumber hired',            n:'Verify license (FS 489) at myfloridalicense.com before scheduling',             b:'required'},
+  {t:'Detection method selected',            n:'Based on symptom: acoustic / electronic / thermal / camera inspection',          b:''},
+  {t:'Pool bucket test done (if applicable)',n:'24-hour water-level comparison between bucket and pool surface',                 b:''},
+  {t:'Utility leak credit applied for',      n:'FL utilities offer one annual credit — apply within 60 days of repair',    b:'save'},
+  {t:'Written repair estimate obtained',     n:'Get scope and cost in writing before any work begins — no verbal estimates',b:'important'}
+];
+
+/* Dot indicator */
+function buildDots() {
+  const el = document.getElementById('stepDots');
+  el.innerHTML = '';
+  for (let i=0;i<4;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i<S.step?' done':i===S.step?' active':'');
+    el.appendChild(d);
+  }
+}
+
+/* Build option grid */
+function buildGrid(cid,items,key,nid) {
+  const el=document.getElementById(cid);
+  el.innerHTML='';
+  items.forEach(item=>{
+    const btn=document.createElement('button');
+    btn.className='opt-btn'+(S[key]===item.id?' sel':'');
+    const em=document.createElement('span');em.className='opt-emoji';em.textContent=item.e;
+    const lb=document.createElement('span');lb.textContent=item.l;
+    const ds=document.createElement('span');ds.className='opt-desc';ds.textContent=item.d;
+    btn.appendChild(em);btn.appendChild(lb);btn.appendChild(ds);
+    btn.addEventListener('click',()=>pick(cid,btn,key,item.id,nid));
+    el.appendChild(btn);
+  });
+}
+
+function pick(gid,btn,key,val,nid) {
+  document.querySelectorAll('#'+gid+' .opt-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  S[key]=val;
+  document.getElementById(nid).disabled=false;
+}
+
+/* Wizard navigation */
+function goNext(step) {
+  document.getElementById('step'+step).classList.remove('active');
+  const nx=step+1;
+  if(nx<4){
+    S.step=nx;
+    document.getElementById('step'+nx).classList.add('active');
+    buildDots();
+    if(nx===3) buildGrid('regionGrid',REGIONS,'region','next3');
+  } else {
+    showResults();
+  }
+}
+
+function goBack(step) {
+  document.getElementById('step'+step).classList.remove('active');
+  S.step=step-1;
+  document.getElementById('step'+(step-1)).classList.add('active');
+  buildDots();
+}
+
+/* Show results */
+function showResults() {
+  document.getElementById('wizard').style.display='none';
+  document.getElementById('results').style.display='block';
+  const base=COSTS[S.symptom][S.age];
+  const m=MULT[S.region];
+  const lo=Math.round(base[0]*m/5)*5;
+  const hi=Math.round(base[1]*m/5)*5;
+  const sym=SYMPTOMS.find(x=>x.id===S.symptom);
+  const reg=REGIONS.find(x=>x.id===S.region);
+  document.getElementById('costRange').textContent='$'+lo.toLocaleString()+'–$'+hi.toLocaleString();
+  document.getElementById('ccTitle').textContent='💧 '+(sym?sym.l:'')+' Detection Estimate';
+  document.getElementById('costLabel').textContent=DETECT[S.symptom]+' · Tampa base ×'+m.toFixed(2);
+  document.getElementById('detectTag').textContent='📍 Region multiplier applied for '+(reg?reg.d:'');
+  document.getElementById('regionPill').textContent=reg?reg.l+' Market':'';
+  document.getElementById('slabAlert').style.display=S.symptom==='slab'?'block':'none';
+}
+
+function restart() {
+  S.symptom=null;S.location=null;S.age=null;S.region=null;S.step=0;
+  document.getElementById('results').style.display='none';
+  document.getElementById('wizard').style.display='block';
+  document.querySelectorAll('.wizard-step').forEach((el,i)=>el.classList.toggle('active',i===0));
+  ['next0','next1','next2','next3'].forEach(id=>{document.getElementById(id).disabled=true;});
+  buildDots();
+  buildGrid('symptomGrid',SYMPTOMS,'symptom','next0');
+  buildGrid('locationGrid',LOCATIONS,'location','next1');
+  buildGrid('ageGrid',AGES,'age','next2');
+}
+
+/* Tab switching */
+function switchTab(idx) {
+  document.querySelectorAll('.tab-content').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+}
+
+/* Lead form */
+function submitLead(nid,pid) {
+  const nEl=document.getElementById(nid);
+  const pEl=document.getElementById(pid);
+  let ok=true;
+  if(!nEl.value.trim()){nEl.classList.add('err');ok=false;}else nEl.classList.remove('err');
+  if(!pEl.value.trim()){pEl.classList.add('err');ok=false;}else pEl.classList.remove('err');
+  if(!ok){setTimeout(()=>{nEl.classList.remove('err');pEl.classList.remove('err');},2200);return;}
+  document.querySelectorAll('.fg input,.fg select,.fg textarea').forEach(el=>{el.value='';});
+  const t=document.getElementById('mainToast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3800);
+}
+
+/* Checklist */
+const DONE=new Set();
+const BC={important:{cls:'badge-b',label:'Important'},urgent:{cls:'badge-o',label:'Urgent'},required:{cls:'badge-r',label:'FL Required'},save:{cls:'badge-g',label:'Save $$$'}};
+
+function buildChecklist() {
+  const el=document.getElementById('clItems');
+  CL.forEach((item,idx)=>{
+    const row=document.createElement('div');
+    row.className='ci';row.id='ci'+idx;
+    row.addEventListener('click',()=>toggleCheck(idx));
+    const box=document.createElement('div');box.className='cbox';box.id='cb'+idx;
+    const wrap=document.createElement('div');
+    const main=document.createElement('div');main.className='c-main';
+    main.textContent=item.t;
+    if(item.b&&BC[item.b]){
+      const bg=BC[item.b];
+      const badge=document.createElement('span');
+      badge.className='badge '+bg.cls;badge.textContent=bg.label;
+      main.appendChild(badge);
+    }
+    const note=document.createElement('div');note.className='c-note';note.textContent=item.n;
+    wrap.appendChild(main);wrap.appendChild(note);
+    row.appendChild(box);row.appendChild(wrap);
+    el.appendChild(row);
+  });
+}
+
+function toggleCheck(idx) {
+  const row=document.getElementById('ci'+idx);
+  const box=document.getElementById('cb'+idx);
+  if(DONE.has(idx)){DONE.delete(idx);row.classList.remove('done');box.textContent='';}
+  else{DONE.add(idx);row.classList.add('done');box.textContent='✓';}
+  const pct=Math.round((DONE.size/CL.length)*100);
+  document.getElementById('progText').textContent=DONE.size+' / '+CL.length+' completed';
+  document.getElementById('progFill').style.width=pct+'%';
+}
+
+/* Init */
+buildDots();
+buildGrid('symptomGrid',SYMPTOMS,'symptom','next0');
+buildGrid('locationGrid',LOCATIONS,'location','next1');
+buildGrid('ageGrid',AGES,'age','next2');
+buildChecklist();
+</script>
+</body>
+</html>
