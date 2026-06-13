@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Is My Florida Water Bill So High? Spike Diagnostic Tool — Leak, Slab, Toilet</title>
+  <meta name="description" content="Free Florida water bill spike diagnostic. Enter your bill amounts to identify hidden leaks, slab leaks, running toilets & meter errors. Get a plumber fast.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0A0E1A; --blue: #00B4FF; --gold: #F4B942;
+      --orange: #F97316; --red: #EF4444; --green: #22C55E; --teal: #14B8A6;
+      --c1: #0F1629; --c2: #141929; --text: #F1F5F9; --muted: #94A3B8; --border: #1E293B;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+    .hdr { background: linear-gradient(135deg,#0F1629,#141929); border-bottom: 1px solid var(--border); padding: 14px 16px; text-align: center; }
+    .hdr h1 { font-size: 1.05rem; color: var(--blue); font-weight: 800; line-height: 1.3; }
+    .hdr p { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+    .tabs { display: flex; background: var(--c1); border-bottom: 1px solid var(--border); max-width: 480px; margin: 0 auto; }
+    .tb { flex: 1; padding: 11px 6px; font-size: 0.72rem; font-weight: 700; color: var(--muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all .2s; }
+    .tb.on { color: var(--blue); border-bottom-color: var(--blue); }
+    .wrap { max-width: 480px; margin: 0 auto; padding: 14px 14px 32px; }
+    .panel { display: none; } .panel.on { display: block; }
+    .card { background: var(--c1); border-radius: 12px; padding: 14px; margin-bottom: 14px; border: 1px solid var(--border); }
+    .ct { font-size: 0.88rem; font-weight: 700; margin-bottom: 10px; }
+    .tg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .tg3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+    .tgc { display: grid; gap: 7px; }
+    .tile { background: var(--c2); border: 2px solid var(--border); border-radius: 8px; padding: 9px 8px; font-size: 0.79rem; font-weight: 600; color: var(--muted); cursor: pointer; text-align: center; transition: all .15s; user-select: none; }
+    .tile:hover { border-color: var(--blue); color: var(--text); }
+    .tile.sel { border-color: var(--blue); background: rgba(0,180,255,.1); color: var(--blue); }
+    .tile.selg { border-color: var(--gold); background: rgba(244,185,66,.1); color: var(--gold); }
+    .tile.selm { border-color: var(--teal); background: rgba(20,184,166,.1); color: var(--teal); }
+    .sbadge { text-align: center; padding: 11px; border-radius: 8px; margin: 10px 0; font-size: 1.05rem; font-weight: 800; display: none; }
+    .sbadge.show { display: block; }
+    .sbadge.warn { background: rgba(249,115,22,.13); color: var(--orange); }
+    .sbadge.danger { background: rgba(239,68,68,.13); color: var(--red); }
+    .sbadge.ok { background: rgba(34,197,94,.13); color: var(--green); }
+    .nav { display: flex; gap: 9px; margin-top: 14px; }
+    .btn { flex: 1; padding: 11px; border-radius: 8px; font-size: 0.88rem; font-weight: 700; border: none; cursor: pointer; transition: opacity .15s; }
+    .bp { background: var(--blue); color: #fff; } .bp:hover { opacity: .88; } .bp:disabled { opacity: .35; cursor: not-allowed; }
+    .bs { background: var(--c2); color: var(--muted); border: 1px solid var(--border); }
+    .bg { background: var(--gold); color: #000; font-weight: 800; }
+    .bg:hover { opacity: .9; }
+    .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: all .2s; }
+    .dot.a { background: var(--blue); transform: scale(1.3); }
+    .dot.d { background: var(--green); }
+    .rc { border-radius: 10px; padding: 13px; margin-bottom: 11px; border: 1px solid; }
+    .rc.teal { border-color: var(--teal); background: rgba(20,184,166,.07); }
+    .rc.red { border-color: var(--red); background: rgba(239,68,68,.07); }
+    .rc.blue { border-color: var(--blue); background: rgba(0,180,255,.07); }
+    .rc.gold { border-color: var(--gold); background: rgba(244,185,66,.07); }
+    .rc.orange { border-color: var(--orange); background: rgba(249,115,22,.07); }
+    .sev { display: inline-block; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; margin-bottom: 7px; letter-spacing: .06em; }
+    .su { background: var(--red); color: #fff; }
+    .sc { background: var(--orange); color: #fff; }
+    .sm { background: var(--teal); color: #fff; }
+    .rt { font-size: 0.92rem; font-weight: 700; margin-bottom: 5px; }
+    .rd { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+    .rdiy { font-size: 0.77rem; color: var(--text); margin-top: 7px; padding: 7px; background: rgba(255,255,255,.04); border-radius: 6px; line-height: 1.45; }
+    .resc { font-size: 0.73rem; color: var(--orange); margin-top: 5px; font-style: italic; }
+    .cta { background: linear-gradient(135deg,rgba(239,68,68,.14),rgba(239,68,68,.04)); border: 1px solid var(--red); border-radius: 12px; padding: 15px; margin-top: 14px; }
+    .ctat { font-size: 0.97rem; font-weight: 800; color: var(--red); margin-bottom: 3px; }
+    .ctas { font-size: 0.8rem; color: var(--muted); margin-bottom: 11px; }
+    .fg { margin-bottom: 9px; }
+    .fg label { display: block; font-size: 0.73rem; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
+    .fg input, .fg textarea { width: 100%; background: var(--c2); border: 1px solid var(--border); border-radius: 7px; padding: 9px 11px; color: var(--text); font-size: 0.83rem; font-family: inherit; outline: none; transition: border-color .2s; }
+    .fg input:focus, .fg textarea:focus { border-color: var(--blue); }
+    .fg textarea { resize: vertical; min-height: 64px; }
+    .gold-call { background: rgba(244,185,66,.09); border: 1px solid var(--gold); border-radius: 10px; padding: 13px; margin-bottom: 14px; }
+    .gold-call p { font-size: 0.83rem; color: var(--gold); font-weight: 600; line-height: 1.5; }
+    .ubars { margin: 10px 0; }
+    .ubi { margin-bottom: 9px; }
+    .ubl { display: flex; justify-content: space-between; font-size: 0.77rem; margin-bottom: 3px; }
+    .ubt { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .ubf { height: 100%; border-radius: 4px; }
+    .sc-card { background: rgba(0,180,255,.05); border: 1px solid rgba(0,180,255,.18); border-radius: 9px; padding: 12px; margin-bottom: 7px; }
+    .sc-row { display: flex; align-items: flex-start; gap: 8px; }
+    .sc-num { width: 22px; height: 22px; background: var(--blue); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; color: #fff; flex-shrink: 0; margin-top: 1px; }
+    .sc-txt { font-size: 0.8rem; line-height: 1.5; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.77rem; }
+    th { background: var(--c2); padding: 8px; text-align: left; font-size: 0.7rem; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--border); }
+    td { padding: 8px; border-bottom: 1px solid rgba(30,41,59,.5); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+    .ins-card { background: rgba(249,115,22,.07); border: 1px solid var(--orange); border-radius: 10px; padding: 13px; margin-bottom: 14px; }
+    .ins-card p { font-size: 0.8rem; line-height: 1.55; }
+    .cl-item { display: flex; align-items: flex-start; gap: 9px; padding: 9px; border-radius: 7px; cursor: pointer; transition: background .15s; margin-bottom: 3px; }
+    .cl-item:hover { background: rgba(255,255,255,.03); }
+    .cb { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: all .15s; position: relative; }
+    .cl-item.ck .cb { background: var(--green); border-color: var(--green); }
+    .cb::after { content: ''; display: block; width: 5px; height: 9px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(45deg) translate(-1px,-1px); opacity: 0; transition: opacity .15s; }
+    .cl-item.ck .cb::after { opacity: 1; }
+    .cl-lbl { font-size: 0.8rem; line-height: 1.4; }
+    .cl-item.ck .cl-lbl { color: var(--muted); text-decoration: line-through; }
+    .pb-wrap { height: 6px; background: var(--border); border-radius: 3px; margin: 10px 0; overflow: hidden; }
+    .pb-fill { height: 100%; background: linear-gradient(90deg,var(--blue),var(--green)); border-radius: 3px; transition: width .4s ease; }
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gold); color: #000; padding: 11px 18px; border-radius: 8px; font-size: 0.83rem; font-weight: 700; transition: transform .3s ease; z-index: 999; white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .sl { font-size: 0.68rem; font-weight: 800; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; margin: 14px 0 8px; }
+    hr.div { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+    .tb-blue { color: var(--blue); } .tb-gold { color: var(--gold); } .tb-red { color: var(--red); }
+    .fw8 { font-weight: 800; } .fw7 { font-weight: 700; }
+    .fs-s { font-size: 0.8rem; } .lh { line-height: 1.55; } .mt8 { margin-top: 8px; } .mb4 { margin-bottom: 4px; }
+    @media (max-width: 375px) { .tile { font-size: 0.74rem; padding: 8px 5px; } .wrap { padding: 10px 10px 28px; } }
+  </style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>💧 FL Water Bill Spike Diagnostic</h1>
+  <p>Find out why your water bill jumped — free tool</p>
+</div>
+
+<div class="tabs">
+  <button class="tb on" onclick="setTab('w')">🔍 Diagnostic</button>
+  <button class="tb" onclick="setTab('u')">📊 Usage Ref</button>
+  <button class="tb" onclick="setTab('c')">💰 Costs</button>
+</div>
+
+<div class="wrap">
+
+  <!-- ═══ TAB 1: WIZARD ═══ -->
+  <div class="panel on" id="pw">
+    <div class="dots" id="dots"></div>
+
+    <!-- Step 1 -->
+    <div id="s1">
+      <div class="card">
+        <div class="ct">What's your typical monthly water bill?</div>
+        <div class="tg" id="tt"></div>
+      </div>
+      <div class="card">
+        <div class="ct">What did your last bill show?</div>
+        <div class="tg" id="lt"></div>
+      </div>
+      <div class="sbadge" id="spk"></div>
+      <div class="nav"><button class="btn bp" id="n1" onclick="gotoStep(2)" disabled>Next: Usage Pattern →</button></div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="s2" style="display:none">
+      <div class="card">
+        <div class="ct">What changed recently?</div>
+        <p style="font-size:.77rem;color:var(--muted);margin-bottom:9px">Select all that apply</p>
+        <div class="tgc" id="ct"></div>
+      </div>
+      <div class="nav">
+        <button class="btn bs" onclick="gotoStep(1)">← Back</button>
+        <button class="btn bp" onclick="gotoStep(3)">Next: Home Details →</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="s3" style="display:none">
+      <div class="card">
+        <div class="ct">Foundation type</div>
+        <div class="tg3" id="ft"></div>
+      </div>
+      <div class="card">
+        <div class="ct">When was your home built?</div>
+        <div class="tg" id="at"></div>
+      </div>
+      <div class="nav">
+        <button class="btn bs" onclick="gotoStep(2)">← Back</button>
+        <button class="btn bp" id="n3" onclick="gotoStep(4)" disabled>See My Results →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Results -->
+    <div id="s4" style="display:none">
+      <div id="rcs"></div>
+      <div class="cta">
+        <div class="ctat">🚨 Suspected Hidden Leak or Slab Leak?</div>
+        <div class="ctas">Free Emergency Diagnosis — we call back within 2 hours</div>
+        <form onsubmit="doLead(event)">
+          <div class="fg"><label>Your Name</label><input type="text" placeholder="John Smith"></div>
+          <div class="fg"><label>Phone Number</label><input type="tel" placeholder="(561) 555-PIPE"></div>
+          <div class="fg"><label>Address / City</label><input type="text" placeholder="Boca Raton, FL"></div>
+          <div class="fg"><label>Briefly describe the issue</label><textarea placeholder="My bill jumped from $85 to $210 last month and nothing changed..."></textarea></div>
+          <button type="submit" class="btn bg" style="width:100%">🔧 Request Free Emergency Diagnosis</button>
+        </form>
+      </div>
+      <div class="nav mt8"><button class="btn bs" onclick="gotoStep(3)">← Edit Answers</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 2: USAGE REFERENCE ═══ -->
+  <div class="panel" id="pu">
+    <div class="gold-call">
+      <p>💡 Florida average water bill: $70–$120/month. If you're over $175 with normal usage, something's wrong.</p>
+    </div>
+
+    <div class="card">
+      <div class="ct tb-blue">FL Typical Water Usage Breakdown</div>
+      <div class="ubars" id="ubars"></div>
+    </div>
+
+    <div class="card">
+      <div class="ct">FL Seasonal Factors</div>
+      <div class="fs-s lh">
+        <p class="mb4">🌧️ <span class="fw7">May–Oct (Wet Season):</span> Irrigation should auto-reduce. Check that rain sensors work — a stuck valve adds $40–$80/mo.</p>
+        <p class="mb4" style="margin-top:8px">☀️ <span class="fw7">Nov–Apr (Dry Season):</span> Pool evaporation peaks at ½" per day (~130 gal/mo). Auto-fills can mask slow leaks.</p>
+        <p style="margin-top:8px">❄️ <span class="fw7">AC Condensate:</span> FL central AC drains 15–25 gallons/day. Usually recycled — verify your system type.</p>
+      </div>
+    </div>
+
+    <hr class="div">
+    <div class="sl">FL Utility Billing Dispute Process</div>
+
+    <div class="sc-card">
+      <div class="sc-row"><span class="sc-num">1</span><span class="sc-txt"><span class="fw7">Request a Meter Re-Read</span> — Call your utility and ask for a re-read. Most FL utilities do this free once per year. Takes 3–5 business days.</span></div>
+    </div>
+    <div class="sc-card">
+      <div class="sc-row"><span class="sc-num">2</span><span class="sc-txt"><span class="fw7">Submit a Leak Adjustment Form</span> — If a plumber confirms a leak, most FL utilities credit 50–100% of overage. Requires a licensed plumber's letter on company letterhead.</span></div>
+    </div>
+    <div class="sc-card">
+      <div class="sc-row"><span class="sc-num">3</span><span class="sc-txt"><span class="fw7">File with FL PSC</span> — If your utility denies a valid claim, file at <span class="tb-blue fw7">floridapsc.com/complaints</span>. FL investor-owned utilities are regulated — municipal utilities have a local appeals board.</span></div>
+    </div>
+
+    <hr class="div">
+    <div class="sl">Midnight Meter Test</div>
+    <div class="card">
+      <div class="fs-s lh">
+        <p class="mb4">1. Note your meter reading (take a photo) at midnight or any quiet 2-hour window.</p>
+        <p class="mb4">2. Do <span class="fw7">NOT</span> use any water — no toilets, ice maker, irrigation, dishwasher.</p>
+        <p class="mb4">3. Check the meter again after 2 hours.</p>
+        <p style="color:var(--red);font-weight:700;margin-top:8px">Any movement = active leak somewhere in your system.</p>
+      </div>
+      <hr class="div">
+      <div class="ctat" style="font-size:.88rem">📞 Have a Pro Do Leak Detection</div>
+      <form onsubmit="doLead(event)" style="margin-top:10px">
+        <div class="fg"><label>Name</label><input type="text" placeholder="Jane Smith"></div>
+        <div class="fg"><label>Phone</label><input type="tel" placeholder="(561) 555-PIPE"></div>
+        <div class="fg"><label>City</label><input type="text" placeholder="Palm Beach, FL"></div>
+        <div class="fg"><label>Notes</label><textarea placeholder="Meter moved 0.04 CCF overnight with no water use..."></textarea></div>
+        <button type="submit" class="btn bp" style="width:100%">Schedule Leak Detection</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 3: COSTS ═══ -->
+  <div class="panel" id="pc">
+    <div class="sl">Repair Cost Reference (FL Average)</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table>
+        <thead><tr><th>Issue</th><th>DIY Fix</th><th>Pro Cost</th></tr></thead>
+        <tbody id="ctb"></tbody>
+      </table>
+    </div>
+
+    <hr class="div">
+    <div class="sl">FL Insurance Coverage</div>
+    <div class="ins-card">
+      <p style="font-weight:700;color:var(--orange);margin-bottom:6px">⚠️ Know Before You File</p>
+      <p>FL homeowners insurance typically <span class="fw7">DOES cover sudden slab leaks</span> — but does <span class="fw7">NOT cover slow/gradual leaks</span>. The distinction is critical. Document everything with photos and timestamps the day you discover it. File within 14 days.</p>
+      <p style="margin-top:8px;font-size:.73rem;color:var(--muted)">FL AOB Reform (FS 627.7152, 2023): Assignment of Benefits contracts in water damage cases are restricted. You must deal directly with your insurer — be cautious of restoration companies asking you to sign AOB documents before your adjuster visits.</p>
+    </div>
+
+    <hr class="div">
+    <div class="sl">Home Leak Prevention Checklist</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <span style="font-size:.73rem;color:var(--muted)">Tap items to check off</span>
+      <span id="ptxt" style="font-size:.73rem;color:var(--blue);font-weight:700">0/10 complete</span>
+    </div>
+    <div class="pb-wrap"><div class="pb-fill" id="pbar" style="width:0%"></div></div>
+    <div id="cli"></div>
+
+    <hr class="div">
+    <div class="card">
+      <div class="ct tb-blue">📅 Schedule Annual Leak Inspection</div>
+      <form onsubmit="doLead(event)">
+        <div class="fg"><label>Name</label><input type="text" placeholder="Mike Johnson"></div>
+        <div class="fg"><label>Phone</label><input type="tel" placeholder="(561) 555-PIPE"></div>
+        <div class="fg"><label>Address</label><input type="text" placeholder="Fort Lauderdale, FL"></div>
+        <div class="fg"><label>Message</label><textarea placeholder="I'd like to schedule an annual plumbing inspection..."></textarea></div>
+        <button type="submit" class="btn bg" style="width:100%">Request Free Estimate</button>
+      </form>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<script>
+// XSS sanitizer — safe text node creation
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.textContent;
+}
+function txt(s) { return document.createTextNode(String(s)); }
+
+// ─── STATE ────────────────────────────────────────────
+const S = {
+  tab: 'w', step: 1,
+  typ: null, lst: null,
+  chg: new Set(),
+  fnd: null, age: null,
+  chk: new Array(10).fill(false)
+};
+
+// ─── DATA ─────────────────────────────────────────────
+const TIERS = ['Under $50','$50–$100','$100–$175','$175–$300','Over $300'];
+const MID   = [35, 75, 137, 237, 350];
+
+const CHANGES = [
+  {k:'irr',  l:'🌿 Running new irrigation / sprinklers'},
+  {k:'pool', l:'🏊 Filled a pool or hot tub'},
+  {k:'ppl',  l:'👨‍👩‍👧 More people in home'},
+  {k:'app',  l:'🔧 New appliances installed'},
+  {k:'none', l:'🤔 No changes — nothing is different'},
+  {k:'vac',  l:'🏠 I\'ve been away (vacant home)'}
+];
+
+const COSTS = [
+  ['Running toilet flapper',        '$8–$15',        '$120–$200'],
+  ['Leaking toilet wax seal',       'Not recommended','$200–$350'],
+  ['Slab leak detection',           'N/A',            '$350–$600'],
+  ['Slab leak repair (tunneling)',   'N/A',            '$2,500–$7,000'],
+  ['Slab leak re-route',            'N/A',            '$1,500–$4,000'],
+  ['Water heater (tank, FL avg)',    'N/A',            '$900–$1,600'],
+  ['Irrigation system repair',      '$25–$75/zone',   '$150–$400/zone'],
+  ['Pressure regulator',            'N/A',            '$250–$500']
+];
+
+const CHECKLIST = [
+  'Annual toilet dye test — add food coloring to tank, wait 15 min without flushing',
+  'Inspect all under-sink supply lines for corrosion, bulging, or drips',
+  'Check water heater age — replace proactively at 10–12 years',
+  'Test pressure regulator (should read 40–80 PSI)',
+  'Walk the irrigation system — check each zone head and valve box',
+  'Inspect washing machine hoses for bulging, cracking, or stiffness',
+  'Run the midnight meter test to detect silent hidden leaks',
+  'Check pool auto-fill valve — a stuck fill wastes 1,000+ gal/day',
+  'Test all toilet flappers for phantom flushes (no jiggling handle)',
+  'Inspect exterior hose bibs and cleanouts for drips and slow seepage'
+];
+
+const USAGE_BARS = [
+  {l:'Irrigation (FL avg)',      p:30, c:'#22C55E'},
+  {l:'Toilet usage',             p:24, c:'#00B4FF'},
+  {l:'Shower & bath',            p:20, c:'#14B8A6'},
+  {l:'Appliances (washer/dish)', p:19, c:'#F4B942'},
+  {l:'Leaks (avg US home)',      p:7,  c:'#EF4444'}
+];
+
+// ─── TAB ──────────────────────────────────────────────
+function setTab(t) {
+  S.tab = t;
+  const ids = {w:'pw', u:'pu', c:'pc'};
+  Object.keys(ids).forEach(k => {
+    document.getElementById(ids[k]).classList.toggle('on', k === t);
+  });
+  document.querySelectorAll('.tb').forEach((b, i) => {
+    b.classList.toggle('on', ['w','u','c'][i] === t);
+  });
+}
+
+// ─── STEP NAV ─────────────────────────────────────────
+function gotoStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('s' + i).style.display = (i === n) ? '' : 'none';
+  }
+  S.step = n;
+  renderDots();
+  if (n === 4) renderResults();
+}
+
+function renderDots() {
+  const el = document.getElementById('dots');
+  el.innerHTML = '';
+  for (let i = 1; i <= 4; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < S.step ? ' d' : i === S.step ? ' a' : '');
+    el.appendChild(d);
+  }
+}
+
+// ─── BILL TILES ───────────────────────────────────────
+function renderBillTiles(eid, selected, type) {
+  const el = document.getElementById(eid);
+  el.innerHTML = '';
+  TIERS.forEach((label, i) => {
+    const t = document.createElement('div');
+    t.className = 'tile' + (i === selected ? ' sel' : '');
+    t.appendChild(txt(label));
+    t.onclick = () => (type === 'typ' ? pickTyp(i) : pickLst(i));
+    el.appendChild(t);
+  });
+}
+
+function pickTyp(i) {
+  S.typ = i;
+  renderBillTiles('tt', i, 'typ');
+  if (S.lst === null && i < 4) { S.lst = i + 1; renderBillTiles('lt', S.lst, 'lst'); }
+  updateSpike();
+}
+function pickLst(i) {
+  S.lst = i;
+  renderBillTiles('lt', i, 'lst');
+  updateSpike();
+}
+
+function calcSpike() {
+  if (S.typ === null || S.lst === null) return null;
+  const diff = MID[S.lst] - MID[S.typ];
+  if (diff <= 0) return 0;
+  return Math.round(diff / MID[S.typ] * 100);
+}
+
+function updateSpike() {
+  const el = document.getElementById('spk');
+  const sp = calcSpike();
+  if (sp === null) { el.className = 'sbadge'; return; }
+  if (sp === 0) {
+    el.textContent = 'Bill is similar or lower — still worth checking for leaks';
+    el.className = 'sbadge ok show';
+  } else if (sp < 50) {
+    el.textContent = '+' + sp + '% spike detected';
+    el.className = 'sbadge warn show';
+  } else {
+    el.textContent = '+' + sp + '% spike detected — potential serious leak';
+    el.className = 'sbadge danger show';
+  }
+  document.getElementById('n1').disabled = false;
+}
+
+// ─── CHANGE TILES ─────────────────────────────────────
+function renderChangeTiles() {
+  const el = document.getElementById('ct');
+  el.innerHTML = '';
+  CHANGES.forEach(({k, l}) => {
+    const t = document.createElement('div');
+    t.className = 'tile' + (S.chg.has(k) ? ' selm' : '');
+    t.appendChild(txt(l));
+    t.onclick = () => toggleChg(k);
+    el.appendChild(t);
+  });
+}
+
+function toggleChg(k) {
+  if (S.chg.has(k)) { S.chg.delete(k); }
+  else {
+    if (k === 'none') S.chg.clear();
+    else S.chg.delete('none');
+    S.chg.add(k);
+  }
+  renderChangeTiles();
+}
+
+// ─── FOUNDATION TILES ─────────────────────────────────
+function renderFoundationTiles() {
+  const el = document.getElementById('ft');
+  el.innerHTML = '';
+  [['slab','Slab'],['pier','Pier & Beam'],['unk','Don\'t Know']].forEach(([v, l]) => {
+    const t = document.createElement('div');
+    t.className = 'tile' + (S.fnd === v ? ' sel' : '');
+    t.appendChild(txt(l));
+    t.onclick = () => { S.fnd = v; renderFoundationTiles(); chkStep3(); };
+    el.appendChild(t);
+  });
+}
+
+// ─── AGE TILES ────────────────────────────────────────
+function renderAgeTiles() {
+  const el = document.getElementById('at');
+  el.innerHTML = '';
+  [['pre80','Pre-1980'],['80-00','1980–2000'],['00-15','2000–2015'],['post15','After 2015']].forEach(([v, l]) => {
+    const t = document.createElement('div');
+    t.className = 'tile' + (S.age === v ? ' selg' : '');
+    t.appendChild(txt(l));
+    t.onclick = () => { S.age = v; renderAgeTiles(); chkStep3(); };
+    el.appendChild(t);
+  });
+}
+
+function chkStep3() {
+  document.getElementById('n3').disabled = !(S.fnd && S.age);
+}
+
+// ─── RESULTS ──────────────────────────────────────────
+function renderResults() {
+  const el = document.getElementById('rcs');
+  el.innerHTML = '';
+  buildCards().forEach(c => el.appendChild(c));
+}
+
+function buildCards() {
+  const cards = [];
+  const sp = calcSpike() || 0;
+  const noChg = S.chg.has('none') || S.chg.size === 0;
+  const slab  = S.fnd === 'slab';
+  const hasIrr = S.chg.has('irr') || S.chg.has('pool');
+  const hasVac = S.chg.has('vac');
+  const oldHm  = S.age === 'pre80' || S.age === '00-15';
+
+  if (noChg || sp > 15) {
+    cards.push(mkCard('teal','sm','MONITOR','🚿 Running / Silent Toilet Leak',
+      'Silent toilet leaks waste 200+ gallons per day without any audible sound. This is the #1 cause of unexplained water bill spikes in Florida homes.',
+      'DIY Check: Add a few drops of food coloring to your tank. Wait 15 min without flushing. Color in the bowl = leak. A new flapper costs $8 at any hardware store.',
+      'Call immediately if: you\'ve replaced the flapper and the dye test still shows color — the flush valve seat may need full rebuild or replacement.'));
+  }
+
+  if (slab && sp > 50 && noChg) {
+    cards.push(mkCard('red','su','URGENT','🏠 Hidden Leak / Possible Slab Leak',
+      'Slab leaks average $2,000–$7,000 to repair if caught early — $15,000+ if ignored. Hot spots on floors, warm tile, or constant water heater cycling are telltale signs.',
+      'DIY Check: Walk barefoot across floors, especially near bathrooms. Feel for warm patches. Turn off all fixtures and listen for hissing sounds at floor level.',
+      'Call immediately if: you feel hot spots on floors, your water heater runs constantly, or you hear water movement in walls/floors with all fixtures off.'));
+  }
+
+  if (hasIrr) {
+    cards.push(mkCard('blue','sc','CHECK','🌿 Irrigation / Pool Overage',
+      'Irrigation = 30% of FL water use on average. One stuck valve adds 500–1,500 gal/day. Pool auto-fill valves are another silent waster — a worn seal can run for months.',
+      'DIY Check: Run each irrigation zone manually and look for broken heads, misting (should be spraying), or wet patches. Check your controller — DST often doubles runtime.',
+      'Call immediately if: yard has consistent wet patches with no rain, or your pool drops more than ½" per day (evaporation is normal — structural loss is not).'));
+  }
+
+  if (hasVac) {
+    cards.push(mkCard('gold','sc','CHECK','📋 Meter Error or Billing Issue',
+      'If you were away and the property was vacant, a bill spike likely means a meter read error, a billing cycle issue, or a leak that occurred while you were absent.',
+      'DIY Check: Pull your current meter reading and compare to the reading printed on your bill. They should match closely. Take a photo of your meter for documentation.',
+      'Call your utility immediately if: the bill\'s stated meter reading doesn\'t match the physical meter. File a billing dispute within 30 days of the statement date.'));
+  }
+
+  if (oldHm && slab) {
+    cards.push(mkCard('orange','sc','CHECK','🔥 Water Heater Leak Risk',
+      'Water heaters on or near slab can leak slowly for weeks before visible damage. Pre-1980 homes may have original supply lines that have corroded over decades.',
+      'DIY Check: Inspect around your water heater base for rust stains, moisture, or scale. Check the pressure relief valve — a dripping T&P valve wastes 50+ gallons/day.',
+      'Call immediately if: your water heater is over 10 years old and you notice rusty water, popping sounds, or any moisture around the base or on nearby flooring.'));
+  }
+
+  if (cards.length === 0) {
+    cards.push(mkCard('blue','sm','MONITOR','📊 No Strong Signals Detected',
+      'Based on your inputs, no single dominant cause stands out. The most common overlooked culprits in FL are silent toilet flappers (check first), irrigation controller issues, and meter read errors.',
+      'DIY Check: Do the toilet dye test in every bathroom, then run each irrigation zone manually. These two checks catch 60%+ of unexplained Florida water bill spikes.',
+      'Call if: the dye test shows a leak in any toilet, or if any irrigation zone won\'t shut off within 5 minutes of turning off the controller.'));
+  }
+
+  return cards;
+}
+
+function mkCard(color, sevClass, sevTxt, title, desc, diy, escalate) {
+  const d = document.createElement('div');
+  d.className = 'rc ' + color;
+  const sev = document.createElement('span');
+  sev.className = 'sev ' + sevClass;
+  sev.appendChild(txt(sevTxt));
+  const h = document.createElement('div');
+  h.className = 'rt';
+  h.appendChild(txt(title));
+  const de = document.createElement('p');
+  de.className = 'rd';
+  de.appendChild(txt(desc));
+  const diyEl = document.createElement('div');
+  diyEl.className = 'rdiy';
+  diyEl.appendChild(txt('🔧 ' + diy));
+  const escEl = document.createElement('p');
+  escEl.className = 'resc';
+  escEl.appendChild(txt('⚠️ ' + escalate));
+  d.append(sev, h, de, diyEl, escEl);
+  return d;
+}
+
+// ─── LEAD FORM ────────────────────────────────────────
+function doLead(e) {
+  e.preventDefault();
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3600);
+}
+
+// ─── CHECKLIST ────────────────────────────────────────
+function renderChecklist() {
+  const el = document.getElementById('cli');
+  el.innerHTML = '';
+  CHECKLIST.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'cl-item' + (S.chk[i] ? ' ck' : '');
+    d.onclick = () => tickCheck(i);
+    const cb = document.createElement('div');
+    cb.className = 'cb';
+    const lb = document.createElement('div');
+    lb.className = 'cl-lbl';
+    lb.appendChild(txt(item));
+    d.append(cb, lb);
+    el.appendChild(d);
+  });
+  syncProgress();
+}
+
+function tickCheck(i) {
+  S.chk[i] = !S.chk[i];
+  const items = document.querySelectorAll('.cl-item');
+  if (items[i]) items[i].classList.toggle('ck', S.chk[i]);
+  syncProgress();
+}
+
+function syncProgress() {
+  const done = S.chk.filter(Boolean).length;
+  document.getElementById('pbar').style.width = (done * 10) + '%';
+  document.getElementById('ptxt').textContent = done + '/10 complete';
+}
+
+// ─── COST TABLE ───────────────────────────────────────
+function renderCostTable() {
+  const tb = document.getElementById('ctb');
+  tb.innerHTML = '';
+  COSTS.forEach(([issue, diy, pro]) => {
+    const tr = document.createElement('tr');
+    [issue, diy, pro].forEach((v, ci) => {
+      const td = document.createElement('td');
+      td.appendChild(txt(v));
+      if (ci === 2) td.style.color = 'var(--gold)';
+      tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+}
+
+// ─── USAGE BARS ───────────────────────────────────────
+function renderUsageBars() {
+  const el = document.getElementById('ubars');
+  el.innerHTML = '';
+  USAGE_BARS.forEach(({l, p, c}) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'ubi';
+    const row = document.createElement('div');
+    row.className = 'ubl';
+    const lbl = document.createElement('span');
+    lbl.appendChild(txt(l));
+    const pct = document.createElement('span');
+    pct.appendChild(txt(p + '%'));
+    pct.style.cssText = 'color:' + c + ';font-weight:700';
+    row.append(lbl, pct);
+    const track = document.createElement('div');
+    track.className = 'ubt';
+    const fill = document.createElement('div');
+    fill.className = 'ubf';
+    fill.style.cssText = 'width:' + p + '%;background:' + c;
+    track.appendChild(fill);
+    wrap.append(row, track);
+    el.appendChild(wrap);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────
+function init() {
+  renderDots();
+  renderBillTiles('tt', S.typ, 'typ');
+  renderBillTiles('lt', S.lst, 'lst');
+  renderChangeTiles();
+  renderFoundationTiles();
+  renderAgeTiles();
+  renderCostTable();
+  renderChecklist();
+  renderUsageBars();
+}
+
+init();
+</script>
+</body>
+</html>
