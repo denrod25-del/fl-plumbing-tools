@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Plumbing Permit Guide — Do You Need a Permit? Free Checker + County Links</title>
+<meta name="description" content="Find out if your Florida plumbing project needs a permit. Interactive checker with county-specific info, permit timeline, and Florida Building Code requirements.">
+<meta property="og:title" content="Florida Plumbing Permit Guide — Do You Need a Permit? Free Checker + County Links">
+<meta property="og:description" content="Find out if your Florida plumbing project needs a permit. Interactive checker with county-specific info, permit timeline, and Florida Building Code requirements.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Florida Plumbing Permit Guide — Free Checker + County Links">
+<meta name="twitter:description" content="Free interactive Florida plumbing permit checker. County-specific guidance, permit timeline, and Florida Building Code quick reference.">
+<style>
+:root{
+  --navy:#0A0E1A;--navy-l:#141928;--card:#1A2035;
+  --blue:#00B4FF;--blue-d:#0090CC;
+  --red:#FF4444;--red-a:rgba(255,68,68,.13);
+  --yel:#FFB800;--yel-a:rgba(255,184,0,.13);
+  --grn:#00CC66;--grn-a:rgba(0,204,102,.13);
+  --txt:#E8EAF0;--muted:#8892B0;--bdr:#2A3050;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh;}
+a{color:var(--blue);}a:hover{opacity:.85;}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,#060912 0%,var(--navy-l) 100%);border-bottom:2px solid var(--blue);padding:26px 20px 20px;text-align:center;}
+.hdr-badge{display:inline-block;background:var(--blue);color:var(--navy);font-size:.68rem;font-weight:900;padding:2px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:11px;}
+.hdr h1{font-size:clamp(1.25rem,4.5vw,1.9rem);color:#fff;font-weight:800;line-height:1.2;}
+.hdr p{color:var(--muted);margin-top:7px;font-size:.88rem;}
+
+/* ── TABS ── */
+.tabs{display:flex;background:var(--navy-l);border-bottom:1px solid var(--bdr);overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:1;min-width:130px;padding:14px 10px;background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);font-size:.81rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;text-align:center;}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab:hover:not(.active){color:var(--txt);background:rgba(0,180,255,.04);}
+
+/* ── PANELS ── */
+.panel{display:none;padding:24px 20px 40px;max-width:860px;margin:0 auto;}
+.panel.active{display:block;}
+
+/* ── STEP HEADERS ── */
+.stp{display:flex;align-items:center;gap:9px;font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1.3px;margin:26px 0 11px;}
+.stp.first{margin-top:4px;}
+.sn{display:inline-flex;width:22px;height:22px;background:var(--blue);color:var(--navy);border-radius:50%;font-size:.72rem;font-weight:900;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* ── GROUP HEADERS ── */
+.gh{display:inline-flex;align-items:center;gap:7px;font-size:.69rem;font-weight:900;text-transform:uppercase;letter-spacing:1.3px;padding:5px 12px;border-radius:4px;margin:18px 0 9px;}
+.gh-r{background:var(--red-a);color:var(--red);border-left:3px solid var(--red);}
+.gh-y{background:var(--yel-a);color:var(--yel);border-left:3px solid var(--yel);}
+.gh-g{background:var(--grn-a);color:var(--grn);border-left:3px solid var(--grn);}
+
+/* ── CHECKBOXES ── */
+.cbx-list{display:flex;flex-direction:column;gap:7px;}
+.cbx{display:flex;align-items:center;gap:11px;padding:10px 14px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.cbx:hover{border-color:rgba(0,180,255,.4);}
+.cbx input{width:17px;height:17px;accent-color:var(--blue);flex-shrink:0;cursor:pointer;}
+.cbx span{font-size:.875rem;}
+.cbx.checked.r{border-color:var(--red);background:var(--red-a);}
+.cbx.checked.y{border-color:var(--yel);background:var(--yel-a);}
+.cbx.checked.g{border-color:var(--grn);background:var(--grn-a);}
+
+/* ── COUNTY SELECT ── */
+.county-sel{width:100%;padding:11px 14px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-size:.9rem;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2300B4FF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer;}
+.county-sel:focus{outline:none;border-color:var(--blue);}
+.county-sel option{background:var(--card);}
+
+/* ── ROLE RADIO ── */
+.rdx-list{display:flex;flex-direction:column;gap:7px;}
+.rdx{display:flex;align-items:center;gap:11px;padding:10px 14px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;cursor:pointer;transition:all .15s;user-select:none;}
+.rdx:hover{border-color:rgba(0,180,255,.4);}
+.rdx.sel{border-color:var(--blue);background:rgba(0,180,255,.07);}
+.rdx input{width:17px;height:17px;accent-color:var(--blue);flex-shrink:0;cursor:pointer;}
+.rdx span{font-size:.875rem;}
+
+/* ── CHECK BUTTON ── */
+.chk-btn{width:100%;padding:14px;background:var(--blue);color:var(--navy);border:none;border-radius:8px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:24px;transition:background .2s,color .2s;letter-spacing:.3px;}
+.chk-btn:hover{background:var(--blue-d);color:#fff;}
+
+/* ── RESULT CARD ── */
+#result{display:none;margin-top:28px;background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;}
+.res-hdr{padding:14px 20px;background:linear-gradient(90deg,var(--navy-l),var(--card));border-bottom:1px solid var(--bdr);}
+.res-hdr h3{font-size:.95rem;color:#fff;font-weight:700;}
+.res-body{padding:18px 20px;}
+.res-item{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--bdr);font-size:.875rem;}
+.res-item:last-child{border-bottom:none;}
+.bdg{display:inline-block;font-size:.58rem;font-weight:900;text-transform:uppercase;padding:2px 7px;border-radius:99px;white-space:nowrap;flex-shrink:0;margin-top:3px;letter-spacing:.5px;}
+.b-r{background:var(--red);color:#fff;}
+.b-y{background:var(--yel);color:#000;}
+.b-g{background:var(--grn);color:#000;}
+
+.ib{padding:12px 15px;border-radius:8px;margin:11px 0;font-size:.865rem;line-height:1.55;}
+.ib-r{background:var(--red-a);border-left:3px solid var(--red);}
+.ib-y{background:var(--yel-a);border-left:3px solid var(--yel);}
+.ib-g{background:var(--grn-a);border-left:3px solid var(--grn);}
+.ib-b{background:rgba(0,180,255,.09);border-left:3px solid var(--blue);}
+.warn-box{background:rgba(255,68,68,.14);border:1px solid rgba(255,68,68,.35);border-radius:8px;padding:13px 15px;margin:11px 0;font-size:.865rem;line-height:1.55;}
+.county-link{margin-top:13px;padding:12px 15px;background:rgba(0,180,255,.08);border:1px solid rgba(0,180,255,.25);border-radius:8px;font-size:.865rem;}
+.county-link a{color:var(--blue);font-weight:700;text-decoration:none;}
+.county-link a:hover{text-decoration:underline;}
+.cta-box{margin-top:20px;padding:18px;background:linear-gradient(135deg,#0A2A3F,var(--card));border:1px solid var(--blue);border-radius:10px;text-align:center;}
+.cta-box p{color:var(--txt);margin-bottom:12px;font-size:.9rem;}
+.cta-btn{display:inline-block;background:var(--blue);color:var(--navy);padding:11px 22px;border-radius:8px;font-weight:800;text-decoration:none;font-size:.88rem;cursor:pointer;border:none;transition:background .2s;}
+.cta-btn:hover{background:var(--blue-d);color:#fff;}
+
+/* ── TIMELINE ── */
+.tl-intro{color:var(--muted);margin-bottom:24px;font-size:.9rem;}
+.tl{display:flex;flex-direction:column;}
+.tl-step{display:flex;gap:14px;position:relative;}
+.tl-step:not(:last-child)::before{content:'';position:absolute;left:18px;top:42px;bottom:0;width:2px;background:var(--bdr);}
+.tl-step.hl:not(:last-child)::before{background:rgba(0,180,255,.3);}
+.tl-dot{width:38px;height:38px;border-radius:50%;background:var(--card);border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:var(--muted);flex-shrink:0;z-index:1;position:relative;}
+.tl-step.hl .tl-dot{background:var(--blue);border-color:var(--blue);color:var(--navy);}
+.tl-body{flex:1;padding-bottom:24px;}
+.tl-title{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:6px;}
+.tl-step.hl .tl-title{color:var(--blue);}
+.tl-card{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:13px 14px;font-size:.845rem;color:var(--muted);line-height:1.6;}
+.tl-step.hl .tl-card{border-color:rgba(0,180,255,.2);}
+.tl-docs{margin-top:7px;padding-top:7px;border-top:1px solid var(--bdr);}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;}
+.chip{font-size:.7rem;padding:3px 9px;border-radius:99px;font-weight:600;}
+.ct{background:var(--yel-a);color:var(--yel);border:1px solid rgba(255,184,0,.25);}
+.cf{background:var(--grn-a);color:var(--grn);border:1px solid rgba(0,204,102,.25);}
+.cb{background:rgba(0,180,255,.1);color:var(--blue);border:1px solid rgba(0,180,255,.2);}
+.tl-sum{margin:22px 0;padding:14px 16px;background:var(--card);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;font-size:.875rem;}
+.tl-sum strong{color:var(--blue);}
+
+/* ── WARNING CARDS ── */
+.warn-sec{margin-top:32px;}
+.warn-sec h2{font-size:1.05rem;color:#fff;margin-bottom:14px;font-weight:700;}
+.warn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:540px){.warn-grid{grid-template-columns:1fr;}}
+.wcard{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:16px;}
+.wcard-icon{font-size:1.7rem;margin-bottom:8px;}
+.wcard-title{font-size:.875rem;font-weight:700;color:#fff;margin-bottom:5px;}
+.wcard-body{font-size:.82rem;color:var(--muted);line-height:1.55;}
+.wcard-cost{color:var(--red);font-weight:700;}
+
+/* ── ACCORDION ── */
+.code-note{background:var(--card);border-left:3px solid var(--blue);padding:13px 16px;border-radius:0 8px 8px 0;margin-bottom:22px;font-size:.86rem;color:var(--muted);}
+.acc{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
+.ai{background:var(--card);border:1px solid var(--bdr);border-radius:8px;overflow:hidden;}
+.ab{width:100%;padding:15px 16px;background:none;border:none;color:#fff;font-size:.88rem;font-weight:700;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.ab:hover{background:rgba(0,180,255,.05);}
+.ab .chev{color:var(--blue);font-size:.85rem;transition:transform .2s;flex-shrink:0;}
+.ai.open .chev{transform:rotate(180deg);}
+.ac{display:none;padding:0 16px 16px;font-size:.845rem;color:var(--muted);line-height:1.65;}
+.ai.open .ac{display:block;}
+.ac ul{padding-left:18px;margin-top:8px;}
+.ac li{margin-bottom:6px;}
+.ac strong{color:var(--txt);}
+.ctag{display:inline-block;background:rgba(0,180,255,.1);color:var(--blue);border:1px solid rgba(0,180,255,.2);font-size:.67rem;padding:2px 8px;border-radius:4px;margin-bottom:8px;font-weight:700;letter-spacing:.3px;}
+
+/* ── LICENSE CTA ── */
+.lic-cta{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:18px;margin:20px 0;display:flex;flex-wrap:wrap;align-items:center;gap:14px;}
+.lic-txt{flex:1;min-width:180px;}
+.lic-txt h3{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:3px;}
+.lic-txt p{font-size:.82rem;color:var(--muted);}
+.lic-cta a{display:inline-block;background:var(--blue);color:var(--navy);padding:10px 16px;border-radius:8px;font-weight:800;text-decoration:none;font-size:.82rem;white-space:nowrap;}
+.lic-cta a:hover{background:var(--blue-d);color:#fff;}
+
+/* ── LEAD FORM ── */
+.lead-sec{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:22px;margin-top:20px;}
+.lead-sec h3{font-size:.95rem;color:#fff;margin-bottom:5px;font-weight:700;}
+.lead-sec>p{font-size:.84rem;color:var(--muted);margin-bottom:18px;}
+.f-row{display:flex;flex-direction:column;gap:11px;margin-bottom:13px;}
+@media(min-width:540px){.f-row{flex-direction:row;}}
+.ff{flex:1;display:flex;flex-direction:column;gap:4px;}
+.ff label{font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px;}
+.ff input,.ff select,.ff textarea{padding:9px 12px;background:var(--navy);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-size:.875rem;font-family:inherit;}
+.ff input:focus,.ff select:focus,.ff textarea:focus{outline:none;border-color:var(--blue);}
+.ff textarea{resize:vertical;min-height:72px;}
+.ff select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2300B4FF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px;cursor:pointer;}
+.ff select option{background:var(--card);}
+.fsub{width:100%;padding:12px;background:var(--blue);color:var(--navy);border:none;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;transition:background .2s;}
+.fsub:hover{background:var(--blue-d);color:#fff;}
+.f-ok{display:none;text-align:center;padding:22px 10px;}
+.f-ok .si{font-size:2.2rem;margin-bottom:10px;}
+.f-ok h4{font-size:1rem;color:#fff;margin-bottom:6px;font-weight:700;}
+.f-ok p{color:var(--muted);font-size:.86rem;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:22px 20px;color:var(--muted);font-size:.76rem;border-top:1px solid var(--bdr);margin-top:20px;line-height:1.7;}
+
+@media(max-width:480px){
+  .tab{min-width:110px;font-size:.74rem;padding:12px 6px;}
+  .hdr{padding:20px 16px 16px;}
+  .panel{padding:20px 14px 36px;}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-badge">🌴 Florida</div>
+  <h1>Florida Plumbing Permit Guide</h1>
+  <p>Free permit checker &nbsp;·&nbsp; County links &nbsp;·&nbsp; FL Building Code reference</p>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Guide sections">
+  <button class="tab active" onclick="switchTab(0)" role="tab">🔍 Do I Need a Permit?</button>
+  <button class="tab" onclick="switchTab(1)" role="tab">📋 Permit Timeline</button>
+  <button class="tab" onclick="switchTab(2)" role="tab">📖 FL Code Reference</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 1 — PERMIT CHECKER
+════════════════════════════════════════════════════ -->
+<div id="p0" class="panel active">
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:2px;">
+    Florida law requires permits for most plumbing work. Find out what applies to your project.
+  </p>
+
+  <div class="stp first"><span class="sn">1</span>What work are you planning? <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.78rem;">(select all that apply)</span></div>
+
+  <div class="gh gh-r">⛔ Permit REQUIRED</div>
+  <div class="cbx-list" id="req-list"></div>
+
+  <div class="gh gh-y">⚠️ Permit MAY Be Required — Check With Your County</div>
+  <div class="cbx-list" id="chk-list"></div>
+
+  <div class="gh gh-g">✅ Permit NOT Required</div>
+  <div class="cbx-list" id="no-list"></div>
+
+  <div class="stp"><span class="sn">2</span>Your county</div>
+  <select class="county-sel" id="county-sel" aria-label="Select your Florida county">
+    <option value="">— Select your county —</option>
+  </select>
+
+  <div class="stp"><span class="sn">3</span>Are you a homeowner or contractor?</div>
+  <div class="rdx-list" id="role-list"></div>
+
+  <button class="chk-btn" onclick="checkPermit()">Check My Permit Requirements →</button>
+
+  <div id="result"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 2 — TIMELINE
+════════════════════════════════════════════════════ -->
+<div id="p1" class="panel">
+  <p class="tl-intro">What to expect from permit application to final inspection — and what's at stake if you skip it.</p>
+  <div class="tl" id="timeline"></div>
+  <div class="tl-sum">
+    <strong>⏱ Total typical time:</strong> 7–30 business days depending on county, project scope, and inspection scheduling.
+  </div>
+  <div class="warn-sec">
+    <h2>⚠️ What Happens if You Skip the Permit?</h2>
+    <div class="warn-grid" id="warn-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 3 — CODE REFERENCE
+════════════════════════════════════════════════════ -->
+<div id="p2" class="panel">
+  <div class="code-note">
+    Based on the <strong>Florida Building Code (FBC) Plumbing — 7th Edition (2020)</strong>. These are statewide minimums; county amendments may be stricter. Always confirm with your local building department before starting work.
+  </div>
+  <div class="acc" id="acc"></div>
+
+  <div class="lic-cta">
+    <div class="lic-txt">
+      <h3>🔎 Verify Your Plumber's FL License</h3>
+      <p>Florida requires plumbing contractors to be state-licensed. Verify before you hire — unlicensed work voids warranties and may void your homeowner's insurance.</p>
+    </div>
+    <a href="https://www.myfloridalicense.com/wl11.asp?mode=2&SID=&brd=0005" target="_blank" rel="noopener noreferrer">Check License →</a>
+  </div>
+
+  <div class="lead-sec">
+    <h3>Have a Permitted Plumbing Project?</h3>
+    <p>Get a free quote from our FL-licensed team — no obligation, same-day response on most requests.</p>
+    <div id="lead-form">
+      <div class="f-row">
+        <div class="ff"><label>Name *</label><input type="text" id="f-name" placeholder="Your full name" autocomplete="name"></div>
+        <div class="ff"><label>Phone</label><input type="tel" id="f-phone" placeholder="(561) 555-0000" autocomplete="tel"></div>
+      </div>
+      <div class="f-row">
+        <div class="ff"><label>Email *</label><input type="email" id="f-email" placeholder="you@example.com" autocomplete="email"></div>
+        <div class="ff"><label>County</label>
+          <select id="f-county"><option value="">Select county…</option></select>
+        </div>
+      </div>
+      <div class="f-row" style="margin-bottom:14px;">
+        <div class="ff"><label>Project Description</label><textarea id="f-desc" placeholder="Briefly describe your plumbing project (e.g. water heater replacement, bathroom addition…)"></textarea></div>
+      </div>
+      <button class="fsub" onclick="submitForm()">Get My Free Quote →</button>
+    </div>
+    <div class="f-ok" id="f-ok">
+      <div class="si">✅</div>
+      <h4>Request received!</h4>
+      <p>A licensed FL plumber will follow up within 1 business day to discuss your project and provide a no-obligation estimate.</p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  This guide is for informational purposes only and does not constitute legal or code-compliance advice.<br>
+  Always verify requirements with your local county building department before starting work.<br>
+  Based on Florida Building Code 7th Edition (2020) and Florida Statutes. &nbsp;|&nbsp; Florida plumbing permit required &nbsp;·&nbsp; plumbing permit Florida homeowner &nbsp;·&nbsp; do I need a permit for plumbing FL
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   DATA
+════════════════════════════════════════════════════ */
+const REQ = [
+  "Installing new water heater",
+  "Replacing water heater",
+  "Adding new bathroom / fixtures",
+  "Relocating pipes (any reason)",
+  "Installing water softener or filtration (whole-house)",
+  "Connecting to city sewer or water main",
+  "Installing irrigation system",
+  "Adding a hose bib or outdoor spigot",
+  "Repipe (partial or full)",
+  "Installing gas line (for gas water heater / appliance)",
+  "Septic system work"
+];
+const CHK = [
+  "Replacing like-for-like fixtures (toilet, faucet)",
+  "Water heater replacement (some FL counties require it)",
+  "Under-sink water filter installation",
+  "Shower pan replacement"
+];
+const NO = [
+  "Fixing a leaky faucet",
+  "Replacing a faucet aerator or showerhead",
+  "Snaking a drain",
+  "Repairing a running toilet (flapper, fill valve)",
+  "Fixing pipe insulation"
+];
+const COUNTIES = [
+  "Alachua","Baker","Bay","Bradford","Brevard","Broward","Calhoun","Charlotte",
+  "Citrus","Clay","Collier","Columbia","DeSoto","Dixie","Duval","Escambia",
+  "Flagler","Franklin","Gadsden","Gilchrist","Glades","Gulf","Hamilton","Hardee",
+  "Hendry","Hernando","Highlands","Hillsborough","Holmes","Indian River","Jackson",
+  "Jefferson","Lafayette","Lake","Lee","Leon","Levy","Liberty","Madison","Manatee",
+  "Marion","Martin","Miami-Dade","Monroe","Nassau","Okaloosa","Okeechobee","Orange",
+  "Osceola","Palm Beach","Pasco","Pinellas","Polk","Putnam","Santa Rosa","Sarasota",
+  "Seminole","St. Johns","St. Lucie","Sumter","Suwannee","Taylor","Union","Volusia",
+  "Wakulla","Walton","Washington"
+];
+const CL = {
+  "Palm Beach":   {url:"https://discover.pbcgov.org/pzb/building/Pages/Permit-Applications.aspx",   n:"Palm Beach County Building Division"},
+  "Broward":      {url:"https://www.broward.org/Building/Pages/Default.aspx",                       n:"Broward County Building Division"},
+  "Miami-Dade":   {url:"https://www.miamidade.gov/permits/",                                        n:"Miami-Dade Building Permits"},
+  "Hillsborough": {url:"https://www.hillsboroughcounty.org/en/residents/property-and-housing/building-and-construction/apply-for-a-permit", n:"Hillsborough County Building Permits"},
+  "Orange":       {url:"https://www.orangecountyfl.net/BuildingPermits",                            n:"Orange County Building Permits"},
+  "Pinellas":     {url:"https://www.pinellascounty.org/build/permits.htm",                          n:"Pinellas County Building Permits"},
+  "Duval":        {url:"https://www.coj.net/departments/planning-and-development/permits.aspx",     n:"City of Jacksonville Building Permits"},
+  "Sarasota":     {url:"https://www.scgov.net/government/planning-and-development-services/building-permits", n:"Sarasota County Building Permits"},
+  "Collier":      {url:"https://www.colliercountyfl.gov/government/growth-management/divisions-a-e/contractor-licensing/apply-for-a-permit", n:"Collier County Building Permits"},
+  "Lee":          {url:"https://www.leegov.com/dcd/building/permits",                               n:"Lee County Building Permits"},
+  "Volusia":      {url:"https://www.volusiagov.com/building",                                       n:"Volusia County Building Permits"},
+  "Brevard":      {url:"https://www.brevardfl.gov/BuildingPermitting",                              n:"Brevard County Building Permits"},
+  "Polk":         {url:"https://www.polk-county.net/development-review-division/building-permits",  n:"Polk County Building Permits"},
+  "Seminole":     {url:"https://www.seminolecountyfl.gov/departments-services/development-services/building/permits/", n:"Seminole County Building Permits"},
+  "Osceola":      {url:"https://www.osceola.org/agencies-departments/growth-management/building-permits/",              n:"Osceola County Building Permits"},
+  "Pasco":        {url:"https://www.pascocountyfl.net/215/Building-Construction",                   n:"Pasco County Building Permits"},
+  "Manatee":      {url:"https://www.mymanatee.org/departments/building___development_services/permits",n:"Manatee County Building Permits"}
+};
+const ROLES = [
+  {v:"homeowner",  l:"Homeowner (doing own work)"},
+  {v:"contractor", l:"Licensed plumbing contractor"},
+  {v:"gc",         l:"General contractor"},
+  {v:"unlicensed", l:"Unlicensed handyman / asking for a friend"}
+];
+const TL = [
+  {n:"1",hl:true, title:"Contractor Submits Permit Application",
+   body:"Submit to the county building department with all required documentation.",
+   docs:"Typical documents: scope of work, site plan, plumbing diagram (new construction or major remodel)",
+   chips:[{c:"ct",t:"⏱ 1–5 business days (standard)"},{c:"cf",t:"💵 $50–$300 depending on county & scope"}]},
+  {n:"2",hl:true, title:"Plan Review",
+   body:"County reviews the application for compliance with Florida Building Code.",
+   docs:"Most plumbing permits qualify for expedited review (1–3 days). Complex jobs (new construction, major remodels) may take 5–15 business days. You'll receive: approved permit with any conditions noted.",
+   chips:[{c:"ct",t:"⏱ 1–3 days (simple) / 5–15 days (complex)"}]},
+  {n:"3",hl:false,title:"Post Permit on Job Site",
+   body:"The approved permit must be physically posted where the inspector can see it. Work begins ONLY after the permit is issued — not after application.",
+   docs:"",
+   chips:[{c:"cb",t:"📌 Required before any work starts"}]},
+  {n:"4",hl:false,title:"Rough-In Inspection",
+   body:"Inspector visits before walls are closed to verify rough plumbing installation.",
+   docs:"Inspector checks: pipe sizing, venting, support, approved materials. Pass → proceed to finish work. Fail → correct deficiencies and reschedule.",
+   chips:[{c:"ct",t:"⏱ 1–3 days to schedule"}]},
+  {n:"5",hl:false,title:"Final Inspection",
+   body:"Inspector visits after all work is complete and fixtures are installed.",
+   docs:"Inspector checks: all fixtures installed, water on, no active leaks, water heater meets code. Pass → permit closed. Fail → correct and reschedule.",
+   chips:[{c:"ct",t:"⏱ 1–3 days to schedule"}]},
+  {n:"6",hl:false,title:"Certificate of Completion",
+   body:"County records the permit as closed. This document is required for insurance claims, home sales, and refinancing.",
+   docs:"Keep a digital and physical copy with your home records permanently.",
+   chips:[{c:"cb",t:"🏠 Required for home sale & insurance"}]}
+];
+const WARNS = [
+  {icon:"🏠",title:"Home Sale Risk",
+   body:"Unpermitted work is flagged during buyer inspections and can kill your sale — or force a price cut of",cost:" $10,000–$50,000",tail:"."},
+  {icon:"🔒",title:"Insurance Claim Denial",
+   body:"Water damage from unpermitted plumbing work may be",cost:" fully denied",tail:" by your homeowner's insurance carrier."},
+  {icon:"⚖️",title:"Fines & Retroactive Fees",
+   body:"Counties may issue fines of",cost:" $100–$1,000/day",tail:" for work without a permit. Getting an after-the-fact permit costs 2–4× the normal fee."},
+  {icon:"🔨",title:"Tear-Out Orders",
+   body:"An inspector can legally require full demolition of completed work to verify compliance — meaning you",cost:" pay twice",tail:" to re-open walls you already closed."}
+];
+const ACC = [
+  {title:"🔥 Water Heater Requirements", tag:"FBC Plumbing §§ 501–504",
+   items:[
+    "<strong>Maximum temperature:</strong> 120°F for residential (scald protection per ANSI Z21.22)",
+    "<strong>TPR (Temperature Pressure Relief) valve required</strong> on all water heaters; discharge pipe must terminate within 6\" of the floor or discharge to the exterior",
+    "<strong>Seismic straps:</strong> Not required in Florida (low seismic zone — Zone 0)",
+    "<strong>Garage installation (gas):</strong> Gas water heater must be elevated 18\" above the floor to protect against ignition of flammable vapors",
+    "<strong>Electric in garage:</strong> No elevation requirement for electric units",
+    "<strong>Energy efficiency:</strong> Must meet Florida Energy Code (FERC) minimums — currently Uniform Energy Factor (UEF) ≥ 0.92 for standard residential tanks"
+   ]},
+  {title:"🔧 Pipe Materials Approved in Florida", tag:"FBC Plumbing §§ 604–605",
+   items:[
+    "<strong>PEX-A, PEX-B, PEX-C:</strong> All approved for supply lines; PEX-A (Engel method) is preferred for flexibility and in-line repairability",
+    "<strong>CPVC:</strong> Approved for hot and cold supply lines; popular in FL for corrosion resistance",
+    "<strong>Copper Type L or M:</strong> Approved for supply lines in all applications",
+    "<strong>Galvanized steel:</strong> Permitted for repairs only — <em>not approved for new installation</em> in Florida due to corrosion issues",
+    "<strong>ABS (Schedule 40):</strong> Approved for drain/waste/vent (DWV) in residential",
+    "<strong>PVC (Schedule 40):</strong> Approved for DWV and buried outdoor use; most common in FL new construction"
+   ]},
+  {title:"🌬️ Venting Requirements", tag:"FBC Plumbing §§ 901–916",
+   items:[
+    "<strong>Every fixture trap must be vented</strong> to prevent siphoning and protect the trap water seal",
+    "<strong>Vent must extend through the roof</strong> or terminate on an exterior wall using an approved atmospheric terminal fitting",
+    "<strong>AAVs (Air Admittance Valves):</strong> Permitted in Florida for individual and branch venting where roof penetration is impractical — must be accessible and installed in a ventilated space",
+    "<strong>Island fixture venting:</strong> Must use a loop vent or approved AAV per FBC requirements",
+    "<strong>Minimum vent pipe size:</strong> 1¼\" for individual fixtures; main vent stack minimum 3\""
+   ]},
+  {title:"💧 Backflow Prevention", tag:"FBC Plumbing § 608 / FAC 62-555",
+   items:[
+    "<strong>Required for:</strong> Irrigation systems, pool fill connections, any non-potable water connection, boilers, and chemical dispensers",
+    "<strong>Annual testing required</strong> for commercial backflow preventers in Florida (Florida Administrative Code Rule 62-555.360)",
+    "<strong>Residential hose bib vacuum breakers:</strong> Required by FBC on all exterior hose bib connections",
+    "<strong>Double-check valve assemblies (DCVA):</strong> Required at service entry for all commercial and multi-family properties",
+    "<strong>RPZ (Reduced Pressure Zone) assemblies:</strong> Required for high-hazard connections including irrigation systems with fertilizer or chemical injection"
+   ]},
+  {title:"🚽 Septic System Rules (Florida-Specific)", tag:"FAC 64E-6 / Florida DOH",
+   items:[
+    "<strong>Permitting authority:</strong> Florida Department of Health (DOH) via county health departments — <em>not</em> the county building department",
+    "<strong>Minimum setbacks:</strong> 75 feet from any surface water body; 50 feet from a potable water well; 10 feet from any property line",
+    "<strong>Drainfield sizing:</strong> Determined by soil percolation (perc) test and bedroom count per FAC 64E-6 — no shortcuts",
+    "<strong>Mandatory inspections:</strong> Some FL counties require septic system inspection every 5 years — check with your county health department",
+    "<strong>Proximity to public sewer:</strong> If public sewer is available within 500 feet, FL law may require connection upon sale or major renovation",
+    "<strong>All repairs require a permit:</strong> Even repair of existing septic components (tank, drainfield, pump) requires a DOH permit — never attempt unpermitted septic repairs"
+   ]}
+];
+
+/* ═══════════════════════════════════════════════════
+   INIT — Build all dynamic content
+════════════════════════════════════════════════════ */
+(function init() {
+  // Checkbox groups
+  buildCbx("req-list", REQ, "r");
+  buildCbx("chk-list", CHK, "y");
+  buildCbx("no-list",  NO,  "g");
+
+  // County dropdowns (checker + form)
+  const cs = document.getElementById("county-sel");
+  const fc = document.getElementById("f-county");
+  COUNTIES.forEach(c => {
+    const opt = `<option value="${c}">${c} County</option>`;
+    cs.insertAdjacentHTML("beforeend", opt);
+    fc.insertAdjacentHTML("beforeend", opt);
+  });
+
+  // Role radios
+  const rl = document.getElementById("role-list");
+  ROLES.forEach(r => {
+    const div = document.createElement("div");
+    div.className = "rdx";
+    div.dataset.val = r.v;
+    div.innerHTML = `<input type="radio" name="role" id="role-${r.v}" value="${r.v}"><span>${r.l}</span>`;
+    div.addEventListener("click", () => selectRole(r.v));
+    div.querySelector("input").addEventListener("change", () => selectRole(r.v));
+    rl.appendChild(div);
+  });
+
+  // Timeline
+  const tl = document.getElementById("timeline");
+  TL.forEach(s => {
+    const chips = s.chips.map(c => `<span class="chip ${c.c}">${c.t}</span>`).join("");
+    const docs  = s.docs ? `<div class="tl-docs">${s.docs}</div>` : "";
+    const div = document.createElement("div");
+    div.className = `tl-step${s.hl ? " hl" : ""}`;
+    div.innerHTML =
+      `<div class="tl-dot">${s.n}</div>
+       <div class="tl-body">
+         <div class="tl-title">${s.title}</div>
+         <div class="tl-card">${s.body}${docs}<div class="chips">${chips}</div></div>
+       </div>`;
+    tl.appendChild(div);
+  });
+
+  // Warning cards
+  const wg = document.getElementById("warn-grid");
+  WARNS.forEach(w => {
+    wg.insertAdjacentHTML("beforeend",
+      `<div class="wcard">
+         <div class="wcard-icon">${w.icon}</div>
+         <div class="wcard-title">${w.title}</div>
+         <div class="wcard-body">${w.body}<span class="wcard-cost">${w.cost}</span>${w.tail}</div>
+       </div>`);
+  });
+
+  // Accordion
+  const ac = document.getElementById("acc");
+  ACC.forEach((a, i) => {
+    const items = a.items.map(it => `<li>${it}</li>`).join("");
+    const div = document.createElement("div");
+    div.className = "ai";
+    div.id = `ai${i}`;
+    div.innerHTML =
+      `<button class="ab" onclick="toggleAcc(${i})">
+         <span>${a.title}</span><span class="chev">▼</span>
+       </button>
+       <div class="ac"><span class="ctag">${a.tag}</span><ul>${items}</ul></div>`;
+    ac.appendChild(div);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════════════ */
+function buildCbx(id, items, cls) {
+  const el = document.getElementById(id);
+  items.forEach((item, i) => {
+    const uid = `${cls}${i}`;
+    const div = document.createElement("div");
+    div.className = `cbx ${cls}`;
+    div.id = `cbx-${uid}`;
+    div.innerHTML = `<input type="checkbox" id="${uid}"><span>${item}</span>`;
+    const inp = div.querySelector("input");
+    // Clicking anywhere on the row toggles the checkbox
+    div.addEventListener("click", e => {
+      if (e.target !== inp) { inp.checked = !inp.checked; }
+      div.classList.toggle("checked", inp.checked);
+    });
+    inp.addEventListener("change", () => div.classList.toggle("checked", inp.checked));
+    el.appendChild(div);
+  });
+}
+
+function selectRole(val) {
+  document.querySelectorAll(".rdx").forEach(r => {
+    const sel = r.dataset.val === val;
+    r.classList.toggle("sel", sel);
+    if (sel) r.querySelector("input").checked = true;
+  });
+}
+
+function switchTab(idx) {
+  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", i === idx));
+  document.querySelectorAll(".panel").forEach((p, i) => p.classList.toggle("active", i === idx));
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+function toggleAcc(i) {
+  document.getElementById(`ai${i}`).classList.toggle("open");
+}
+
+/* ═══════════════════════════════════════════════════
+   PERMIT CHECK
+════════════════════════════════════════════════════ */
+function checkPermit() {
+  const reqSel = [], chkSel = [], noSel = [];
+  REQ.forEach((item, i) => { if (document.getElementById(`r${i}`)?.checked) reqSel.push(item); });
+  CHK.forEach((item, i) => { if (document.getElementById(`y${i}`)?.checked) chkSel.push(item); });
+  NO.forEach((item, i)  => { if (document.getElementById(`g${i}`)?.checked)  noSel.push(item);  });
+
+  const total = reqSel.length + chkSel.length + noSel.length;
+  if (total === 0) {
+    alert("Please select at least one type of work before checking requirements.");
+    return;
+  }
+
+  const county = document.getElementById("county-sel").value;
+  const role   = document.querySelector('input[name="role"]:checked')?.value || "";
+
+  // Build result
+  let html = `<div class="res-hdr"><h3>📋 Your Permit Requirements — ${total} item${total>1?"s":""} selected</h3></div><div class="res-body">`;
+
+  // Item list
+  const all = [
+    ...reqSel.map(i => ({t:i, bc:"b-r", bl:"REQUIRED"})),
+    ...chkSel.map(i => ({t:i, bc:"b-y", bl:"CHECK WITH COUNTY"})),
+    ...noSel.map(i  => ({t:i, bc:"b-g", bl:"NOT REQUIRED"}))
+  ];
+  all.forEach(o => {
+    html += `<div class="res-item"><span class="bdg ${o.bc}">${o.bl}</span><span>${o.t}</span></div>`;
+  });
+
+  // Summary blocks
+  if (reqSel.length > 0) {
+    html += `<div class="ib ib-r">🚨 <strong>You will need a permit for ${reqSel.length} item${reqSel.length>1?"s":""}</strong> in your selection. Contact your county building department <em>before</em> starting any work.</div>`;
+  }
+  if (chkSel.length > 0) {
+    html += `<div class="ib ib-y">⚠️ <strong>${chkSel.length} item${chkSel.length>1?"s":""} may require a permit</strong> depending on your county. Call your local building department to confirm — requirements vary across Florida's 67 counties.</div>`;
+  }
+  if (reqSel.length === 0 && chkSel.length === 0 && noSel.length > 0) {
+    html += `<div class="ib ib-g">✅ <strong>No permit required</strong> for the items you selected. If your project scope changes or you're unsure, always call your county building department to confirm.</div>`;
+  }
+
+  // Role-specific notes
+  if (role === "homeowner" && (reqSel.length > 0 || chkSel.length > 0)) {
+    html += `<div class="ib ib-b">🏠 <strong>Homeowner permits:</strong> Florida Statute § 489.103 allows homeowners to pull their own permits for work on their <em>primary residence</em>. This exemption does <strong>not</strong> apply to rental properties, investment properties, or homes listed for sale.</div>`;
+  }
+  if (role === "unlicensed" && (reqSel.length > 0 || chkSel.length > 0)) {
+    html += `<div class="warn-box">⚠️ <strong>Unlicensed contractor warning (FL Stat. § 489.127):</strong> Hiring an unlicensed contractor for permitted plumbing work is illegal in Florida. The homeowner may be held personally liable for any unpermitted work — including fines, required demolition, and insurance claim denials — discovered during a sale, inspection, or loss. Always verify a contractor's license at <a href="https://www.myfloridalicense.com" target="_blank" rel="noopener">myfloridalicense.com</a>.</div>`;
+  }
+
+  // County link
+  if (county) {
+    const link = CL[county];
+    if (link) {
+      html += `<div class="county-link">🔗 <strong>Get ${county} County's permit application:</strong><br><a href="${link.url}" target="_blank" rel="noopener">${link.n} →</a></div>`;
+    } else {
+      html += `<div class="county-link">🔗 Search <strong>"${county} County building department permit application"</strong> to find your local permit portal. Most FL counties now accept online applications through their building department websites.</div>`;
+    }
+  }
+
+  // CTA
+  html += `<div class="cta-box"><p>Ready to do this right? We handle the permit paperwork and inspections for you.</p><button class="cta-btn" onclick="switchTab(2)">Schedule Permitted Plumbing Work — $0 Estimate →</button></div>`;
+  html += "</div>";
+
+  const el = document.getElementById("result");
+  el.innerHTML = html;
+  el.style.display = "block";
+  setTimeout(() => el.scrollIntoView({behavior:"smooth", block:"start"}), 50);
+}
+
+/* ═══════════════════════════════════════════════════
+   LEAD FORM
+════════════════════════════════════════════════════ */
+function submitForm() {
+  const name  = document.getElementById("f-name").value.trim();
+  const email = document.getElementById("f-email").value.trim();
+  if (!name) { alert("Please enter your name."); return; }
+  if (!email || !email.includes("@")) { alert("Please enter a valid email address."); return; }
+  document.getElementById("lead-form").style.display = "none";
+  document.getElementById("f-ok").style.display = "block";
+}
+</script>
+</body>
+</html>
