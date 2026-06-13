@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Hydro-Jetting Cost Calculator | Florida Plumbing</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.5;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:0 0 80px}
+
+/* Header */
+.header{background:#0F1629;padding:16px;border-bottom:2px solid #00B4FF;text-align:center}
+.header h1{font-size:1.35rem;font-weight:800;color:#00B4FF;margin-bottom:3px}
+.header .sub{color:#94A3B8;font-size:0.83rem}
+
+/* Emergency banner */
+.emg{background:linear-gradient(90deg,#EF4444,#F97316);color:#fff;text-align:center;padding:9px 16px;font-size:0.82rem;font-weight:700}
+.emg a{color:#fff;text-decoration:underline}
+
+/* Tabs */
+.tabs{display:flex;background:#0F1629;border-bottom:1px solid #1E2A3A;position:sticky;top:0;z-index:10}
+.tab-btn{flex:1;padding:11px 4px;font-size:0.72rem;font-weight:700;color:#94A3B8;background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.04em}
+.tab-btn.active{color:#00B4FF;border-bottom-color:#00B4FF}
+.tab-btn:hover:not(.active){color:#E2E8F0}
+
+/* Panels */
+.panel{display:none;padding:16px}
+.panel.active{display:block}
+
+/* Cards */
+.card{background:#0F1629;border-radius:10px;padding:15px;margin-bottom:12px}
+.card.alt{background:#141929}
+.card.bl{border-left:4px solid #00B4FF}
+.card.gd{border-left:4px solid #F4B942}
+.card.or{border-left:4px solid #F97316}
+.card.rd{border-left:4px solid #EF4444}
+.card.tl{border-left:4px solid #14B8A6}
+.card-title{font-size:0.8rem;font-weight:800;margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em}
+.card.bl .card-title{color:#00B4FF}
+.card.gd .card-title{color:#F4B942}
+.card.or .card-title{color:#F97316}
+.card.rd .card-title{color:#EF4444}
+.card.tl .card-title{color:#14B8A6}
+.card-body{font-size:0.88rem;color:#E2E8F0}
+
+/* Step wizard */
+.step{display:none}
+.step.active{display:block}
+.step-indicator{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:18px}
+.sd{width:30px;height:30px;border-radius:50%;border:2px solid #1E2A3A;color:#94A3B8;font-size:0.76rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.sd.done{background:#00B4FF;border-color:#00B4FF;color:#0A0E1A}
+.sd.cur{border-color:#00B4FF;color:#00B4FF}
+.sl{flex:1;height:2px;background:#1E2A3A;max-width:44px;transition:background .2s}
+.sl.done{background:#00B4FF}
+.step-label{text-align:center;margin-bottom:14px}
+.step-label h2{font-size:1.05rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.step-label .sub{color:#94A3B8;font-size:0.83rem}
+
+/* Option buttons */
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.opt-btn{background:#141929;border:2px solid #1E2A3A;border-radius:8px;padding:12px 14px;color:#E2E8F0;font-size:0.9rem;cursor:pointer;text-align:left;transition:all .2s;width:100%}
+.opt-btn:hover{border-color:#00B4FF;color:#00B4FF}
+.opt-btn.selected{border-color:#00B4FF;background:rgba(0,180,255,.09);color:#00B4FF;font-weight:600}
+
+/* Nav */
+.nav-row{display:flex;gap:10px;margin-top:10px}
+.btn{flex:1;padding:12px;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.btn-back{background:#141929;color:#94A3B8;border:1px solid #1E2A3A}
+.btn-back:hover{color:#E2E8F0;border-color:#E2E8F0}
+.btn-next{background:#00B4FF;color:#0A0E1A}
+.btn-next:hover{background:#009ee0}
+.btn-reset{width:100%;padding:10px;background:#141929;color:#94A3B8;border:1px solid #1E2A3A;border-radius:8px;font-size:0.85rem;cursor:pointer;margin-top:8px;transition:all .2s}
+.btn-reset:hover{color:#E2E8F0}
+
+/* Results */
+.results{display:none}
+.results.show{display:block}
+.result-price{font-size:1.6rem;font-weight:900;color:#00B4FF;margin:6px 0 4px}
+.result-note{color:#94A3B8;font-size:0.82rem}
+
+/* Phone strip */
+.phone-strip{background:#F4B942;color:#0A0E1A;text-align:center;padding:13px;border-radius:8px;font-weight:800;font-size:1rem;margin-bottom:12px;text-decoration:none;display:block}
+.phone-strip a{color:#0A0E1A;text-decoration:none}
+
+/* Guide */
+.section-hd{font-size:1rem;font-weight:700;color:#E2E8F0;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.section-hd::before{content:'';display:block;width:4px;height:18px;background:#00B4FF;border-radius:2px;flex-shrink:0}
+.fact-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.fact-list li{background:#141929;border-radius:8px;padding:12px 13px;font-size:0.88rem;display:flex;align-items:flex-start;gap:10px}
+.fact-num{min-width:24px;height:24px;background:#00B4FF;color:#0A0E1A;border-radius:50%;font-weight:900;font-size:0.76rem;display:flex;align-items:center;justify-content:center;margin-top:1px;flex-shrink:0}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;margin-bottom:12px;border-radius:8px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{background:#00B4FF;color:#0A0E1A;padding:9px 10px;text-align:left;font-weight:800}
+td{padding:8px 10px;border-bottom:1px solid #1E2A3A;color:#E2E8F0;vertical-align:top}
+tr:nth-child(even) td{background:#141929}
+tr:nth-child(odd) td{background:#0F1629}
+
+/* Checklist */
+.progress-bar{background:#1E2A3A;border-radius:4px;height:8px;margin-bottom:6px;overflow:hidden}
+.progress-fill{height:100%;background:#00B4FF;border-radius:4px;transition:width .4s ease}
+.progress-label{text-align:right;font-size:0.82rem;color:#94A3B8;margin-bottom:12px}
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #1E2A3A;cursor:pointer;transition:opacity .15s}
+.check-item:last-child{border-bottom:none}
+.check-box{width:22px;height:22px;min-width:22px;border-radius:4px;border:2px solid #1E2A3A;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:2px;font-size:13px;font-weight:900}
+.check-item.checked .check-box{background:#22C55E;border-color:#22C55E;color:#fff}
+.check-text{font-size:0.87rem;color:#E2E8F0;line-height:1.4}
+.check-item.checked .check-text{color:#94A3B8;text-decoration:line-through}
+
+/* Lead form */
+.form-group{margin-bottom:11px}
+label{display:block;font-size:0.8rem;font-weight:700;color:#94A3B8;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+input,select{width:100%;padding:11px 13px;background:#0A0E1A;border:1px solid #1E2A3A;border-radius:8px;color:#E2E8F0;font-size:0.9rem;outline:none;transition:border-color .2s;-webkit-appearance:none}
+input:focus,select:focus{border-color:#00B4FF}
+select option{background:#0F1629}
+.btn-submit{width:100%;padding:14px;background:#F4B942;color:#0A0E1A;border:none;border-radius:8px;font-size:1rem;font-weight:900;cursor:pointer;transition:background .2s;margin-top:4px}
+.btn-submit:hover{background:#d9a430}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);padding:12px 22px;border-radius:8px;font-weight:700;font-size:0.9rem;z-index:1000;transition:transform .3s;white-space:nowrap;color:#0A0E1A;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="emg">🚨 Emergency drain backup? Call now: <a href="tel:5615557473">(561) 555-PIPE</a></div>
+
+<div class="header">
+  <h1>💧 FL Hydro-Jetting</h1>
+  <div class="sub">Cost Calculator &amp; Drain Guide for Florida Homeowners</div>
+</div>
+
+<div class="wrap">
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tab0" onclick="switchTab(0)">💰 Cost Calc</button>
+    <button class="tab-btn" id="tab1" onclick="switchTab(1)">📋 FL Guide</button>
+    <button class="tab-btn" id="tab2" onclick="switchTab(2)">✅ Checklist</button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANEL 0 — COST CALCULATOR
+  ══════════════════════════════════════ -->
+  <div class="panel active" id="panel0">
+
+    <!-- Step Indicator -->
+    <div class="step-indicator" id="stepInd">
+      <div class="sd cur" id="sd1">1</div>
+      <div class="sl" id="sl1"></div>
+      <div class="sd" id="sd2">2</div>
+      <div class="sl" id="sl2"></div>
+      <div class="sd" id="sd3">3</div>
+      <div class="sl" id="sl3"></div>
+      <div class="sd" id="sd4">4</div>
+    </div>
+
+    <!-- Step 1 — Pipe/Drain Type -->
+    <div class="step active" id="step1">
+      <div class="step-label">
+        <h2>What type of drain or pipe?</h2>
+        <div class="sub">Step 1 of 4</div>
+      </div>
+      <div class="options">
+        <button class="opt-btn" onclick="pick('pipeType','main',this)">🏠 Main Sewer Line</button>
+        <button class="opt-btn" onclick="pick('pipeType','kitchen',this)">🍳 Kitchen Drain</button>
+        <button class="opt-btn" onclick="pick('pipeType','bathroom',this)">🛁 Bathroom / Tub Drain</button>
+        <button class="opt-btn" onclick="pick('pipeType','floor',this)">🏭 Floor Drain</button>
+        <button class="opt-btn" onclick="pick('pipeType','storm',this)">🌧️ Storm Drain</button>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-next" onclick="goStep(2)">Next →</button>
+      </div>
+    </div>
+
+    <!-- Step 2 — Blockage Cause -->
+    <div class="step" id="step2">
+      <div class="step-label">
+        <h2>Primary blockage cause?</h2>
+        <div class="sub">Step 2 of 4</div>
+      </div>
+      <div class="options">
+        <button class="opt-btn" onclick="pick('blockage','grease',this)">🫙 Grease / FOG Buildup</button>
+        <button class="opt-btn" onclick="pick('blockage','root',this)">🌳 Root Intrusion</button>
+        <button class="opt-btn" onclick="pick('blockage','scale',this)">💧 Mineral Scale (hard water)</button>
+        <button class="opt-btn" onclick="pick('blockage','debris',this)">🪨 Debris / Foreign Objects</button>
+        <button class="opt-btn" onclick="pick('blockage','unknown',this)">❓ Unknown</button>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-back" onclick="goStep(1)">← Back</button>
+        <button class="btn btn-next" onclick="goStep(3)">Next →</button>
+      </div>
+    </div>
+
+    <!-- Step 3 — Pipe Size -->
+    <div class="step" id="step3">
+      <div class="step-label">
+        <h2>Estimated pipe size?</h2>
+        <div class="sub">Step 3 of 4</div>
+      </div>
+      <div class="options">
+        <button class="opt-btn" onclick="pick('pipeSize','small',this)">🔵 Small (1"–2" residential drain)</button>
+        <button class="opt-btn" onclick="pick('pipeSize','medium',this)">🟡 Medium (3"–4" main drain)</button>
+        <button class="opt-btn" onclick="pick('pipeSize','large',this)">🔴 Large (6"+ commercial/municipal)</button>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-back" onclick="goStep(2)">← Back</button>
+        <button class="btn btn-next" onclick="goStep(4)">Next →</button>
+      </div>
+    </div>
+
+    <!-- Step 4 — FL Region -->
+    <div class="step" id="step4">
+      <div class="step-label">
+        <h2>Your FL region?</h2>
+        <div class="sub">Step 4 of 4</div>
+      </div>
+      <div class="options">
+        <button class="opt-btn" onclick="pick('region','south',this)">🌴 South FL (Miami/Broward/PB)</button>
+        <button class="opt-btn" onclick="pick('region','tampa',this)">⚡ Tampa Bay Area</button>
+        <button class="opt-btn" onclick="pick('region','jax',this)">🌊 Jacksonville / NE FL</button>
+        <button class="opt-btn" onclick="pick('region','swfl',this)">🦅 SW FL (Naples/Ft Myers)</button>
+        <button class="opt-btn" onclick="pick('region','panhandle',this)">🏖️ Panhandle (Pensacola/Panama City)</button>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-back" onclick="goStep(3)">← Back</button>
+        <button class="btn btn-next" onclick="calcCost()">Calculate 💰</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+      <div class="card bl">
+        <div class="card-title">💧 Hydro-Jetting Cost</div>
+        <div class="result-price" id="resCost"></div>
+        <div class="result-note">Includes camera inspection pre-jetting (standard in FL)</div>
+      </div>
+      <div class="card gd">
+        <div class="card-title">⚠️ FL Hard Water Alert</div>
+        <div class="card-body">FL ranks #3 nationally for water hardness. Mineral scale deposits build up 3× faster than national average. Annual hydro-jetting recommended for older FL homes.</div>
+      </div>
+      <div class="card or">
+        <div class="card-title" id="condTitle"></div>
+        <div class="card-body" id="condBody"></div>
+      </div>
+      <div class="card tl">
+        <div class="card-title">📷 Camera Inspection</div>
+        <div class="card-body">Most FL plumbers include a camera inspection ($150 value) before jetting to locate the blockage and confirm pipe condition. Always insist on this.</div>
+      </div>
+      <a class="phone-strip" href="tel:5615557473">📞 Get Your Free Quote — (561) 555-PIPE</a>
+      <button class="btn-reset" onclick="resetCalc()">↩ Start Over</button>
+    </div>
+
+  </div><!-- /panel0 -->
+
+  <!-- ══════════════════════════════════════
+       PANEL 1 — FL DRAIN GUIDE
+  ══════════════════════════════════════ -->
+  <div class="panel" id="panel1">
+
+    <div class="section-hd">5 FL Drain Facts Every Homeowner Must Know</div>
+    <ul class="fact-list">
+      <li><span class="fact-num">1</span><span>FL's hard water (200–400 ppm in many areas) deposits calcium scale that narrows pipes by up to 40% over 10 years.</span></li>
+      <li><span class="fact-num">2</span><span>Live oak, ficus, and palm roots are the top pipe-invaders in FL — roots seek moisture year-round due to our dry seasons.</span></li>
+      <li><span class="fact-num">3</span><span>Sewer camera inspections are now required for FL home sales in most counties — reveals jetting needs before closing.</span></li>
+      <li><span class="fact-num">4</span><span>Restaurant grease traps in FL must be pumped every 30–90 days (per local county ordinance) — FOG backs up residential drains too.</span></li>
+      <li><span class="fact-num">5</span><span>Hydro-jetting uses 3,500–4,000 PSI water pressure — safe for PVC, cast iron, and most FL pipe materials.</span></li>
+    </ul>
+
+    <div class="section-hd">Hydro-Jetting vs. Drain Snake</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Factor</th><th>Hydro-Jetting</th><th>Drain Snake</th></tr></thead>
+        <tbody>
+          <tr><td>Cost</td><td>$150–$750</td><td>$75–$250</td></tr>
+          <tr><td>Effectiveness</td><td>Fully clears pipe walls</td><td>Pokes through only</td></tr>
+          <tr><td>For hard water scale</td><td>Excellent</td><td>Does not work</td></tr>
+          <tr><td>For root intrusion</td><td>Very good + foam addable</td><td>Temporary only</td></tr>
+          <tr><td>Pipe condition required</td><td>Structurally sound</td><td>Any condition</td></tr>
+          <tr><td>FL hard water pipes</td><td>Best choice</td><td>Repeated treatments needed</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-hd">Signs You Need Hydro-Jetting</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Symptom</th><th>Likely Cause</th><th>Urgency</th></tr></thead>
+        <tbody>
+          <tr><td>Multiple slow drains simultaneously</td><td>Main line buildup</td><td style="color:#EF4444;font-weight:700">High — call now</td></tr>
+          <tr><td>Gurgling after flushing</td><td>Partial blockage with air</td><td style="color:#F97316;font-weight:700">Medium</td></tr>
+          <tr><td>Sewer smell without visible backup</td><td>Scale / partial block</td><td style="color:#F97316;font-weight:700">Medium</td></tr>
+          <tr><td>Prior snaking didn't last</td><td>Root or scale cause</td><td style="color:#EF4444;font-weight:700">High</td></tr>
+          <tr><td>Over 5 years since last clearing</td><td>Preventive</td><td style="color:#F4B942;font-weight:700">Schedule now</td></tr>
+          <tr><td>New home purchase (FL)</td><td>Unknown history</td><td style="color:#F4B942;font-weight:700">Before moving in</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card rd">
+      <div class="card-title">🚫 Do Not Use Chemical Drain Cleaners</div>
+      <div class="card-body">DO NOT use chemical drain cleaners in FL homes — they corrode PVC fittings and are ineffective on mineral scale. FL's hard water requires mechanical clearing. Chemicals also damage septic systems.</div>
+    </div>
+
+    <div class="card tl">
+      <div class="card-title">🛡️ Preventive Jetting FL</div>
+      <div class="card-body">Annual jetting for homes with mature trees or hard water costs $200–400/year and prevents $3,000+ emergency repairs. Many FL plumbers offer maintenance contracts.</div>
+    </div>
+
+    <a class="phone-strip" href="tel:5615557473">📞 Call for a Free Quote — (561) 555-PIPE</a>
+
+  </div><!-- /panel1 -->
+
+  <!-- ══════════════════════════════════════
+       PANEL 2 — DRAIN HEALTH CHECKLIST
+  ══════════════════════════════════════ -->
+  <div class="panel" id="panel2">
+
+    <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:14px">FL Drain Health Checklist</h2>
+
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">0 of 12 complete</div>
+
+    <div class="card alt" id="checklistWrap"></div>
+
+    <div class="card gd" style="margin-top:12px">
+      <div class="card-title">📋 FL Permit Note</div>
+      <div class="card-body">Hydro-jetting the main sewer line and any work on cleanout access points may require a permit in some FL counties. Your licensed CFC plumber will advise.</div>
+    </div>
+
+    <div class="card bl">
+      <div class="card-title">📞 Get a Free Hydro-Jetting Quote</div>
+      <form id="leadForm" onsubmit="submitLead(event)" style="margin-top:12px">
+        <div class="form-group">
+          <label for="fName">Name</label>
+          <input type="text" id="fName" placeholder="Your name" autocomplete="name" required>
+        </div>
+        <div class="form-group">
+          <label for="fPhone">Phone</label>
+          <input type="tel" id="fPhone" placeholder="(561) 555-0000" autocomplete="tel" required>
+        </div>
+        <div class="form-group">
+          <label for="fEmail">Email</label>
+          <input type="email" id="fEmail" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="fConcern">What's your main concern?</label>
+          <select id="fConcern" required>
+            <option value="">Select one…</option>
+            <option value="slow">Slow drains</option>
+            <option value="smell">Sewer smell</option>
+            <option value="root">Root intrusion</option>
+            <option value="preventive">Preventive maintenance</option>
+            <option value="emergency">Emergency backup</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit">🚿 Get Free Quote →</button>
+      </form>
+      <p style="text-align:center;font-size:0.8rem;color:#94A3B8;margin-top:10px">
+        Or call us directly: <a href="tel:5615557473" style="color:#F4B942;font-weight:700">(561) 555-PIPE</a>
+      </p>
+    </div>
+
+  </div><!-- /panel2 -->
+
+</div><!-- /wrap -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── XSS escape ─────────────────────────────── */
+const esc = s => String(s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+  .replace(/'/g,'&#39;');
+
+/* ── Cost data ──────────────────────────────── */
+const COSTS = {
+  main:     {grease:[300,550],root:[400,700],scale:[350,600],debris:[300,500],unknown:[350,575]},
+  kitchen:  {grease:[150,300],root:[200,375],scale:[175,325],debris:[150,275],unknown:[175,310]},
+  bathroom: {grease:[125,260],root:[175,325],scale:[150,280],debris:[125,240],unknown:[150,275]},
+  floor:    {grease:[150,290],root:[200,360],scale:[175,310],debris:[150,280],unknown:[175,305]},
+  storm:    {grease:[350,600],root:[450,750],scale:[400,650],debris:[325,550],unknown:[375,625]}
+};
+const SIZE_MULT = {small:0.85, medium:1.0, large:1.45};
+const MULT      = {south:1.20, tampa:1.0, jax:0.92, swfl:1.15, panhandle:0.88};
+
+/* ── Checklist items ────────────────────────── */
+const ITEMS = [
+  'Check all drains for slow drainage (fill sink, time drain rate)',
+  'Listen for gurgling in toilets when shower runs (main line signal)',
+  'Inspect under kitchen sink for grease buildup around P-trap',
+  'Note any sewer smell in bathroom, kitchen, or yard',
+  'Check age of home — FL pipes over 25 years need inspection',
+  'Ask previous owners about drain history (required on FL disclosure)',
+  'Locate and inspect floor drains in laundry/garage',
+  'Check outdoor cleanout access point (required by FL code)',
+  'Note any large trees within 20 feet of sewer line (root risk)',
+  'Review water bill for unexplained increases (possible leak vs. backflow)',
+  'Schedule camera inspection if any symptoms present',
+  'Call licensed FL plumber for hydro-jetting quote: (561) 555-PIPE'
+];
+
+/* ── State ──────────────────────────────────── */
+let sel      = {pipeType:'', blockage:'', pipeSize:'', region:''};
+let curStep  = 1;
+let checks   = new Array(ITEMS.length).fill(false);
+let toastTmr = null;
+
+/* ── Tab switcher ───────────────────────────── */
+function switchTab(n) {
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('tab'+i).classList.toggle('active', i===n);
+    document.getElementById('panel'+i).classList.toggle('active', i===n);
+  }
+}
+
+/* ── Wizard option picker ───────────────────── */
+function pick(field, val, el) {
+  sel[field] = val;
+  el.closest('.options').querySelectorAll('.opt-btn')
+    .forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ── Step navigation ────────────────────────── */
+function goStep(n) {
+  const guard = {2:'pipeType', 3:'blockage', 4:'pipeSize'};
+  if (n > curStep && guard[n] && !sel[guard[n]]) {
+    toast('Please select an option first', '#F97316');
+    return;
+  }
+  document.getElementById('step'+curStep).classList.remove('active');
+  curStep = n;
+  document.getElementById('step'+n).classList.add('active');
+  updateDots();
+  document.getElementById('panel0').scrollTop = 0;
+}
+
+/* ── Step-dot updater ───────────────────────── */
+function updateDots() {
+  for (let i = 1; i <= 4; i++) {
+    const d = document.getElementById('sd'+i);
+    d.className = 'sd';
+    if (i < curStep)      { d.classList.add('done'); d.textContent = '✓'; }
+    else if (i === curStep){ d.classList.add('cur');  d.textContent = String(i); }
+    else                   {                           d.textContent = String(i); }
+  }
+  for (let i = 1; i <= 3; i++) {
+    const l = document.getElementById('sl'+i);
+    l.className = i < curStep ? 'sl done' : 'sl';
+  }
+}
+
+/* ── Round to nearest $25 ───────────────────── */
+const r25 = n => Math.round(n / 25) * 25;
+
+/* ── Cost calculator ────────────────────────── */
+function calcCost() {
+  if (!sel.region) { toast('Please select your FL region', '#F97316'); return; }
+  const [lo, hi] = COSTS[sel.pipeType][sel.blockage];
+  const sm = SIZE_MULT[sel.pipeSize];
+  const rm = MULT[sel.region];
+  const cLo = r25(lo * sm * rm);
+  const cHi = r25(hi * sm * rm);
+  document.getElementById('resCost').textContent =
+    '$' + cLo.toLocaleString() + '–$' + cHi.toLocaleString();
+  setConditional(sel.blockage);
+  document.getElementById('step4').classList.remove('active');
+  document.getElementById('stepInd').style.display = 'none';
+  document.getElementById('results').classList.add('show');
+}
+
+/* ── Conditional result card ────────────────── */
+function setConditional(blockage) {
+  const t = document.getElementById('condTitle');
+  const b = document.getElementById('condBody');
+  if (blockage === 'root') {
+    t.textContent = '🌳 Root Alert';
+    b.textContent = "FL's warm sandy soil accelerates root growth year-round. "
+      + "Roots can re-infiltrate within 12–18 months. "
+      + "Ask about root-killing foam treatment (adds $75–150).";
+  } else {
+    t.textContent = '⚙️ Hydro-Jetting vs. Snaking';
+    b.textContent = "Hydro-jetting fully clears pipes; snaking just pokes a hole. "
+      + "For FL's hard water scale, jetting is the only permanent solution.";
+  }
+}
+
+/* ── Reset calculator ───────────────────────── */
+function resetCalc() {
+  sel = {pipeType:'', blockage:'', pipeSize:'', region:''};
+  curStep = 1;
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('stepInd').style.display = 'flex';
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step1').classList.add('active');
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  updateDots();
+}
+
+/* ── Build checklist DOM ────────────────────── */
+function buildChecklist() {
+  const wrap = document.getElementById('checklistWrap');
+  wrap.innerHTML = '';
+  ITEMS.forEach((txt, i) => {
+    const row = document.createElement('div');
+    row.className = 'check-item' + (checks[i] ? ' checked' : '');
+    row.onclick = () => toggleCheck(i);
+    const box = document.createElement('div');
+    box.className = 'check-box';
+    if (checks[i]) box.textContent = '✓';
+    const span = document.createElement('span');
+    span.className = 'check-text';
+    span.textContent = txt;
+    row.appendChild(box);
+    row.appendChild(span);
+    wrap.appendChild(row);
+  });
+  updateProgress();
+}
+
+/* ── Toggle a checklist item ────────────────── */
+function toggleCheck(i) {
+  checks[i] = !checks[i];
+  const rows = document.querySelectorAll('.check-item');
+  rows[i].classList.toggle('checked', checks[i]);
+  const box = rows[i].querySelector('.check-box');
+  box.textContent = checks[i] ? '✓' : '';
+  updateProgress();
+}
+
+/* ── Update progress bar ────────────────────── */
+function updateProgress() {
+  const done = checks.filter(Boolean).length;
+  const pct  = Math.round(done / ITEMS.length * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent =
+    done + ' of ' + ITEMS.length + ' complete';
+}
+
+/* ── Lead form submit ───────────────────────── */
+function submitLead(e) {
+  e.preventDefault();
+  toast("✅ We'll call you within 2 hours!", '#F4B942');
+  e.target.reset();
+}
+
+/* ── Toast notification ─────────────────────── */
+function toast(msg, bg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = bg || '#F97316';
+  el.classList.add('show');
+  clearTimeout(toastTmr);
+  toastTmr = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+/* ── Init ───────────────────────────────────── */
+buildChecklist();
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**70 interactive cost calculators** for Florida homeowners.
+**73 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -18,6 +18,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Construction Defect Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/construction-defect/fl_construction_defect.html)
 - [FL Drain Cleaning Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-cleaning/fl_drain_cleaning.html)
 - [FL Drain Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-cost/fl_drain_cost.html)
+- [FL Drain Field Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-field/fl_drain_field.html)
 - [FL Drain Health Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-health/fl_drain_health.html)
 - [FL Emergency Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/emergency-plumbing/fl_emergency_plumbing.html)
 - [FL Expansion Tank Prv Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/expansion-tank-prv/fl_expansion_tank_prv.html)
@@ -30,6 +31,8 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Gas Propane Electric Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-propane-electric/fl_gas_propane_electric.html)
 - [FL Home Buyer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/home-buyer/fl_home_buyer_plumbing.html)
 - [FL Hot Water Recirculation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hot-water-recirculation/fl_hot_water_recirculation.html)
+- [FL Hurricane Prep Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hurricane-prep/fl_hurricane_prep.html)
+- [FL Hydro Jetting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hydro-jetting/fl_hydro_jetting.html)
 - [FL Inspector Prep Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/inspector-prep/fl_inspector_prep.html)
 - [FL Irrigation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/irrigation/fl_irrigation_guide.html)
 - [FL Kitchen Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/kitchen-cost/fl_kitchen_cost.html)

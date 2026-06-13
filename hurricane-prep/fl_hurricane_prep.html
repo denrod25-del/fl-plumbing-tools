@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Hurricane Plumbing Prep | Damage Estimator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;padding:12px 12px 48px;-webkit-font-smoothing:antialiased}
+.app{max-width:480px;margin:0 auto}
+
+/* Header */
+.header{text-align:center;padding:22px 0 18px}
+.header-icon{font-size:2.6rem;display:block;margin-bottom:8px;filter:drop-shadow(0 0 16px #00B4FF55)}
+.header h1{font-size:1.3rem;font-weight:800;color:#E2E8F0;line-height:1.3;letter-spacing:-.01em}
+.header-sub{font-size:.78rem;color:#94A3B8;margin-top:5px}
+.header-badge{display:inline-flex;align-items:center;gap:6px;background:#0F1629;border:1px solid #F4B94230;border-radius:20px;padding:4px 12px;font-size:.7rem;color:#F4B942;margin-top:8px;font-weight:600}
+
+/* Tabs */
+.tabs{display:flex;gap:3px;margin-bottom:16px;background:#0F1629;border-radius:11px;padding:4px}
+.tab-btn{flex:1;padding:9px 4px;border:none;border-radius:8px;background:transparent;color:#94A3B8;font-size:.68rem;font-weight:700;cursor:pointer;transition:all .2s;line-height:1.25;letter-spacing:.01em}
+.tab-btn.active{background:#141929;color:#00B4FF;box-shadow:0 1px 5px rgba(0,0,0,.5)}
+
+/* Cards */
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px}
+.card-inner{background:#141929;border-radius:9px;padding:13px;margin-bottom:9px}
+.card.bl{border-left:3px solid #00B4FF}
+.card.gd{border-left:3px solid #F4B942}
+.card.or{border-left:3px solid #F97316}
+.card.tl{border-left:3px solid #14B8A6}
+.card.rd{border-left:3px solid #EF4444;background:#130b0b}
+.card.gn{border-left:3px solid #22C55E;background:#0a130c}
+.card-label{font-size:.63rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+.bl .card-label{color:#00B4FF}
+.gd .card-label{color:#F4B942}
+.or .card-label{color:#F97316}
+.tl .card-label{color:#14B8A6}
+.rd .card-label{color:#EF4444}
+.gn .card-label{color:#22C55E}
+
+/* Wizard progress dots */
+.wiz-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.wiz-dots{display:flex;gap:5px;flex:1}
+.step-dot{flex:1;height:4px;border-radius:2px;background:#1a2235;transition:background .35s}
+.step-dot.done{background:#22C55E}
+.step-dot.active{background:#00B4FF}
+.step-counter{font-size:.68rem;color:#94A3B8;white-space:nowrap;font-weight:600}
+
+/* Step label */
+.step-q{font-size:.9rem;font-weight:700;color:#E2E8F0;margin-bottom:12px;line-height:1.35}
+
+/* Option buttons */
+.option-grid{display:grid;gap:7px}
+.opt{width:100%;padding:12px 14px;background:#141929;border:1.5px solid #1e2a3a;border-radius:9px;color:#E2E8F0;font-size:.84rem;text-align:left;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:10px}
+.opt:hover{border-color:#00B4FF55;background:#111c30}
+.opt.sel{border-color:#00B4FF;background:#0a1830;color:#00B4FF;font-weight:600}
+.opt-icon{font-size:1.15rem;min-width:1.5rem;text-align:center}
+.opt-text{flex:1;line-height:1.3}
+
+/* Buttons */
+.btn-primary{width:100%;padding:13px;background:linear-gradient(135deg,#00B4FF,#0077cc);border:none;border-radius:9px;color:#fff;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:12px;transition:opacity .2s;letter-spacing:.01em;box-shadow:0 2px 12px rgba(0,180,255,.25)}
+.btn-primary:hover{opacity:.9}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed;background:#1e2a3a;box-shadow:none;color:#94A3B8}
+.btn-back{background:transparent;border:1px solid #1e2a3a;color:#94A3B8;width:100%;padding:10px;border-radius:9px;font-size:.82rem;cursor:pointer;margin-top:7px;transition:all .2s}
+.btn-back:hover{border-color:#94A3B8;color:#E2E8F0}
+
+/* Results */
+.risk-amount{font-size:1.75rem;font-weight:900;color:#00B4FF;margin:5px 0 3px;letter-spacing:-.02em}
+.risk-amount.safe{color:#22C55E;font-size:1rem;font-weight:700}
+.risk-sublabel{font-size:.75rem;color:#94A3B8;line-height:1.4}
+
+/* Summary checklist */
+.sum-list{list-style:none;padding:0;margin-top:2px}
+.sum-list li{padding:7px 0;border-bottom:1px solid #1a2235;font-size:.82rem;display:flex;align-items:flex-start;gap:9px;line-height:1.4}
+.sum-list li:last-child{border-bottom:none}
+.sum-icon{color:#22C55E;min-width:16px;font-size:.85rem;margin-top:1px;font-weight:700}
+
+/* Tab 2 Guide */
+.fact-row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #1a2235}
+.fact-row:last-child{border-bottom:none}
+.fact-n{min-width:26px;height:26px;background:#00B4FF18;color:#00B4FF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:1px;border:1px solid #00B4FF30}
+
+table{width:100%;border-collapse:collapse;font-size:.77rem}
+th{background:#141929;color:#94A3B8;padding:8px 7px;text-align:left;font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #1a2235}
+td{padding:8px 7px;border-bottom:1px solid #151e30;vertical-align:top;line-height:1.45;color:#C4D0E0}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#0d1525}
+.tbl-wrap{overflow-x:auto;border-radius:9px;background:#0F1629}
+
+/* Tab 3 Checklist */
+.prog-wrap{background:#141929;border-radius:20px;height:8px;margin:8px 0 3px;overflow:hidden}
+.prog-bar{height:100%;background:linear-gradient(90deg,#F97316,#F4B942);border-radius:20px;transition:width .45s cubic-bezier(.4,0,.2,1)}
+.prog-label{font-size:.7rem;color:#94A3B8;display:flex;justify-content:space-between;align-items:center;margin-top:2px}
+.prog-pct{color:#F97316;font-weight:700}
+
+.chk-item{display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:#141929;border-radius:9px;margin-bottom:6px;cursor:pointer;transition:all .2s;border:1.5px solid transparent;user-select:none}
+.chk-item:hover{border-color:#1e2a3a;background:#0f1929}
+.chk-item.done{background:#0a1610;border-color:#22C55E25}
+.chk-item input[type=checkbox]{accent-color:#22C55E;width:16px;height:16px;flex-shrink:0;margin-top:2px;cursor:pointer;border-radius:4px}
+.chk-item label{font-size:.82rem;cursor:pointer;line-height:1.45;color:#E2E8F0;flex:1}
+.chk-item.done label{color:#6b7f6b;text-decoration:line-through;text-decoration-color:#22C55E33}
+
+/* Lead form */
+.form-group{margin-bottom:11px}
+.form-lbl{display:block;font-size:.67rem;color:#94A3B8;margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.form-inp{width:100%;padding:11px 13px;background:#141929;border:1.5px solid #1e2a3a;border-radius:8px;color:#E2E8F0;font-size:.87rem;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.form-inp:focus{border-color:#00B4FF;background:#0d1829}
+.form-inp::placeholder{color:#4a5568}
+select.form-inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%2394A3B8' d='M5 7L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;cursor:pointer}
+.btn-gold{width:100%;padding:14px;background:linear-gradient(135deg,#F4B942,#e5a930);border:none;border-radius:9px;color:#0A0E1A;font-size:.95rem;font-weight:800;cursor:pointer;transition:opacity .2s;margin-top:4px;letter-spacing:.01em;box-shadow:0 2px 14px rgba(244,185,66,.3)}
+.btn-gold:hover{opacity:.9}
+
+/* Phone badge */
+.phone-badge{display:flex;align-items:center;justify-content:center;gap:8px;background:#0F1629;border:1px solid #F4B94235;border-radius:10px;padding:12px 16px;margin-top:10px;font-size:.85rem;color:#F4B942;font-weight:700;letter-spacing:.01em}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:linear-gradient(135deg,#F4B942,#e5a930);color:#0A0E1A;padding:12px 24px;border-radius:10px;font-size:.85rem;font-weight:800;transition:transform .4s cubic-bezier(.4,0,.2,1);z-index:999;pointer-events:none;white-space:nowrap;box-shadow:0 4px 24px rgba(244,185,66,.45);max-width:320px;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Tabs content */
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* Helpers */
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+.sec-title{font-size:.95rem;font-weight:700;color:#E2E8F0;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.sec-title::before{content:'';display:block;width:3px;height:1em;background:#00B4FF;border-radius:2px}
+.text-sm{font-size:.82rem;line-height:1.6;color:#C4D0E0}
+.hl-gold{color:#F4B942;font-weight:700}
+.hl-red{color:#EF4444;font-weight:700}
+.hl-teal{color:#14B8A6;font-weight:700}
+.hl-blue{color:#00B4FF;font-weight:700}
+.hl-orange{color:#F97316;font-weight:700}
+.divider{height:1px;background:#1a2235;margin:12px 0}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <span class="header-icon">🔧</span>
+    <h1>FL Hurricane Plumbing Prep</h1>
+    <p class="header-sub">Protect your home. Know your risk. Get ready.</p>
+    <span class="header-badge">⚡ CFC Licensed Plumbers · (561) 555-PIPE</span>
+  </div>
+
+  <!-- ── TABS ── -->
+  <div class="tabs" role="tablist" aria-label="Tool sections">
+    <button class="tab-btn active" id="tb0" onclick="switchTab(0)" role="tab" aria-selected="true">⚡ Risk Calc</button>
+    <button class="tab-btn" id="tb1" onclick="switchTab(1)" role="tab" aria-selected="false">📖 FL Guide</button>
+    <button class="tab-btn" id="tb2" onclick="switchTab(2)" role="tab" aria-selected="false">✅ Checklist</button>
+  </div>
+
+  <!-- ══════════════════════════════════
+       TAB 1 — Damage Risk Calculator
+  ══════════════════════════════════ -->
+  <div class="tab-pane active" id="tp0">
+
+    <!-- Step progress -->
+    <div class="wiz-header">
+      <div class="wiz-dots">
+        <div class="step-dot active" id="sd0"></div>
+        <div class="step-dot" id="sd1"></div>
+        <div class="step-dot" id="sd2"></div>
+        <div class="step-dot" id="sd3"></div>
+      </div>
+      <span class="step-counter" id="stepCounter">Step 1 of 4</span>
+    </div>
+
+    <!-- Wizard steps -->
+    <div id="wizardWrap">
+
+      <!-- Step 1: Hurricane Category -->
+      <div id="wz0" class="card">
+        <p class="step-q">What hurricane scenario are you preparing for?</p>
+        <div class="option-grid">
+          <button class="opt" onclick="pick(0,'tropical_storm',this)">
+            <span class="opt-icon">🌀</span>
+            <span class="opt-text">Tropical Storm / Cat 1</span>
+          </button>
+          <button class="opt" onclick="pick(0,'cat23',this)">
+            <span class="opt-icon">🌪️</span>
+            <span class="opt-text">Category 2–3</span>
+          </button>
+          <button class="opt" onclick="pick(0,'cat45',this)">
+            <span class="opt-icon">⚠️</span>
+            <span class="opt-text">Category 4–5</span>
+          </button>
+          <button class="opt" onclick="pick(0,'preparing',this)">
+            <span class="opt-icon">📋</span>
+            <span class="opt-text">Just Preparing (no active storm)</span>
+          </button>
+        </div>
+        <button class="btn-primary" id="nb0" onclick="goNext(0)" disabled>Next →</button>
+      </div>
+
+      <!-- Step 2: Home Age -->
+      <div id="wz1" class="card" style="display:none">
+        <p class="step-q">How old is your home / when were the pipes installed?</p>
+        <div class="option-grid">
+          <button class="opt" onclick="pick(1,'pre1985',this)">
+            <span class="opt-icon">🏚️</span>
+            <span class="opt-text">Pre-1985 — older galvanized or copper pipes</span>
+          </button>
+          <button class="opt" onclick="pick(1,'y1985_2005',this)">
+            <span class="opt-icon">🏠</span>
+            <span class="opt-text">1985–2005 — mixed era plumbing</span>
+          </button>
+          <button class="opt" onclick="pick(1,'post2005',this)">
+            <span class="opt-icon">🏡</span>
+            <span class="opt-text">2005 or newer — modern PEX or CPVC</span>
+          </button>
+        </div>
+        <button class="btn-primary" id="nb1" onclick="goNext(1)" disabled>Next →</button>
+        <button class="btn-back" onclick="goBack(1)">← Back</button>
+      </div>
+
+      <!-- Step 3: Water Source -->
+      <div id="wz2" class="card" style="display:none">
+        <p class="step-q">What is your primary water source?</p>
+        <div class="option-grid">
+          <button class="opt" onclick="pick(2,'city',this)">
+            <span class="opt-icon">🚰</span>
+            <span class="opt-text">City / Municipal Water</span>
+          </button>
+          <button class="opt" onclick="pick(2,'well',this)">
+            <span class="opt-icon">⛏️</span>
+            <span class="opt-text">Private Well Water</span>
+          </button>
+          <button class="opt" onclick="pick(2,'both',this)">
+            <span class="opt-icon">💧</span>
+            <span class="opt-text">City Water + Well Backup</span>
+          </button>
+        </div>
+        <button class="btn-primary" id="nb2" onclick="goNext(2)" disabled>Next →</button>
+        <button class="btn-back" onclick="goBack(2)">← Back</button>
+      </div>
+
+      <!-- Step 4: FL Region -->
+      <div id="wz3" class="card" style="display:none">
+        <p class="step-q">Which FL region are you in?</p>
+        <div class="option-grid">
+          <button class="opt" onclick="pick(3,'south',this)">
+            <span class="opt-icon">🌴</span>
+            <span class="opt-text">South FL — Miami / Broward / Palm Beach</span>
+          </button>
+          <button class="opt" onclick="pick(3,'tampa',this)">
+            <span class="opt-icon">🌉</span>
+            <span class="opt-text">Tampa Bay Area</span>
+          </button>
+          <button class="opt" onclick="pick(3,'jax',this)">
+            <span class="opt-icon">🌲</span>
+            <span class="opt-text">Jacksonville / Northeast FL</span>
+          </button>
+          <button class="opt" onclick="pick(3,'swfl',this)">
+            <span class="opt-icon">🦩</span>
+            <span class="opt-text">SW FL — Naples / Fort Myers</span>
+          </button>
+          <button class="opt" onclick="pick(3,'panhandle',this)">
+            <span class="opt-icon">🏖️</span>
+            <span class="opt-text">Panhandle — Pensacola / Panama City</span>
+          </button>
+        </div>
+        <button class="btn-primary" id="nb3" onclick="showResults()" disabled>See My Risk →</button>
+        <button class="btn-back" onclick="goBack(3)">← Back</button>
+      </div>
+
+    </div><!-- /wizardWrap -->
+
+    <!-- ── RESULTS ── -->
+    <div id="results" style="display:none">
+
+      <!-- Blue: Damage Risk -->
+      <div class="card bl">
+        <div class="card-label">⚡ Potential Water Damage Risk</div>
+        <div class="risk-amount" id="riskAmt">—</div>
+        <p class="risk-sublabel" id="riskSub">Estimated damage if plumbing systems fail unprepared</p>
+      </div>
+
+      <!-- Gold: FL Law -->
+      <div class="card gd">
+        <div class="card-label">⚖️ FL Law You Should Know</div>
+        <p class="text-sm">
+          <span class="hl-gold">FS 553.73</span> requires flood-resistant construction standards.
+          A <strong>building permit is required</strong> for all post-storm plumbing repairs.
+          Insurers require <em>documented pre-storm shutoff</em> to validate water damage claims —
+          photograph your shutoff before the storm.
+        </p>
+      </div>
+
+      <!-- Orange: Water source conditional -->
+      <div class="card or">
+        <div class="card-label" id="wLabel">💧 Your Water Source</div>
+        <p class="text-sm" id="wText">—</p>
+      </div>
+
+      <!-- Teal: Pre-storm visit -->
+      <div class="card tl">
+        <div class="card-label">🔧 Pre-Storm Plumber Visit Recommendation</div>
+        <p class="text-sm">
+          A licensed CFC plumber pre-storm inspection costs <span class="hl-teal">$150–$300</span>
+          and covers: water heater anode rod, all shutoff valves, sump pump condition (if any),
+          outdoor hose bibs &amp; irrigation. <strong>Book at least 72h before predicted landfall.</strong>
+          Call <span class="hl-teal">(561) 555-PIPE</span> to schedule.
+        </p>
+      </div>
+
+      <!-- Summary checklist -->
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:12px">🛡️ 6-Point Hurricane Prep Summary</div>
+        <ul class="sum-list" id="sumList"></ul>
+      </div>
+
+      <button class="btn-back" onclick="resetWiz()">← Start Over</button>
+      <button class="btn-primary mt8" onclick="switchTab(2)">Open Full 12-Point Checklist →</button>
+
+    </div><!-- /results -->
+
+  </div><!-- /tp0 -->
+
+  <!-- ══════════════════════════════════
+       TAB 2 — FL Hurricane Guide
+  ══════════════════════════════════ -->
+  <div class="tab-pane" id="tp1">
+
+    <!-- 5 FL Facts -->
+    <div class="sec-title mt8">🌀 5 FL Hurricane Plumbing Facts</div>
+    <div class="card" style="padding:12px 14px">
+      <div class="fact-row">
+        <div class="fact-n">1</div>
+        <p class="text-sm">Florida averages <span class="hl-orange">1.6 hurricane landfalls per year</span> — the highest rate of any U.S. state. The Gulf and Atlantic coasts face completely different storm tracks.</p>
+      </div>
+      <div class="fact-row">
+        <div class="fact-n">2</div>
+        <p class="text-sm">Storm surge and prolonged heavy rain <span class="hl-orange">flood septic systems and contaminate private well water</span>, often requiring weeks of remediation and professional testing before water is safe to drink.</p>
+      </div>
+      <div class="fact-row">
+        <div class="fact-n">3</div>
+        <p class="text-sm">Post-storm <span class="hl-orange">water main breaks cause citywide boil-water notices</span>. This happened across dozens of FL municipalities during Hurricane Ian (2022) and Idalia (2023), affecting hundreds of thousands of residents.</p>
+      </div>
+      <div class="fact-row">
+        <div class="fact-n">4</div>
+        <p class="text-sm"><span class="hl-orange">Galvanized steel and polybutylene pipes</span> (common in homes built before 1995) are the most vulnerable to storm pressure surges and post-flood oxidation. Repiping with PEX is the long-term solution.</p>
+      </div>
+      <div class="fact-row" style="border-bottom:none;padding-bottom:0">
+        <div class="fact-n">5</div>
+        <p class="text-sm">FL homeowner's insurance <span class="hl-orange">typically excludes flood damage</span>. A separate NFIP (National Flood Insurance Program) policy is required and must be purchased <strong>at least 30 days</strong> before any storm event.</p>
+      </div>
+    </div>
+
+    <!-- Table 1 -->
+    <div class="sec-title mt16">⚡ Pre-Storm Plumbing Actions</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Action</th><th>When</th><th>DIY / Pro</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Locate main water shutoff</td><td>1 week before</td><td>DIY</td><td>10 min</td></tr>
+          <tr><td>Test shutoff valve operation</td><td>1 week before</td><td>Pro if seized</td><td>30 min</td></tr>
+          <tr><td>Turn off water heater</td><td>At hurricane watch</td><td>DIY</td><td>5 min</td></tr>
+          <tr><td>Drain exterior hoses &amp; lines</td><td>24h before</td><td>DIY</td><td>30 min</td></tr>
+          <tr><td>Shut off irrigation system</td><td>48h before</td><td>DIY</td><td>5 min</td></tr>
+          <tr><td>Document pipe locations (photos)</td><td>Anytime</td><td>DIY</td><td>15 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table 2 -->
+    <div class="sec-title mt16">🔍 Post-Storm Plumbing Checks</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>What to Check</th><th>Why It Matters</th><th>Call Pro When…</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Inspect all visible pipes</td><td>Surge pressure damage</td><td>Any cracks or leaks</td></tr>
+          <tr><td>Test water pressure</td><td>Main break indicator</td><td>Low or surging pressure</td></tr>
+          <tr><td>Check WH for flooding</td><td>Electrocution hazard</td><td>Any flood contact at all</td></tr>
+          <tr><td>Run all faucets briefly</td><td>Clear debris and air locks</td><td>Sputtering continues &gt;2 min</td></tr>
+          <tr><td>Smell near gas appliances</td><td>Gas line damage risk</td><td>Immediately — any smell</td></tr>
+          <tr><td>Check drains for backup</td><td>Storm drain overwhelm</td><td>Any sewage backup</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Red warning card -->
+    <div class="card rd mt12">
+      <div class="card-label">🚨 Electrocution Warning — Read This</div>
+      <p class="text-sm">
+        <span class="hl-red">DO NOT turn on a flooded electric water heater</span> — the risk of electrocution is severe.
+        Call a licensed FL plumber with a valid <span class="hl-red">CFC license number</span> before restoring power
+        to any water heater, pump, or appliance that experienced any flood or submersion contact.
+        Verify CFC license at <strong>myfloridalicense.com</strong>.
+      </p>
+    </div>
+
+    <!-- Teal boil water card -->
+    <div class="card tl mt8">
+      <div class="card-label">💧 FL DEP Boil-Water Notices</div>
+      <p class="text-sm">
+        Check <span class="hl-teal">floridadep.gov</span> and your county emergency management website immediately after any storm.
+        Well owners <strong>must perform a bacteriological water test</strong> before drinking — do not rely on visual inspection.
+        Shock chlorination kits ($15–30) should be on-hand before the storm season begins.
+      </p>
+    </div>
+
+    <div class="phone-badge mt12">
+      📞 Emergency Line: <strong>(561) 555-PIPE</strong>
+    </div>
+
+  </div><!-- /tp1 -->
+
+  <!-- ══════════════════════════════════
+       TAB 3 — Storm Prep Checklist + Lead Form
+  ══════════════════════════════════ -->
+  <div class="tab-pane" id="tp2">
+
+    <!-- Progress card -->
+    <div class="card">
+      <div class="sec-title" style="margin-bottom:8px">✅ 12-Point Storm Prep Checklist</div>
+      <div class="prog-wrap">
+        <div class="prog-bar" id="progBar" style="width:0%"></div>
+      </div>
+      <div class="prog-label">
+        <span id="progTxt">0 of 12 complete</span>
+        <span class="prog-pct" id="progPct">0%</span>
+      </div>
+    </div>
+
+    <!-- Checklist items rendered by JS -->
+    <div id="chkItems"></div>
+
+    <!-- Gold permit card -->
+    <div class="card gd mt8">
+      <div class="card-label">📋 FL Building Permit Requirement</div>
+      <p class="text-sm">
+        Post-storm plumbing repairs over <span class="hl-gold">$2,500</span> typically require a Florida building permit.
+        Emergency permits are available within <span class="hl-gold">48 hours</span> of a declared disaster under
+        <em>FS 489.117</em>. Ask your contractor to pull permits — unpermitted repairs can void insurance claims
+        and complicate future home sales.
+      </p>
+    </div>
+
+    <!-- Lead Form -->
+    <div class="card mt12">
+      <div class="sec-title" style="margin-bottom:4px">🔧 Get a Pre-Storm Plumbing Inspection</div>
+      <p class="text-sm" style="color:#94A3B8;margin-bottom:14px">CFC-licensed FL plumbers. We call back within 2 hours.</p>
+
+      <div class="form-group">
+        <label class="form-lbl" for="fi-name">Your Name</label>
+        <input class="form-inp" type="text" id="fi-name" placeholder="Jane Smith" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label class="form-lbl" for="fi-phone">Phone Number</label>
+        <input class="form-inp" type="tel" id="fi-phone" placeholder="(561) 555-1234" autocomplete="tel">
+      </div>
+      <div class="form-group">
+        <label class="form-lbl" for="fi-email">Email Address</label>
+        <input class="form-inp" type="email" id="fi-email" placeholder="jane@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-lbl" for="fi-when">When do you need the inspection?</label>
+        <select class="form-inp" id="fi-when">
+          <option value="">Select timing…</option>
+          <option value="48h">48 hours before storm</option>
+          <option value="routine">Routine prep (no storm threat)</option>
+          <option value="post">Post-storm assessment</option>
+        </select>
+      </div>
+
+      <button class="btn-gold" onclick="submitLead()">Request My Inspection →</button>
+    </div>
+
+    <div class="phone-badge">
+      📞 Emergency Line: <strong>(561) 555-PIPE</strong>
+    </div>
+
+  </div><!-- /tp2 -->
+
+</div><!-- /app -->
+
+<!-- Toast notification -->
+<div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT — All functions ≤ 60 lines
+════════════════════════════════════════ -->
+<script>
+/* ─── XSS Guard ─── */
+const esc = s => String(s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+/* ─── Cost Data ─── */
+const COSTS = {
+  tropical_storm: { pre1985:[800,3000],   y1985_2005:[500,2000],  post2005:[300,1200]  },
+  cat23:          { pre1985:[3000,10000], y1985_2005:[2000,7000], post2005:[1200,5000] },
+  cat45:          { pre1985:[10000,40000],y1985_2005:[7000,28000],post2005:[4000,18000]},
+  preparing:      { pre1985:[0,0],        y1985_2005:[0,0],       post2005:[0,0]       }
+};
+const MULT = { south:1.25, tampa:1.0, jax:0.90, swfl:1.18, panhandle:0.88 };
+
+/* ─── Checklist Data ─── */
+const CHECKLIST_ITEMS = [
+  'Locate and test main water shutoff valve',
+  'Know individual fixture shutoffs (toilets, sinks, WH)',
+  'Schedule pre-storm plumber inspection (CFC licensed)',
+  'Turn off WH at circuit breaker (electric) or gas valve (gas)',
+  'Drain outdoor hoses and irrigation system',
+  'Shut off backflow preventers and irrigation zones',
+  'Clear roof drains and gutters of all debris',
+  'Photograph all exposed pipes and fixture locations',
+  'Store 1 gallon of water/person/day for 7 days',
+  'Save FL licensed emergency plumber: (561) 555-PIPE',
+  'If on well: buy chlorination tablets for post-storm use',
+  'Review homeowner\'s insurance policy for flood coverage'
+];
+
+const SUMMARY_6 = [
+  'Shut off the main water supply at the street meter',
+  'Turn off water heater at circuit breaker or gas valve',
+  'Drain all outdoor pipes and disconnect garden hoses',
+  'Protect or remove outdoor fixtures and hose bibs',
+  'Photograph all exposed pipes and shutoff locations',
+  'Save your plumber\'s 24/7 emergency line: (561) 555-PIPE'
+];
+
+/* ─── State ─── */
+const ans = {};
+const chkState = new Array(12).fill(false);
+
+/* ─── Tab Switching ─── */
+function switchTab(n) {
+  ['tp0','tp1','tp2'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.classList.toggle('active', i === n);
+  });
+  ['tb0','tb1','tb2'].forEach((id,i) => {
+    const b = document.getElementById(id);
+    b.classList.toggle('active', i === n);
+    b.setAttribute('aria-selected', i === n ? 'true' : 'false');
+  });
+}
+
+/* ─── Wizard: Option Selection ─── */
+function pick(step, val, el) {
+  const keys = ['cat','age','water','region'];
+  ans[keys[step]] = val;
+  el.closest('.option-grid').querySelectorAll('.opt')
+    .forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('nb' + step).disabled = false;
+}
+
+/* ─── Wizard: Next / Back ─── */
+function goNext(step) {
+  document.getElementById('wz' + step).style.display = 'none';
+  document.getElementById('sd' + step).classList.replace('active','done');
+  const next = step + 1;
+  if (next < 4) {
+    document.getElementById('wz' + next).style.display = 'block';
+    document.getElementById('sd' + next).classList.add('active');
+    document.getElementById('stepCounter').textContent = 'Step ' + (next+1) + ' of 4';
+  }
+}
+
+function goBack(step) {
+  document.getElementById('wz' + step).style.display = 'none';
+  const prev = step - 1;
+  document.getElementById('sd' + step).classList.remove('active');
+  const dot = document.getElementById('sd' + prev);
+  dot.classList.remove('done');
+  dot.classList.add('active');
+  document.getElementById('wz' + prev).style.display = 'block';
+  document.getElementById('stepCounter').textContent = 'Step ' + (prev+1) + ' of 4';
+}
+
+/* ─── Format Currency ─── */
+function fmtMoney(n) {
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+
+/* ─── Show Results ─── */
+function showResults() {
+  const {cat, age, water, region} = ans;
+  const base = COSTS[cat][age];
+  const mult = MULT[region];
+  const lo = Math.round(base[0] * mult);
+  const hi = Math.round(base[1] * mult);
+
+  document.querySelectorAll('.step-dot').forEach(d => {
+    d.classList.remove('active');
+    d.classList.add('done');
+  });
+  document.getElementById('wizardWrap').style.display = 'none';
+
+  const amtEl = document.getElementById('riskAmt');
+  const subEl = document.getElementById('riskSub');
+  if (cat === 'preparing') {
+    amtEl.className = 'risk-amount safe';
+    amtEl.textContent = 'Great thinking! Prep now, save later.';
+    subEl.textContent = 'No active storm — you\'re ahead of the game. $0 estimated risk.';
+  } else {
+    amtEl.className = 'risk-amount';
+    amtEl.textContent = fmtMoney(lo) + ' – ' + fmtMoney(hi);
+    subEl.textContent = 'Estimated water damage if plumbing systems fail unprepared';
+  }
+
+  const wLabel = document.getElementById('wLabel');
+  const wText  = document.getElementById('wText');
+  if (water === 'well' || water === 'both') {
+    wLabel.textContent = '⛏️ Well Owners: Take Note';
+    wText.textContent = 'Sanitize your well after any storm surge — contamination is very common in FL. Budget $150–$300 for shock chlorination. Do not drink well water until a lab test confirms it safe.';
+  } else {
+    wLabel.textContent = '🚰 City Water: Know Your Shutoff';
+    wText.textContent = 'Locate your home\'s main shutoff valve before the storm. Broken city mains cause backflow contamination affecting entire neighborhoods — documented shutoff protects your insurance claim.';
+  }
+
+  buildSummary();
+  document.getElementById('results').style.display = 'block';
+}
+
+/* ─── Build 6-Point Summary ─── */
+function buildSummary() {
+  const list = document.getElementById('sumList');
+  list.textContent = '';
+  SUMMARY_6.forEach(item => {
+    const li   = document.createElement('li');
+    const icon = document.createElement('span');
+    icon.className = 'sum-icon';
+    icon.textContent = '✓';
+    const txt = document.createElement('span');
+    txt.textContent = item;
+    li.appendChild(icon);
+    li.appendChild(txt);
+    list.appendChild(li);
+  });
+}
+
+/* ─── Reset Wizard ─── */
+function resetWiz() {
+  ['cat','age','water','region'].forEach(k => delete ans[k]);
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('wizardWrap').style.display = 'block';
+  for (let i = 0; i < 4; i++) {
+    const wz = document.getElementById('wz' + i);
+    wz.style.display = i === 0 ? 'block' : 'none';
+    const nb = document.getElementById('nb' + i);
+    if (nb) nb.disabled = true;
+    const dot = document.getElementById('sd' + i);
+    dot.className = 'step-dot' + (i === 0 ? ' active' : '');
+    wz.querySelectorAll('.opt').forEach(b => b.classList.remove('sel'));
+  }
+  document.getElementById('stepCounter').textContent = 'Step 1 of 4';
+}
+
+/* ─── Build Checklist ─── */
+function buildChecklist() {
+  const container = document.getElementById('chkItems');
+  container.textContent = '';
+  CHECKLIST_ITEMS.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'chk-item' + (chkState[i] ? ' done' : '');
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.id = 'ck' + i;
+    cb.checked = chkState[i];
+    cb.setAttribute('aria-label', item);
+
+    const lbl = document.createElement('label');
+    lbl.setAttribute('for', 'ck' + i);
+    lbl.textContent = item;
+
+    div.appendChild(cb);
+    div.appendChild(lbl);
+
+    div.addEventListener('click', e => {
+      if (e.target !== cb) cb.checked = !cb.checked;
+      chkState[i] = cb.checked;
+      div.classList.toggle('done', cb.checked);
+      updateProgress();
+    });
+
+    container.appendChild(div);
+  });
+  updateProgress();
+}
+
+/* ─── Update Progress Bar ─── */
+function updateProgress() {
+  const done = chkState.filter(Boolean).length;
+  const pct  = Math.round(done / 12 * 100);
+  document.getElementById('progBar').style.width = pct + '%';
+  document.getElementById('progTxt').textContent  = done + ' of 12 complete';
+  document.getElementById('progPct').textContent  = pct + '%';
+}
+
+/* ─── Lead Form Submission ─── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3800);
+}
+
+function submitLead() {
+  const name  = document.getElementById('fi-name').value.trim();
+  const phone = document.getElementById('fi-phone').value.trim();
+  const email = document.getElementById('fi-email').value.trim();
+  const when  = document.getElementById('fi-when').value;
+  if (!name || !phone || !email || !when) {
+    showToast('⚠️ Please fill in all fields');
+    return;
+  }
+  const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRx.test(email)) {
+    showToast('⚠️ Please enter a valid email');
+    return;
+  }
+  showToast("✓ We'll call you within 2 hours!");
+  document.getElementById('fi-name').value  = '';
+  document.getElementById('fi-phone').value = '';
+  document.getElementById('fi-email').value = '';
+  document.getElementById('fi-when').value  = '';
+}
+
+/* ─── Init ─── */
+buildChecklist();
+</script>
+</body>
+</html>
