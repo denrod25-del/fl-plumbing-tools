@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Water Heater Efficiency Calculator — Annual Cost, Replacement ROI &amp; Rebates</title>
+<meta name="description" content="Free Florida water heater efficiency calculator. Find out how much your old water heater costs per year, compare tank vs. tankless vs. heat pump ROI, and check FL utility rebates.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0E1A;--card:#0F1629;--card2:#141929;
+  --blue:#00B4FF;--gold:#F4B942;
+  --orange:#F97316;--red:#EF4444;--green:#22C55E;--teal:#14B8A6;
+  --text:#E8ECF4;--muted:#8892A4;--border:#1E2840;
+  --radius:12px;--max:480px;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.5;min-height:100vh}
+.app{max-width:var(--max);margin:0 auto;padding:0 0 80px}
+header{padding:20px 16px 12px;text-align:center}
+header h1{font-size:1.25rem;font-weight:700;color:var(--blue);line-height:1.3}
+header p{color:var(--muted);font-size:.85rem;margin-top:4px}
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;padding:0 8px}
+.tab-btn{flex:1;padding:12px 4px;background:none;border:none;color:var(--muted);font-size:.8rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:.2s;text-align:center;line-height:1.2}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-panel{display:none;padding:16px}
+.tab-panel.active{display:block}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.card-gold{background:#1A1508;border-color:var(--gold)}
+.card-orange{background:#1A0D05;border-color:var(--orange)}
+.card-red{background:#1A0505;border-color:var(--red)}
+.card-green{background:#051A0A;border-color:var(--green)}
+.card-teal{background:#051714;border-color:var(--teal)}
+.card h3{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.card-gold h3{color:var(--gold)}
+.card-orange h3{color:var(--orange)}
+.card-red h3{color:var(--red)}
+.card-green h3{color:var(--green)}
+.card-teal h3{color:var(--teal)}
+/* STEP */
+.step-label{font-size:.75rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.step-title{font-size:1rem;font-weight:700;margin-bottom:12px}
+/* TILES */
+.tile-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+.tile-grid.cols3{grid-template-columns:repeat(3,1fr)}
+.tile-grid.cols4{grid-template-columns:repeat(4,1fr)}
+.tile{background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:10px 8px;cursor:pointer;text-align:center;font-size:.8rem;font-weight:600;color:var(--muted);transition:.15s;line-height:1.3;-webkit-tap-highlight-color:transparent;user-select:none}
+.tile:hover{border-color:var(--blue);color:var(--text)}
+.tile.selected{background:#071828;border-color:var(--blue);color:var(--blue)}
+.tile .tile-icon{font-size:1.3rem;display:block;margin-bottom:4px}
+/* NEXT BUTTON */
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;text-align:center;transition:.2s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#009fdf}
+.btn-primary:disabled{background:#1E2840;color:var(--muted);cursor:not-allowed}
+.btn-gold{background:var(--gold);color:#0A0E1A}
+.btn-gold:hover{background:#e0a832}
+/* WIZARD NAV */
+.wizard-steps{display:flex;gap:8px;margin-bottom:16px;align-items:center}
+.ws{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;background:var(--card2);border:1.5px solid var(--border);color:var(--muted);flex-shrink:0}
+.ws.done{background:#071828;border-color:var(--blue);color:var(--blue)}
+.ws.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.ws-line{flex:1;height:1px;background:var(--border)}
+.ws-line.done{background:var(--blue)}
+/* RESULTS */
+.big-cost{text-align:center;padding:20px 0 8px}
+.big-cost .amount{font-size:2.8rem;font-weight:800;color:var(--gold);display:block;line-height:1}
+.big-cost .label{color:var(--muted);font-size:.85rem;margin-top:4px}
+/* COMPARISON BARS */
+.compare-section{margin:16px 0}
+.compare-section h4{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+.bar-row{margin-bottom:12px}
+.bar-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:.82rem}
+.bar-name{color:var(--text);font-weight:600}
+.bar-val{color:var(--gold);font-weight:700}
+.bar-track{background:var(--card2);border-radius:4px;height:10px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.bar-save{font-size:.75rem;color:var(--green);margin-top:2px}
+/* PAYBACK */
+.payback-box{background:var(--card2);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.payback-box .pb-label{font-size:.82rem;color:var(--muted)}
+.payback-box .pb-val{font-size:1.1rem;font-weight:700;color:var(--teal)}
+/* LEAD FORM */
+.lead-form{margin-top:16px}
+.lead-form h3{font-size:1rem;font-weight:700;margin-bottom:12px;color:var(--gold)}
+.form-row{margin-bottom:10px}
+.form-row label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px;font-weight:600}
+.form-row input,.form-row select{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:11px 12px;color:var(--text);font-size:.9rem;outline:none;transition:.15s}
+.form-row input:focus,.form-row select:focus{border-color:var(--blue)}
+.form-row input::placeholder{color:var(--muted)}
+.form-row select option{background:var(--card)}
+/* TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:.78rem;min-width:360px}
+th{background:var(--card2);color:var(--muted);font-weight:700;padding:9px 8px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:9px 8px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+tr.highlight-gold td{background:#1A1508;color:var(--gold)}
+tr.highlight-gold td:first-child::after{content:" ⭐";color:var(--gold)}
+/* CHECKLIST */
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.check-item:last-child{border-bottom:none}
+.check-box{width:22px;height:22px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.15s;background:var(--card2)}
+.check-item.checked .check-box{background:var(--orange);border-color:var(--orange);color:#fff}
+.check-text{font-size:.85rem;color:var(--text);line-height:1.4}
+.check-item.checked .check-text{color:var(--muted);text-decoration:line-through}
+/* SCORE */
+.score-bar{text-align:center;padding:12px;background:var(--card2);border-radius:8px;margin:12px 0}
+.score-bar .score-num{font-size:1.8rem;font-weight:800}
+.score-bar .score-label{font-size:.8rem;color:var(--muted);margin-top:2px}
+/* MAINTENANCE STEPS */
+.maint-step{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)}
+.maint-step:last-child{border-bottom:none}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.maint-content .maint-title{font-weight:700;font-size:.9rem}
+.maint-content .maint-desc{font-size:.82rem;color:var(--muted);margin-top:3px}
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#fff;padding:12px 24px;border-radius:30px;font-weight:700;font-size:.9rem;transition:.3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+/* UTILITY */
+.section-title{font-size:1rem;font-weight:700;margin:16px 0 10px;color:var(--text)}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.72rem;font-weight:700;margin-left:6px}
+.badge-gold{background:var(--gold);color:#0A0E1A}
+.back-btn{background:none;border:none;color:var(--blue);font-size:.85rem;font-weight:600;cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:4px;margin-bottom:12px}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.text-muted{color:var(--muted);font-size:.82rem}
+.text-gold{color:var(--gold)}
+.text-green{color:var(--green)}
+.text-blue{color:var(--blue)}
+.text-orange{color:var(--orange)}
+.text-red{color:var(--red)}
+.mb8{margin-bottom:8px}
+.mt8{margin-top:8px}
+@media(max-width:400px){
+  .tile-grid.cols4{grid-template-columns:repeat(2,1fr)}
+  .tabs .tab-btn{font-size:.72rem;padding:10px 2px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>💧 FL Water Heater Efficiency Calculator</h1>
+    <p>Find out what your old water heater really costs — and when to replace it</p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(0)" id="tab0">⚡ Calculator</button>
+    <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(1)" id="tab1">📋 Types</button>
+    <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(2)" id="tab2">⚠️ Warning Signs</button>
+  </div>
+
+  <!-- TAB 0: CALCULATOR -->
+  <div class="tab-panel active" id="panel0">
+
+    <!-- WIZARD NAV -->
+    <div class="wizard-steps" id="wizardNav" aria-label="Calculator steps">
+      <div class="ws active" id="ws1">1</div>
+      <div class="ws-line" id="wl1"></div>
+      <div class="ws" id="ws2">2</div>
+      <div class="ws-line" id="wl2"></div>
+      <div class="ws" id="ws3">3</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div id="step1">
+      <div class="step-label">Step 1 of 3</div>
+      <div class="step-title">Your Current Water Heater</div>
+
+      <div class="step-label mt8">Type</div>
+      <div class="tile-grid" id="typeTiles" role="group" aria-label="Water heater type">
+        <div class="tile" data-val="elec_tank" onclick="selectTile(this,'type')" tabindex="0">
+          <span class="tile-icon">🔌</span>Standard Tank Electric
+        </div>
+        <div class="tile" data-val="gas_tank" onclick="selectTile(this,'type')" tabindex="0">
+          <span class="tile-icon">🔥</span>Standard Tank Gas
+        </div>
+        <div class="tile" data-val="elec_tankless" onclick="selectTile(this,'type')" tabindex="0">
+          <span class="tile-icon">⚡</span>Tankless Electric
+        </div>
+        <div class="tile" data-val="gas_tankless" onclick="selectTile(this,'type')" tabindex="0">
+          <span class="tile-icon">💨</span>Tankless Gas
+        </div>
+        <div class="tile" data-val="heat_pump" onclick="selectTile(this,'type')" tabindex="0">
+          <span class="tile-icon">🌡️</span>Heat Pump
+        </div>
+        <div class="tile" data-val="solar" onclick="selectTile(this,'type')" tabindex="0">
+          <span class="tile-icon">☀️</span>Solar
+        </div>
+        <div class="tile" data-val="unknown" onclick="selectTile(this,'type')" tabindex="0" style="grid-column:span 2">
+          <span class="tile-icon">🤷</span>Don't Know
+        </div>
+      </div>
+
+      <div class="step-label">Age of Water Heater</div>
+      <div class="tile-grid cols4" id="ageTiles" role="group" aria-label="Water heater age">
+        <div class="tile" data-val="under5" onclick="selectTile(this,'age')" tabindex="0">Under 5 yrs</div>
+        <div class="tile" data-val="5to10" onclick="selectTile(this,'age')" tabindex="0">5–10 yrs</div>
+        <div class="tile" data-val="10to15" onclick="selectTile(this,'age')" tabindex="0">10–15 yrs</div>
+        <div class="tile" data-val="over15" onclick="selectTile(this,'age')" tabindex="0">Over 15 yrs</div>
+      </div>
+
+      <button class="btn btn-primary" id="step1Btn" onclick="goStep(2)" disabled>Next →</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2" style="display:none">
+      <button class="back-btn" onclick="goStep(1)">← Back</button>
+      <div class="step-label">Step 2 of 3</div>
+      <div class="step-title">Your Household</div>
+
+      <div class="step-label">People in Home</div>
+      <div class="tile-grid cols4" id="peopleTiles" role="group" aria-label="People in home">
+        <div class="tile" data-val="1" onclick="selectTile(this,'people')" tabindex="0">1–2</div>
+        <div class="tile" data-val="2" onclick="selectTile(this,'people')" tabindex="0">3–4</div>
+        <div class="tile" data-val="3" onclick="selectTile(this,'people')" tabindex="0">5–6</div>
+        <div class="tile" data-val="4" onclick="selectTile(this,'people')" tabindex="0">7+</div>
+      </div>
+
+      <div class="step-label">FL Utility Provider</div>
+      <div class="tile-grid cols3" id="utilityTiles" role="group" aria-label="Utility provider">
+        <div class="tile" data-val="fpl" onclick="selectTile(this,'utility')" tabindex="0">FPL</div>
+        <div class="tile" data-val="duke" onclick="selectTile(this,'utility')" tabindex="0">Duke Energy FL</div>
+        <div class="tile" data-val="teco" onclick="selectTile(this,'utility')" tabindex="0">Tampa Electric (TECO)</div>
+        <div class="tile" data-val="jea" onclick="selectTile(this,'utility')" tabindex="0">JEA</div>
+        <div class="tile" data-val="gulf" onclick="selectTile(this,'utility')" tabindex="0">Gulf Power</div>
+        <div class="tile" data-val="other" onclick="selectTile(this,'utility')" tabindex="0">Other / Solar / Well</div>
+      </div>
+
+      <button class="btn btn-primary" id="step2Btn" onclick="goStep(3)" disabled>Calculate My Costs →</button>
+    </div>
+
+    <!-- STEP 3: RESULTS -->
+    <div id="step3" style="display:none">
+      <button class="back-btn" onclick="goStep(2)">← Back</button>
+      <div class="step-label">Your Results</div>
+
+      <!-- Big cost display -->
+      <div class="card">
+        <div class="big-cost">
+          <span class="amount" id="annualCost">—</span>
+          <div class="label">Estimated Annual Water Heating Cost</div>
+        </div>
+        <div class="text-muted" id="costBreakdown" style="text-align:center;font-size:.78rem;margin-top:8px"></div>
+      </div>
+
+      <!-- Age warning -->
+      <div class="card card-red" id="ageWarning" style="display:none">
+        <h3>⚠️ High Failure Risk</h3>
+        <p class="text-muted" style="font-size:.85rem">Water heaters over 15 years old have a <strong style="color:var(--red)">3× higher failure risk</strong>. FL average emergency water heater call: <strong style="color:var(--red)">$800–$1,400 after-hours</strong>. Don't wait for a flood.</p>
+      </div>
+
+      <!-- Comparison bars -->
+      <div class="card" id="comparisonCard">
+        <h3 class="mb8">Cost Comparison (Annual)</h3>
+        <div class="compare-section" id="barsContainer"></div>
+      </div>
+
+      <!-- Payback -->
+      <div id="paybackSection" style="display:none">
+        <div class="payback-box">
+          <div>
+            <div class="pb-label">Heat Pump Upgrade — Payback Period</div>
+            <div class="text-muted" id="paybackNote" style="font-size:.75rem;margin-top:2px"></div>
+          </div>
+          <div class="pb-val" id="paybackVal">—</div>
+        </div>
+      </div>
+
+      <!-- Rebate card -->
+      <div class="card card-gold">
+        <h3>💰 FL Utility Rebates Available</h3>
+        <p class="text-muted" style="font-size:.85rem" id="rebateText">Heat pump water heaters qualify for <strong style="color:var(--gold)">$100–$300</strong> utility rebates from FPL and Duke Energy FL. Plus the <strong style="color:var(--gold)">Federal IRA 30% tax credit</strong> on installed cost (through 2032). Ask your installer about stacking these.</p>
+      </div>
+
+      <!-- Lead form -->
+      <div class="card card-teal lead-form">
+        <h3>Get a Free Replacement Quote</h3>
+        <div class="form-row">
+          <label for="cf1-name">Your Name</label>
+          <input type="text" id="cf1-name" placeholder="Jane Smith" autocomplete="name" maxlength="80">
+        </div>
+        <div class="form-row">
+          <label for="cf1-phone">Phone Number</label>
+          <input type="tel" id="cf1-phone" placeholder="(561) 555-PIPE" autocomplete="tel" maxlength="20">
+        </div>
+        <div class="form-row">
+          <label for="cf1-zip">ZIP Code</label>
+          <input type="text" id="cf1-zip" inputmode="numeric" placeholder="33401" maxlength="5">
+        </div>
+        <div class="form-row">
+          <label for="cf1-interest">I'm Interested In</label>
+          <select id="cf1-interest">
+            <option value="">Select one…</option>
+            <option>Free efficiency quote</option>
+            <option>Heat pump water heater install</option>
+            <option>Tankless water heater install</option>
+            <option>Standard tank replacement</option>
+            <option>Maintenance / inspection</option>
+            <option>Emergency replacement</option>
+          </select>
+        </div>
+        <button class="btn btn-gold" onclick="submitLead('lead1')" style="margin-top:4px">Get My Free Quote →</button>
+        <p class="text-muted" style="font-size:.72rem;margin-top:8px;text-align:center">No obligation. A licensed FL plumber will call within 2 hours.</p>
+      </div>
+    </div>
+  </div><!-- /panel0 -->
+
+  <!-- TAB 1: TYPES REFERENCE -->
+  <div class="tab-panel" id="panel1">
+    <div class="section-title">Water Heater Types — FL Guide</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>FL Installed Cost</th>
+            <th>Annual Energy</th>
+            <th>Lifespan</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Standard Tank Electric (50 gal)</td>
+            <td>$900–$1,400</td>
+            <td>$480–$650</td>
+            <td>8–12 yrs</td>
+            <td>Budget, simple install</td>
+          </tr>
+          <tr>
+            <td>Standard Tank Gas</td>
+            <td>$1,100–$1,600</td>
+            <td>$250–$380</td>
+            <td>8–12 yrs</td>
+            <td>Gas homes</td>
+          </tr>
+          <tr>
+            <td>Tankless Electric</td>
+            <td>$1,200–$2,000</td>
+            <td>$340–$480</td>
+            <td>15–20 yrs</td>
+            <td>Small homes, condos</td>
+          </tr>
+          <tr>
+            <td>Tankless Gas</td>
+            <td>$1,800–$3,200</td>
+            <td>$160–$280</td>
+            <td>15–25 yrs</td>
+            <td>High demand, best ROI</td>
+          </tr>
+          <tr class="highlight-gold">
+            <td>Heat Pump (Hybrid)</td>
+            <td>$1,400–$2,200</td>
+            <td>$140–$220</td>
+            <td>10–15 yrs</td>
+            <td>FL best overall</td>
+          </tr>
+          <tr>
+            <td>Solar + Backup</td>
+            <td>$3,000–$5,500</td>
+            <td>$60–$120</td>
+            <td>20+ yrs</td>
+            <td>Max savings, FL ideal</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card card-gold">
+      <h3>⭐ Best for Most FL Homes: Heat Pump</h3>
+      <p class="text-muted" style="font-size:.85rem">FL's mild climate makes heat pump water heaters <strong style="color:var(--gold)">3–4× more efficient</strong> than standard electric. They pull heat from surrounding air — FL's warm air makes them exceptionally effective year-round. Pair with a $100–$300 utility rebate and 30% federal tax credit for the fastest payback.</p>
+    </div>
+
+    <div class="section-title">FL-Specific Considerations</div>
+
+    <div class="card">
+      <h3 style="color:var(--teal)">🌡️ Heat Pump — Space Requirement</h3>
+      <p class="text-muted" style="font-size:.85rem">Needs <strong style="color:var(--text)">700+ cubic feet</strong> of unconditioned space (garage, utility room, attic access). Very common in FL homes — most single-family homes qualify without modification.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--blue)">💨 Tankless in FL — Sizing Matters</h3>
+      <p class="text-muted" style="font-size:.85rem">FL's warm groundwater (72–78°F) reduces the temperature rise needed, lowering energy use. However, large homes with simultaneous high-demand fixtures need <strong style="color:var(--text)">12–18 GPM</strong> flow rates. Size correctly with a licensed installer.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--gold)">☀️ Solar in FL — #2 State for ROI</h3>
+      <p class="text-muted" style="font-size:.85rem">FL is ranked #2 nationally for solar water heating return on investment. Pair with FPL net metering for maximum benefit. Average payback: 5–8 years with state/federal incentives.</p>
+    </div>
+
+    <div class="card card-orange">
+      <h3>💧 Hard Water Impact</h3>
+      <p class="text-muted" style="font-size:.85rem">FL water hardness averages <strong style="color:var(--orange)">150–350 mg/L</strong> — among the highest in the US. Scale buildup on heating elements reduces efficiency by 10–30%. Annual tank flush and anode rod inspection are critical in FL.</p>
+    </div>
+
+    <div class="section-title">Rebate &amp; Incentive Reference</div>
+    <div class="card card-gold">
+      <h3>💰 FL Rebates &amp; Federal Credits</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+        <div>
+          <div style="font-weight:700;font-size:.88rem">FPL Rebate</div>
+          <div class="text-muted" style="font-size:.82rem">$100–$150 rebate on ENERGY STAR certified heat pump water heater</div>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:.88rem">Duke Energy FL Rebate</div>
+          <div class="text-muted" style="font-size:.82rem">Up to <strong style="color:var(--gold)">$300</strong> rebate — highest in FL</div>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:.88rem">Federal IRA Tax Credit (30%)</div>
+          <div class="text-muted" style="font-size:.82rem">30% of installed cost for heat pump water heaters through 2032. On a $1,800 install: <strong style="color:var(--gold)">$540 back</strong></div>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:.88rem">FL Sales Tax Exemption</div>
+          <div class="text-muted" style="font-size:.82rem">ENERGY STAR appliances exempt during FL annual tax holiday. Check FL DOR for current dates.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead form Tab 1 (compact) -->
+    <div class="card card-teal lead-form" style="margin-top:16px">
+      <h3>Get a Free Water Heater Quote</h3>
+      <div class="form-row">
+        <label for="cf2-name">Name</label>
+        <input type="text" id="cf2-name" placeholder="Jane Smith" autocomplete="name" maxlength="80">
+      </div>
+      <div class="form-row">
+        <label for="cf2-phone">Phone</label>
+        <input type="tel" id="cf2-phone" placeholder="(561) 555-PIPE" autocomplete="tel" maxlength="20">
+      </div>
+      <button class="btn btn-gold" onclick="submitLead('lead2')">Request Quote →</button>
+    </div>
+  </div><!-- /panel1 -->
+
+  <!-- TAB 2: WARNING SIGNS -->
+  <div class="tab-panel" id="panel2">
+    <div class="section-title">Warning Signs Checklist</div>
+    <p class="text-muted mb8" style="font-size:.83rem">Check any warning signs you've noticed. We'll score your risk level.</p>
+
+    <div class="card" id="checklistCard">
+      <div id="checklistItems"></div>
+    </div>
+
+    <div class="score-bar card" id="scoreCard">
+      <div class="score-num" id="scoreNum" style="color:var(--green)">0</div>
+      <div class="score-label" id="scoreLabel">of 10 warning signs — Monitor as normal</div>
+    </div>
+
+    <div class="card card-orange">
+      <h3>🌊 FL Lifespan Reality</h3>
+      <p class="text-muted" style="font-size:.85rem">FL's hard water (<strong style="color:var(--orange)">150–350 mg/L</strong>) reduces standard tank water heater lifespan by <strong style="color:var(--orange)">20–30%</strong> vs. national average. A unit rated for 12 years may only last <strong style="color:var(--orange)">8–10 years</strong> in South FL without annual maintenance.</p>
+    </div>
+
+    <div class="section-title">Annual Maintenance Guide</div>
+    <div class="card" id="maintGuide"></div>
+
+    <div class="card card-red" style="margin-top:12px">
+      <h3>🚨 Emergency — Tank Leaking?</h3>
+      <p class="text-muted" style="font-size:.85rem">If your water heater is leaking <strong style="color:var(--red)">from the tank body</strong> (not the fittings): <strong style="color:var(--red)">shut off the supply valve immediately</strong>. Do not attempt to repair — the tank is compromised and requires full replacement. FL average emergency replacement: <strong style="color:var(--red)">$900–$1,600 same day</strong>.</p>
+    </div>
+
+    <!-- Lead form Tab 2 -->
+    <div class="card card-teal lead-form" style="margin-top:16px">
+      <h3>Schedule Inspection or Replacement Quote</h3>
+      <div class="form-row">
+        <label for="cf3-name">Name</label>
+        <input type="text" id="cf3-name" placeholder="Jane Smith" autocomplete="name" maxlength="80">
+      </div>
+      <div class="form-row">
+        <label for="cf3-phone">Phone</label>
+        <input type="tel" id="cf3-phone" placeholder="(561) 555-PIPE" autocomplete="tel" maxlength="20">
+      </div>
+      <div class="form-row">
+        <label for="cf3-type">Service Needed</label>
+        <select id="cf3-type">
+          <option value="">Select…</option>
+          <option>Annual maintenance / flush</option>
+          <option>Inspection &amp; report</option>
+          <option>Anode rod replacement</option>
+          <option>Water heater replacement</option>
+          <option>Emergency same-day replacement</option>
+        </select>
+      </div>
+      <button class="btn btn-gold" onclick="submitLead('lead3')">Schedule Now →</button>
+    </div>
+  </div><!-- /panel2 -->
+</div><!-- /app -->
+
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+// ── XSS sanitizer ─────────────────────────────────────────────
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ── State ─────────────────────────────────────────────────────
+const state = {
+  type: null, age: null, people: null, utility: null,
+  currentStep: 1
+};
+
+// ── Base costs [min, max] per household tier ──────────────────
+const BASE_COST = {
+  elec_tank:     [520, 620],
+  gas_tank:      [280, 380],
+  elec_tankless: [380, 460],
+  gas_tankless:  [180, 260],
+  heat_pump:     [160, 220],
+  solar:         [60,  120],
+  unknown:       [520, 620]
+};
+
+const PEOPLE_SCALE = [0, 0, 120, 240, 360];
+
+const AGE_MULT = {
+  under5: 1.00, '5to10': 1.12, '10to15': 1.28, over15: 1.45
+};
+
+const UTILITY_MULT = {
+  fpl: 1.05, duke: 1.02, teco: 0.98,
+  jea: 0.95, gulf: 1.00, other: 1.00
+};
+
+const UTILITY_LABELS = {
+  fpl: 'FPL', duke: 'Duke Energy FL', teco: 'Tampa Electric',
+  jea: 'JEA', gulf: 'Gulf Power', other: 'Other/Solar/Well'
+};
+
+const TYPE_LABELS = {
+  elec_tank: 'Standard Tank Electric', gas_tank: 'Standard Tank Gas',
+  elec_tankless: 'Tankless Electric', gas_tankless: 'Tankless Gas',
+  heat_pump: 'Heat Pump', solar: 'Solar', unknown: 'Unknown (est. electric tank)'
+};
+
+const PEOPLE_LABEL = { '1': '1–2 people', '2': '3–4 people', '3': '5–6 people', '4': '7+ people' };
+
+// ── Tab switching ─────────────────────────────────────────────
+function switchTab(idx) {
+  for (let i = 0; i < 3; i++) {
+    const btn = document.getElementById('tab' + i);
+    const panel = document.getElementById('panel' + i);
+    const active = (i === idx);
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-selected', String(active));
+    panel.classList.toggle('active', active);
+  }
+}
+
+// ── Tile selection ────────────────────────────────────────────
+function selectTile(el, group) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.tile').forEach(function(t) {
+    t.classList.remove('selected');
+    t.setAttribute('aria-checked', 'false');
+  });
+  el.classList.add('selected');
+  el.setAttribute('aria-checked', 'true');
+  state[group] = el.dataset.val;
+  updateStepButtons();
+}
+
+function updateStepButtons() {
+  const b1 = document.getElementById('step1Btn');
+  const b2 = document.getElementById('step2Btn');
+  if (b1) b1.disabled = !(state.type && state.age);
+  if (b2) b2.disabled = !(state.people && state.utility);
+}
+
+// ── Wizard navigation ─────────────────────────────────────────
+function goStep(n) {
+  document.getElementById('step1').style.display = (n === 1) ? '' : 'none';
+  document.getElementById('step2').style.display = (n === 2) ? '' : 'none';
+  document.getElementById('step3').style.display = (n === 3) ? '' : 'none';
+  state.currentStep = n;
+  updateWizardNav(n);
+  if (n === 3) renderResults();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateWizardNav(n) {
+  for (let i = 1; i <= 3; i++) {
+    const ws = document.getElementById('ws' + i);
+    ws.classList.remove('active', 'done');
+    if (i < n) ws.classList.add('done');
+    else if (i === n) ws.classList.add('active');
+  }
+  for (let i = 1; i <= 2; i++) {
+    const wl = document.getElementById('wl' + i);
+    wl.classList.toggle('done', i < n);
+  }
+}
+
+// ── Cost calculation ──────────────────────────────────────────
+function calcAnnualCost(type, age, people, utility) {
+  const base = BASE_COST[type] || BASE_COST.elec_tank;
+  const midBase = (base[0] + base[1]) / 2;
+  const peopleIdx = parseInt(people, 10);
+  const peopleMod = PEOPLE_SCALE[peopleIdx] || 0;
+  const ageMult = AGE_MULT[age] || 1;
+  const isElec = ['elec_tank', 'elec_tankless', 'heat_pump', 'unknown'].includes(type);
+  const utilMult = isElec ? (UTILITY_MULT[utility] || 1.0) : 1.0;
+  return Math.round((midBase + peopleMod) * ageMult * utilMult);
+}
+
+function calcBaseNewCost(type, people) {
+  const base = BASE_COST[type] || BASE_COST.elec_tank;
+  const mid = (base[0] + base[1]) / 2;
+  const idx = parseInt(people, 10);
+  const peopleMod = PEOPLE_SCALE[idx] || 0;
+  return Math.round(mid + peopleMod);
+}
+
+// ── Results rendering ─────────────────────────────────────────
+function renderResults() {
+  const { type, age, people, utility } = state;
+  if (!type || !age || !people || !utility) return;
+
+  const current = calcAnnualCost(type, age, people, utility);
+  const elCurrent = document.getElementById('annualCost');
+  elCurrent.textContent = '$' + current.toLocaleString();
+
+  const brkEl = document.getElementById('costBreakdown');
+  const ageLabel = { under5:'under 5 yrs', '5to10':'5–10 yrs', '10to15':'10–15 yrs', over15:'over 15 yrs' };
+  brkEl.textContent = TYPE_LABELS[type] + ' · ' + ageLabel[age] + ' · ' + PEOPLE_LABEL[people] + ' · ' + UTILITY_LABELS[utility];
+
+  const ageWarn = document.getElementById('ageWarning');
+  ageWarn.style.display = (age === 'over15') ? '' : 'none';
+
+  renderBars(current, type, people, utility);
+  renderPayback(current, type, people, utility);
+  renderRebateText(utility);
+}
+
+function renderBars(current, type, people, utility) {
+  const newSameCost = calcBaseNewCost(type, people);
+  const hpCost = calcBaseNewCost('heat_pump', people);
+  const gasTanklessCost = calcBaseNewCost('gas_tankless', people);
+  const isGas = ['gas_tank', 'gas_tankless'].includes(type);
+
+  const items = [];
+  items.push({ label: 'Current (' + TYPE_LABELS[type] + ')', cost: current, color: getCostColor(current, current) });
+  if (type !== 'heat_pump' && type !== 'solar' && type !== 'unknown') {
+    const newSameLabel = 'New ' + TYPE_LABELS[type];
+    items.push({ label: newSameLabel, cost: newSameCost, color: 'var(--blue)', save: current - newSameCost });
+  }
+  if (!isGas && type !== 'gas_tankless') {
+    items.push({ label: 'Upgrade → Tankless Gas', cost: gasTanklessCost, color: 'var(--teal)', save: current - gasTanklessCost });
+  }
+  if (type !== 'heat_pump') {
+    items.push({ label: 'Upgrade → Heat Pump ⭐', cost: hpCost, color: 'var(--gold)', save: current - hpCost });
+  }
+
+  const maxCost = Math.max(...items.map(function(i) { return i.cost; }), 1);
+  const container = document.getElementById('barsContainer');
+  container.innerHTML = '';
+
+  items.forEach(function(item) {
+    const pct = Math.round((item.cost / maxCost) * 100);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+
+    const lbl = document.createElement('div');
+    lbl.className = 'bar-label';
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'bar-name';
+    nameSpan.textContent = item.label;
+    const valSpan = document.createElement('span');
+    valSpan.className = 'bar-val';
+    valSpan.textContent = '$' + item.cost.toLocaleString() + '/yr';
+    lbl.appendChild(nameSpan);
+    lbl.appendChild(valSpan);
+
+    const track = document.createElement('div');
+    track.className = 'bar-track';
+    const fill = document.createElement('div');
+    fill.className = 'bar-fill';
+    fill.style.width = pct + '%';
+    fill.style.background = item.color;
+    track.appendChild(fill);
+
+    row.appendChild(lbl);
+    row.appendChild(track);
+
+    if (item.save && item.save > 0) {
+      const saveEl = document.createElement('div');
+      saveEl.className = 'bar-save';
+      saveEl.textContent = '→ Save $' + item.save.toLocaleString() + '/yr vs. current';
+      row.appendChild(saveEl);
+    } else if (item.save && item.save < 0) {
+      const saveEl = document.createElement('div');
+      saveEl.className = 'bar-save';
+      saveEl.style.color = 'var(--muted)';
+      saveEl.textContent = '(current system already efficient)';
+      row.appendChild(saveEl);
+    }
+
+    container.appendChild(row);
+  });
+}
+
+function getCostColor(cost, maxCost) {
+  const ratio = cost / maxCost;
+  if (ratio > 0.85) return 'var(--red)';
+  if (ratio > 0.6) return 'var(--orange)';
+  return 'var(--blue)';
+}
+
+function renderPayback(current, type, people, utility) {
+  if (type === 'heat_pump') {
+    document.getElementById('paybackSection').style.display = 'none';
+    return;
+  }
+  const hpCost = calcBaseNewCost('heat_pump', people);
+  const annualSavings = current - hpCost;
+  if (annualSavings <= 0) {
+    document.getElementById('paybackSection').style.display = 'none';
+    return;
+  }
+  const installLow = 1400, installHigh = 2200;
+  const installMid = (installLow + installHigh) / 2;
+  const rebate = getUtilityRebate(utility);
+  const taxCredit = Math.round(installMid * 0.30);
+  const netCost = Math.round(installMid - rebate - taxCredit);
+  const paybackYrs = (netCost / annualSavings).toFixed(1);
+
+  document.getElementById('paybackSection').style.display = '';
+  document.getElementById('paybackVal').textContent = paybackYrs + ' yrs';
+  const noteEl = document.getElementById('paybackNote');
+  noteEl.textContent = 'After ~$' + rebate + ' utility rebate + $' + taxCredit + ' federal tax credit (est. net cost $' + netCost.toLocaleString() + ')';
+}
+
+function getUtilityRebate(utility) {
+  const rebates = { fpl: 125, duke: 300, teco: 75, jea: 75, gulf: 75, other: 75 };
+  return rebates[utility] || 75;
+}
+
+function renderRebateText(utility) {
+  const rebate = getUtilityRebate(utility);
+  const label = UTILITY_LABELS[utility] || 'Your utility';
+  const el = document.getElementById('rebateText');
+  el.textContent = label + ' heat pump rebate: up to $' + rebate + '. Plus Federal IRA 30% tax credit on installed cost (through 2032). Ask your installer about stacking these incentives for maximum savings.';
+}
+
+// ── Lead form submission ──────────────────────────────────────
+function submitLead(formId) {
+  showToast("We'll call you within 2 hours! 🎉");
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+// ── Checklist (Tab 2) ─────────────────────────────────────────
+const WARNINGS = [
+  'Rust-colored or discolored hot water',
+  'Rumbling, popping, or banging sounds during heating',
+  'Water pooling around the base of the unit',
+  'Inconsistent water temperature (hot/cold fluctuations)',
+  'Unit is over 10 years old (tank) or 15 years (tankless)',
+  'Unexplained increase in energy bills',
+  'Reduced hot water capacity or slower recovery',
+  'Anode rod has never been inspected or replaced',
+  'Visible corrosion or rust on fittings or connections',
+  'Pressure relief valve has never been tested'
+];
+
+const SCORE_LEVELS = [
+  { min: 0, max: 2, label: 'Monitor as normal', color: 'var(--green)' },
+  { min: 3, max: 4, label: 'Schedule an inspection soon', color: 'var(--orange)' },
+  { min: 5, max: 10, label: 'Replace soon — high risk', color: 'var(--red)' }
+];
+
+const checkState = new Array(10).fill(false);
+
+function buildChecklist() {
+  const container = document.getElementById('checklistItems');
+  WARNINGS.forEach(function(w, i) {
+    const div = document.createElement('div');
+    div.className = 'check-item';
+    div.setAttribute('tabindex', '0');
+    div.setAttribute('role', 'checkbox');
+    div.setAttribute('aria-checked', 'false');
+    div.setAttribute('data-idx', String(i));
+    div.onclick = function() { toggleCheck(i, div); };
+    div.onkeydown = function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCheck(i, div); }
+    };
+
+    const box = document.createElement('div');
+    box.className = 'check-box';
+    box.innerHTML = '';
+
+    const txt = document.createElement('div');
+    txt.className = 'check-text';
+    txt.textContent = w;
+
+    div.appendChild(box);
+    div.appendChild(txt);
+    container.appendChild(div);
+  });
+}
+
+function toggleCheck(idx, el) {
+  checkState[idx] = !checkState[idx];
+  el.classList.toggle('checked', checkState[idx]);
+  el.setAttribute('aria-checked', String(checkState[idx]));
+  const box = el.querySelector('.check-box');
+  box.textContent = checkState[idx] ? '✓' : '';
+  updateScore();
+}
+
+function updateScore() {
+  const score = checkState.filter(Boolean).length;
+  const numEl = document.getElementById('scoreNum');
+  const lblEl = document.getElementById('scoreLabel');
+  numEl.textContent = String(score);
+  const level = SCORE_LEVELS.find(function(l) { return score >= l.min && score <= l.max; });
+  numEl.style.color = level ? level.color : 'var(--green)';
+  lblEl.textContent = 'of 10 warning signs — ' + (level ? level.label : 'Monitor as normal');
+}
+
+// ── Maintenance guide ─────────────────────────────────────────
+const MAINT_STEPS = [
+  {
+    title: 'Flush Sediment (Tank Units Only)',
+    desc: 'Attach garden hose to drain valve, shut off cold supply, open drain valve for 10–15 min until water runs clear. Annually in FL hard water areas.'
+  },
+  {
+    title: 'Test Pressure Relief Valve',
+    desc: 'WARNING: Hot water discharge. Lift lever briefly to verify it opens and releases pressure. Replace if corroded or if it doesn\'t snap shut cleanly.'
+  },
+  {
+    title: 'Inspect Anode Rod (Every 3–5 Years)',
+    desc: 'Critical in FL hard water. A depleted anode rod causes tank corrosion. Replacement cost: $20–$50 + labor. Skipping this is the #1 cause of early tank failure in FL.'
+  },
+  {
+    title: 'Check for Condensation & Corrosion',
+    desc: 'Inspect all fittings, the TPR valve pipe, and base for moisture or rust spots. Minor fittings corrosion is fixable; tank body corrosion means replacement.'
+  },
+  {
+    title: 'Verify Temperature Setting',
+    desc: 'FL recommended: 120°F. This prevents scalding and Legionella bacteria growth. Higher temps accelerate scale buildup and reduce heater lifespan.'
+  }
+];
+
+function buildMaintGuide() {
+  const container = document.getElementById('maintGuide');
+  MAINT_STEPS.forEach(function(s, i) {
+    const div = document.createElement('div');
+    div.className = 'maint-step';
+
+    const num = document.createElement('div');
+    num.className = 'step-num';
+    num.textContent = String(i + 1);
+
+    const content = document.createElement('div');
+    content.className = 'maint-content';
+    const title = document.createElement('div');
+    title.className = 'maint-title';
+    title.textContent = s.title;
+    const desc = document.createElement('div');
+    desc.className = 'maint-desc';
+    desc.textContent = s.desc;
+
+    content.appendChild(title);
+    content.appendChild(desc);
+    div.appendChild(num);
+    div.appendChild(content);
+    container.appendChild(div);
+  });
+}
+
+// ── Keyboard support for tiles ────────────────────────────────
+function initTileKeyboard() {
+  document.querySelectorAll('.tile').forEach(function(tile) {
+    tile.onkeydown = function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        tile.click();
+      }
+    };
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────
+(function init() {
+  buildChecklist();
+  buildMaintGuide();
+  updateScore();
+  initTileKeyboard();
+  updateStepButtons();
+})();
+</script>
+</body>
+</html>
