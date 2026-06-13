@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Whole-Home Repipe Cost Estimator — PEX vs. Copper vs. Cast Iron Prices</title>
+<meta name="description" content="Get an honest FL repipe cost estimate by home size, region, and pipe material. Copper, PEX-A, cast iron drain replacement costs for South FL, Central FL, and North FL.">
+<meta name="keywords" content="whole home repipe cost Florida, repipe cost estimate Florida, Florida repiping cost, how much does repiping cost Florida, Florida repipe PEX copper CPVC, whole house repipe cost FL, Florida repipe financing, cast iron repipe cost Florida">
+<style>
+  :root {
+    --navy: #0A0E1A;
+    --navy-light: #141828;
+    --navy-card: #1A1F35;
+    --navy-border: #252B45;
+    --blue: #00B4FF;
+    --blue-dim: rgba(0,180,255,0.15);
+    --blue-bright: #33C4FF;
+    --gold: #F4B942;
+    --gold-dim: rgba(244,185,66,0.12);
+    --gold-border: rgba(244,185,66,0.35);
+    --red: #FF4757;
+    --red-dim: rgba(255,71,87,0.12);
+    --red-border: rgba(255,71,87,0.35);
+    --green: #2ED573;
+    --green-dim: rgba(46,213,115,0.12);
+    --text: #E8EAFF;
+    --text-dim: #8B92B8;
+    --text-muted: #5A6080;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  .site-header {
+    background: linear-gradient(135deg, #0A0E1A 0%, #0F1628 100%);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 24px 20px 20px;
+    text-align: center;
+  }
+  .site-header .badge {
+    display: inline-block;
+    background: var(--blue-dim);
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .site-header h1 {
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .site-header h1 span { color: var(--gold); }
+  .site-header p {
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* Tabs */
+  .tabs-nav {
+    display: flex;
+    border-bottom: 1px solid var(--navy-border);
+    background: var(--navy-light);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 14px 16px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    text-align: center;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Main layout */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 16px 60px;
+  }
+
+  /* Section headings */
+  .section-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+
+  /* Step labels */
+  .step-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  /* Tile grid */
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .tile-grid.wide { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .tile {
+    background: var(--navy-card);
+    border: 2px solid var(--navy-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.1s;
+    text-align: center;
+    user-select: none;
+  }
+  .tile:hover {
+    border-color: var(--blue);
+    background: var(--blue-dim);
+    transform: translateY(-1px);
+  }
+  .tile.selected {
+    border-color: var(--blue);
+    background: var(--blue-dim);
+    box-shadow: 0 0 0 1px var(--blue);
+  }
+  .tile.selected-red {
+    border-color: var(--red);
+    background: var(--red-dim);
+    box-shadow: 0 0 0 1px var(--red);
+  }
+  .tile-icon { font-size: 22px; display: block; margin-bottom: 6px; }
+  .tile-label { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .tile-sub { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+
+  /* CTA button */
+  .calc-btn {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    margin: 28px auto 0;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--blue) 0%, #0099DD 100%);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .calc-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+  .calc-btn:active { transform: translateY(0); }
+  .calc-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* Results section */
+  #results { margin-top: 36px; }
+  .result-card {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .result-card.urgent {
+    border-color: var(--red-border);
+    background: var(--red-dim);
+  }
+  .result-card.info {
+    border-color: var(--blue);
+    background: var(--blue-dim);
+  }
+  .result-card.gold {
+    border-color: var(--gold-border);
+    background: var(--gold-dim);
+  }
+  .result-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .result-card h3 .urgent-badge {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .estimate-range {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--gold);
+    margin: 10px 0 6px;
+  }
+  .estimate-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .result-note {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* Cost table */
+  .cost-table-wrap { overflow-x: auto; margin: 16px 0; }
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .cost-table th, .cost-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--navy-border);
+  }
+  .cost-table th {
+    color: var(--text-dim);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.03);
+  }
+  .cost-table td { color: var(--text); }
+  .cost-table tr.highlighted td {
+    background: var(--blue-dim);
+    color: var(--blue-bright);
+    font-weight: 700;
+  }
+  .cost-table tr.highlighted td:first-child { border-left: 3px solid var(--blue); }
+
+  /* Expandable */
+  .expandable {
+    background: var(--navy-card);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .expandable-header {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 14px;
+    user-select: none;
+  }
+  .expandable-header:hover { background: rgba(244,185,66,0.05); }
+  .expandable-arrow { font-size: 12px; transition: transform 0.2s; }
+  .expandable-header.open .expandable-arrow { transform: rotate(180deg); }
+  .expandable-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--gold-border);
+  }
+  .expandable-body.open { display: block; }
+  .factor-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--navy-border);
+    font-size: 13px;
+  }
+  .factor-item:last-child { border-bottom: none; }
+  .factor-title { font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .factor-desc { color: var(--text-dim); line-height: 1.5; }
+  .factor-desc span { color: var(--gold); font-weight: 600; }
+
+  /* Lead form */
+  .lead-form {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-top: 28px;
+  }
+  .lead-form h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .lead-form p {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .form-row.single { grid-template-columns: 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .form-group input, .form-group select {
+    background: var(--navy-light);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--blue);
+  }
+  .form-group select option { background: var(--navy-light); }
+  .form-submit {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--gold) 0%, #E8A830 100%);
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 800;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-top: 16px;
+    transition: opacity 0.2s;
+  }
+  .form-submit:hover { opacity: 0.9; }
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  /* Tab 2 — Pipe Guide */
+  .pipe-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .pipe-card {
+    background: var(--navy-card);
+    border: 2px solid var(--navy-border);
+    border-radius: var(--radius);
+    padding: 18px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .pipe-card:hover { border-color: var(--blue); }
+  .pipe-card.open { border-color: var(--blue); }
+  .pipe-card.recommended { border-color: var(--green); }
+  .pipe-card.recommended.open { border-color: var(--green); }
+  .pipe-card.warning { border-color: var(--gold-border); }
+  .pipe-card.warning.open { border-color: var(--gold); }
+  .pipe-card-header { display: flex; align-items: flex-start; justify-content: space-between; }
+  .pipe-card-title { font-size: 15px; font-weight: 800; color: #fff; }
+  .pipe-card-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+  .badge-recommended { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+  .badge-warning { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+  .badge-caution { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+  .pipe-card-sub { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+  .pipe-card-body {
+    display: none;
+    margin-top: 14px;
+    border-top: 1px solid var(--navy-border);
+    padding-top: 14px;
+  }
+  .pipe-card.open .pipe-card-body { display: block; }
+  .pipe-detail { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 8px; }
+  .pipe-detail strong { color: var(--text); }
+  .pro-con-row { display: flex; gap: 12px; margin-top: 10px; }
+  .pro-box, .con-box {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+  }
+  .pro-box { background: var(--green-dim); border: 1px solid var(--green); }
+  .pro-box .label { color: var(--green); font-weight: 700; margin-bottom: 4px; }
+  .con-box { background: var(--red-dim); border: 1px solid var(--red-border); }
+  .con-box .label { color: var(--red); font-weight: 700; margin-bottom: 4px; }
+  .pro-box ul, .con-box ul { padding-left: 14px; color: var(--text); }
+  .pro-box li, .con-box li { margin-bottom: 2px; }
+
+  /* Checklist */
+  .checklist { list-style: none; margin-bottom: 20px; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--navy-border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--navy-border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: background 0.15s, border-color 0.15s;
+    margin-top: 1px;
+  }
+  .checklist li.checked .check-box {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+  }
+  .check-label { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .checklist li.checked .check-label { color: var(--text-dim); }
+
+  /* Score card */
+  .score-card {
+    background: var(--navy-card);
+    border: 2px solid var(--navy-border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    transition: border-color 0.3s;
+  }
+  .score-number {
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--blue);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .score-label { font-size: 14px; color: var(--text-dim); }
+  .score-recommendation {
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    display: inline-block;
+  }
+
+  /* Timeline */
+  .timeline { margin: 20px 0; }
+  .timeline-step {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--navy-border);
+  }
+  .timeline-step:last-child { border-bottom: none; }
+  .timeline-day {
+    flex-shrink: 0;
+    width: 56px;
+    text-align: center;
+    background: var(--blue-dim);
+    border: 1px solid var(--blue);
+    border-radius: var(--radius-sm);
+    padding: 8px 4px;
+  }
+  .timeline-day-num { font-size: 18px; font-weight: 900; color: var(--blue); line-height: 1; }
+  .timeline-day-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .timeline-content h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .timeline-content p { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+
+  /* Info cards */
+  .info-card {
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .info-card.blue { background: var(--blue-dim); border: 1px solid var(--blue); }
+  .info-card.gold { background: var(--gold-dim); border: 1px solid var(--gold-border); }
+  .info-card.orange { background: rgba(255,120,0,0.1); border: 1px solid rgba(255,140,0,0.4); }
+  .info-card h4 { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+  .info-card.blue h4 { color: var(--blue-bright); }
+  .info-card.gold h4 { color: var(--gold); }
+  .info-card.orange h4 { color: #FF8C00; }
+  .info-card p { color: var(--text-dim); line-height: 1.6; }
+  .info-card strong { color: var(--text); }
+
+  /* Contractor checklist (Tab 2) */
+  .contractor-check li {
+    padding: 14px 0;
+  }
+  .contractor-check li.checked .check-label { color: var(--green); text-decoration: none; }
+  .contractor-check li.checked .check-box {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  /* Urgency cards for Tab 1 pipe selection */
+  .pipe-urgency {
+    display: none;
+    background: var(--red-dim);
+    border: 1px solid var(--red-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--red);
+  }
+
+  /* Mobile tweaks */
+  @media (max-width: 480px) {
+    .tile-grid { grid-template-columns: repeat(2, 1fr); }
+    .tile-grid.wide { grid-template-columns: repeat(2, 1fr); }
+    .form-row { grid-template-columns: 1fr; }
+    .pipe-cards { grid-template-columns: 1fr; }
+    .pro-con-row { flex-direction: column; }
+    .cost-table th, .cost-table td { padding: 8px 10px; font-size: 12px; }
+  }
+  @media (max-width: 360px) {
+    .tile-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="badge">Florida Repipe Estimator</div>
+  <h1>Whole-Home Repipe Cost in <span>Florida</span></h1>
+  <p>Honest estimates by home size, pipe material, and FL region. No email required to see your range.</p>
+</header>
+
+<nav class="tabs-nav" role="tablist">
+  <button class="tab-btn active" onclick="switchTab('estimator')" role="tab">💰 Cost Estimator</button>
+  <button class="tab-btn" onclick="switchTab('materials')" role="tab">🔧 Pipe Material Guide</button>
+  <button class="tab-btn" onclick="switchTab('timing')" role="tab">📋 When to Repipe</button>
+</nav>
+
+<!-- ===== TAB 1: COST ESTIMATOR ===== -->
+<div id="tab-estimator" class="tab-content active">
+  <div class="container">
+    <div class="section-title">Get an honest repipe cost estimate for your Florida home.</div>
+    <div class="section-sub">Answer 4 questions — your estimate appears instantly, no sign-up required.</div>
+
+    <!-- Step 1: Home size -->
+    <div class="step-label">Step 1 — Home Size</div>
+    <div class="tile-grid" id="size-tiles">
+      <div class="tile" data-group="size" data-val="under1000" onclick="selectTile(this)">
+        <span class="tile-icon">🏠</span>
+        <div class="tile-label">Under 1,000 sq ft</div>
+        <div class="tile-sub">Cottage / Condo</div>
+      </div>
+      <div class="tile" data-group="size" data-val="1000-1500" onclick="selectTile(this)">
+        <span class="tile-icon">🏡</span>
+        <div class="tile-label">1,000–1,500 sq ft</div>
+      </div>
+      <div class="tile" data-group="size" data-val="1500-2000" onclick="selectTile(this)">
+        <span class="tile-icon">🏡</span>
+        <div class="tile-label">1,500–2,000 sq ft</div>
+      </div>
+      <div class="tile" data-group="size" data-val="2000-2500" onclick="selectTile(this)">
+        <span class="tile-icon">🏠</span>
+        <div class="tile-label">2,000–2,500 sq ft</div>
+      </div>
+      <div class="tile" data-group="size" data-val="2500-3000" onclick="selectTile(this)">
+        <span class="tile-icon">🏘️</span>
+        <div class="tile-label">2,500–3,000 sq ft</div>
+      </div>
+      <div class="tile" data-group="size" data-val="3000-4000" onclick="selectTile(this)">
+        <span class="tile-icon">🏘️</span>
+        <div class="tile-label">3,000–4,000 sq ft</div>
+      </div>
+      <div class="tile" data-group="size" data-val="4000plus" onclick="selectTile(this)">
+        <span class="tile-icon">🏛️</span>
+        <div class="tile-label">4,000+ sq ft</div>
+        <div class="tile-sub">Large Home / Estate</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Region -->
+    <div class="step-label">Step 2 — Where in Florida?</div>
+    <div class="tile-grid wide" id="region-tiles">
+      <div class="tile" data-group="region" data-val="south" onclick="selectTile(this)">
+        <span class="tile-icon">🌴</span>
+        <div class="tile-label">South FL</div>
+        <div class="tile-sub">Miami-Dade, Broward, Palm Beach</div>
+      </div>
+      <div class="tile" data-group="region" data-val="gulf" onclick="selectTile(this)">
+        <span class="tile-icon">🌊</span>
+        <div class="tile-label">Gulf Coast</div>
+        <div class="tile-sub">Naples, Fort Myers, Sarasota, Tampa</div>
+      </div>
+      <div class="tile" data-group="region" data-val="central" onclick="selectTile(this)">
+        <span class="tile-icon">☀️</span>
+        <div class="tile-label">Orlando / Central FL</div>
+      </div>
+      <div class="tile" data-group="region" data-val="space" onclick="selectTile(this)">
+        <span class="tile-icon">🌺</span>
+        <div class="tile-label">Space Coast</div>
+        <div class="tile-sub">Treasure Coast</div>
+      </div>
+      <div class="tile" data-group="region" data-val="north" onclick="selectTile(this)">
+        <span class="tile-icon">🌲</span>
+        <div class="tile-label">North FL</div>
+        <div class="tile-sub">Jacksonville, Gainesville, Tallahassee</div>
+      </div>
+      <div class="tile" data-group="region" data-val="keys" onclick="selectTile(this)">
+        <span class="tile-icon">🏝️</span>
+        <div class="tile-label">FL Keys</div>
+        <div class="tile-sub">Monroe County — highest in state</div>
+      </div>
+    </div>
+
+    <!-- Step 3: Current pipe material -->
+    <div class="step-label">Step 3 — Current Pipe Material</div>
+    <div class="tile-grid wide" id="material-tiles">
+      <div class="tile" data-group="material" data-val="cast-iron" data-urgent="true" onclick="selectTile(this)">
+        <span class="tile-icon">🟫</span>
+        <div class="tile-label">Cast Iron Drain Pipes</div>
+        <div class="tile-sub">Pre-1975 FL homes — very common</div>
+      </div>
+      <div class="tile" data-group="material" data-val="copper" onclick="selectTile(this)">
+        <span class="tile-icon">🔴</span>
+        <div class="tile-label">Copper Supply Pipes</div>
+        <div class="tile-sub">1960s–1990s FL homes</div>
+      </div>
+      <div class="tile" data-group="material" data-val="galvanized" data-urgent="true" onclick="selectTile(this)">
+        <span class="tile-icon">⬜</span>
+        <div class="tile-label">Galvanized Steel</div>
+        <div class="tile-sub">Pre-1960s — repipe urgent</div>
+      </div>
+      <div class="tile" data-group="material" data-val="cpvc" onclick="selectTile(this)">
+        <span class="tile-icon">🔵</span>
+        <div class="tile-label">CPVC Supply Pipes</div>
+        <div class="tile-sub">1980s–2000s FL homes</div>
+      </div>
+      <div class="tile" data-group="material" data-val="polybutylene" data-urgent="true" onclick="selectTile(this)">
+        <span class="tile-icon">🔵</span>
+        <div class="tile-label">Polybutylene</div>
+        <div class="tile-sub">1978–1995 — major defect issue</div>
+      </div>
+      <div class="tile" data-group="material" data-val="unknown" onclick="selectTile(this)">
+        <span class="tile-icon">❓</span>
+        <div class="tile-label">Don't Know</div>
+        <div class="tile-sub">Need a plumber to assess</div>
+      </div>
+    </div>
+    <div id="polybutylene-urgency" class="pipe-urgency">
+      ⚠️ <strong>Polybutylene requires urgent replacement.</strong> These gray/blue pipes are known to fail without warning — don't wait for a burst. A burst supply line can cause $20,000–$50,000 in water damage.
+    </div>
+
+    <!-- Step 4: Scope -->
+    <div class="step-label">Step 4 — What Needs to Be Repiped?</div>
+    <div class="tile-grid wide" id="scope-tiles">
+      <div class="tile" data-group="scope" data-val="supply" onclick="selectTile(this)">
+        <span class="tile-icon">🚿</span>
+        <div class="tile-label">Supply Lines Only</div>
+        <div class="tile-sub">Hot/cold water lines</div>
+      </div>
+      <div class="tile" data-group="scope" data-val="drain" onclick="selectTile(this)">
+        <span class="tile-icon">🚽</span>
+        <div class="tile-label">Drain/Waste/Vent Only</div>
+        <div class="tile-sub">DWV — cast iron replacement</div>
+      </div>
+      <div class="tile" data-group="scope" data-val="full" onclick="selectTile(this)">
+        <span class="tile-icon">🏠</span>
+        <div class="tile-label">Full Repipe</div>
+        <div class="tile-sub">Supply + drain</div>
+      </div>
+      <div class="tile" data-group="scope" data-val="assess" onclick="selectTile(this)">
+        <span class="tile-icon">❓</span>
+        <div class="tile-label">Need Assessment First</div>
+        <div class="tile-sub">Plumber to evaluate</div>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calculateEstimate()" id="calc-btn">Calculate My Estimate →</button>
+
+    <!-- RESULTS -->
+    <div id="results"></div>
+
+    <!-- Cost Factors Expandable -->
+    <div class="expandable" style="margin-top:28px;">
+      <div class="expandable-header" onclick="toggleExpand(this)">
+        💡 Why repipe costs vary so much in Florida
+        <span class="expandable-arrow">▼</span>
+      </div>
+      <div class="expandable-body">
+        <div class="factor-item">
+          <div class="factor-title">Slab vs. pier-and-beam foundation</div>
+          <div class="factor-desc">FL slab homes (most common in South FL) require tunneling under the slab for drain repipe — adds <span>$2,000–$6,000</span>. Pier-and-beam homes (more common in North FL) are much easier to access.</div>
+        </div>
+        <div class="factor-item">
+          <div class="factor-title">Number of bathrooms</div>
+          <div class="factor-desc">Each additional bathroom adds <span>$400–$800</span> in labor and materials.</div>
+        </div>
+        <div class="factor-item">
+          <div class="factor-title">Two-story homes</div>
+          <div class="factor-desc">Second floor lines are harder to access — add <span>15–20%</span> to your estimate.</div>
+        </div>
+        <div class="factor-item">
+          <div class="factor-title">FL permit required by law</div>
+          <div class="factor-desc">FL requires a licensed plumbing contractor and permit for whole-home repipes. Budget <span>$300–$800</span> for permit in most FL counties. Do not waive this — it protects you.</div>
+        </div>
+        <div class="factor-item">
+          <div class="factor-title">Drywall restoration NOT included</div>
+          <div class="factor-desc">Drywall patching is typically <em>not</em> in the repipe quote. Budget <span>$1,500–$4,000</span> separately for drywall patch/texture/paint.</div>
+        </div>
+        <div class="factor-item">
+          <div class="factor-title">Timeline</div>
+          <div class="factor-desc">Most FL single-story homes: <span>2–4 days</span>. Two-story or complex slab layouts: <span>4–7 days</span>.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead form Tab 1 -->
+    <div class="lead-form" id="lead-form-1">
+      <h3>Get a Detailed Repipe Quote from Licensed FL Plumbing Contractors</h3>
+      <p>Written estimates, permits pulled, financing available. No obligation.</p>
+      <form onsubmit="submitLead(event,'lead-form-1')">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" name="name" placeholder="Full name" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="(555) 000-0000" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Address or ZIP Code</label>
+            <input type="text" name="address" placeholder="123 Main St or 33101" required>
+          </div>
+          <div class="form-group">
+            <label>Current Pipe Material</label>
+            <select name="material" id="lead1-material">
+              <option value="">Select...</option>
+              <option value="cast-iron">Cast Iron Drain Pipes</option>
+              <option value="copper">Copper Supply Pipes</option>
+              <option value="galvanized">Galvanized Steel</option>
+              <option value="cpvc">CPVC</option>
+              <option value="polybutylene">Polybutylene</option>
+              <option value="unknown">Don't Know</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Home Size</label>
+            <select name="size" id="lead1-size">
+              <option value="">Select...</option>
+              <option value="under1000">Under 1,000 sq ft</option>
+              <option value="1000-1500">1,000–1,500 sq ft</option>
+              <option value="1500-2000">1,500–2,000 sq ft</option>
+              <option value="2000-2500">2,000–2,500 sq ft</option>
+              <option value="2500-3000">2,500–3,000 sq ft</option>
+              <option value="3000-4000">3,000–4,000 sq ft</option>
+              <option value="4000plus">4,000+ sq ft</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Urgency</label>
+            <select name="urgency">
+              <option value="emergency">🚨 Emergency — active leak now</option>
+              <option value="soon">📅 Planning in next 6 months</option>
+              <option value="researching">🔍 Just researching</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="form-submit">Request My Free Quote →</button>
+        <div class="form-success" id="lead-form-1-success">✅ Request received! A licensed FL plumbing contractor will contact you within 1 business day.</div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== TAB 2: PIPE MATERIAL GUIDE ===== -->
+<div id="tab-materials" class="tab-content">
+  <div class="container">
+    <div class="section-title">Choosing the Right Pipe Material for Your FL Repipe</div>
+    <div class="section-sub">FL's aggressive water chemistry makes material selection more important than in most states.</div>
+
+    <div class="step-label" style="margin-top:0;">Supply Pipe Options</div>
+    <div class="pipe-cards">
+
+      <div class="pipe-card recommended" onclick="togglePipeCard(this)">
+        <div class="pipe-card-header">
+          <div>
+            <div class="pipe-card-title">PEX-A</div>
+            <div class="pipe-card-sub">Cross-linked polyethylene — expansion type</div>
+          </div>
+          <span class="pipe-card-badge badge-recommended">RECOMMENDED</span>
+        </div>
+        <div class="pipe-card-body">
+          <div class="pipe-detail"><strong>Why PEX-A for FL:</strong> PEX doesn't corrode in FL's aggressive water chemistry — the #1 reason copper fails in FL. PEX-A (Uponor/Wirsbo brand) is superior to PEX-B: better flexibility, better connection security, and easier to run through slab homes.</div>
+          <div class="pipe-detail"><strong>Lifespan:</strong> 25–50 years. <strong>Cost vs. copper:</strong> 30–40% less.</div>
+          <div class="pro-con-row">
+            <div class="pro-box">
+              <div class="label">✓ Pros</div>
+              <ul>
+                <li>FL corrosion-resistant</li>
+                <li>Flexible — great for slab homes</li>
+                <li>Freeze-resistant</li>
+                <li>Quieter than copper</li>
+                <li>Lower cost</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <div class="label">✗ Cons</div>
+              <ul>
+                <li>No outdoor/UV use</li>
+                <li>Requires special expansion tool</li>
+                <li>Not rigid (some prefer copper aesthetics)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-card warning" onclick="togglePipeCard(this)">
+        <div class="pipe-card-header">
+          <div>
+            <div class="pipe-card-title">Copper</div>
+            <div class="pipe-card-sub">Traditional choice — FL-problematic</div>
+          </div>
+          <span class="pipe-card-badge badge-warning">FL CAUTION</span>
+        </div>
+        <div class="pipe-card-body">
+          <div class="pipe-detail"><strong>FL reality:</strong> Many FL plumbers now recommend against copper for supply lines due to pinhole leak history. FL's high chlorides and low pH in some areas aggressively attack copper. If you choose copper, request <strong>Type L (heavier wall)</strong>.</div>
+          <div class="pipe-detail"><strong>Best use:</strong> Short runs, high-heat applications. Excellent for commercial or where rigid pipe is preferred.</div>
+          <div class="pro-con-row">
+            <div class="pro-box">
+              <div class="label">✓ Pros</div>
+              <ul>
+                <li>Long history — approved everywhere</li>
+                <li>Excellent for hot water</li>
+                <li>Recyclable</li>
+                <li>Rigid — predictable runs</li>
+              </ul>
+            </div>
+            <div class="con-box">
+              <div class="label">✗ Cons</div>
+              <ul>
+                <li>Pinhole leaks endemic in FL</li>
+                <li>Highest material cost</li>
+                <li>Requires skilled soldering</li>
+                <li>Vulnerable to FL water chemistry</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-card" onclick="togglePipeCard(this)">
+        <div class="pipe-card-header">
+          <div>
+            <div class="pipe-card-title">PEX-B</div>
+            <div class="pipe-card-sub">Lower cost than PEX-A</div>
+          </div>
+          <span class="pipe-card-badge" style="background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);">ACCEPTABLE</span>
+        </div>
+        <div class="pipe-card-body">
+          <div class="pipe-detail"><strong>Overview:</strong> Adequate for most FL applications. Uses crimp or clamp fittings vs. PEX-A's expansion fittings. Less flexible than PEX-A — for complex slab homes, PEX-A is worth the premium.</div>
+          <div class="pipe-detail"><strong>Bottom line:</strong> A solid mid-tier choice. For straightforward installations, it performs well. Ask your contractor which type they stock.</div>
+        </div>
+      </div>
+
+      <div class="pipe-card" onclick="togglePipeCard(this)">
+        <div class="pipe-card-header">
+          <div>
+            <div class="pipe-card-title">CPVC</div>
+            <div class="pipe-card-sub">Rigid plastic — hot/cold supply</div>
+          </div>
+          <span class="pipe-card-badge" style="background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);">ACCEPTABLE</span>
+        </div>
+        <div class="pipe-card-body">
+          <div class="pipe-detail"><strong>Overview:</strong> Rigid chlorinated PVC — easier to install than copper, lower cost. Has a long track record in FL residential.</div>
+          <div class="pipe-detail"><strong>FL concern:</strong> CPVC is more brittle than PEX — not ideal for North FL freeze risk, or for settling/movement in older homes. Some contractors prefer PEX for new repipes.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-label">Drain / DWV Pipe Options</div>
+    <div class="pipe-cards">
+      <div class="pipe-card recommended" onclick="togglePipeCard(this)">
+        <div class="pipe-card-header">
+          <div>
+            <div class="pipe-card-title">Schedule 40 PVC</div>
+            <div class="pipe-card-sub">Standard FL drain replacement</div>
+          </div>
+          <span class="pipe-card-badge badge-recommended">STANDARD</span>
+        </div>
+        <div class="pipe-card-body">
+          <div class="pipe-detail">The overwhelming standard for FL residential drain replacements. Durable, chemical-resistant, low cost, readily available. For cast iron replacement, 3" and 4" Schedule 40 PVC is the go-to choice for virtually every FL plumber.</div>
+          <div class="pipe-detail"><strong>Lifespan:</strong> 50–70+ years. <strong>Sound:</strong> Quieter than cast iron when corroded; can be louder than new cast iron — ask about sound insulation wrap if near bedrooms.</div>
+        </div>
+      </div>
+      <div class="pipe-card" onclick="togglePipeCard(this)">
+        <div class="pipe-card-header">
+          <div>
+            <div class="pipe-card-title">ABS</div>
+            <div class="pipe-card-sub">Alternative drain material</div>
+          </div>
+          <span class="pipe-card-badge" style="background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);">ACCEPTABLE</span>
+        </div>
+        <div class="pipe-card-body">
+          <div class="pipe-detail">Less common in FL but acceptable — more flexible than PVC, slightly easier to cut. <strong>Important:</strong> ABS is not compatible with CPVC cement — verify compatibility with your contractor before mixing materials in the same drain system.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FL Building Code -->
+    <div class="info-card blue" style="margin-top:8px;">
+      <h4>🏛️ Florida Building Code Requirements</h4>
+      <p>
+        <strong>Licensed contractor required:</strong> Supply repipe requires a licensed Plumbing Contractor under FL FS 489. Verify your contractor's license at <a href="https://www.myfloridalicense.com" target="_blank" rel="noopener">myfloridalicense.com</a>.<br><br>
+        <strong>Permit required by law:</strong> PEX and all supply repipe work must be permitted per FL Building Code Plumbing (FBC Plumbing 2020).<br><br>
+        <strong>Inspection before covering:</strong> All new pipes must be accessible for inspection before walls/floors are closed.<br><br>
+        <strong>Pressure test required:</strong> Post-installation pressure test is mandatory — any reputable contractor will provide documentation.
+      </p>
+    </div>
+
+    <!-- Contractor checklist -->
+    <div class="step-label" style="margin-top:28px;">What to Ask Your Repipe Contractor</div>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px;">Click to check off as you ask each question:</p>
+    <ul class="checklist contractor-check" id="contractor-checklist">
+      <li onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Are you licensed as a FL Master Plumber or Plumbing Contractor under FS 489?</div>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Do you pull the permit, or do I? (Answer should always be: we pull it.)</div>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Is the price fixed-price or time-and-materials? (Fixed is strongly preferred.)</div>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Does the quote include drywall patching, or is that separate?</div>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">What pipe brand are you using? (Ask for Uponor/Wirsbo for PEX-A, Nibco or Charlotte for PVC.)</div>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Do you offer a warranty on both labor and materials? (Minimum 1 year labor; pipe manufacturer warranty should transfer to you.)</div>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Will you perform a pressure test after completion and provide written documentation?</div>
+      </li>
+      <li onclick="toggleCheck(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Is financing available? (GreenSky, Synchrony, or HFS Financial are common.)</div>
+      </li>
+    </ul>
+
+    <!-- Lead form Tab 2 -->
+    <div class="lead-form" id="lead-form-2">
+      <h3>Ready for a Quote? Get Licensed FL Contractors to Compete for Your Job</h3>
+      <p>Written estimates, proper permits, financing options. Zero obligation.</p>
+      <form onsubmit="submitLead(event,'lead-form-2')">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" name="name" placeholder="Full name" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="(555) 000-0000" required>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label>ZIP Code</label>
+            <input type="text" name="zip" placeholder="FL ZIP code" pattern="[0-9]{5}" required>
+          </div>
+        </div>
+        <button type="submit" class="form-submit">Request My Free Quote →</button>
+        <div class="form-success" id="lead-form-2-success">✅ Request received! A licensed FL plumbing contractor will contact you within 1 business day.</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 3: WHEN TO REPIPE ===== -->
+<div id="tab-timing" class="tab-content">
+  <div class="container">
+    <div class="section-title">Signs It's Time — and What Happens During a Repipe</div>
+    <div class="section-sub">Check off any warning signs that apply to your home to get a recommendation.</div>
+
+    <!-- Score card -->
+    <div class="score-card" id="score-card">
+      <div class="score-number" id="score-num">0</div>
+      <div class="score-label">Warning signs checked</div>
+      <div class="score-recommendation" id="score-rec" style="background:var(--navy-light);color:var(--text-dim);">Check the boxes below ↓</div>
+    </div>
+
+    <!-- Symptom checklist -->
+    <ul class="checklist" id="symptom-checklist">
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Low water pressure throughout the house (not just one fixture)</div>
+      </li>
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Discolored water — brown, orange, or rust-colored when first turned on</div>
+      </li>
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Multiple pinhole leaks or leaks at pipe joints (especially in the same material)</div>
+      </li>
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Water stains or mold on walls/ceilings without a known roof/plumbing source</div>
+      </li>
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Older home (pre-1985) and pipes have never been replaced</div>
+      </li>
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Slow drains throughout the house — drain snaking hasn't helped long-term</div>
+      </li>
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Sulfur smell or metallic taste in your water</div>
+      </li>
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Water pressure fluctuates noticeably when multiple fixtures run simultaneously</div>
+      </li>
+      <li onclick="toggleSymptom(this)">
+        <div class="check-box">✓</div>
+        <div class="check-label">Your home has polybutylene (gray or blue plastic) supply pipes</div>
+      </li>
+    </ul>
+
+    <!-- What to expect: Timeline -->
+    <div class="step-label" style="margin-top:8px;">What to Expect During a FL Repipe</div>
+    <div class="result-card">
+      <div class="timeline">
+        <div class="timeline-step">
+          <div class="timeline-day"><div class="timeline-day-num">1</div><div class="timeline-day-label">Day</div></div>
+          <div class="timeline-content">
+            <h4>Demo — Open Access Points</h4>
+            <p>Contractor opens walls, ceilings, or slab access as needed and removes old pipes. <strong>Water will be off most of the day.</strong> You'll receive water back each evening.</p>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-day"><div class="timeline-day-num">2–3</div><div class="timeline-day-label">Day</div></div>
+          <div class="timeline-content">
+            <h4>New Pipe Installation</h4>
+            <p>New lines are run through walls, ceilings, under slab if applicable. PEX's flexibility significantly speeds this phase vs. copper.</p>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-day"><div class="timeline-day-num">3–4</div><div class="timeline-day-label">Day</div></div>
+          <div class="timeline-content">
+            <h4>Connections</h4>
+            <p>New lines connected to all fixtures, water heater, and shutoff valves. This is where bathroom count matters most — each bath adds time.</p>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-day"><div class="timeline-day-num">4</div><div class="timeline-day-label">Day</div></div>
+          <div class="timeline-content">
+            <h4>Pressure Test &amp; Inspection</h4>
+            <p>Pass/fail test with documentation. City or county inspector visits. <strong>This is the permit inspection — do not skip this step.</strong></p>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-day"><div class="timeline-day-num">5+</div><div class="timeline-day-label">Day</div></div>
+          <div class="timeline-content">
+            <h4>Closeout — Drywall Patching</h4>
+            <p>Often performed by a separate drywall contractor. Budget $1,500–$4,000 for patch/texture/paint, not included in most repipe quotes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Minimizing disruption -->
+    <div class="info-card gold">
+      <h4>🏨 Minimizing Disruption — Do I Need a Hotel?</h4>
+      <p>Most FL homeowners stay in their home during a repipe — you'll have water restored each evening. Hotels are rarely needed unless you have a very large or complex home. Plan for <strong>2–5 days of partial disruption</strong> depending on home size and complexity. Have bottled water on hand for day 1.</p>
+    </div>
+
+    <!-- Insurance -->
+    <div class="info-card orange">
+      <h4>🏦 FL Homeowners Insurance &amp; Repiping</h4>
+      <p>Some FL homeowner insurance policies cover pipe replacement under "service line coverage" or when tied to a covered water damage claim. <strong>Polybutylene replacement may be partially covered</strong> if you've had prior burst pipe claims. Always contact your insurer before starting — get the plumber's written assessment first. A licensed plumber's report documenting pipe condition is your strongest basis for a coverage conversation.</p>
+    </div>
+
+    <!-- Permit warning -->
+    <div class="info-card blue">
+      <h4>📋 Florida Permit Warning — Read Before Hiring</h4>
+      <p>In Florida, a repipe permit protects <em>you</em> — it ensures the work is inspected and documented. <strong>If a contractor asks you to waive the permit "to save money," walk away immediately.</strong> An unpermitted repipe voids your homeowner's insurance coverage for related claims, and creates serious problems — and potential deal-killing issues — when you sell your home.</p>
+    </div>
+
+    <!-- Final lead form -->
+    <div class="lead-form" id="lead-form-3">
+      <h3>Our Licensed FL Plumbing Contractors Provide Written Estimates, Pull Permits, and Offer Financing</h3>
+      <p>Get a quote for your FL home — no obligation, responds within 1 business day.</p>
+      <form onsubmit="submitLead(event,'lead-form-3')">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" name="name" placeholder="Full name" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="(555) 000-0000" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ZIP Code</label>
+            <input type="text" name="zip" placeholder="FL ZIP code" required>
+          </div>
+          <div class="form-group">
+            <label>Home Size</label>
+            <select name="size" id="lead3-size">
+              <option value="">Select...</option>
+              <option value="under1000">Under 1,000 sq ft</option>
+              <option value="1000-1500">1,000–1,500 sq ft</option>
+              <option value="1500-2000">1,500–2,000 sq ft</option>
+              <option value="2000-2500">2,000–2,500 sq ft</option>
+              <option value="2500-3000">2,500–3,000 sq ft</option>
+              <option value="3000-4000">3,000–4,000 sq ft</option>
+              <option value="4000plus">4,000+ sq ft</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Current Pipe Material</label>
+            <select name="material" id="lead3-material">
+              <option value="">Select...</option>
+              <option value="cast-iron">Cast Iron Drain Pipes</option>
+              <option value="copper">Copper Supply Pipes</option>
+              <option value="galvanized">Galvanized Steel</option>
+              <option value="cpvc">CPVC</option>
+              <option value="polybutylene">Polybutylene (urgent)</option>
+              <option value="unknown">Don't Know</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Urgency</label>
+            <select name="urgency">
+              <option value="emergency">🚨 Emergency — leak now</option>
+              <option value="soon">📅 Planning next 6 months</option>
+              <option value="researching">🔍 Just researching</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="form-submit">Request My Free Repipe Quote →</button>
+        <div class="form-success" id="lead-form-3-success">✅ Request received! A licensed FL plumbing contractor will contact you within 1 business day.</div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Selections state ──────────────────────────────────────────
+const sel = { size: null, region: null, material: null, scope: null };
+
+// ── Cost data ─────────────────────────────────────────────────
+// regionMultiplier: relative to Central FL base (1.0)
+const REGION = {
+  south:   { label: 'South FL',        mult: 1.30 },
+  gulf:    { label: 'Gulf Coast',       mult: 1.15 },
+  central: { label: 'Central FL',       mult: 1.00 },
+  space:   { label: 'Space/Treasure Coast', mult: 1.05 },
+  north:   { label: 'North FL',         mult: 0.88 },
+  keys:    { label: 'FL Keys',          mult: 1.50 }
+};
+
+// Base supply repipe costs (Central FL, PEX-A) by size tier
+const SUPPLY_BASE = {
+  'under1000': { lo: 3200, hi: 5200 },
+  '1000-1500': { lo: 4000, hi: 6500 },
+  '1500-2000': { lo: 4500, hi: 7500 },
+  '2000-2500': { lo: 5500, hi: 9000 },
+  '2500-3000': { lo: 7000, hi: 11000 },
+  '3000-4000': { lo: 9000, hi: 14000 },
+  '4000plus':  { lo: 12000, hi: 20000 }
+};
+
+// Drain repipe (PVC cast iron replacement) base costs, Central FL
+const DRAIN_BASE = {
+  'under1000': { lo: 3500, hi: 6000 },
+  '1000-1500': { lo: 4500, hi: 8000 },
+  '1500-2000': { lo: 6000, hi: 10000 },
+  '2000-2500': { lo: 7500, hi: 13000 },
+  '2500-3000': { lo: 9000, hi: 15000 },
+  '3000-4000': { lo: 11000, hi: 18000 },
+  '4000plus':  { lo: 15000, hi: 26000 }
+};
+
+const SIZE_LABEL = {
+  'under1000': 'Under 1,000 sq ft',
+  '1000-1500': '1,000–1,500 sq ft',
+  '1500-2000': '1,500–2,000 sq ft',
+  '2000-2500': '2,000–2,500 sq ft',
+  '2500-3000': '2,500–3,000 sq ft',
+  '3000-4000': '3,000–4,000 sq ft',
+  '4000plus':  '4,000+ sq ft'
+};
+
+function fmt(n) {
+  return '$' + n.toLocaleString('en-US');
+}
+
+function applyMult(base, mult) {
+  return { lo: Math.round(base.lo * mult / 100) * 100, hi: Math.round(base.hi * mult / 100) * 100 };
+}
+
+// ── Tab switching ─────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  document.getElementById('tab-' + id).classList.add('active');
+  var btns = document.querySelectorAll('.tab-btn');
+  var map = { estimator: 0, materials: 1, timing: 2 };
+  btns[map[id]].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Tile selection ────────────────────────────────────────────
+function selectTile(tile) {
+  var group = tile.dataset.group;
+  var urgent = tile.dataset.urgent === 'true';
+  document.querySelectorAll('[data-group="' + group + '"]').forEach(function(t) {
+    t.classList.remove('selected', 'selected-red');
+  });
+  if (urgent) {
+    tile.classList.add('selected-red');
+  } else {
+    tile.classList.add('selected');
+  }
+  sel[group] = tile.dataset.val;
+
+  // Show/hide polybutylene urgency notice
+  if (group === 'material') {
+    var pb = document.getElementById('polybutylene-urgency');
+    pb.style.display = (sel.material === 'polybutylene') ? 'block' : 'none';
+    // Pre-fill lead form material
+    var lm = document.getElementById('lead1-material');
+    if (lm) lm.value = sel.material;
+  }
+  if (group === 'size') {
+    var ls = document.getElementById('lead1-size');
+    if (ls) ls.value = sel.size;
+  }
+}
+
+// ── Calculate estimate ────────────────────────────────────────
+function calculateEstimate() {
+  if (!sel.size || !sel.region || !sel.material || !sel.scope) {
+    alert('Please select an option for each step before calculating.');
+    return;
+  }
+
+  var region = REGION[sel.region];
+  var mult = region.mult;
+  var supplyBase = SUPPLY_BASE[sel.size];
+  var drainBase = DRAIN_BASE[sel.size];
+  var supplyAdj = applyMult(supplyBase, mult);
+  var drainAdj = applyMult(drainBase, mult);
+
+  // Copper premium ~60% more than PEX
+  var copperSupply = { lo: Math.round(supplyAdj.lo * 1.6 / 100) * 100, hi: Math.round(supplyAdj.hi * 1.6 / 100) * 100 };
+  // Galvanized: copper + 12%
+  var galvSupply = { lo: Math.round(copperSupply.lo * 1.12 / 100) * 100, hi: Math.round(copperSupply.hi * 1.12 / 100) * 100 };
+  // Full repipe = supply + drain
+  var fullRepipe = { lo: supplyAdj.lo + drainAdj.lo, hi: supplyAdj.hi + drainAdj.hi };
+
+  var html = '';
+
+  // === POLYBUTYLENE ===
+  if (sel.material === 'polybutylene') {
+    html += buildUrgentCard(
+      '⚠️ Polybutylene Pipes — Replacement Urgent',
+      fmt(supplyAdj.lo) + '–' + fmt(supplyAdj.hi),
+      'Supply repipe with PEX-A, ' + SIZE_LABEL[sel.size] + ' · ' + region.label,
+      'Polybutylene (gray/blue plastic pipe) was widely installed in FL homes from 1978–1995. It is known to fail without warning — inner walls degrade from chlorine exposure. A class action settlement paid out in the 1990s, but millions of FL homes still have polybutylene.',
+      'Replacement priority: HIGH. A burst polybutylene supply line can cause $20,000–$50,000 in water damage — don\'t wait for a failure.'
+    );
+
+  // === CAST IRON ===
+  } else if (sel.material === 'cast-iron') {
+    html += '<div class="result-card urgent">';
+    html += '<h3><span class="urgent-badge">HIGH PRIORITY</span> Cast Iron Drain Repipe Estimate</h3>';
+    html += '<div class="estimate-range">' + fmt(drainAdj.lo) + '–' + fmt(drainAdj.hi) + '</div>';
+    html += '<div class="estimate-label">Drain repipe only · ' + SIZE_LABEL[sel.size] + ' · ' + region.label + '</div>';
+    if (sel.scope === 'full') {
+      html += '<div class="result-note">➕ Full supply + drain repipe: <strong>' + fmt(fullRepipe.lo) + '–' + fmt(fullRepipe.hi) + '</strong></div>';
+    }
+    html += '<div class="result-note">Cast iron pipes in FL corrode from the inside out due to Florida\'s aggressive water chemistry — high sulfates and acidic condensate from AC systems. Most FL cast iron pipes installed pre-1975 are now at or past end of life. A camera inspection typically reveals scale buildup, pitting, and partial blockages.</div>';
+    html += '<div class="result-note"><strong>Drain replacement material:</strong> Schedule 40 PVC — the FL standard. Durable, low cost, chemical-resistant.<br><strong>Timeline:</strong> 3–5 days for most single-story FL homes; longer for two-story or slab-heavy layouts.</div>';
+    html += '</div>';
+
+  // === GALVANIZED ===
+  } else if (sel.material === 'galvanized') {
+    html += buildUrgentCard(
+      '⚠️ Galvanized Steel — End of Life, Repipe Urgent',
+      fmt(galvSupply.lo) + '–' + fmt(galvSupply.hi),
+      'Supply repipe · ' + SIZE_LABEL[sel.size] + ' · ' + region.label,
+      'Galvanized pipes corrode from the inside, gradually restricting water flow and eventually causing failures. Any galvanized pipe in a FL home is past its useful life. Progressively worsening water pressure is the #1 symptom.',
+      'Note: Galvanized adds a 10–15% premium over standard copper repipe estimates due to added difficulty working with the corroded pipes.'
+    );
+
+  // === STANDARD COPPER / CPVC / UNKNOWN ===
+  } else {
+    html += '<div class="result-card info">';
+    html += '<h3>🟡 Supply Repipe Estimate — ' + region.label + '</h3>';
+    html += '<div class="estimate-range">' + fmt(supplyAdj.lo) + '–' + fmt(supplyAdj.hi) + '</div>';
+    html += '<div class="estimate-label">PEX-A supply repipe · ' + SIZE_LABEL[sel.size] + ' · ' + region.label + '</div>';
+
+    if (sel.scope === 'full' || sel.scope === 'drain') {
+      html += '<div class="result-note">➕ Full supply + drain repipe: <strong>' + fmt(fullRepipe.lo) + '–' + fmt(fullRepipe.hi) + '</strong></div>';
+    }
+
+    if (sel.material === 'copper') {
+      html += '<div class="result-note">🔴 <strong>FL copper note:</strong> Copper pinhole leaks are epidemic in FL homes built 1970–1990 due to FL\'s aggressive water chemistry (high chlorides, low pH in some areas). The typical cycle: pinhole leaks → drywall damage → mold → insurance claim. Repiping with PEX-A eliminates this cycle permanently.</div>';
+    }
+
+    // Cost comparison table
+    html += buildComparisonTable(sel.size, sel.region);
+    html += '</div>';
+  }
+
+  // Financing card (always show)
+  html += '<div class="result-card gold">';
+  html += '<h3>💳 Financing Available — Most FL Repipes Qualify</h3>';
+  html += '<div class="result-note" style="font-size:14px;">The average FL repipe runs <strong>$12,000–$18,000</strong>. Most repipe contractors offer financing through GreenSky, Synchrony, or HFS Financial. 12–18 month same-as-cash financing is common — ask about it when you get your quote. Monthly payments for a $15,000 repipe at 0% for 18 months: ~$833/month.</div>';
+  html += '</div>';
+
+  var resultsEl = document.getElementById('results');
+  resultsEl.innerHTML = html;
+  resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildUrgentCard(title, range, label, note1, note2) {
+  return '<div class="result-card urgent">' +
+    '<h3><span class="urgent-badge">URGENT</span> ' + title + '</h3>' +
+    '<div class="estimate-range">' + range + '</div>' +
+    '<div class="estimate-label">' + label + '</div>' +
+    '<div class="result-note">' + note1 + '</div>' +
+    '<div class="result-note">' + note2 + '</div>' +
+    '</div>';
+}
+
+function buildComparisonTable(size, regionKey) {
+  var regions = [
+    { key: 'south',   label: 'South FL' },
+    { key: 'central', label: 'Central FL' },
+    { key: 'north',   label: 'North FL' }
+  ];
+
+  // Determine highlight column (map keys, fall back to nearest)
+  var hlMap = { south: 'south', gulf: 'south', central: 'central', space: 'central', north: 'north', keys: 'south' };
+  var hlKey = hlMap[regionKey] || 'central';
+
+  var supBase = SUPPLY_BASE[size];
+  var drBase = DRAIN_BASE[size];
+
+  var rows = [
+    { label: 'Supply only (PEX-A)', getBase: function(r) { var b = applyMult(supBase, REGION[r.key].mult); return fmt(b.lo)+'–'+fmt(b.hi); } },
+    { label: 'Supply only (Copper)', getBase: function(r) { var b = applyMult(supBase, REGION[r.key].mult); var c = { lo: Math.round(b.lo*1.6/100)*100, hi: Math.round(b.hi*1.6/100)*100 }; return fmt(c.lo)+'–'+fmt(c.hi); } },
+    { label: 'Supply + Drain (PVC)', getBase: function(r) { var sb = applyMult(supBase, REGION[r.key].mult); var db = applyMult(drBase, REGION[r.key].mult); return fmt(sb.lo+db.lo)+'–'+fmt(sb.hi+db.hi); } }
+  ];
+
+  var html = '<div class="cost-table-wrap"><table class="cost-table">';
+  html += '<thead><tr><th>Scope (' + SIZE_LABEL[size] + ')</th>';
+  for (var i = 0; i < regions.length; i++) {
+    var isHl = regions[i].key === hlKey;
+    html += '<th' + (isHl ? ' style="color:var(--blue)"' : '') + '>' + regions[i].label + (isHl ? ' ★' : '') + '</th>';
+  }
+  html += '</tr></thead><tbody>';
+
+  for (var r = 0; r < rows.length; r++) {
+    html += '<tr>';
+    html += '<td>' + rows[r].label + '</td>';
+    for (var c = 0; c < regions.length; c++) {
+      var isHl2 = regions[c].key === hlKey;
+      html += (isHl2 ? '<td style="color:var(--blue-bright);font-weight:700">' : '<td>') + rows[r].getBase(regions[c]) + '</td>';
+    }
+    html += '</tr>';
+  }
+
+  html += '</tbody></table></div>';
+  return html;
+}
+
+// ── Expandable ────────────────────────────────────────────────
+function toggleExpand(header) {
+  header.classList.toggle('open');
+  var body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ── Pipe cards ────────────────────────────────────────────────
+function togglePipeCard(card) {
+  card.classList.toggle('open');
+}
+
+// ── Checklist (contractor) ────────────────────────────────────
+function toggleCheck(li) {
+  li.classList.toggle('checked');
+}
+
+// ── Symptom checklist (Tab 3) ─────────────────────────────────
+function toggleSymptom(li) {
+  li.classList.toggle('checked');
+  updateScore();
+}
+
+function updateScore() {
+  var count = document.querySelectorAll('#symptom-checklist li.checked').length;
+  var scoreNum = document.getElementById('score-num');
+  var scoreRec = document.getElementById('score-rec');
+  var scoreCard = document.getElementById('score-card');
+
+  scoreNum.textContent = count;
+
+  if (count === 0) {
+    scoreRec.textContent = 'Check the boxes below ↓';
+    scoreRec.style.background = 'var(--navy-light)';
+    scoreRec.style.color = 'var(--text-dim)';
+    scoreCard.style.borderColor = 'var(--navy-border)';
+  } else if (count <= 2) {
+    scoreRec.textContent = '1–2 signs: Get a camera inspection to assess pipe condition.';
+    scoreRec.style.background = 'var(--gold-dim)';
+    scoreRec.style.color = 'var(--gold)';
+    scoreCard.style.borderColor = 'var(--gold)';
+    scoreNum.style.color = 'var(--gold)';
+  } else {
+    scoreRec.textContent = '3+ signs: Repipe consultation strongly recommended — schedule now.';
+    scoreRec.style.background = 'var(--red-dim)';
+    scoreRec.style.color = 'var(--red)';
+    scoreCard.style.borderColor = 'var(--red)';
+    scoreNum.style.color = 'var(--red)';
+  }
+}
+
+// ── Lead form submit ──────────────────────────────────────────
+function submitLead(e, formId) {
+  e.preventDefault();
+  var form = e.target;
+  var successEl = document.getElementById(formId + '-success');
+  form.style.display = 'none';
+  successEl.style.display = 'block';
+  // In production: POST to your lead capture endpoint here
+}
+
+// ── Keyboard accessibility ────────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') {
+    var t = e.target;
+    if (t.classList.contains('tile')) { e.preventDefault(); selectTile(t); }
+    if (t.classList.contains('pipe-card')) { e.preventDefault(); togglePipeCard(t); }
+  }
+});
+
+// Make tiles keyboard-focusable
+document.querySelectorAll('.tile, .pipe-card').forEach(function(el) {
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+});
+</script>
+
+</body>
+</html>
