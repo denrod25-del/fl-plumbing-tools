@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Irrigation System Guide — Water Restrictions, Backflow & Repairs</title>
+<meta name="description" content="Diagnose Florida sprinkler problems, check SFWMD water restriction schedules, and understand reclaimed water requirements. Licensed plumber for backflow and supply line issues.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#e2e8f0;min-height:100vh}
+.header{background:linear-gradient(135deg,#0D1229 0%,#111827 100%);border-bottom:2px solid #00B4FF;padding:20px 16px;text-align:center}
+.header h1{font-size:1.4rem;font-weight:700;color:#fff;line-height:1.3}
+.header p{color:#94a3b8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;background:#0D1229;border-bottom:1px solid #1e2d45}
+.tab{flex:1;padding:12px 6px;text-align:center;font-size:.78rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.03em}
+.tab.active{color:#00B4FF;border-bottom-color:#00B4FF}
+.tab-content{display:none;padding:16px;max-width:520px;margin:0 auto}
+.tab-content.active{display:block}
+.section-title{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.section-sub{color:#94a3b8;font-size:.82rem;margin-bottom:16px;line-height:1.5}
+
+/* Symptom groups */
+.symptom-group{margin-bottom:14px}
+.group-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding:4px 8px;border-radius:4px;display:inline-block}
+.group-pump{background:#1e3a5f;color:#60a5fa}
+.group-physical{background:#4a1c1c;color:#fca5a5}
+.group-controller{background:#3b2e0a;color:#fcd34d}
+.group-water{background:#0f3d23;color:#6ee7b7}
+.symptom-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.symptom-tile{background:#111827;border:2px solid #1e2d45;border-radius:10px;padding:10px 8px;cursor:pointer;transition:all .2s;text-align:center}
+.symptom-tile:hover{border-color:#00B4FF;background:#0f1f38}
+.symptom-tile.selected{border-color:#00B4FF;background:#0f1f38}
+.symptom-tile .icon{font-size:1.3rem;display:block;margin-bottom:4px}
+.symptom-tile .label{font-size:.72rem;font-weight:600;color:#cbd5e1;line-height:1.3}
+.diagnose-btn{width:100%;padding:14px;background:linear-gradient(135deg,#00B4FF,#0284c7);color:#fff;font-size:1rem;font-weight:700;border:none;border-radius:10px;cursor:pointer;margin-top:16px;transition:opacity .2s}
+.diagnose-btn:hover{opacity:.9}
+.diagnose-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Result cards */
+.results-section{margin-top:20px}
+.result-card{background:#111827;border-radius:12px;margin-bottom:14px;overflow:hidden}
+.result-header{padding:12px 14px;display:flex;align-items:center;gap:10px}
+.result-icon{font-size:1.3rem}
+.result-title{font-weight:700;color:#fff;font-size:.9rem}
+.result-body{padding:0 14px 14px}
+.urgency-badge{padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.urg-high{background:#7f1d1d;color:#fca5a5}
+.urg-mod{background:#451a03;color:#fdba74}
+.urg-low{background:#064e3b;color:#6ee7b7}
+.who-badge{padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;margin-left:6px}
+.who-plumber{background:#1e3a5f;color:#60a5fa}
+.who-irrigation{background:#134e4a;color:#2dd4bf}
+.who-diy{background:#1a3e2a;color:#86efac}
+.result-causes{font-size:.8rem;color:#94a3b8;margin-bottom:8px;line-height:1.5}
+.result-label{font-size:.72rem;font-weight:700;color:#F4B942;text-transform:uppercase;letter-spacing:.04em;margin:8px 0 4px}
+.result-steps li{font-size:.8rem;color:#cbd5e1;margin-bottom:3px;padding-left:12px;position:relative;line-height:1.4}
+.result-steps li::before{content:'•';position:absolute;left:0;color:#00B4FF}
+.result-cost{background:#0D1229;border-radius:6px;padding:8px 10px;margin-top:8px;font-size:.78rem;color:#94a3b8}
+.result-cost strong{color:#F4B942}
+
+/* Tab 2 - Restrictions */
+.schedule-card{background:#111827;border-radius:12px;padding:14px;margin-bottom:14px}
+.schedule-title{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:10px}
+.schedule-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.schedule-table th{background:#0D1229;color:#F4B942;padding:8px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em}
+.schedule-table td{padding:8px;border-bottom:1px solid #1e2d45;color:#cbd5e1}
+.schedule-table tr:last-child td{border-bottom:none}
+.day-cell{font-weight:700;color:#60a5fa}
+.law-box{background:linear-gradient(135deg,#1a2e1a,#1a3520);border:1px solid #16a34a;border-radius:10px;padding:14px;margin-bottom:14px}
+.law-box h3{color:#4ade80;font-size:.85rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.law-box p{font-size:.8rem;color:#cbd5e1;line-height:1.5}
+.law-box .fine{color:#f97316;font-weight:700}
+.rain-sensor{background:#111827;border-radius:12px;padding:14px;margin-bottom:14px}
+.rain-sensor h3{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:10px}
+.sensor-options{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.sensor-opt{background:#0D1229;border:2px solid #1e2d45;border-radius:8px;padding:8px;text-align:center;cursor:pointer;transition:all .2s;font-size:.75rem;font-weight:600;color:#94a3b8}
+.sensor-opt:hover{border-color:#00B4FF}
+.sensor-opt.selected{border-color:#00B4FF;color:#00B4FF;background:#0f1f38}
+.sensor-result{background:#0D1229;border-radius:8px;padding:10px;font-size:.8rem;color:#cbd5e1;line-height:1.5;display:none}
+.sensor-result.active{display:block}
+.violation-steps{list-style:none}
+.violation-steps li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1e2d45;font-size:.8rem;color:#cbd5e1;line-height:1.4}
+.violation-steps li:last-child{border-bottom:none}
+.step-num{background:#00B4FF;color:#0A0E1A;font-weight:700;font-size:.72rem;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.info-box{background:#111827;border-left:3px solid #F4B942;border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:14px;font-size:.8rem;color:#cbd5e1;line-height:1.5}
+.info-box strong{color:#F4B942}
+
+/* Tab 3 - Reclaimed */
+.reclaimed-banner{background:linear-gradient(135deg,#2d1b69,#3b2080);border:1px solid #9333ea;border-radius:12px;padding:14px;margin-bottom:14px}
+.reclaimed-banner h3{color:#c4b5fd;font-size:.9rem;font-weight:700;margin-bottom:8px}
+.reclaimed-banner p{font-size:.8rem;color:#ddd6fe;line-height:1.5}
+.purple-badge{background:#7e22ce;color:#e9d5ff;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700;display:inline-block;margin-top:6px}
+.component-accordion{background:#111827;border-radius:12px;margin-bottom:10px;overflow:hidden}
+.component-header{padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .2s}
+.component-header:hover{background:#0f1f38}
+.component-title{display:flex;align-items:center;gap:10px}
+.component-icon{font-size:1.2rem}
+.component-name{font-size:.88rem;font-weight:700;color:#fff}
+.component-type{font-size:.72rem;color:#94a3b8;margin-top:2px}
+.expand-arrow{color:#00B4FF;font-size:.9rem;transition:transform .2s}
+.component-header.open .expand-arrow{transform:rotate(180deg)}
+.component-body{display:none;padding:0 14px 14px;border-top:1px solid #1e2d45}
+.component-body.open{display:block}
+.comp-detail{font-size:.8rem;color:#cbd5e1;line-height:1.6;margin-top:10px}
+.comp-detail strong{color:#F4B942}
+.comp-cost{background:#0D1229;border-radius:6px;padding:8px 10px;margin-top:8px;font-size:.78rem;color:#94a3b8}
+.comp-cost strong{color:#22c55e}
+.warning-box{background:#2d1a0a;border:1px solid #f97316;border-radius:8px;padding:10px 12px;margin:10px 0;font-size:.78rem;color:#fed7aa;line-height:1.5}
+.warning-box strong{color:#f97316}
+.req-list{margin-top:8px}
+.req-list li{font-size:.78rem;color:#cbd5e1;padding:3px 0 3px 12px;position:relative;line-height:1.4}
+.req-list li::before{content:'✓';position:absolute;left:0;color:#22c55e;font-size:.7rem}
+
+/* Lead form */
+.lead-form{background:linear-gradient(135deg,#0f1f38,#0D1229);border:1px solid #00B4FF;border-radius:12px;padding:16px;margin-top:20px}
+.lead-form h3{color:#00B4FF;font-size:.95rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.form-row{margin-bottom:10px}
+.form-label{display:block;font-size:.75rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.form-input,.form-select{width:100%;background:#0D1229;border:1px solid #1e2d45;border-radius:8px;padding:10px 12px;color:#e2e8f0;font-size:.88rem;outline:none;transition:border-color .2s}
+.form-input:focus,.form-select:focus{border-color:#00B4FF}
+.form-select option{background:#0D1229}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.submit-btn{width:100%;padding:13px;background:linear-gradient(135deg,#F4B942,#d97706);color:#0A0E1A;font-size:.95rem;font-weight:700;border:none;border-radius:10px;cursor:pointer;margin-top:6px;transition:opacity .2s}
+.submit-btn:hover{opacity:.9}
+.success-card{background:#0f3d23;border:1px solid #22c55e;border-radius:10px;padding:16px;text-align:center;display:none}
+.success-card h3{color:#22c55e;font-size:1rem;font-weight:700;margin-bottom:6px}
+.success-card p{font-size:.82rem;color:#86efac;line-height:1.5}
+.phone-link{color:#F4B942;font-weight:700}
+.no-selection{background:#111827;border-radius:10px;padding:20px;text-align:center;color:#94a3b8;font-size:.85rem;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌿 Florida Irrigation System Guide</h1>
+  <p>Diagnose problems · SFWMD water restrictions · Reclaimed water & backflow</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">Diagnostics</div>
+  <div class="tab" onclick="switchTab(1)">Restrictions</div>
+  <div class="tab" onclick="switchTab(2)">Reclaimed Water</div>
+</div>
+
+<!-- TAB 1: DIAGNOSTICS -->
+<div class="tab-content active" id="tab0">
+  <div class="section-title">Sprinkler Problem Diagnostics</div>
+  <div class="section-sub">Select all symptoms you're seeing — we'll diagnose what's wrong and who should fix it.</div>
+
+  <div class="symptom-group">
+    <span class="group-label group-pump">💧 Water / Pressure Issues</span>
+    <div class="symptom-grid">
+      <div class="symptom-tile" onclick="toggleSymptom(this,'zone_dead')"><span class="icon">🚫</span><span class="label">One zone not working at all</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'low_pressure')"><span class="icon">📉</span><span class="label">Low pressure / weak spray</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'high_pressure')"><span class="icon">💥</span><span class="label">Very high pressure / misting</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'water_hammer')"><span class="icon">💢</span><span class="label">Water hammer / banging pipes</span></div>
+    </div>
+  </div>
+
+  <div class="symptom-group">
+    <span class="group-label group-physical">🔧 Physical Problems</span>
+    <div class="symptom-grid">
+      <div class="symptom-tile" onclick="toggleSymptom(this,'broken_head')"><span class="icon">🔧</span><span class="label">Broken / stuck sprinkler head</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'dry_spots')"><span class="icon">🌵</span><span class="label">Dry spots despite watering</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'wet_soggy')"><span class="icon">💦</span><span class="label">Wet / soggy area between cycles</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'uneven')"><span class="icon">🌱</span><span class="label">Uneven coverage</span></div>
+    </div>
+  </div>
+
+  <div class="symptom-group">
+    <span class="group-label group-controller">⚙️ System / Controller</span>
+    <div class="symptom-grid">
+      <div class="symptom-tile" onclick="toggleSymptom(this,'controller_fail')"><span class="icon">⏰</span><span class="label">Schedule not running correctly</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'no_power')"><span class="icon">📴</span><span class="label">System not turning on at all</span></div>
+    </div>
+  </div>
+
+  <div class="symptom-group">
+    <span class="group-label group-water">🌊 Water Source / Compliance</span>
+    <div class="symptom-grid">
+      <div class="symptom-tile" onclick="toggleSymptom(this,'high_bill')"><span class="icon">📊</span><span class="label">Water bill very high</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'backflow_leak')"><span class="icon">🔴</span><span class="label">Backflow preventer leaking</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'violation')"><span class="icon">🏛️</span><span class="label">Received violation notice</span></div>
+      <div class="symptom-tile" onclick="toggleSymptom(this,'reclaimed_q')"><span class="icon">🟣</span><span class="label">Reclaimed water questions</span></div>
+    </div>
+  </div>
+
+  <button class="diagnose-btn" onclick="showDiagnosis()" id="diagBtn" disabled>Select symptoms to diagnose →</button>
+
+  <div class="results-section" id="resultsArea" style="display:none">
+    <div id="resultCards"></div>
+    <div class="lead-form" id="diagLeadForm">
+      <h3>📞 Get Expert Help</h3>
+      <div class="form-grid">
+        <div class="form-row"><label class="form-label">Name</label><input class="form-input" id="d1name" placeholder="Your name"></div>
+        <div class="form-row"><label class="form-label">Phone</label><input class="form-input" id="d1phone" type="tel" placeholder="(561) 555-0000"></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-row"><label class="form-label">ZIP Code</label><input class="form-input" id="d1zip" placeholder="33401"></div>
+        <div class="form-row"><label class="form-label">Urgency</label>
+          <select class="form-select" id="d1urgency">
+            <option>Non-urgent</option>
+            <option>This week</option>
+            <option>Today if possible</option>
+            <option>Emergency</option>
+          </select>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="submitLead('diag')">Schedule Service Call</button>
+      <div class="success-card" id="diagSuccess">
+        <h3>✅ Request Received!</h3>
+        <p>We'll call you back shortly. For emergencies call <span class="phone-link">(561) 555-PIPE</span>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: RESTRICTIONS -->
+<div class="tab-content" id="tab1">
+  <div class="section-title">FL Water Restrictions</div>
+  <div class="section-sub">SFWMD enforces year-round irrigation schedules across most of South Florida. Know your watering days.</div>
+
+  <div class="schedule-card">
+    <div class="schedule-title">📅 Year-Round SFWMD Watering Schedule</div>
+    <table class="schedule-table">
+      <thead>
+        <tr><th>Who</th><th>Allowed Days</th><th>Hours</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong style="color:#60a5fa">Even address</strong></td><td class="day-cell">Thu & Sun</td><td>Before 10am or after 4pm</td></tr>
+        <tr><td><strong style="color:#60a5fa">Odd address</strong></td><td class="day-cell">Wed & Sat</td><td>Before 10am or after 4pm</td></tr>
+        <tr><td><strong style="color:#fcd34d">Commercial</strong></td><td class="day-cell">Tue & Fri</td><td>Before 10am or after 4pm</td></tr>
+        <tr><td colspan="3" style="font-size:.72rem;color:#64748b;padding-top:8px">Max 1 hour per zone per watering day. Even/odd = last digit of street address number.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box">
+    <strong>Dry season (Nov–May):</strong> Some areas restrict to 1 day/week. During drought Phase alerts, restrictions tighten further. Always check <strong>sfwmd.gov</strong> for your specific zone and any active alerts.
+  </div>
+
+  <div class="law-box">
+    <h3>⚖️ FL Rain Sensor Law — FS 373.62</h3>
+    <p>Every irrigation system connected to potable or reclaimed water <strong>MUST have a working rain sensor or soil moisture sensor</strong> that automatically bypasses the controller after adequate rainfall. This is <strong>state law</strong> — not optional.<br><br>
+    Fine for non-compliance: <span class="fine">up to $500</span>. A broken or missing sensor can also cause water restriction violations if the system runs during rain events.</p>
+  </div>
+
+  <div class="rain-sensor">
+    <h3>🔍 Does Your System Have a Rain Sensor?</h3>
+    <div class="sensor-options">
+      <div class="sensor-opt" onclick="selectSensor(this,'yes')">✅ Yes</div>
+      <div class="sensor-opt" onclick="selectSensor(this,'no')">❌ No</div>
+      <div class="sensor-opt" onclick="selectSensor(this,'unknown')">❓ Don't Know</div>
+    </div>
+    <div class="sensor-result" id="sensorYes">
+      <strong style="color:#22c55e">Good — you're compliant with FL law.</strong> Make sure it's functional: after heavy rain, your system should NOT run. If it still runs during or right after rain, the sensor may be faulty. Test it by holding a glass of water to the sensor disc to simulate rain — the zone should shut off within seconds.
+    </div>
+    <div class="sensor-result" id="sensorNo">
+      <strong style="color:#f97316">Action required — FL law requires a rain sensor.</strong> We can install a wireless rain sensor for <strong>$75–$150</strong>. It also saves water and reduces your bill. Call us to schedule installation.
+    </div>
+    <div class="sensor-result" id="sensorUnknown">
+      <strong style="color:#fcd34d">Look for a small white or gray disc</strong> mounted on your fascia, roof edge, or fence — usually near the controller. If you don't see one, or if your system runs during heavy rain, you likely don't have a working sensor. We can inspect and install one for $75–$150.
+    </div>
+  </div>
+
+  <div class="schedule-card">
+    <div class="schedule-title">🚨 Received a Water Violation Notice?</div>
+    <ul class="violation-steps">
+      <li><span class="step-num">1</span><span>Check your watering days using the schedule above. Even/odd address and property type determine your days.</span></li>
+      <li><span class="step-num">2</span><span>Verify your rain sensor is functional — a broken sensor causes violations when the system runs during rain events.</span></li>
+      <li><span class="step-num">3</span><span>Review your controller schedule — check both start times AND days. Multiple start programs running add up.</span></li>
+      <li><span class="step-num">4</span><span>If you have newly planted sod or landscaping, apply for a 30-day temporary watering exemption at sfwmd.gov (daily watering allowed during establishment period).</span></li>
+      <li><span class="step-num">5</span><span>Respond to the notice in writing by the deadline. First violation is typically a warning with no fine.</span></li>
+    </ul>
+  </div>
+
+  <div class="info-box">
+    <strong>Well water:</strong> SFWMD watering day restrictions still apply to private well irrigation — you're on the honor system, and drought emergency orders can restrict well-based irrigation. Chemical injection or fertigation from wells has additional FL DEP requirements.
+  </div>
+
+  <div class="lead-form">
+    <h3>🔧 Irrigation Compliance Help</h3>
+    <p style="font-size:.8rem;color:#94a3b8;margin-bottom:12px">Rain sensor installation, controller programming, backflow repair — we handle it all.</p>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Name</label><input class="form-input" id="r1name" placeholder="Your name"></div>
+      <div class="form-row"><label class="form-label">Phone</label><input class="form-input" id="r1phone" type="tel" placeholder="(561) 555-0000"></div>
+    </div>
+    <div class="form-row"><label class="form-label">What do you need?</label>
+      <select class="form-select" id="r1need">
+        <option>Rain sensor installation</option>
+        <option>Controller reprogramming</option>
+        <option>Violation notice help</option>
+        <option>Backflow preventer repair</option>
+        <option>General inspection</option>
+      </select>
+    </div>
+    <div class="form-row"><label class="form-label">ZIP Code</label><input class="form-input" id="r1zip" placeholder="33401"></div>
+    <button class="submit-btn" onclick="submitLead('rest')">Request Service</button>
+    <div class="success-card" id="restSuccess">
+      <h3>✅ Got it!</h3>
+      <p>We'll be in touch shortly. For rain sensor installs, we often get same-day or next-day appointments. <span class="phone-link">(561) 555-PIPE</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: RECLAIMED WATER & COMPONENTS -->
+<div class="tab-content" id="tab2">
+  <div class="section-title">Reclaimed Water & System Guide</div>
+  <div class="section-sub">Purple pipe explained — plus a complete guide to every irrigation system component.</div>
+
+  <div class="reclaimed-banner">
+    <h3>💜 What Is Reclaimed Water?</h3>
+    <p>Reclaimed water ("reuse water") is highly treated wastewater processed to a safe level for outdoor irrigation. It's delivered through <strong>purple-marked pipes and fixtures</strong>. It is <strong>NOT</strong> safe to drink, swim in, or use indoors. It IS an excellent and often cheaper source for lawn and landscape irrigation — available in many Palm Beach and Broward County communities.<br>
+    <span class="purple-badge">Purple Pipe = Reclaimed Water</span></p>
+  </div>
+
+  <div class="schedule-card">
+    <div class="schedule-title">🔍 Do You Have Reclaimed Water?</div>
+    <ul class="req-list">
+      <li>Purple-capped sprinkler heads at your irrigation zones</li>
+      <li>Purple pipes visible at the meter or backflow device</li>
+      <li>"DO NOT DRINK" signage on the connection</li>
+      <li>Separate "reuse" or "reclaim" billing line on your water bill</li>
+    </ul>
+  </div>
+
+  <div class="warning-box">
+    <strong>⚠️ Critical: No Cross-Connections Allowed</strong><br>
+    Florida law requires strict separation between reclaimed water and potable (drinking) water. The reclaimed supply CANNOT connect to indoor plumbing, hose bibs, or pool systems in any way. Violations result in utility shutoff, fines, and potential health liability. A licensed plumber must install and certify the separation.
+  </div>
+
+  <div class="schedule-card">
+    <div class="schedule-title">🔌 Adding Reclaimed Water Requires a Plumber</div>
+    <p style="font-size:.8rem;color:#94a3b8;margin-bottom:10px">Installing a reclaimed water connection requires a licensed plumber to:</p>
+    <ul class="req-list">
+      <li>Install the reclaimed water connection and meter</li>
+      <li>Ensure complete separation from all potable water lines</li>
+      <li>Repaint/replace all exposed pipes and fittings in purple</li>
+      <li>Pass a cross-connection inspection by the water utility</li>
+      <li>Pull required permit — inspected before use</li>
+    </ul>
+  </div>
+
+  <div style="margin:16px 0 10px;font-size:.9rem;font-weight:700;color:#fff">🔩 Irrigation System Component Guide</div>
+
+  <div class="component-accordion">
+    <div class="component-header" onclick="toggleComponent(this)">
+      <div class="component-title"><span class="component-icon">⏰</span><div><div class="component-name">Controller / Timer</div><div class="component-type">Brain of your irrigation system</div></div></div>
+      <span class="expand-arrow">▼</span>
+    </div>
+    <div class="component-body">
+      <div class="comp-detail"><strong>What it does:</strong> Programs watering days, times, and zone durations. Controls all zone valves via low-voltage wiring.<br><br>
+      <strong>FL requirement:</strong> Must support rain sensor bypass input (FS 373.62). Smart controllers that use ET (evapotranspiration) data can reduce water use 30–50% vs. fixed timers.<br><br>
+      <strong>Recommended:</strong> Rachio, Hunter Hydrawise, Rain Bird — all support local FL ET data and SFWMD schedule programming.<br><br>
+      <strong>Common failures:</strong> Zone output fails (one zone never turns on from controller); programming lost after power outage; display failure.
+      </div>
+      <div class="comp-cost"><strong>Cost:</strong> Basic timer $50–$150 DIY install; Smart Wi-Fi controller $200–$400 + $75–$150 installation</div>
+    </div>
+  </div>
+
+  <div class="component-accordion">
+    <div class="component-header" onclick="toggleComponent(this)">
+      <div class="component-title"><span class="component-icon">🛡️</span><div><div class="component-name">Backflow Preventer (PVB)</div><div class="component-type">Required on all FL irrigation systems</div></div></div>
+      <span class="expand-arrow">▼</span>
+    </div>
+    <div class="component-body">
+      <div class="comp-detail"><strong>What it does:</strong> Prevents irrigation water (which contacts soil, fertilizer, and pesticides) from flowing back into the drinking water supply.<br><br>
+      <strong>FL requirement:</strong> Required on ALL irrigation systems connected to potable water. Most FL utilities require annual testing by an ASSE 5000 certified tester — results submitted to the utility. Keep test records.<br><br>
+      <strong>Common failure:</strong> Bonnet seal (top cap) cracks or weeps — common after cold snaps or years of UV exposure. FL's sun degrades the rubber seal faster than northern climates.<br><br>
+      <strong>Important:</strong> Backflow preventer work is plumbing — not irrigation tech work. Must be done by a licensed FL plumber.
+      </div>
+      <div class="comp-cost"><strong>Repair cost:</strong> Seal replacement $75–$200 | <strong>Full replacement (installed):</strong> $200–$600</div>
+    </div>
+  </div>
+
+  <div class="component-accordion">
+    <div class="component-header" onclick="toggleComponent(this)">
+      <div class="component-title"><span class="component-icon">🔌</span><div><div class="component-name">Zone Valves (Solenoid Valves)</div><div class="component-type">Opens each irrigation zone on command</div></div></div>
+      <span class="expand-arrow">▼</span>
+    </div>
+    <div class="component-body">
+      <div class="comp-detail"><strong>What it does:</strong> Electrically operated valves that open when the controller sends a signal (24V AC), allowing water to flow through that zone.<br><br>
+      <strong>Common failures:</strong> Solenoid burns out (zone stays off); diaphragm tears from debris or age (zone stays on or pressure loss); manual bleed screw left open accidentally.<br><br>
+      <strong>DIY check:</strong> Turn the manual bleed screw on the valve 1/4 turn — if the zone comes on, the solenoid or wiring is the problem. If not, the diaphragm may be torn or clogged with debris.<br><br>
+      <strong>FL note:</strong> Hard water and sand in the supply can clog valve seats — flush the system periodically.
+      </div>
+      <div class="comp-cost"><strong>Solenoid only (DIY):</strong> $15–$40 | <strong>Full valve replacement:</strong> $40–$100 DIY | <strong>Service call:</strong> $100–$300</div>
+    </div>
+  </div>
+
+  <div class="component-accordion">
+    <div class="component-header" onclick="toggleComponent(this)">
+      <div class="component-title"><span class="component-icon">🔵</span><div><div class="component-name">Supply Pipe (Main & Lateral Lines)</div><div class="component-type">PVC underground distribution network</div></div></div>
+      <span class="expand-arrow">▼</span>
+    </div>
+    <div class="component-body">
+      <div class="comp-detail"><strong>What it is:</strong> PVC or poly pipe running from the backflow preventer to zone valves (main line) and from valves to sprinkler heads (lateral lines). Typically buried 6–12 inches in FL's sandy soil.<br><br>
+      <strong>FL failure modes:</strong> UV degradation of above-ground PVC; root intrusion (especially from Ficus, palms, and aggressive tropical species); soil movement in limestone areas; cuts during landscaping or construction.<br><br>
+      <strong>Signs of leak:</strong> One zone always low pressure; soggy area that doesn't dry out; meter spinning with system off; unexplained water bill spike.<br><br>
+      <strong>Detection:</strong> Underground leaks in FL's sandy soil can be difficult to locate — professional leak detection equipment ($200–$400) may be needed.
+      </div>
+      <div class="comp-cost"><strong>Break repair:</strong> $300–$1,200 depending on depth, access, and pipe size | <strong>Leak detection:</strong> $200–$400</div>
+    </div>
+  </div>
+
+  <div class="component-accordion">
+    <div class="component-header" onclick="toggleComponent(this)">
+      <div class="component-title"><span class="component-icon">💧</span><div><div class="component-name">Sprinkler Heads</div><div class="component-type">Pop-up rotors, sprays, and drip emitters</div></div></div>
+      <span class="expand-arrow">▼</span>
+    </div>
+    <div class="component-body">
+      <div class="comp-detail"><strong>Types:</strong><br>
+      • <strong>Pop-up rotors</strong> — rotating stream, 25–50 ft radius. Good for large turf areas.<br>
+      • <strong>Pop-up sprays</strong> — fixed pattern, 5–15 ft radius. For smaller areas and beds.<br>
+      • <strong>Drip emitters</strong> — slow-drip at root level. Best for shrubs, trees, and beds. Most water-efficient.<br><br>
+      <strong>FL tip:</strong> Use matched precipitation rate (MPR) nozzles so all heads in a zone apply the same amount of water regardless of radius. Prevents dry spots and overwatering simultaneously.<br><br>
+      <strong>Common issues:</strong> Head struck by mower; nozzle clogged with hard water scale; head not retracting (debris in retract spring); head tilted from soil movement.
+      </div>
+      <div class="comp-cost"><strong>Replacement head (DIY):</strong> $5–$30 | <strong>Irrigation tech visit:</strong> $100–$200 for multiple heads</div>
+    </div>
+  </div>
+
+  <div class="lead-form">
+    <h3>🔧 Licensed Irrigation Plumbing Service</h3>
+    <p style="font-size:.8rem;color:#94a3b8;margin-bottom:12px">Backflow preventer repair and installation, supply line breaks, reclaimed water connections, and zone valve replacement — Palm Beach and Broward counties.</p>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Name</label><input class="form-input" id="rc1name" placeholder="Your name"></div>
+      <div class="form-row"><label class="form-label">Phone</label><input class="form-input" id="rc1phone" type="tel" placeholder="(561) 555-0000"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Water Source</label>
+      <select class="form-select" id="rc1water">
+        <option>City / municipal water</option>
+        <option>Private well</option>
+        <option>Reclaimed / purple pipe</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label class="form-label">Issue Type</label>
+        <select class="form-select" id="rc1issue">
+          <option>Backflow preventer</option>
+          <option>Broken / leaking pipe</option>
+          <option>Zone valve replacement</option>
+          <option>Reclaimed water connection</option>
+          <option>General inspection</option>
+        </select>
+      </div>
+      <div class="form-row"><label class="form-label">ZIP Code</label><input class="form-input" id="rc1zip" placeholder="33401"></div>
+    </div>
+    <button class="submit-btn" onclick="submitLead('recl')">Request Service</button>
+    <div class="success-card" id="reclSuccess">
+      <h3>✅ Request Submitted!</h3>
+      <p>We'll follow up shortly. Backflow preventer repairs often scheduled same-week. <span class="phone-link">(561) 555-PIPE</span></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const selectedSymptoms=new Set();
+
+function switchTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-content').forEach((c,j)=>c.classList.toggle('active',i===j));
+}
+
+function toggleSymptom(el,key){
+  el.classList.toggle('selected');
+  if(selectedSymptoms.has(key))selectedSymptoms.delete(key);
+  else selectedSymptoms.add(key);
+  const btn=document.getElementById('diagBtn');
+  if(selectedSymptoms.size>0){btn.disabled=false;btn.textContent='Diagnose '+selectedSymptoms.size+' symptom'+(selectedSymptoms.size>1?'s':'')+' →';}
+  else{btn.disabled=true;btn.textContent='Select symptoms to diagnose →';}
+}
+
+const diagnoses={
+  zone_dead:{
+    icon:'🚫',title:'One Zone Not Working',urgency:'mod',who:'mix',
+    causes:'Most common: solenoid valve failure, wiring break, or torn diaphragm. Less common: controller zone output failed or manual bleed screw accidentally left open.',
+    steps:['Turn the manual bleed screw on the valve slightly — if zone comes on, the solenoid or wiring is the problem','Check controller display for zone fault indicators','Inspect wiring at valve box for corrosion or disconnection','If pipe to valve is cracked or zone never responds to manual bleed — call a plumber'],
+    who_text:'Solenoid replacement: irrigation tech or DIY. Supply pipe break or valve body cracked: licensed plumber.',
+    cost:'Solenoid $15–$40 DIY · Irrigation tech $100–$250 · Pipe break $300–$900'
+  },
+  low_pressure:{
+    icon:'📉',title:'Low Pressure / Weak Spray',urgency:'mod',who:'plumber',
+    causes:'Partially closed zone valve; clogged nozzle; supply pressure low at meter; fouled backflow preventer; multiple zones running simultaneously.',
+    steps:['Clean nozzle screens first (remove head, rinse nozzle under tap)','Verify only one zone runs at a time','Check that main supply valve and backflow preventer are fully open','If all zones have low pressure — backflow preventer or PRV issue — call a plumber'],
+    who_text:'Nozzle cleaning: DIY. Backflow preventer or supply pressure issue: licensed plumber.',
+    cost:'Nozzle cleaning: free DIY · Backflow repair $75–$250 · PRV installation $200–$500'
+  },
+  high_pressure:{
+    icon:'💥',title:'High Pressure / Misting',urgency:'mod',who:'plumber',
+    causes:'Supply pressure too high (South FL utility pressure can be 80–100 psi — heads are designed for 40–65 psi); wrong nozzle type; no pressure-regulating heads.',
+    steps:['Check pressure at an outdoor hose bib with a gauge (under $15 at hardware store)','If above 70 psi, a pressure reducer on the irrigation supply is needed','Pressure-regulating heads (Hunter, Rain Bird) can help at zone level'],
+    who_text:'PRV installation on irrigation supply requires a licensed plumber. Nozzle changes are DIY or irrigation tech.',
+    cost:'PRV installation $200–$500 · Pressure-regulating heads $8–$20 each'
+  },
+  water_hammer:{
+    icon:'💢',title:'Water Hammer / Banging',urgency:'low',who:'irrigation',
+    causes:'Solenoid valve closing too fast; high system pressure; no slow-close valve on zone.',
+    steps:['Install slow-close solenoid valves (drop-in replacement, about $20 each)','If pressure is very high throughout — have plumber check for PRV needed'],
+    who_text:'Slow-close solenoid: irrigation tech or DIY. Pressure issue: licensed plumber.',
+    cost:'Slow-close solenoid $20–$35 DIY · Service call $100–$200'
+  },
+  broken_head:{
+    icon:'🔧',title:'Broken / Stuck Sprinkler Head',urgency:'low',who:'diy',
+    causes:'Physical impact from mower or foot traffic; retract spring failure from debris; UV-degraded plastic cracking.',
+    steps:['Turn off zone. Unscrew the head counter-clockwise from the riser','Match the model (check bottom of head) or bring to hardware store','Screw in replacement — hand-tight only, then test','If the riser or supply pipe to the head is broken underground — call a plumber'],
+    who_text:'Head replacement: DIY or irrigation tech. Underground pipe broken: licensed plumber.',
+    cost:'Replacement head $5–$30 DIY · Irrigation tech visit $100–$200 · Underground repair $300–$900'
+  },
+  dry_spots:{
+    icon:'🌵',title:'Dry Spots Despite Watering',urgency:'low',who:'irrigation',
+    causes:'Blocked or clogged head nozzle; head tilted by soil movement; zone layout mismatch; arc setting changed; unmatched precipitation rates between head types.',
+    steps:['Run each zone and walk the area — identify which heads have reduced or no output','Clean or replace problem heads','Check head arc settings — may have been bumped','If coverage gap is structural (no head covers the area), zone redesign needed'],
+    who_text:'Usually DIY or irrigation tech — not a plumbing issue unless a supply pipe is broken.',
+    cost:'Head cleaning/replacement $5–$30 DIY · Coverage audit $100–$200'
+  },
+  wet_soggy:{
+    icon:'💦',title:'Wet / Soggy Area Between Cycles',urgency:'high',who:'plumber',
+    causes:'Broken lateral line; cracked fitting underground; head with cracked case leaking at base; main supply leak. In South FL\'s sandy/limestone soil, underground breaks can be hard to locate without detection equipment.',
+    steps:['Turn off irrigation — does the soggy area drain within 24–48 hours? If yes, likely the irrigation source','Run each zone individually — does the soggy area worsen during a specific zone? That zone has the break','Check water meter with irrigation off — if meter spins, you have an active supply leak','Call a plumber or leak detection specialist if you can\'t identify the break'],
+    who_text:'Underground pipe break: licensed plumber. Head replacement: DIY or irrigation tech.',
+    cost:'Leak detection $200–$400 · Underground lateral repair $300–$1,200 · Head replacement $5–$30'
+  },
+  uneven:{
+    icon:'🌱',title:'Uneven Coverage',urgency:'low',who:'irrigation',
+    causes:'Mixed head types with different precipitation rates (rotors and sprays on same zone); blocked heads; tilted heads; arc settings changed; zone too large for pipe size.',
+    steps:['Run each zone and do a visual walk — note heads with reduced output or off-angle spray','Clean or adjust problem heads','Avoid mixing rotor and spray heads on the same zone — different precipitation rates create uneven watering'],
+    who_text:'Usually irrigation tech or DIY. Supply pipe issue: licensed plumber.',
+    cost:'Head adjustment: free DIY · Irrigation tech audit $100–$200'
+  },
+  controller_fail:{
+    icon:'⏰',title:'Controller Schedule Not Running',urgency:'mod',who:'irrigation',
+    causes:'Schedule programming lost after power outage; secondary start programs accidentally added; DST time change; incorrect AM/PM setting; controller display failure.',
+    steps:['Check that the time and AM/PM are correct — this is the #1 cause','Review ALL program slots (A, B, C) — many controllers have multiple programs running','After power outage, reprogram start times and verify watering days','Smart controller app: check app and controller display match','If controller won\'t hold programming — replacement needed'],
+    who_text:'Controller reprogramming: DIY or irrigation tech. If controller is failed: irrigation tech.',
+    cost:'Reprogramming: free DIY · Basic replacement $50–$150 · Smart controller $200–$400 installed'
+  },
+  no_power:{
+    icon:'📴',title:'System Not Turning On At All',urgency:'mod',who:'plumber',
+    causes:'Tripped circuit breaker for transformer; transformer failure; main shutoff valve closed; water utility pressure issue.',
+    steps:['Check the circuit breaker for the irrigation transformer — reset if tripped','Check the main water supply valve to irrigation — may have been closed accidentally','Verify water pressure is normal at outdoor hose bib','If transformer has power but no zones respond — call for service'],
+    who_text:'Electrical/transformer: irrigation tech or electrician. Main supply issue: licensed plumber.',
+    cost:'Transformer replacement $40–$100 · Service call $100–$250'
+  },
+  high_bill:{
+    icon:'📊',title:'Very High Water Bill',urgency:'high',who:'plumber',
+    causes:'Underground irrigation leak; stuck-open zone valve (zone running continuously or at wrong times); incorrect irrigation schedule (too frequent); water utility meter issue.',
+    steps:['Shut off ALL irrigation at the main valve — check if meter stops spinning','If meter still spins with irrigation off: you have a plumbing leak unrelated to irrigation','If meter stops: run each zone individually and note meter speed — a leaking zone uses abnormally fast','Also check: are you watering within SFWMD schedule? Overwatering is legal until you exceed restrictions.'],
+    who_text:'Underground irrigation leak: licensed plumber. Zone valve stuck open: irrigation tech or plumber.',
+    cost:'Leak detection $200–$400 · Underground repair $300–$1,200 · Zone valve $40–$100'
+  },
+  backflow_leak:{
+    icon:'🔴',title:'Backflow Preventer Leaking',urgency:'mod',who:'plumber',
+    causes:'PVB bonnet seal failed (most common — weeping from top cap); debris in check valve; assembly failed after cold snap or UV damage; past annual test due.',
+    steps:['A small weep from the top bonnet is usually a seal — repairable','A steady stream from the relief valve is a pressure issue — needs service','Check if your annual test is current — most FL utilities require annual testing','Do NOT attempt to repair backflow preventers yourself — this is licensed plumber work in FL'],
+    who_text:'All backflow preventer work requires a licensed FL plumber. Annual testing requires ASSE 5000 certified tester.',
+    cost:'Seal repair $75–$200 · Full replacement (installed) $200–$600 · Annual test $50–$100'
+  },
+  violation:{
+    icon:'🏛️',title:'Water Restriction Violation',urgency:'mod',who:'diy',
+    causes:'Watering on wrong days; watering during restricted hours (10am–4pm); running irrigation during or after rain (broken rain sensor); no rain sensor installed.',
+    steps:['Check Tab 2 (Restrictions) for your correct watering days and hours','Verify your rain sensor works — replace if broken ($75–$150 installed)','Review controller for extra start programs running outside your days','Respond to violation notice in writing by the deadline — first offense is usually a warning','If you have new sod, apply for a 30-day temporary watering exemption at sfwmd.gov'],
+    who_text:'Most violations can be resolved by adjusting your schedule and fixing your rain sensor — DIY or irrigation tech.',
+    cost:'Rain sensor installation $75–$150 · Controller reprogramming: free DIY'
+  },
+  reclaimed_q:{
+    icon:'🟣',title:'Reclaimed Water Questions',urgency:'low',who:'plumber',
+    causes:'Purple pipe is reclaimed (treated wastewater) — NOT safe to drink. Requires strict separation from potable water. See Tab 3 for full reclaimed water guide.',
+    steps:['Check Tab 3 for the complete reclaimed water guide','Look for purple pipes, purple-capped heads, and "DO NOT DRINK" signage at your meter','Never cross-connect reclaimed water to indoor plumbing — this requires a licensed plumber to certify','Contact your utility to confirm if reclaimed water is available in your area'],
+    who_text:'Any reclaimed water plumbing work requires a licensed FL plumber and utility inspection.',
+    cost:'Reclaimed water connection: varies by utility ($0–$2,000) · Plumber installation labor $500–$1,500'
+  }
+};
+
+function showDiagnosis(){
+  const area=document.getElementById('resultsArea');
+  const cards=document.getElementById('resultCards');
+  cards.innerHTML='';
+  selectedSymptoms.forEach(key=>{
+    const d=diagnoses[key];
+    if(!d)return;
+    const whoMap={plumber:'<span class="who-badge who-plumber">🔧 LICENSED PLUMBER</span>',irrigation:'<span class="who-badge who-irrigation">🌿 IRRIGATION TECH</span>',diy:'<span class="who-badge who-diy">✅ DIY OK</span>',mix:'<span class="who-badge who-irrigation">🌿 IRRIGATION TECH</span><span class="who-badge who-plumber" style="margin-left:4px">🔧 PLUMBER if pipe</span>'};
+    const urg={high:'<span class="urgency-badge urg-high">HIGH PRIORITY</span>',mod:'<span class="urgency-badge urg-mod">MODERATE</span>',low:'<span class="urgency-badge urg-low">LOW URGENCY</span>'};
+    const steps=d.steps.map(s=>`<li>${esc(s)}</li>`).join('');
+    cards.innerHTML+=`<div class="result-card">
+      <div class="result-header">${esc(d.icon)}<div><div class="result-title">${esc(d.title)}</div><div style="margin-top:4px">${urg[d.urgency]}${whoMap[d.who]}</div></div></div>
+      <div class="result-body">
+        <div class="result-causes"><strong>Likely cause:</strong> ${esc(d.causes)}</div>
+        <div class="result-label">DIY Check Steps</div>
+        <ul class="result-steps">${steps}</ul>
+        <div class="result-label">Who Fixes It</div>
+        <div class="result-causes">${d.who_text}</div>
+        <div class="result-cost">💰 <strong>Cost range:</strong> ${esc(d.cost)}</div>
+      </div>
+    </div>`;
+  });
+  area.style.display='block';
+  area.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function selectSensor(el,type){
+  document.querySelectorAll('.sensor-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  ['sensorYes','sensorNo','sensorUnknown'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  const map={yes:'sensorYes',no:'sensorNo',unknown:'sensorUnknown'};
+  document.getElementById(map[type]).classList.add('active');
+}
+
+function toggleComponent(header){
+  header.classList.toggle('open');
+  const body=header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function submitLead(form){
+  const ids={diag:['d1name','d1phone','d1zip'],rest:['r1name','r1phone','r1zip'],recl:['rc1name','rc1phone','rc1zip']};
+  const successIds={diag:'diagSuccess',rest:'restSuccess',recl:'reclSuccess'};
+  const formIds={diag:'diagLeadForm',rest:null,recl:null};
+  const fields=ids[form];
+  if(fields.some(id=>!document.getElementById(id)||!document.getElementById(id).value.trim())){
+    alert('Please fill in all required fields.');return;
+  }
+  document.getElementById(successIds[form]).style.display='block';
+  if(formIds[form]){
+    const f=document.getElementById(formIds[form]);
+    if(f)f.querySelectorAll('.form-row').forEach(r=>{r.style.display='none'});
+  }
+}
+
+function esc(s){
+  if(!s)return'';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
