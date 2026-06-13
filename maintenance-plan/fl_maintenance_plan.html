@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FL Plumbing Service Plan Calculator — Is a Maintenance Membership Worth It in Florida?</title>
+  <meta name="description" content="Calculate whether a Florida plumbing service plan saves you money. Compare Basic, Comfort & Total Care plans vs. emergency call costs. Free ROI calculator.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0E1A;
+      --c1: #0F1629;
+      --c2: #141929;
+      --blue: #00B4FF;
+      --gold: #F4B942;
+      --orange: #F97316;
+      --red: #EF4444;
+      --green: #22C55E;
+      --teal: #14B8A6;
+      --text: #E2E8F0;
+      --muted: #94A3B8;
+      --border: #1E2A45;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .app { max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
+
+    /* ── Header ── */
+    .hdr {
+      background: linear-gradient(135deg, var(--c1) 0%, var(--c2) 100%);
+      border-bottom: 2px solid var(--blue);
+      padding: 18px 16px 14px;
+      text-align: center;
+    }
+    .hdr-badge {
+      display: inline-block;
+      background: rgba(0,180,255,.12);
+      border: 1px solid var(--blue);
+      color: var(--blue);
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 12px; border-radius: 20px; margin-bottom: 9px;
+    }
+    .hdr h1 { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 5px; }
+    .hdr h1 em { color: var(--blue); font-style: normal; }
+    .hdr-sub { font-size: 13px; color: var(--muted); }
+    .hdr-phone { margin-top: 10px; }
+    .hdr-phone a {
+      display: inline-block;
+      background: rgba(244,185,66,.12);
+      border: 1px solid rgba(244,185,66,.35);
+      color: var(--gold);
+      font-size: 13px; font-weight: 700;
+      padding: 5px 14px; border-radius: 20px;
+      text-decoration: none; letter-spacing: .03em;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex; background: var(--c1);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .tab-btn {
+      flex: 1; padding: 11px 4px;
+      background: none; border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--muted);
+      font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all .18s;
+      letter-spacing: .02em;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.on { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── Panels ── */
+    .panel { padding: 18px 16px; }
+
+    /* ── Utility ── */
+    .sec-lbl {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 12px;
+    }
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--c1); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px; margin-bottom: 14px;
+    }
+    .card-ttl { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+
+    /* ── Step dots ── */
+    .step-bar { display: flex; align-items: center; gap: 7px; margin-bottom: 18px; }
+    .sdot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800;
+      border: 2px solid var(--border); color: var(--muted);
+      background: var(--c2); flex-shrink: 0; transition: all .2s;
+    }
+    .sdot.on { border-color: var(--blue); color: var(--blue); background: rgba(0,180,255,.1); }
+    .sdot.done { border-color: var(--green); color: var(--green); background: rgba(34,197,94,.1); }
+    .sline { flex: 1; height: 2px; background: var(--border); border-radius: 1px; transition: background .2s; }
+    .sline.done { background: var(--green); }
+
+    /* ── Question / tiles ── */
+    .q-lbl { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+    .tiles { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+    .tile {
+      padding: 9px 13px;
+      background: var(--c2); border: 2px solid var(--border);
+      border-radius: 8px; color: var(--muted);
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all .13s; white-space: nowrap;
+    }
+    .tile:hover { border-color: rgba(0,180,255,.4); color: var(--text); }
+    .tile.sel { border-color: var(--blue); color: var(--blue); background: rgba(0,180,255,.1); }
+
+    /* ── Wizard nav buttons ── */
+    .next-btn {
+      display: none; width: 100%; padding: 13px;
+      background: var(--blue); color: #000;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 800;
+      cursor: pointer; transition: opacity .18s;
+    }
+    .next-btn:hover { opacity: .88; }
+    .back-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); padding: 8px 14px;
+      border-radius: 8px; font-size: 13px;
+      cursor: pointer; margin-bottom: 14px;
+      transition: all .13s;
+    }
+    .back-btn:hover { color: var(--text); border-color: var(--muted); }
+
+    /* ── Results ── */
+    .spend-box {
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 18px; margin-bottom: 14px;
+    }
+    .spend-sub { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .spend-num { font-size: 40px; font-weight: 900; color: var(--orange); line-height: 1; }
+    .spend-note { font-size: 12px; color: var(--muted); margin-top: 7px; }
+
+    /* Bar chart */
+    .bar-chart { margin: 4px 0 2px; }
+    .bar-row { margin-bottom: 9px; }
+    .bar-head { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+    .bar-head strong { color: var(--text); }
+    .bar-track { height: 18px; background: rgba(255,255,255,.05); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; min-width: 4px; transition: width .5s ease; }
+    .bf-red   { background: linear-gradient(90deg, var(--red), var(--orange)); }
+    .bf-green { background: linear-gradient(90deg, var(--teal), var(--green)); }
+    .bf-gold  { background: linear-gradient(90deg, #c97d10, var(--gold)); }
+
+    /* Plan cards */
+    .plan-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .plan-card {
+      background: var(--c2); border: 2px solid var(--border);
+      border-radius: 12px; padding: 15px;
+      position: relative;
+    }
+    .plan-card.rec {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, var(--c2), rgba(244,185,66,.05));
+    }
+    .plan-badge {
+      position: absolute; top: -10px; right: 14px;
+      background: var(--gold); color: #000;
+      font-size: 10px; font-weight: 900;
+      padding: 2px 9px; border-radius: 9px;
+      text-transform: uppercase; letter-spacing: .05em;
+    }
+    .pname { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 1px; }
+    .pprice { font-size: 12px; color: var(--muted); margin-bottom: 9px; }
+    .psave { font-size: 22px; font-weight: 800; margin-bottom: 2px; }
+    .psave.pos { color: var(--green); }
+    .psave.neg { color: var(--orange); }
+    .psave-lbl { font-size: 12px; color: var(--muted); margin-bottom: 9px; }
+    .perks { list-style: none; }
+    .perks li { font-size: 12px; color: var(--muted); padding: 2px 0; display: flex; gap: 6px; }
+    .perks li::before { content: '✓'; color: var(--green); font-weight: 800; flex-shrink: 0; }
+
+    /* ── Alerts ── */
+    .alert { border-radius: 10px; padding: 13px; margin-bottom: 12px; font-size: 13px; line-height: 1.5; }
+    .a-gold  { background: rgba(244,185,66,.09);  border: 1px solid rgba(244,185,66,.3);  color: #fde68a; }
+    .a-red   { background: rgba(239,68,68,.09);   border: 1px solid rgba(239,68,68,.3);   color: #fca5a5; }
+    .a-orange{ background: rgba(249,115,22,.09);  border: 1px solid rgba(249,115,22,.3);  color: #fdba74; }
+    .a-teal  { background: rgba(20,184,166,.09);  border: 1px solid rgba(20,184,166,.3);  color: #5eead4; }
+    .a-blue  { background: rgba(0,180,255,.09);   border: 1px solid rgba(0,180,255,.3);   color: #7dd3fc; }
+    .a-green { background: rgba(34,197,94,.09);   border: 1px solid rgba(34,197,94,.3);   color: #86efac; }
+    .alert strong { display: block; margin-bottom: 5px; }
+
+    /* ── Lead form ── */
+    .form-card {
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      border: 2px solid var(--gold); border-radius: 14px;
+      padding: 18px; margin-top: 18px;
+    }
+    .form-ttl { font-size: 15px; font-weight: 800; color: var(--gold); margin-bottom: 3px; }
+    .form-sub { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+    .fg { margin-bottom: 10px; }
+    .fg label {
+      display: block; font-size: 11px; font-weight: 700;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: .05em; margin-bottom: 4px;
+    }
+    .fg input, .fg select, .fg textarea {
+      width: 100%; padding: 9px 11px;
+      background: var(--c2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      font-size: 14px; font-family: inherit;
+      transition: border-color .13s; outline: none;
+    }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--blue); }
+    .fg select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 5 5-5' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center;
+      padding-right: 32px;
+    }
+    .fg select option { background: var(--c2); }
+    .fg textarea { resize: vertical; min-height: 76px; }
+    .sub-btn {
+      width: 100%; padding: 13px;
+      background: var(--gold); color: #000;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 900;
+      cursor: pointer; transition: opacity .18s;
+    }
+    .sub-btn:hover { opacity: .88; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 20px; left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: var(--gold); color: #000;
+      padding: 13px 22px; border-radius: 12px;
+      font-size: 14px; font-weight: 800;
+      max-width: 330px; text-align: center;
+      z-index: 9999;
+      transition: transform .38s cubic-bezier(.34,1.56,.64,1);
+      box-shadow: 0 8px 32px rgba(0,0,0,.45);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Benefits table ── */
+    .tbl-wrap { overflow-x: auto; }
+    .btbl {
+      width: 100%; border-collapse: collapse;
+      font-size: 12px; min-width: 320px;
+    }
+    .btbl th {
+      padding: 9px 6px; font-size: 11px; font-weight: 800;
+      border-bottom: 2px solid var(--border); text-align: center;
+    }
+    .btbl th:first-child { text-align: left; min-width: 110px; }
+    .btbl th.h-basic  { color: var(--muted); }
+    .btbl th.h-comf   { color: var(--blue); }
+    .btbl th.h-total  { color: var(--gold); }
+    .btbl td {
+      padding: 8px 6px; text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      color: var(--muted); font-size: 12px;
+    }
+    .btbl td:first-child { text-align: left; color: var(--text); }
+    .btbl tr:last-child td { border-bottom: none; }
+    .cy { color: var(--green); font-weight: 800; }
+    .cn { color: var(--red); opacity: .65; }
+
+    /* ── Risk checklist ── */
+    .risk-item {
+      display: flex; align-items: flex-start; gap: 11px;
+      padding: 11px 12px;
+      background: var(--c2); border: 1px solid var(--border);
+      border-radius: 8px; margin-bottom: 7px;
+      cursor: pointer; transition: all .13s;
+    }
+    .risk-item:hover { border-color: rgba(0,180,255,.3); }
+    .risk-item.flagged { border-color: var(--orange); background: rgba(249,115,22,.05); }
+    .rck {
+      width: 20px; height: 20px; border: 2px solid var(--border);
+      border-radius: 4px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: var(--orange);
+      transition: all .13s;
+    }
+    .risk-item.flagged .rck { border-color: var(--orange); background: rgba(249,115,22,.2); }
+    .rtxt { font-size: 13px; color: var(--text); line-height: 1.3; }
+    .rsub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .score-bar { height: 7px; background: var(--border); border-radius: 4px; margin: 8px 0 6px; overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 4px; transition: width .4s, background .4s; }
+
+    /* ── Calendar ── */
+    .cal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 14px; }
+    .cal-card {
+      background: var(--c2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 13px;
+    }
+    .cal-season { font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
+    .cal-mo { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 7px; }
+    .cal-list { list-style: none; }
+    .cal-list li { font-size: 11px; color: var(--muted); padding: 2px 0; display: flex; gap: 5px; }
+    .cal-list li::before { content: '→'; color: var(--blue); flex-shrink: 0; }
+
+    /* ── Tips ── */
+    .tip-card {
+      background: var(--c2); border-left: 3px solid var(--teal);
+      border-radius: 0 8px 8px 0; padding: 11px 13px; margin-bottom: 9px;
+    }
+    .tip-ttl { font-size: 13px; font-weight: 800; color: var(--teal); margin-bottom: 4px; }
+    .tip-txt { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Emergency card ── */
+    .emg-card {
+      background: rgba(20,184,166,.07);
+      border: 1px solid rgba(20,184,166,.28);
+      border-radius: 12px; padding: 16px; margin-bottom: 14px;
+    }
+    .emg-ttl {
+      font-size: 14px; font-weight: 800; color: var(--teal);
+      display: flex; align-items: center; gap: 7px; margin-bottom: 12px;
+    }
+    .shut-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .shut-item { background: rgba(0,0,0,.2); border-radius: 8px; padding: 9px; }
+    .shut-lbl { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--teal); letter-spacing: .05em; margin-bottom: 3px; }
+    .shut-dsc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+    /* ── Responsive ── */
+    @media (max-width: 380px) {
+      .tile { padding: 8px 9px; font-size: 12px; }
+      .cal-grid { grid-template-columns: 1fr; }
+      .shut-grid { grid-template-columns: 1fr; }
+      .spend-num { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── Header ── -->
+  <header class="hdr">
+    <div class="hdr-badge">🌴 Florida Homeowner Tool</div>
+    <h1>Is a Plumbing Plan <em>Worth It?</em></h1>
+    <p class="hdr-sub">Free ROI calculator — see your real savings vs. emergency call costs in 60 seconds</p>
+    <div class="hdr-phone"><a href="tel:5615557473">📞 (561) 555-PIPE — Call Now</a></div>
+  </header>
+
+  <!-- ── Tab nav ── -->
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn on" onclick="switchTab(0)" role="tab" aria-selected="true">💰 ROI Calculator</button>
+    <button class="tab-btn"    onclick="switchTab(1)" role="tab" aria-selected="false">📋 What's Covered</button>
+    <button class="tab-btn"    onclick="switchTab(2)" role="tab" aria-selected="false">📅 Maintenance</button>
+  </nav>
+
+  <!-- ══════════════════════════════════
+       TAB 1 — ROI Calculator
+  ══════════════════════════════════ -->
+  <section class="panel" id="p0" role="tabpanel">
+
+    <!-- Step indicator -->
+    <div class="step-bar">
+      <div class="sdot on" id="dot1">1</div>
+      <div class="sline" id="ln1"></div>
+      <div class="sdot" id="dot2">2</div>
+      <div class="sline" id="ln2"></div>
+      <div class="sdot" id="dot3">3</div>
+    </div>
+
+    <!-- Step 1 -->
+    <div id="s1">
+      <p class="sec-lbl">Step 1 — Emergency Call History</p>
+      <div class="card">
+        <p class="q-lbl">How many emergency plumbing calls in the past 2 years?</p>
+        <div class="tiles" id="tg-calls">
+          <button class="tile" onclick="pick('calls',0,this)">0</button>
+          <button class="tile" onclick="pick('calls',1,this)">1</button>
+          <button class="tile" onclick="pick('calls',2.5,this)">2–3</button>
+          <button class="tile" onclick="pick('calls',4.5,this)">4–5</button>
+          <button class="tile" onclick="pick('calls',7,this)">6+</button>
+        </div>
+        <p class="q-lbl">Average cost per emergency call?</p>
+        <div class="tiles" id="tg-cost">
+          <button class="tile" onclick="pick('avgCost',150,this)">Under $200</button>
+          <button class="tile" onclick="pick('avgCost',300,this)">$200–$400</button>
+          <button class="tile" onclick="pick('avgCost',550,this)">$400–$700</button>
+          <button class="tile" onclick="pick('avgCost',950,this)">$700–$1,200</button>
+          <button class="tile" onclick="pick('avgCost',1400,this)">Over $1,200</button>
+        </div>
+        <button class="next-btn" id="nx1" onclick="goStep(2)">Continue to Home Profile →</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="s2" style="display:none">
+      <button class="back-btn" onclick="goStep(1)">← Back</button>
+      <p class="sec-lbl">Step 2 — Home Profile</p>
+      <div class="card">
+        <p class="q-lbl">Home age?</p>
+        <div class="tiles" id="tg-age">
+          <button class="tile" onclick="pick('homeAge',0,this)">Under 10 yrs</button>
+          <button class="tile" onclick="pick('homeAge',1,this)">10–25 yrs</button>
+          <button class="tile" onclick="pick('homeAge',2,this)">25–40 yrs</button>
+          <button class="tile" onclick="pick('homeAge',3,this)">Over 40 yrs</button>
+        </div>
+        <p class="q-lbl">Number of bathrooms?</p>
+        <div class="tiles" id="tg-baths">
+          <button class="tile" onclick="pick('baths',1,this)">1</button>
+          <button class="tile" onclick="pick('baths',2,this)">2</button>
+          <button class="tile" onclick="pick('baths',3,this)">3</button>
+          <button class="tile" onclick="pick('baths',4,this)">4+</button>
+        </div>
+        <p class="q-lbl">Do you have a pool?</p>
+        <div class="tiles" id="tg-pool">
+          <button class="tile" onclick="pick('pool',true,this)">Yes</button>
+          <button class="tile" onclick="pick('pool',false,this)">No</button>
+        </div>
+        <button class="next-btn" id="nx2" onclick="showResults()">See My Savings →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Results (populated by JS) -->
+    <div id="s3" style="display:none">
+      <button class="back-btn" onclick="goStep(2)">← Back</button>
+      <p class="sec-lbl">Step 3 — Your ROI Analysis</p>
+      <div id="results"></div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════
+       TAB 2 — What's Covered
+  ══════════════════════════════════ -->
+  <section class="panel" id="p1" role="tabpanel" hidden>
+
+    <p class="sec-lbl">Plan Benefits Comparison</p>
+
+    <div class="card" style="padding:12px">
+      <div class="tbl-wrap">
+        <table class="btbl" aria-label="Plan benefits comparison">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="h-basic">Basic<br><span style="font-weight:400;color:var(--muted)">$19/mo</span></th>
+              <th class="h-comf">Comfort<br><span style="font-weight:400;color:var(--muted)">$39/mo</span></th>
+              <th class="h-total">Total Care<br><span style="font-weight:400;color:var(--muted)">$69/mo</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Inspections/yr</td><td>1</td><td style="color:var(--blue)">2</td><td style="color:var(--gold)">4</td></tr>
+            <tr><td>Repair discount</td><td>15%</td><td style="color:var(--blue)">20%</td><td style="color:var(--gold)">25%</td></tr>
+            <tr><td>After-hours surcharge</td><td><span class="cn">✗ Full rate</span></td><td><span class="cy">✓ Waived</span></td><td><span class="cy">✓ Waived</span></td></tr>
+            <tr><td>Drain cleaning</td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cy">✓ Annual</span></td></tr>
+            <tr><td>Water heater flush</td><td><span class="cn">✗</span></td><td><span class="cy">✓ Annual</span></td><td><span class="cy">✓ Bi-annual</span></td></tr>
+            <tr><td>Sewer camera</td><td><span class="cn">✗</span></td><td><span class="cn">✗</span></td><td><span class="cy">✓ Every 3 yrs</span></td></tr>
+            <tr><td>Priority dispatch</td><td>Standard</td><td style="color:var(--blue)">Priority</td><td style="color:var(--gold)">VIP</td></tr>
+            <tr><td>Parts markup</td><td>Standard</td><td style="color:var(--blue)">−10%</td><td style="color:var(--gold)">−15%</td></tr>
+            <tr><td>Transferable?</td><td><span class="cy">✓ Yes</span></td><td><span class="cy">✓ Yes</span></td><td><span class="cy">✓ Yes</span></td></tr>
+            <tr><td>Cancel anytime?</td><td><span class="cy">✓ Yes</span></td><td><span class="cy">✓ Yes</span></td><td><span class="cy">✓ Yes</span></td></tr>
+            <tr><td>Response SLA</td><td>Next biz day</td><td style="color:var(--blue)">Same day</td><td style="color:var(--gold)">2-hr window</td></tr>
+            <tr><td>Member-only rates</td><td><span class="cy">✓</span></td><td><span class="cy">✓</span></td><td><span class="cy">✓</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="sec-lbl">What Plans Cover (and Don't)</p>
+
+    <div class="alert a-blue">
+      <strong>✓ What's Covered</strong>
+      Annual inspection finds hidden leaks before they become slab leaks · PRV (pressure reducing valve) pressure check · Water heater anode rod inspection · Full drain flow test · Fixture operation check · Shut-off valve lubrication · Visible pipe and fitting inspection
+    </div>
+
+    <div class="alert a-orange">
+      <strong>✗ Not Covered</strong>
+      Pre-existing conditions at time of enrollment · Cosmetic issues (discoloration, staining) · Third-party or contractor damage · Appliance repairs (dishwasher, fridge water line) · Tenant misuse damage · Outdoor irrigation system repairs
+    </div>
+
+    <div class="alert a-gold">
+      ⚖️ <strong>FL Law Note:</strong> Florida licensed plumbers must provide written service agreements per FS 489.147. Always request your contract before signing — and verify the contractor's license at <em>myfloridalicense.com</em>.
+    </div>
+
+    <div class="divider"></div>
+    <p class="sec-lbl">FL Home Plumbing Risk Assessment</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Check every item that applies to your home — get an instant risk score:</p>
+
+    <div id="risk-list">
+      <div class="risk-item" onclick="toggleRisk(this,0)"><div class="rck" id="rc0"></div><div><div class="rtxt">Hard water area</div><div class="rsub">FL avg hardness 150–350 mg/L — scale buildup damages fixtures &amp; water heaters</div></div></div>
+      <div class="risk-item" onclick="toggleRisk(this,1)"><div class="rck" id="rc1"></div><div><div class="rtxt">Older home (25+ years)</div><div class="rsub">Galvanized or aging copper pipes approaching end-of-life</div></div></div>
+      <div class="risk-item" onclick="toggleRisk(this,2)"><div class="rck" id="rc2"></div><div><div class="rtxt">Slab foundation</div><div class="rsub">Slab leaks are FL's most expensive plumbing problem — avg $2,000–$5,000 to repair</div></div></div>
+      <div class="risk-item" onclick="toggleRisk(this,3)"><div class="rck" id="rc3"></div><div><div class="rtxt">Well water supply</div><div class="rsub">Iron &amp; mineral content accelerates corrosion, clogs aerators and valves</div></div></div>
+      <div class="risk-item" onclick="toggleRisk(this,4)"><div class="rck" id="rc4"></div><div><div class="rtxt">Irrigation system</div><div class="rsub">Backflow preventer failures can contaminate potable water supply</div></div></div>
+      <div class="risk-item" onclick="toggleRisk(this,5)"><div class="rck" id="rc5"></div><div><div class="rtxt">3+ bathrooms</div><div class="rsub">More fixtures = more failure points and higher total water throughput</div></div></div>
+      <div class="risk-item" onclick="toggleRisk(this,6)"><div class="rck" id="rc6"></div><div><div class="rtxt">Pool or spa</div><div class="rsub">Pool plumbing leaks often go undetected — can waste 1,000+ gallons/day</div></div></div>
+      <div class="risk-item" onclick="toggleRisk(this,7)"><div class="rck" id="rc7"></div><div><div class="rtxt">Rental property</div><div class="rsub">Higher occupancy wear and faster fixture deterioration — 2× average call frequency</div></div></div>
+    </div>
+
+    <div id="risk-result" style="display:none;margin-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:13px;color:var(--text)">Risk Level:</span>
+        <strong id="risk-lbl" style="font-size:14px"></strong>
+      </div>
+      <div class="score-bar"><div class="score-fill" id="risk-fill" style="width:0%"></div></div>
+      <p id="risk-msg" style="font-size:12px;color:var(--muted);margin-top:4px"></p>
+    </div>
+
+    <div class="form-card">
+      <div class="form-ttl">📋 Enroll in a Service Plan</div>
+      <div class="form-sub">We'll call you within 2 hours to set up your account.</div>
+      <form onsubmit="doSubmit(event)">
+        <div class="fg"><label>Full Name</label><input type="text" placeholder="Your name" required></div>
+        <div class="fg"><label>Phone Number</label><input type="tel" placeholder="(561) 555-PIPE" required></div>
+        <div class="fg"><label>City / ZIP Code</label><input type="text" placeholder="e.g. Boca Raton, 33432" required></div>
+        <div class="fg"><label>Plan Interest</label>
+          <select>
+            <option value="">Not sure yet</option>
+            <option value="basic">Basic — $19/mo</option>
+            <option value="comfort">Comfort — $39/mo</option>
+            <option value="total">Total Care — $69/mo</option>
+          </select>
+        </div>
+        <button type="submit" class="sub-btn">Start My Plan →</button>
+      </form>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════
+       TAB 3 — Annual Maintenance
+  ══════════════════════════════════ -->
+  <section class="panel" id="p2" role="tabpanel" hidden>
+
+    <p class="sec-lbl">12-Month FL Plumbing Calendar</p>
+
+    <div class="cal-grid">
+      <div class="cal-card">
+        <div class="cal-season" style="color:var(--teal)">❄️ Winter</div>
+        <div class="cal-mo">Jan – Mar</div>
+        <ul class="cal-list">
+          <li>Inspect water heater (rust, sediment)</li>
+          <li>Check PRV pressure (40–80 psi)</li>
+          <li>Flush water softener system</li>
+          <li>Test main shut-off valve operation</li>
+          <li>Inspect exposed supply lines for wear</li>
+        </ul>
+      </div>
+      <div class="cal-card">
+        <div class="cal-season" style="color:var(--green)">🌸 Spring</div>
+        <div class="cal-mo">Apr – Jun</div>
+        <ul class="cal-list">
+          <li>Pre-hurricane season full inspection</li>
+          <li>Check outdoor hose bibs &amp; spigots</li>
+          <li>Inspect washing machine hoses</li>
+          <li>Test irrigation backflow preventer</li>
+          <li>Flush water heater tank sediment</li>
+        </ul>
+      </div>
+      <div class="cal-card">
+        <div class="cal-season" style="color:var(--orange)">☀️ Summer</div>
+        <div class="cal-mo">Jul – Sep</div>
+        <ul class="cal-list">
+          <li>Hurricane prep: locate main shut-off</li>
+          <li>Test sump pump (if present)</li>
+          <li>Clear AC condensate drain line</li>
+          <li>Run unused fixtures (p-trap mold)</li>
+          <li>Check under-sink supply line fittings</li>
+        </ul>
+      </div>
+      <div class="cal-card">
+        <div class="cal-season" style="color:var(--gold)">🍂 Fall</div>
+        <div class="cal-mo">Oct – Dec</div>
+        <ul class="cal-list">
+          <li>Sewer scope if home is 25+ years</li>
+          <li>Flush &amp; inspect water heater</li>
+          <li>Inspect all toilet internals &amp; flappers</li>
+          <li>Adjust irrigation timer for dry season</li>
+          <li>Inspect caulking around tubs &amp; showers</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sec-lbl">FL-Specific Maintenance Tips</p>
+
+    <div class="tip-card">
+      <div class="tip-ttl">💧 Hard Water Descaling</div>
+      <div class="tip-txt">Florida average water hardness is 150–350 mg/L (very hard). Annual descaling of water heaters and faucet aerators prevents efficiency loss and premature element failure. Sediment buildup can cut water heater efficiency by up to 25%. Consider a whole-home water softener if your hardness exceeds 180 mg/L.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-ttl">🌳 Tree Root Intrusion</div>
+      <div class="tip-txt">Florida fig, live oak, and some palm species have aggressive root systems that seek moisture from sewer lines. Any sewer line within 20 feet of these trees should be scoped every 3–5 years. Warning signs: recurring slow drains, frequent main-line clogs, gurgling sounds from multiple fixtures simultaneously.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-ttl">🟢 P-Trap Mold (Unused Drains)</div>
+      <div class="tip-txt">Florida's average relative humidity (74% RH) creates ideal mold conditions at dry p-traps in guest bathrooms and seldom-used sinks. Run water for 30 seconds weekly in all unused fixtures. Pour one cup of diluted bleach monthly into floor drains and infrequently used floor drain p-traps.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-ttl">🌿 Irrigation &amp; Water District Rules</div>
+      <div class="tip-txt">St. Johns, South Florida, and Southwest Florida Water Management Districts restrict irrigation to 2 designated days per week year-round. Adjust your controller each season — overwatering saturates soil, which stresses underground service connections and can accelerate joint degradation in older PVC lines.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="emg-card">
+      <div class="emg-ttl">🚨 Emergency Prep: Know Your Shutoffs</div>
+      <div class="shut-grid">
+        <div class="shut-item">
+          <div class="shut-lbl">Main Water Valve</div>
+          <div class="shut-dsc">Near the street meter box. The utility side is the utility's responsibility — the home side is yours. Know the difference before a leak starts.</div>
+        </div>
+        <div class="shut-item">
+          <div class="shut-lbl">Toilet Shutoff</div>
+          <div class="shut-dsc">Oval knob behind/below the tank. Turn clockwise to close. Test annually — a stiff valve seizes and fails in real emergencies.</div>
+        </div>
+        <div class="shut-item">
+          <div class="shut-lbl">Under-Sink Valves</div>
+          <div class="shut-dsc">Hot and cold angle stops under each sink cabinet. Turn clockwise to shut off. Lubricate annually so they don't freeze in place.</div>
+        </div>
+        <div class="shut-item">
+          <div class="shut-lbl">Water Heater</div>
+          <div class="shut-dsc">Cold water inlet valve at the top of tank. Also locate the T&amp;P relief valve — it's a critical safety device, not just a fitting.</div>
+        </div>
+      </div>
+      <div class="alert a-teal" style="margin-top:12px;margin-bottom:0">
+        📸 <strong>Pro Tip:</strong> Photograph each shutoff location and save the images labeled in your phone contacts (e.g., "HOUSE — Main Water Shutoff"). In a leak emergency, every second counts.
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-ttl">🔧 Start Your Service Plan — First Inspection Free</div>
+      <div class="form-sub">No contracts. Cancel anytime. Join FL homeowners who stopped reacting and started protecting.</div>
+      <form onsubmit="doSubmit(event)">
+        <div class="fg"><label>Full Name</label><input type="text" placeholder="Your name" required></div>
+        <div class="fg"><label>Phone Number</label><input type="tel" placeholder="(561) 555-PIPE" required></div>
+        <div class="fg"><label>City / ZIP Code</label><input type="text" placeholder="e.g. West Palm Beach, 33401" required></div>
+        <div class="fg"><label>Which plan interests you?</label>
+          <select>
+            <option value="">Not sure yet</option>
+            <option value="basic">Basic — $19/mo</option>
+            <option value="comfort">Comfort — $39/mo</option>
+            <option value="total">Total Care — $69/mo</option>
+          </select>
+        </div>
+        <div class="fg"><label>Tell us about your home (optional)</label>
+          <textarea placeholder="e.g. 35-year-old home, slab foundation, recurring drain issues..."></textarea>
+        </div>
+        <button type="submit" class="sub-btn">Start My Plan — First Inspection Free →</button>
+      </form>
+    </div>
+
+  </section>
+</div><!-- .app -->
+
+<div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+<script>
+/* =====================================================
+   STATE — preserved across tab switches
+===================================================== */
+var S = {
+  tab: 0, step: 1,
+  calls: null, avgCost: null,
+  homeAge: null, baths: null, pool: null,
+  riskN: 0
+};
+
+/* =====================================================
+   XSS SANITIZER
+===================================================== */
+function esc(s) {
+  var el = document.createElement('span');
+  el.textContent = String(s);
+  return el.innerHTML;
+}
+function txt(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+/* =====================================================
+   TAB NAVIGATION
+===================================================== */
+function switchTab(n) {
+  S.tab = n;
+  document.querySelectorAll('.panel').forEach(function(p, i) { p.hidden = i !== n; });
+  document.querySelectorAll('.tab-btn').forEach(function(b, i) {
+    b.classList.toggle('on', i === n);
+    b.setAttribute('aria-selected', i === n ? 'true' : 'false');
+  });
+}
+
+/* =====================================================
+   WIZARD STEP NAVIGATION
+===================================================== */
+function goStep(n) {
+  S.step = n;
+  ['s1','s2','s3'].forEach(function(id, i) {
+    document.getElementById(id).style.display = i === n - 1 ? 'block' : 'none';
+  });
+  refreshDots(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function refreshDots(n) {
+  for (var i = 1; i <= 3; i++) {
+    var d = document.getElementById('dot' + i);
+    d.className = 'sdot' + (i < n ? ' done' : i === n ? ' on' : '');
+  }
+  for (var j = 1; j <= 2; j++) {
+    var l = document.getElementById('ln' + j);
+    l.className = 'sline' + (j < n ? ' done' : '');
+  }
+}
+
+/* =====================================================
+   TILE PICKER
+===================================================== */
+function pick(field, value, el) {
+  S[field] = value;
+  el.closest('.tiles').querySelectorAll('.tile').forEach(function(t) { t.classList.remove('sel'); });
+  el.classList.add('sel');
+  checkReady();
+}
+
+function checkReady() {
+  var b1 = document.getElementById('nx1');
+  var b2 = document.getElementById('nx2');
+  if (b1) b1.style.display = (S.calls !== null && S.avgCost !== null) ? 'block' : 'none';
+  if (b2) b2.style.display = (S.homeAge !== null && S.baths !== null && S.pool !== null) ? 'block' : 'none';
+}
+
+/* =====================================================
+   CALCULATIONS
+===================================================== */
+function calcAnnual() {
+  var c = S.calls || 0;
+  var avg = S.avgCost || 0;
+  var penalties = [0, 0.15, 0.30, 0.45];
+  var base = c * avg;
+  return (base + base * (penalties[S.homeAge || 0])) / 2;
+}
+
+function planDefs() {
+  return [
+    { id:'basic',   name:'Basic Plan',      mo:19,  yr:228,  disc:.15, svcVal:150,
+      perks:['1 annual inspection','15% repair discount','Member-only labor rates','Transferable to new owner'] },
+    { id:'comfort', name:'Comfort Plan',    mo:39,  yr:468,  disc:.20, svcVal:380,
+      perks:['2 annual inspections','20% repair discount','After-hours surcharge waived','Annual water heater flush'] },
+    { id:'total',   name:'Total Care Plan', mo:69,  yr:828,  disc:.25, svcVal:977,
+      perks:['4 annual inspections','25% repair discount','Annual drain cleaning','Sewer camera every 3 years','VIP 2-hour response window'] }
+  ];
+}
+
+function calcSavings(annual, plan) {
+  // savings = repair discount savings + included service value - plan cost
+  return annual * plan.disc + plan.svcVal - plan.yr;
+}
+
+function recPlan() {
+  var c = S.calls || 0, age = S.homeAge || 0;
+  if (c >= 4.5 || age === 3) return 'total';
+  if (c >= 2.5 || age >= 2 || S.pool) return 'comfort';
+  return 'basic';
+}
+
+/* =====================================================
+   RESULTS RENDERER
+===================================================== */
+function showResults() {
+  goStep(3);
+  var annual = calcAnnual();
+  var plans = planDefs();
+  var rec = recPlan();
+  var el = document.getElementById('results');
+  el.innerHTML = '';
+  buildSpend(el, annual);
+  if (S.homeAge === 3) buildOldAlert(el);
+  buildChart(el, annual, plans, rec);
+  buildPlans(el, annual, plans, rec);
+  buildGoldNote(el);
+  buildForm(el);
+}
+
+function buildSpend(root, annual) {
+  var box = mk('div', 'spend-box');
+  var sub = mk('p', 'spend-sub');  sub.textContent = 'Estimated annual emergency plumbing spend'; box.appendChild(sub);
+  var num = mk('div', 'spend-num'); num.textContent = '$' + fmt(annual); box.appendChild(num);
+  var note = mk('p', 'spend-note'); note.textContent = 'Includes home-age risk factor adjustment.'; box.appendChild(note);
+  root.appendChild(box);
+}
+
+function buildOldAlert(root) {
+  var d = mk('div', 'alert a-red');
+  var s = mk('strong'); s.textContent = '⚠️ Older Home Alert:'; d.appendChild(s);
+  d.appendChild(document.createTextNode(' Homes over 40 years old average 3.2× more plumbing emergencies. A maintenance plan typically pays for itself in a single call.'));
+  root.appendChild(d);
+}
+
+function buildChart(root, annual, plans, rec) {
+  var card = mk('div', 'card');
+  var ttl = mk('p', 'card-ttl'); ttl.textContent = 'Annual Cost Comparison'; card.appendChild(ttl);
+  var chart = mk('div', 'bar-chart');
+  var recPlan = plans.find(function(p) { return p.id === rec; });
+  var recTotal = recPlan.yr + annual * (1 - recPlan.disc);
+  var maxV = Math.max(annual, recTotal, 1);
+  chart.appendChild(barRow('Your current spend', '$' + fmt(annual) + '/yr', annual / maxV, 'bf-red'));
+  plans.forEach(function(p) {
+    var tot = p.yr + annual * (1 - p.disc);
+    var cls = p.id === rec ? 'bf-gold' : 'bf-green';
+    chart.appendChild(barRow(p.name, '$' + fmt(tot) + '/yr', tot / maxV, cls));
+  });
+  card.appendChild(chart); root.appendChild(card);
+}
+
+function barRow(label, valStr, frac, cls) {
+  var row = mk('div', 'bar-row');
+  var head = mk('div', 'bar-head');
+  var lbl = mk('span'); lbl.textContent = label;
+  var val = mk('strong'); val.textContent = valStr;
+  head.appendChild(lbl); head.appendChild(val);
+  var track = mk('div', 'bar-track');
+  var fill = mk('div', 'bar-fill ' + cls);
+  fill.style.width = Math.max(Math.round(frac * 100), 4) + '%';
+  track.appendChild(fill);
+  row.appendChild(head); row.appendChild(track);
+  return row;
+}
+
+function buildPlans(root, annual, plans, rec) {
+  var ttl = mk('p', 'sec-lbl'); ttl.style.marginTop = '18px'; ttl.textContent = 'Plan Comparison'; root.appendChild(ttl);
+  var grid = mk('div', 'plan-grid');
+  plans.forEach(function(p) {
+    var card = mk('div', p.id === rec ? 'plan-card rec' : 'plan-card');
+    if (p.id === rec) { var badge = mk('div', 'plan-badge'); badge.textContent = '★ Best For You'; card.appendChild(badge); }
+    var nm = mk('div', 'pname'); nm.textContent = p.name; card.appendChild(nm);
+    var pr = mk('div', 'pprice'); pr.textContent = '$' + p.mo + '/mo  ($' + p.yr + '/yr)'; card.appendChild(pr);
+    var sav = calcSavings(annual, p);
+    var sv = mk('div', sav >= 0 ? 'psave pos' : 'psave neg');
+    sv.textContent = sav >= 0 ? 'Save ~$' + fmt(sav) + '/yr' : '~$' + fmt(Math.abs(sav)) + '/yr net cost'; card.appendChild(sv);
+    var sl = mk('div', 'psave-lbl');
+    sl.textContent = sav >= 0 ? 'vs. reactive emergency spending' : 'low call history — plan adds preventive value'; card.appendChild(sl);
+    var ul = mk('ul', 'perks');
+    p.perks.forEach(function(pk) { var li = mk('li'); li.textContent = pk; ul.appendChild(li); });
+    card.appendChild(ul); grid.appendChild(card);
+  });
+  root.appendChild(grid);
+}
+
+function buildGoldNote(root) {
+  var d = mk('div', 'alert a-gold');
+  var s = mk('strong'); s.textContent = '💡 FL Average Emergency Call:'; d.appendChild(s);
+  d.appendChild(document.createTextNode(' $285–$450 on evenings &amp; weekends. Service plan members skip the after-hours surcharge entirely — saving $75–$150 per call.'));
+  root.appendChild(d);
+}
+
+function buildForm(root) {
+  var wrap = mk('div', 'form-card');
+  var ttl = mk('div', 'form-ttl'); ttl.textContent = '📞 Enroll — We\'ll Call You Today'; wrap.appendChild(ttl);
+  var sub = mk('div', 'form-sub'); sub.textContent = 'Join FL homeowners who stopped reacting and started protecting.'; wrap.appendChild(sub);
+  var form = document.createElement('form');
+  form.onsubmit = doSubmit;
+  form.appendChild(fldGroup('Full Name', 'text', '(561) 555-PIPE'));
+  form.appendChild(fldGroup('Phone Number', 'tel', '(561) 555-PIPE'));
+  form.appendChild(fldGroup('City / ZIP Code', 'text', 'e.g. Fort Lauderdale, 33301'));
+  var sg = mk('div', 'fg');
+  var sl = mk('label'); sl.textContent = 'Plan Interest'; sg.appendChild(sl);
+  var sel = document.createElement('select');
+  [['','Not sure yet'],['basic','Basic — $19/mo'],['comfort','Comfort — $39/mo'],['total','Total Care — $69/mo']].forEach(function(o) {
+    var opt = document.createElement('option'); opt.value = o[0]; opt.textContent = o[1]; sel.appendChild(opt);
+  });
+  sg.appendChild(sel); form.appendChild(sg);
+  var btn = mk('button', 'sub-btn'); btn.type = 'submit'; btn.textContent = 'Start My Plan →'; form.appendChild(btn);
+  wrap.appendChild(form); root.appendChild(wrap);
+}
+
+function fldGroup(labelTxt, type, ph) {
+  var g = mk('div', 'fg');
+  var l = mk('label'); l.textContent = labelTxt; g.appendChild(l);
+  var inp = document.createElement('input'); inp.type = type; inp.placeholder = ph; inp.required = true;
+  g.appendChild(inp); return g;
+}
+
+/* =====================================================
+   RISK CHECKLIST
+===================================================== */
+function toggleRisk(el, idx) {
+  el.classList.toggle('flagged');
+  var cb = document.getElementById('rc' + idx);
+  var on = el.classList.contains('flagged');
+  cb.textContent = on ? '✓' : '';
+  S.riskN += on ? 1 : -1;
+  updateRisk();
+}
+
+function updateRisk() {
+  var sec = document.getElementById('risk-result');
+  sec.style.display = 'block';
+  var pct = (S.riskN / 8) * 100;
+  var fill = document.getElementById('risk-fill');
+  fill.style.width = pct + '%';
+  var lvl, col, msg;
+  if (S.riskN <= 2) {
+    lvl = 'Low Risk'; col = 'var(--green)';
+    msg = 'Few elevated risk factors. Basic Plan coverage may be sufficient.';
+  } else if (S.riskN <= 5) {
+    lvl = 'Medium Risk'; col = 'var(--orange)';
+    msg = 'Multiple risk factors detected. Comfort Plan strongly recommended.';
+  } else {
+    lvl = 'High Risk ⚠️'; col = 'var(--red)';
+    msg = 'Significant risk profile. Total Care Plan with priority dispatch could save you thousands this year.';
+  }
+  fill.style.background = col;
+  var lbl = document.getElementById('risk-lbl'); lbl.textContent = lvl; lbl.style.color = col;
+  document.getElementById('risk-msg').textContent = msg;
+}
+
+/* =====================================================
+   FORM + TOAST
+===================================================== */
+function doSubmit(e) {
+  e.preventDefault();
+  showToast('Welcome! We\'ll call you within 2 hours to set up your account. 🎉');
+  if (e.target) e.target.reset();
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 4200);
+}
+
+/* =====================================================
+   DOM HELPER
+===================================================== */
+function mk(tag, cls) {
+  var el = document.createElement(tag);
+  if (cls) el.className = cls;
+  return el;
+}
+
+function fmt(n) {
+  return Math.round(n).toLocaleString();
+}
+
+/* =====================================================
+   INIT
+===================================================== */
+checkReady();
+</script>
+</body>
+</html>
