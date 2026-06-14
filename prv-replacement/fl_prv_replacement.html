@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>FL PRV Replacement Guide | Florida Plumbing</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+.wrap{max-width:480px;margin:0 auto;padding:16px 14px 40px}
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab-btn{flex:1;padding:8px 4px;border:none;border-radius:7px;background:transparent;color:#94A3B8;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;line-height:1.3;touch-action:manipulation}
+.tab-btn.active{background:#00B4FF;color:#0A0E1A}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+/* Cards */
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px}
+.card-alt{background:#141929;border-radius:12px;padding:16px;margin-bottom:12px}
+.card.bl{border-left:3px solid #00B4FF}
+.card.gd{border-left:3px solid #F4B942}
+.card.or{border-left:3px solid #F97316}
+.card.rd{border-left:3px solid #EF4444}
+.card.tl{border-left:3px solid #14B8A6}
+/* Type */
+h2{font-size:15px;font-weight:700;color:#E2E8F0;margin-bottom:8px}
+p{font-size:13px;line-height:1.55;color:#E2E8F0}
+.muted{color:#94A3B8;font-size:12px}
+.c-blue{color:#00B4FF}.c-gold{color:#F4B942}.c-orange{color:#F97316}
+.c-red{color:#EF4444}.c-teal{color:#14B8A6}.c-green{color:#22C55E}
+/* Header */
+.header{text-align:center;padding:20px 0 16px}
+.badge{display:inline-block;background:#F4B942;color:#0A0E1A;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;margin-bottom:8px;letter-spacing:.3px}
+.header h1{font-size:20px;font-weight:800;color:#00B4FF;margin-bottom:4px}
+/* Step indicator */
+.step-row{display:flex;gap:0;margin-bottom:16px;align-items:center}
+.sd{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;transition:all .2s}
+.sd.done{background:#22C55E;color:#0A0E1A}
+.sd.active{background:#00B4FF;color:#0A0E1A}
+.sd.pend{background:#1E2A45;color:#94A3B8}
+.sl{flex:1;height:2px;background:#1E2A45;transition:background .2s;margin:0 4px}
+.sl.done{background:#22C55E}
+/* Wizard */
+.wz{display:none}
+.wz.active{display:block}
+/* Options */
+.opts{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.opt{background:#141929;border:1px solid #1E2A45;border-radius:10px;padding:12px 14px;text-align:left;color:#E2E8F0;font-size:13px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px;width:100%;touch-action:manipulation}
+.opt:hover{border-color:#00B4FF;background:#0F1E35}
+.opt.sel{border-color:#00B4FF;background:#0A1F35}
+.opt-icon{font-size:20px;flex-shrink:0}
+.opt-label{font-weight:600;margin-bottom:2px}
+/* Buttons */
+.btn-row{display:flex;gap:8px;margin-top:16px}
+.btn{padding:12px 16px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;flex:1;transition:all .15s;touch-action:manipulation}
+.btn-p{background:#00B4FF;color:#0A0E1A}.btn-p:hover{background:#00CFFF}
+.btn-s{background:#1E2A45;color:#E2E8F0}.btn-s:hover{background:#253355}
+.btn-g{background:#F4B942;color:#0A0E1A}.btn-g:hover{background:#F5C456}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+/* Result */
+.res-sec{display:none}
+.res-sec.active{display:block}
+.cost-range{font-size:30px;font-weight:800;color:#00B4FF;margin:4px 0 8px}
+/* Progress */
+.prog-wrap{background:#1E2A45;border-radius:20px;height:8px;margin-bottom:16px;overflow:hidden}
+.prog-bar{height:100%;background:linear-gradient(90deg,#00B4FF,#14B8A6);border-radius:20px;transition:width .3s ease}
+.prog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+/* Checklist */
+.cl-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #1E2A45}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:22px;height:22px;border-radius:6px;border:2px solid #2A3A5E;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:#0F1629;font-size:12px;font-weight:800;color:#0A0E1A;margin-top:1px;user-select:none;touch-action:manipulation}
+.cl-box.ck{background:#22C55E;border-color:#22C55E}
+.cl-txt{font-size:13px;line-height:1.45;color:#E2E8F0;transition:color .15s}
+.cl-txt.dn{color:#94A3B8;text-decoration:line-through}
+/* Tables */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:4px}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:#0F1629;color:#94A3B8;text-transform:uppercase;font-size:10px;letter-spacing:.5px;padding:8px 10px;text-align:left;white-space:nowrap}
+.tbl td{padding:8px 10px;border-top:1px solid #1E2A45;color:#E2E8F0;vertical-align:top;line-height:1.4}
+.urg-h{color:#EF4444;font-weight:700;font-size:11px;white-space:nowrap}
+.urg-m{color:#F97316;font-weight:700;font-size:11px;white-space:nowrap}
+/* Facts */
+.fact{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #1E2A45}
+.fact:last-child{border-bottom:none}
+.fact-n{width:24px;height:24px;border-radius:50%;background:#00B4FF;color:#0A0E1A;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.fact-t{font-size:13px;line-height:1.5}
+/* Form */
+.fg{margin-bottom:12px}
+.fl{font-size:12px;color:#94A3B8;font-weight:600;margin-bottom:4px;display:block}
+.fi{width:100%;background:#0F1629;border:1px solid #1E2A45;border-radius:8px;padding:10px 12px;color:#E2E8F0;font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
+.fi:focus{border-color:#00B4FF}
+/* Phone */
+.phone-cta{background:linear-gradient(135deg,#0F1629,#141929);border:1px solid #00B4FF;border-radius:12px;padding:16px;text-align:center;margin-bottom:12px}
+.phone-a{display:block;font-size:22px;font-weight:800;color:#00B4FF;letter-spacing:1px;text-decoration:none;margin:4px 0}
+.phone-a:hover{color:#00CFFF}
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:14px;z-index:999;transition:transform .3s ease;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(244,185,66,.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Header -->
+<div class="header">
+  <div class="badge">🔧 LICENSED CFC PLUMBER · FLORIDA</div>
+  <h1>FL PRV Replacement Guide</h1>
+  <p class="muted">Pressure Reducing Valve · Cost Calculator &amp; FL Code Guide</p>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" id="tbtn-calc" onclick="switchTab('calc')">💰 Cost Calc</button>
+  <button class="tab-btn" id="tbtn-guide" onclick="switchTab('guide')">📋 FL Guide</button>
+  <button class="tab-btn" id="tbtn-check" onclick="switchTab('check')">✅ Checklist</button>
+</div>
+
+<!-- ═══════════ TAB 1 · Cost Calculator ═══════════ -->
+<div id="tab-calc" class="tab-panel active">
+
+  <!-- Step indicator -->
+  <div class="step-row">
+    <div class="sd active" id="sd1">1</div><div class="sl" id="sl1"></div>
+    <div class="sd pend" id="sd2">2</div><div class="sl" id="sl2"></div>
+    <div class="sd pend" id="sd3">3</div><div class="sl" id="sl3"></div>
+    <div class="sd pend" id="sd4">4</div>
+  </div>
+
+  <!-- Step 1 · Reason -->
+  <div class="wz active card-alt" id="step1">
+    <h2>Why are you replacing your PRV?</h2>
+    <p class="muted">Step 1 of 4 · Primary reason for service</p>
+    <div class="opts">
+      <button class="opt" onclick="pickOpt(1,'high',this)">
+        <span class="opt-icon">🔊</span>
+        <div><div class="opt-label">High Water Pressure</div><div class="muted">Banging pipes / running toilets</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(1,'low',this)">
+        <span class="opt-icon">📉</span>
+        <div><div class="opt-label">Low Pressure After Street Work</div><div class="muted">After replacement or utility work</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(1,'age',this)">
+        <span class="opt-icon">📅</span>
+        <div><div class="opt-label">PRV Over 7 Years Old</div><div class="muted">Proactive replacement</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(1,'prepurchase',this)">
+        <span class="opt-icon">🏠</span>
+        <div><div class="opt-label">Pre-Purchase Home Inspection</div><div class="muted">Buying a home, checking PRV</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(1,'routine',this)">
+        <span class="opt-icon">🔧</span>
+        <div><div class="opt-label">Routine Service</div><div class="muted">No symptoms, scheduled maintenance</div></div>
+      </button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-p" id="next1" onclick="goStep(2)" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 2 · Home size -->
+  <div class="wz card-alt" id="step2">
+    <h2>Home size?</h2>
+    <p class="muted">Step 2 of 4 · Affects valve sizing and labor</p>
+    <div class="opts">
+      <button class="opt" onclick="pickOpt(2,'small',this)">
+        <span class="opt-icon">🏡</span>
+        <div><div class="opt-label">Small</div><div class="muted">Under 1,500 sq ft</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(2,'medium',this)">
+        <span class="opt-icon">🏘️</span>
+        <div><div class="opt-label">Medium</div><div class="muted">1,500–2,500 sq ft</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(2,'large',this)">
+        <span class="opt-icon">🏠</span>
+        <div><div class="opt-label">Large</div><div class="muted">2,500–4,000 sq ft</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(2,'estate',this)">
+        <span class="opt-icon">🏛️</span>
+        <div><div class="opt-label">Estate</div><div class="muted">Over 4,000 sq ft</div></div>
+      </button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-s" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-p" id="next2" onclick="goStep(3)" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 3 · Access -->
+  <div class="wz card-alt" id="step3">
+    <h2>PRV access difficulty?</h2>
+    <p class="muted">Step 3 of 4 · Where is your PRV located?</p>
+    <div class="opts">
+      <button class="opt" onclick="pickOpt(3,'easy',this)">
+        <span class="opt-icon">✅</span>
+        <div><div class="opt-label">Easy Access</div><div class="muted">Garage / utility room / exposed pipe</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(3,'moderate',this)">
+        <span class="opt-icon">⚠️</span>
+        <div><div class="opt-label">Moderate</div><div class="muted">Under-slab access or closet</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(3,'difficult',this)">
+        <span class="opt-icon">🔴</span>
+        <div><div class="opt-label">Difficult</div><div class="muted">Buried exterior / commercial</div></div>
+      </button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-s" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-p" id="next3" onclick="goStep(4)" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- Step 4 · Region -->
+  <div class="wz card-alt" id="step4">
+    <h2>FL Region?</h2>
+    <p class="muted">Step 4 of 4 · Local market affects labor rates</p>
+    <div class="opts">
+      <button class="opt" onclick="pickOpt(4,'south',this)">
+        <span class="opt-icon">🌴</span>
+        <div><div class="opt-label">South FL</div><div class="muted">Miami / Broward / Palm Beach</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(4,'tampa',this)">
+        <span class="opt-icon">⚡</span>
+        <div><div class="opt-label">Tampa Bay Area</div><div class="muted">Tampa / St. Pete / Clearwater</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(4,'jax',this)">
+        <span class="opt-icon">🌊</span>
+        <div><div class="opt-label">Jacksonville / NE FL</div><div class="muted">Duval, St. Johns, Clay counties</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(4,'swfl',this)">
+        <span class="opt-icon">🦅</span>
+        <div><div class="opt-label">SW FL</div><div class="muted">Naples / Fort Myers</div></div>
+      </button>
+      <button class="opt" onclick="pickOpt(4,'panhandle',this)">
+        <span class="opt-icon">🏖️</span>
+        <div><div class="opt-label">Panhandle</div><div class="muted">Pensacola / Panama City</div></div>
+      </button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-s" onclick="goStep(3)">← Back</button>
+      <button class="btn btn-g" id="calcBtn" onclick="calcCost()" disabled>Calculate Cost →</button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="res-sec">
+    <div class="card bl">
+      <h2 class="c-blue">PRV Replacement Cost</h2>
+      <div class="cost-range" id="costRange"></div>
+      <p class="muted">Includes labor, PRV valve ($40–150 part), pressure test, and adjustment to FL-standard 55–65 PSI.</p>
+    </div>
+    <div class="card gd">
+      <h2 class="c-gold">FL Standard</h2>
+      <p>Normal residential water pressure in FL is 40–80 PSI. PRVs are set to 55–65 PSI per FL Plumbing Code (FPC 604.8). Utility pressure in urban FL often runs 80–125 PSI — a working PRV is essential.</p>
+    </div>
+    <div class="card or" id="condCard"></div>
+    <div class="card tl">
+      <h2 class="c-teal">Expansion Tank Combo</h2>
+      <p>A failing PRV in a closed FL water system requires a thermal expansion tank ($100–300 installed). FL code requires expansion tanks on all water heaters in closed systems. Ask your plumber to check both.</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-s" onclick="resetCalc()">← Start Over</button>
+      <button class="btn btn-g" onclick="switchTab('check')">Get Checklist →</button>
+    </div>
+  </div>
+
+</div><!-- /tab-calc -->
+
+<!-- ═══════════ TAB 2 · FL PRV Guide ═══════════ -->
+<div id="tab-guide" class="tab-panel">
+
+  <div class="card-alt">
+    <h2>5 FL-Specific PRV Facts</h2>
+    <div id="flFacts"></div>
+  </div>
+
+  <div class="card-alt">
+    <h2>FL PRV Failure Symptoms</h2>
+    <div class="tbl-wrap">
+      <table class="tbl" id="sympTable"></table>
+    </div>
+  </div>
+
+  <div class="card-alt">
+    <h2>PRV vs. Expansion Tank — What Each Does</h2>
+    <div class="tbl-wrap">
+      <table class="tbl" id="compTable"></table>
+    </div>
+  </div>
+
+  <div class="card rd">
+    <h2 class="c-red">⚠ WARNING</h2>
+    <p>High water pressure (over 80 PSI) voids most FL water heater and appliance warranties. If your PRV has failed, every appliance on your system is running at risk. FL insurance adjusters note failed PRVs when evaluating water damage claims.</p>
+  </div>
+
+  <div class="card tl">
+    <h2 class="c-teal">🏠 FL Home Sale Disclosure</h2>
+    <p>A non-functioning PRV on a supply over 80 PSI is a code violation that must be disclosed in FL real estate transactions (FS 689.261). Replace before listing to avoid renegotiation or deal fall-through.</p>
+  </div>
+
+  <div class="phone-cta">
+    <p class="muted" style="margin-bottom:4px">Licensed CFC Plumber · Available Now</p>
+    <a href="tel:5615557473" class="phone-a">📞 (561) 555-PIPE</a>
+    <p class="muted" style="margin-top:4px">2-hour response guarantee</p>
+  </div>
+
+</div><!-- /tab-guide -->
+
+<!-- ═══════════ TAB 3 · Checklist ═══════════ -->
+<div id="tab-check" class="tab-panel">
+
+  <div class="card-alt">
+    <div class="prog-head">
+      <span style="font-size:13px;font-weight:700">PRV Health Score</span>
+      <span class="c-blue" style="font-size:13px;font-weight:700" id="progLabel">0 / 12</span>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-bar" id="progBar" style="width:0%"></div>
+    </div>
+    <div id="clItems"></div>
+  </div>
+
+  <div class="card gd">
+    <h2 class="c-gold">📋 FL Code Note</h2>
+    <p>PRV installation or replacement requires a FL plumbing permit in most jurisdictions when it's part of a larger plumbing repair. Your CFC-licensed plumber handles the permit. Ask upfront.</p>
+  </div>
+
+  <div class="card-alt">
+    <h2 style="margin-bottom:12px">Get a Free PRV Pressure Assessment</h2>
+    <form id="leadForm" onsubmit="submitForm(event)" novalidate>
+      <div class="fg">
+        <label class="fl" for="fName">Full Name</label>
+        <input id="fName" class="fi" type="text" autocomplete="name" placeholder="Jane Smith" required>
+      </div>
+      <div class="fg">
+        <label class="fl" for="fPhone">Phone Number</label>
+        <input id="fPhone" class="fi" type="tel" autocomplete="tel" placeholder="(561) 555-1234" required>
+      </div>
+      <div class="fg">
+        <label class="fl" for="fEmail">Email Address</label>
+        <input id="fEmail" class="fi" type="email" autocomplete="email" placeholder="jane@example.com" required>
+      </div>
+      <div class="fg">
+        <label class="fl" for="fSit">What describes your situation?</label>
+        <select id="fSit" class="fi" required>
+          <option value="">Select situation…</option>
+          <option value="banging">Banging pipes</option>
+          <option value="running">Running toilets</option>
+          <option value="prepurchase">Pre-purchase inspection</option>
+          <option value="old">Old PRV (7+ years)</option>
+          <option value="routine">Routine check</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-g" style="width:100%;margin-top:4px">📞 Request Free Assessment</button>
+    </form>
+    <div class="phone-cta" style="margin-top:12px;margin-bottom:0">
+      <p class="muted" style="margin-bottom:4px">Or call us directly</p>
+      <a href="tel:5615557473" class="phone-a">📞 (561) 555-PIPE</a>
+    </div>
+  </div>
+
+</div><!-- /tab-check -->
+</div><!-- /wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// XSS escape (used for any future dynamic insertions)
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// ── State ──────────────────────────────────────────
+const sel = {1:null,2:null,3:null,4:null};
+let curStep = 1;
+const checked = new Array(12).fill(false);
+
+// ── Cost data ──────────────────────────────────────
+const COSTS = {
+  high:        {small:[250,450],medium:[300,550],large:[375,650],estate:[450,800]},
+  low:         {small:[200,425],medium:[250,500],large:[325,575],estate:[400,700]},
+  age:         {small:[225,440],medium:[275,525],large:[350,625],estate:[425,750]},
+  prepurchase: {small:[175,375],medium:[200,425],large:[250,475],estate:[300,550]},
+  routine:     {small:[200,425],medium:[250,500],large:[325,600],estate:[400,700]}
+};
+const ACC = {easy:1.0,moderate:1.18,difficult:1.40};
+const REG = {south:1.20,tampa:1.0,jax:0.92,swfl:1.15,panhandle:0.88};
+
+function r25(v){return Math.round(v/25)*25;}
+
+// ── Wizard ─────────────────────────────────────────
+function pickOpt(step, val, el) {
+  sel[step] = val;
+  el.closest('.opts').querySelectorAll('.opt').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  const ids = {1:'next1',2:'next2',3:'next3',4:'calcBtn'};
+  const btn = document.getElementById(ids[step]);
+  if (btn) btn.disabled = false;
+}
+
+function goStep(n) {
+  document.getElementById('step'+curStep).classList.remove('active');
+  curStep = n;
+  document.getElementById('step'+curStep).classList.add('active');
+  syncDots();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function syncDots() {
+  for (let i=1;i<=4;i++) {
+    const d = document.getElementById('sd'+i);
+    if (i < curStep)      { d.className='sd done';   d.textContent='✓'; }
+    else if (i===curStep) { d.className='sd active';  d.textContent=i; }
+    else                  { d.className='sd pend';    d.textContent=i; }
+  }
+  for (let i=1;i<=3;i++) {
+    document.getElementById('sl'+i).className = 'sl'+(i<curStep?' done':'');
+  }
+}
+
+function calcCost() {
+  const [r,s,a,g] = [sel[1],sel[2],sel[3],sel[4]];
+  if (!r||!s||!a||!g) return;
+  const base = COSTS[r][s];
+  const lo = r25(base[0]*ACC[a]*REG[g]);
+  const hi = r25(base[1]*ACC[a]*REG[g]);
+  document.getElementById('costRange').textContent = '$'+lo.toLocaleString()+'–$'+hi.toLocaleString();
+  const cc = document.getElementById('condCard');
+  while (cc.firstChild) cc.removeChild(cc.firstChild);
+  const h2 = document.createElement('h2');
+  h2.className = 'c-orange';
+  const p  = document.createElement('p');
+  if (r === 'high') {
+    h2.textContent = '⚠ High Pressure Damage Alert';
+    p.textContent  = 'FL water pressure over 80 PSI shortens water heater lifespan by 30–50%, causes toilet flappers to fail 3x faster, and voids most FL appliance warranties. Your PRV may be failing.';
+  } else {
+    h2.textContent = '📊 PRV Lifespan in FL';
+    p.textContent  = "FL's hard water (high calcium) accelerates PRV diaphragm wear. Average PRV lifespan is 10–12 years in FL vs. 15+ years elsewhere. Proactive replacement is cheaper than burst pipe repairs ($3,000–15,000).";
+  }
+  cc.appendChild(h2);
+  cc.appendChild(p);
+  document.getElementById('step4').classList.remove('active');
+  document.getElementById('results').classList.add('active');
+}
+
+function resetCalc() {
+  sel[1]=sel[2]=sel[3]=sel[4]=null;
+  curStep=1;
+  document.getElementById('results').classList.remove('active');
+  document.querySelectorAll('.wz').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step1').classList.add('active');
+  document.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+  ['next1','next2','next3','calcBtn'].forEach(id=>{
+    const b=document.getElementById(id);
+    if(b) b.disabled=true;
+  });
+  syncDots();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Tabs ───────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  document.getElementById('tbtn-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── FL Facts ───────────────────────────────────────
+const FL_FACTS = [
+  'FL municipal water pressure averages 85–110 PSI in urban areas — well above the residential maximum of 80 PSI. An unregulated PRV silently damages every appliance in your home.',
+  "FL's hard water (statewide average 200+ ppm hardness) deposits calcium inside PRVs, causing diaphragm failure — most FL PRVs should be replaced every 8–10 years, not 15.",
+  'Failing PRVs cause water hammer (banging pipes) — the #2 call after leaks for FL emergency plumbers.',
+  'FL building code (FPC 604.8) requires a PRV wherever municipal supply exceeds 80 PSI — most South FL utility zones exceed this at the meter.',
+  'A new PRV can reduce your FL water bill by 10–15% by stopping the flow waste caused by over-pressure.'
+];
+
+function buildFacts() {
+  const el = document.getElementById('flFacts');
+  FL_FACTS.forEach((f,i) => {
+    const div = document.createElement('div');
+    div.className = 'fact';
+    const num = document.createElement('div');
+    num.className = 'fact-n';
+    num.textContent = i+1;
+    const txt = document.createElement('div');
+    txt.className = 'fact-t';
+    txt.textContent = f;
+    div.appendChild(num);
+    div.appendChild(txt);
+    el.appendChild(div);
+  });
+}
+
+// ── Tables ─────────────────────────────────────────
+function mkTable(id, heads, rows, urgCol) {
+  const tbl = document.getElementById(id);
+  const thead = document.createElement('thead');
+  const hr = document.createElement('tr');
+  heads.forEach(h => {
+    const th = document.createElement('th');
+    th.textContent = h;
+    hr.appendChild(th);
+  });
+  thead.appendChild(hr);
+  tbl.appendChild(thead);
+  const tbody = document.createElement('tbody');
+  rows.forEach(row => {
+    const tr = document.createElement('tr');
+    row.forEach((cell,ci) => {
+      const td = document.createElement('td');
+      td.textContent = cell;
+      if (urgCol !== undefined && ci === urgCol) {
+        td.className = cell==='High' ? 'urg-h' : 'urg-m';
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  tbl.appendChild(tbody);
+}
+
+const SYMP_H = ['Symptom','What It Means','Urgency'];
+const SYMP_D = [
+  ['Banging/knocking pipes','Water hammer from pressure spike','High'],
+  ['Toilets constantly running','Diaphragm worn, pressure too high','Medium'],
+  ['Faucets dripping at idle','PRV set too high or diaphragm gone','Medium'],
+  ['WH expansion tank leaking','Closed system overpressure','High'],
+  ['Sudden low pressure everywhere','PRV stuck closed or clogged','High'],
+  ['Water bills creeping up','Over-pressure wastes flow at every fixture','Medium']
+];
+const COMP_H = ['Item','Function','When FL Code Requires','Cost'];
+const COMP_D = [
+  ['PRV','Reduces high utility pressure','When supply > 80 PSI (most of South FL)','$200–800 installed'],
+  ['Expansion Tank','Absorbs thermal expansion in closed system','All FL closed-loop WH systems','$100–300 installed'],
+  ['Pressure Gauge','Monitors real-time PSI','Recommended, not required','$15–40 DIY'],
+  ['Water Hammer Arrestors','Absorbs shockwave at fixtures','Recommended for dishwashers/washing machines','$15–50 DIY']
+];
+
+// ── Checklist ──────────────────────────────────────
+const CL_ITEMS = [
+  'Test water pressure with a gauge ($15 at hardware store) — attach to hose bib',
+  'Record pressure readings: morning (cold) and afternoon (warm) — both should be 40–80 PSI',
+  'Listen for banging or knocking pipes when water shuts off quickly',
+  'Check if toilets run after flushing stops (flapper overpressure)',
+  'Inspect PRV body for corrosion, mineral deposits, or drips',
+  'Locate PRV — typically at main water entry point (garage, utility room, or exterior)',
+  'Check PRV age — if over 8 years in FL, schedule proactive replacement',
+  'Test expansion tank (if present) — tap it; hollow sound = functional, solid/waterlogged = replace',
+  'Ask FL plumber to check both PRV and expansion tank together (common combo service)',
+  'Verify FL building permit exists for current PRV (required by FPC 604.8)',
+  'Note any appliance warranty exclusions for high-pressure damage',
+  'Call licensed CFC plumber for PRV evaluation: (561) 555-PIPE'
+];
+
+function buildChecklist() {
+  const el = document.getElementById('clItems');
+  CL_ITEMS.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'cl-item';
+    const box = document.createElement('div');
+    box.className = 'cl-box';
+    box.setAttribute('role','checkbox');
+    box.setAttribute('aria-checked','false');
+    box.setAttribute('tabindex','0');
+    box.addEventListener('click', () => toggleCL(i));
+    box.addEventListener('keydown', e => { if(e.key===' '||e.key==='Enter'){e.preventDefault();toggleCL(i);} });
+    const txt = document.createElement('div');
+    txt.className = 'cl-txt';
+    txt.id = 'ct'+i;
+    txt.textContent = item;
+    div.appendChild(box);
+    div.appendChild(txt);
+    el.appendChild(div);
+  });
+}
+
+function toggleCL(i) {
+  checked[i] = !checked[i];
+  const box = document.getElementById('clItems').querySelectorAll('.cl-box')[i];
+  const txt = document.getElementById('ct'+i);
+  box.className  = 'cl-box'+(checked[i]?' ck':'');
+  box.setAttribute('aria-checked', checked[i]);
+  box.textContent = checked[i] ? '✓' : '';
+  txt.className  = 'cl-txt'+(checked[i]?' dn':'');
+  const n = checked.filter(Boolean).length;
+  document.getElementById('progLabel').textContent = n+' / 12';
+  document.getElementById('progBar').style.width = (n/12*100)+'%';
+}
+
+// ── Lead form ──────────────────────────────────────
+function submitForm(e) {
+  e.preventDefault();
+  const f = e.target;
+  const name  = document.getElementById('fName').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
+  const email = document.getElementById('fEmail').value.trim();
+  const sit   = document.getElementById('fSit').value;
+  if (!name||!phone||!email||!sit) { f.reportValidity(); return; }
+  showToast("We'll call you within 2 hours! 📞");
+  f.reset();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Init ───────────────────────────────────────────
+buildFacts();
+mkTable('sympTable', SYMP_H, SYMP_D, 2);
+mkTable('compTable', COMP_H, COMP_D);
+buildChecklist();
+</script>
+</body>
+</html>
