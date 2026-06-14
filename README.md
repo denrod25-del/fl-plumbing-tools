@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**85 interactive cost calculators** for Florida homeowners.
+**88 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -32,8 +32,10 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Gas Line Installation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-installation/fl_gas_line_installation.html)
 - [FL Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line/fl_gas_line.html)
 - [FL Gas Propane Electric Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-propane-electric/fl_gas_propane_electric.html)
+- [FL Generator Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/generator-gas-line/fl_generator_gas_line.html)
 - [FL Grease Trap Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/grease-trap/fl_grease_trap.html)
 - [FL Home Buyer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/home-buyer/fl_home_buyer_plumbing.html)
+- [FL Hot Tub Spa Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hot-tub-spa/fl_hot_tub_spa.html)
 - [FL Hot Water Recirculation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hot-water-recirculation/fl_hot_water_recirculation.html)
 - [FL Hurricane Prep Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hurricane-prep/fl_hurricane_prep.html)
 - [FL Hydro Jetting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hydro-jetting/fl_hydro_jetting.html)
@@ -75,6 +77,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Slab Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-leak/fl_slab_leak.html)
 - [FL Slab Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-repair/fl_slab_repair.html)
 - [FL Solar Hpwh Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/solar-hpwh/fl_solar_hpwh.html)
+- [FL Stormwater Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/stormwater-drain/fl_stormwater_drain.html)
 - [FL Tankless Water Heater Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-water-heater/fl_tankless_water_heater.html)
 - [FL Toilet Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/toilet-repair/fl_toilet_repair.html)
 - [FL Toilet Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/toilet-replacement/fl_toilet_replacement.html)
