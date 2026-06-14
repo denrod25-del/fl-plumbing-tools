@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**82 interactive cost calculators** for Florida homeowners.
+**85 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -26,11 +26,13 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Expansion Tank Prv Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/expansion-tank-prv/fl_expansion_tank_prv.html)
 - [FL Expansion Tank Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/expansion-tank/fl_expansion_tank.html)
 - [FL Faucet Fixture Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/faucet-fixture/fl_faucet_fixture.html)
+- [FL Fire Sprinkler Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fire-sprinkler/fl_fire_sprinkler.html)
 - [FL Fixture Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fixture-cost/fl_fixture_cost.html)
 - [FL Garbage Disposal Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/garbage-disposal/fl_garbage_disposal.html)
 - [FL Gas Line Installation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-installation/fl_gas_line_installation.html)
 - [FL Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line/fl_gas_line.html)
 - [FL Gas Propane Electric Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-propane-electric/fl_gas_propane_electric.html)
+- [FL Grease Trap Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/grease-trap/fl_grease_trap.html)
 - [FL Home Buyer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/home-buyer/fl_home_buyer_plumbing.html)
 - [FL Hot Water Recirculation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hot-water-recirculation/fl_hot_water_recirculation.html)
 - [FL Hurricane Prep Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hurricane-prep/fl_hurricane_prep.html)
@@ -58,6 +60,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pool Equipment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-equipment/fl_pool_equipment.html)
 - [FL Pool Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-leak/fl_pool_leak.html)
 - [FL Prv Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/prv-replacement/fl_prv_replacement.html)
+- [FL Radiant Floor Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/radiant-floor/fl_radiant_floor.html)
 - [FL Reclaimed Water Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/reclaimed-water/fl_reclaimed_water.html)
 - [FL Repipe Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repipe-cost/fl_repipe_cost.html)
 - [FL Repiping Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping/fl_repiping.html)

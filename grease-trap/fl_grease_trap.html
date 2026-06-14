@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>FL Grease Trap &amp; FOG Management Tool | (561) 555-PIPE</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0A0E1A;--card:#0F1629;--card2:#141929;--blue:#00B4FF;--gold:#F4B942;--orange:#F97316;--red:#EF4444;--green:#22C55E;--teal:#14B8A6;--text:#E2E8F0;--muted:#94A3B8;--border:#1E2A4A}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.5;min-height:100vh}
+.container{max-width:480px;margin:0 auto;padding:0 12px 100px}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);border-bottom:2px solid var(--blue);padding:14px 12px 10px;text-align:center;position:sticky;top:0;z-index:100}
+.header-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:3px}
+.header-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--teal));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.header h1{font-size:15px;font-weight:700;color:var(--blue);letter-spacing:.4px}
+.header-sub{font-size:10px;color:var(--muted);margin-bottom:5px}
+.header-phone{font-size:14px;font-weight:700;color:var(--gold)}
+.tabs{display:flex;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;position:sticky;top:82px;z-index:99}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:1;min-width:76px;padding:10px 6px;background:none;border:none;color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-panel{display:none;padding-top:16px}
+.tab-panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.card-blue{border-color:var(--blue);background:rgba(0,180,255,.05)}
+.card-gold{border-color:var(--gold);background:rgba(244,185,66,.05)}
+.card-orange{border-color:var(--orange);background:rgba(249,115,22,.05)}
+.card-green{border-color:var(--green);background:rgba(34,197,94,.05)}
+.card-teal{border-color:var(--teal);background:rgba(20,184,166,.05)}
+.card-title{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card-title.blue{color:var(--blue)}.card-title.gold{color:var(--gold)}.card-title.orange{color:var(--orange)}.card-title.green{color:var(--green)}.card-title.teal{color:var(--teal)}
+.section-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px}
+.section-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.step-indicator{display:flex;justify-content:space-between;margin-bottom:20px;position:relative}
+.step-indicator::before{content:'';position:absolute;top:14px;left:28px;right:28px;height:2px;background:var(--border)}
+.step-dot{width:28px;height:28px;border-radius:50%;background:var(--card2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);position:relative;z-index:1;transition:all .3s}
+.step-dot.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.step-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.step-label{font-size:9px;color:var(--muted);text-align:center;margin-top:4px;max-width:64px}
+.step-item{display:flex;flex-direction:column;align-items:center}
+.wizard-step{display:none}
+.wizard-step.active{display:block}
+.wizard-title{font-size:15px;font-weight:700;margin-bottom:12px;color:var(--text)}
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.option-card{background:var(--card2);border:2px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s;text-align:center}
+.option-card:hover{border-color:var(--blue)}
+.option-card.selected{border-color:var(--blue);background:rgba(0,180,255,.1)}
+.option-icon{font-size:22px;margin-bottom:6px}
+.option-label{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.option-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.btn{padding:12px 20px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;width:100%}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{opacity:.9}
+.btn-gold{background:var(--gold);color:#0A0E1A}.btn-gold:hover{opacity:.9}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-row{display:flex;gap:8px}.btn-row .btn{flex:1}
+.table-wrap{overflow-x:auto;margin-bottom:12px;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:11px;min-width:460px}
+thead tr{background:var(--card2)}
+th{padding:10px 8px;text-align:left;font-weight:700;color:var(--blue);border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:9px 8px;color:var(--text);border-bottom:1px solid var(--border);vertical-align:top;line-height:1.4}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.table-note{font-size:10px;color:var(--muted);text-align:center;padding:6px 0;margin-bottom:6px}
+.fact-item{background:var(--card2);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:10px}
+.fact-num{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.fact-text{font-size:12px;color:var(--text);line-height:1.6}
+.progress-bar-wrap{background:var(--card2);border-radius:99px;height:8px;margin-bottom:8px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:99px;transition:width .3s}
+.progress-label{font-size:11px;color:var(--muted);margin-bottom:16px}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.check-item:last-child{border-bottom:none}
+.check-box{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .2s;font-size:12px}
+.check-box.checked{background:var(--teal);border-color:var(--teal);color:#fff}
+.check-text{font-size:12px;color:var(--text);line-height:1.5}
+.check-text.checked{color:var(--muted);text-decoration:line-through}
+.form-group{margin-bottom:12px}
+.form-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;display:block}
+.form-input,.form-select{width:100%;padding:10px 12px;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;transition:border-color .2s}
+.form-input:focus,.form-select:focus{border-color:var(--blue)}
+.form-select option{background:var(--card2)}
+.slider-wrap{margin-bottom:16px}
+.slider-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.slider-title{font-size:12px;font-weight:600;color:var(--text)}
+.slider-value{font-size:15px;font-weight:700;color:var(--blue)}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:5px;background:var(--border);border-radius:99px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;border:none}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-card{background:var(--card2);border-radius:10px;padding:12px;text-align:center}
+.stat-val{font-size:20px;font-weight:800;margin-bottom:3px}
+.stat-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.chart-wrap{background:var(--card2);border-radius:10px;padding:14px;margin-bottom:12px}
+.chart-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:14px}
+.chart-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.chart-year{font-size:10px;color:var(--muted);width:32px;flex-shrink:0}
+.chart-bars{flex:1;display:flex;flex-direction:column;gap:3px}
+.chart-bar{height:14px;border-radius:3px;transition:width .5s;position:relative;min-width:6px}
+.bar-g{background:linear-gradient(90deg,var(--green),#16a34a)}
+.bar-r{background:linear-gradient(90deg,var(--red),#dc2626)}
+.bar-val{font-size:9px;color:#fff;position:absolute;right:4px;top:50%;transform:translateY(-50%);font-weight:700;white-space:nowrap}
+.chart-legend{display:flex;gap:16px;font-size:10px;color:var(--muted);margin-top:10px}
+.legend-item{display:flex;align-items:center;gap:4px}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--gold);color:#0A0E1A;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:700;z-index:999;transition:transform .35s;text-align:center;max-width:340px;width:calc(100% - 32px);box-shadow:0 8px 32px rgba(244,185,66,.45)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.info-box{background:rgba(0,180,255,.05);border:1px solid rgba(0,180,255,.2);border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--text);line-height:1.6}
+.warn-box{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:12px;margin-top:10px;font-size:11px;color:var(--text);line-height:1.6}
+#result-section{display:none}
+hr.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+.spacer{height:8px}
+.score-band{padding:9px 12px;border-radius:7px;font-size:11px;line-height:1.5;margin-bottom:6px}
+.band-red{background:rgba(239,68,68,.08);border-left:3px solid var(--red)}
+.band-orange{background:rgba(249,115,22,.08);border-left:3px solid var(--orange)}
+.band-blue{background:rgba(0,180,255,.08);border-left:3px solid var(--blue)}
+.band-green{background:rgba(34,197,94,.08);border-left:3px solid var(--green)}
+.roi-note{font-size:11px;color:var(--muted);padding:10px;background:rgba(244,185,66,.05);border:1px solid rgba(244,185,66,.15);border-radius:8px;line-height:1.6;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">
+    <div class="header-icon">&#x1F6A0;</div>
+    <div><h1>FL Grease Trap &amp; FOG Tool</h1></div>
+  </div>
+  <div class="header-sub">Florida Commercial Plumbing Specialists &mdash; Licensed &amp; Insured Statewide</div>
+  <div class="header-phone">&#x1F4DE; (561) 555-PIPE</div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(0)">&#x1F4B0; Estimator</button>
+  <button class="tab-btn" onclick="switchTab(1)">&#x1F4CB; FOG Laws</button>
+  <button class="tab-btn" onclick="switchTab(2)">&#x2705; Checklist</button>
+  <button class="tab-btn" onclick="switchTab(3)">&#x1F4CA; ROI Calc</button>
+</div>
+
+<div class="container">
+
+<!-- TAB 1 -->
+<div id="tab-0" class="tab-panel active">
+  <div class="section-title">Grease Trap Cost Estimator</div>
+  <div class="section-sub">Get a Florida-specific cost estimate in 4 quick steps. All prices reflect current FL commercial plumbing market rates including labor, materials, and county permitting fees.</div>
+
+  <div class="step-indicator">
+    <div class="step-item"><div class="step-dot active" id="sd-1">1</div><div class="step-label">Trap Type</div></div>
+    <div class="step-item"><div class="step-dot" id="sd-2">2</div><div class="step-label">Kitchen Size</div></div>
+    <div class="step-item"><div class="step-dot" id="sd-3">3</div><div class="step-label">Situation</div></div>
+    <div class="step-item"><div class="step-dot" id="sd-4">4</div><div class="step-label">FL Region</div></div>
+  </div>
+
+  <div class="wizard-step active" id="step-1">
+    <div class="wizard-title">Step 1: What type of grease trap?</div>
+    <div class="option-grid">
+      <div class="option-card" onclick="selectOption(1,'hydromechanical',this)"><div class="option-icon">&#x1F527;</div><div class="option-label">Hydromechanical</div><div class="option-desc">Under-sink passive separation unit</div></div>
+      <div class="option-card" onclick="selectOption(1,'in_ground',this)"><div class="option-icon">&#x26AB;</div><div class="option-label">In-Ground Passive</div><div class="option-desc">Buried concrete or fiberglass interceptor</div></div>
+      <div class="option-card" onclick="selectOption(1,'agru',this)"><div class="option-icon">&#x2699;&#xFE0F;</div><div class="option-label">AGRU</div><div class="option-desc">Automatic Grease Removal Unit</div></div>
+      <div class="option-card" onclick="selectOption(1,'vault',this)"><div class="option-icon">&#x1F3D7;&#xFE0F;</div><div class="option-label">Outdoor Vault</div><div class="option-desc">Large buried outdoor vault interceptor</div></div>
+    </div>
+    <div class="info-box"><strong>Which type is right for your Florida kitchen?</strong><br><br>
+<strong>Hydromechanical units</strong> install under the sink using passive baffles to separate grease by gravity. They are compact and cost-effective for small cafes, delis, and bars. However, many Florida counties do NOT allow hydromechanical units for high-volume kitchens (150+ seats). Always confirm with your local FOG program before purchasing.<br><br>
+<strong>In-ground passive interceptors</strong> (concrete or fiberglass, buried outside or below floor) are the most widely accepted type across all Florida county FOG programs. They require excavation but deliver large capacity, 20-30 year service life, and meet all FL Administrative Code sizing requirements when correctly specified by a licensed plumber.<br><br>
+<strong>AGRUs</strong> use motorized skimmers or heating elements to continuously remove FOG from wastewater. Excellent for high-volume operations with limited outdoor space. They require electrical connections and mechanical maintenance, and must be permitted as an alternative interceptor in many FL counties.<br><br>
+<strong>Outdoor vault interceptors</strong> are large pre-cast concrete or fiberglass structures buried outside the building. Required by most FL counties for restaurants over 150 seats, hotels, hospital kitchens, and commercial cafeterias. They offer the highest capacity and lowest per-gallon maintenance cost over their 30-50 year lifespan.</div>
+    <button class="btn btn-blue" onclick="nextStep(2)">Next: Kitchen Volume &#x2192;</button>
+  </div>
+
+  <div class="wizard-step" id="step-2">
+    <div class="wizard-title">Step 2: Kitchen volume / seating capacity</div>
+    <div class="option-grid">
+      <div class="option-card" onclick="selectOption(2,'cafe',this)"><div class="option-icon">&#x2615;</div><div class="option-label">Small Cafe / Deli</div><div class="option-desc">Under 50 seats or light food prep</div></div>
+      <div class="option-card" onclick="selectOption(2,'mid',this)"><div class="option-icon">&#x1F37D;&#xFE0F;</div><div class="option-label">Mid-Size Restaurant</div><div class="option-desc">50-150 seats, full-service kitchen</div></div>
+      <div class="option-card" onclick="selectOption(2,'large',this)"><div class="option-icon">&#x1F3EA;</div><div class="option-label">Large Restaurant</div><div class="option-desc">150-300 seats, high-volume kitchen</div></div>
+      <div class="option-card" onclick="selectOption(2,'cafeteria',this)"><div class="option-icon">&#x1F3E8;</div><div class="option-label">Commercial / Hotel</div><div class="option-desc">300+ seats, hotel or institutional kitchen</div></div>
+    </div>
+    <div class="info-box"><strong>Why kitchen volume determines your FL trap size:</strong><br><br>
+Florida Administrative Code Chapter 64E-6 requires interceptor sizing to be calculated using drainage fixture units (DFUs) connected to the grease system, plus a minimum grease retention time. As a rule of thumb, each 5 gallons per minute (GPM) of required flow rate needs roughly 25 gallons of trap capacity.<br><br>
+Undersized traps are the single most common FOG violation cited by Florida county health inspectors. An undersized trap fills faster, discharges grease into the municipal sewer prematurely, and can result in an immediate notice of violation, emergency pump-out orders, and daily fines from $500 to $10,000. Proper sizing at installation is always cheaper than retrofitting or fines later.</div>
+    <div class="btn-row"><button class="btn btn-outline" onclick="prevStep(1)">&#x2190; Back</button><button class="btn btn-blue" onclick="nextStep(3)">Next: Your Situation &#x2192;</button></div>
+  </div>
+
+  <div class="wizard-step" id="step-3">
+    <div class="wizard-title">Step 3: What is your current situation?</div>
+    <div class="option-grid">
+      <div class="option-card" onclick="selectOption(3,'none',this)"><div class="option-icon">&#x1F195;</div><div class="option-label">New Installation</div><div class="option-desc">No existing trap - new setup from scratch</div></div>
+      <div class="option-card" onclick="selectOption(3,'replacing',this)"><div class="option-icon">&#x1F504;</div><div class="option-label">Replacing Old Trap</div><div class="option-desc">Existing unit has failed or is undersized</div></div>
+      <div class="option-card" onclick="selectOption(3,'adding',this)"><div class="option-icon">&#x2795;</div><div class="option-label">Adding 2nd Unit</div><div class="option-desc">Expanding capacity with second interceptor</div></div>
+      <div class="option-card" onclick="selectOption(3,'pumpout',this)"><div class="option-icon">&#x1F69B;</div><div class="option-label">Pump-Out Only</div><div class="option-desc">Routine pump-out and maintenance service</div></div>
+    </div>
+    <div class="info-box"><strong>How your situation affects total cost in Florida:</strong><br><br>
+<strong>New installations</strong> require full permitting, excavation (for in-ground units), drain tie-in, backfill, and paving restoration where applicable. Budget 2-4 weeks for permit approval in Miami-Dade and Broward Counties. Some FL counties require a pre-installation site inspection by the utility FOG program before permit issuance.<br><br>
+<strong>Replacements</strong> run 10-15% less expensive because drain connections and permit history already exist. However, if the old trap was illegally undersized or soil around it has FOG contamination, remediation costs may partially offset savings. Always have the old unit properly decommissioned per FL DEP requirements.<br><br>
+<strong>Adding a second unit</strong> requires a new hydraulic flow calculation to balance drainage between both interceptors, plus separate excavation and plumbing tie-ins. Common in restaurants that have expanded seating beyond what the original trap was designed to handle.<br><br>
+<strong>Pump-out only</strong> pricing reflects service by a licensed FL waste hauler, manifest documentation required by state law, and a basic visual inspection of trap condition. Prices vary by trap volume (gallons pumped) and hauler travel distance from your location.</div>
+    <div class="btn-row"><button class="btn btn-outline" onclick="prevStep(2)">&#x2190; Back</button><button class="btn btn-blue" onclick="nextStep(4)">Next: FL Region &#x2192;</button></div>
+  </div>
+
+  <div class="wizard-step" id="step-4">
+    <div class="wizard-title">Step 4: Which Florida region?</div>
+    <div class="option-grid">
+      <div class="option-card" onclick="selectOption(4,'south',this)"><div class="option-icon">&#x1F334;</div><div class="option-label">South Florida</div><div class="option-desc">Miami-Dade / Broward / Palm Beach</div></div>
+      <div class="option-card" onclick="selectOption(4,'tampa',this)"><div class="option-icon">&#x2600;&#xFE0F;</div><div class="option-label">Tampa Bay</div><div class="option-desc">Hillsborough / Pinellas / Pasco</div></div>
+      <div class="option-card" onclick="selectOption(4,'jax',this)"><div class="option-icon">&#x1F30A;</div><div class="option-label">Jacksonville / NE FL</div><div class="option-desc">Duval / Clay / St. Johns / Flagler</div></div>
+      <div class="option-card" onclick="selectOption(4,'swfl',this)"><div class="option-icon">&#x1F40A;</div><div class="option-label">SW Florida</div><div class="option-desc">Naples / Fort Myers / Sarasota</div></div>
+      <div class="option-card" onclick="selectOption(4,'panhandle',this)" style="grid-column:1/-1"><div class="option-icon">&#x1F3D6;&#xFE0F;</div><div class="option-label">Florida Panhandle</div><div class="option-desc">Pensacola / Tallahassee / Panama City / Gainesville</div></div>
+    </div>
+    <div class="info-box"><strong>Why FL region affects your project cost:</strong><br><br>
+Licensed commercial plumber labor rates vary significantly across Florida. South Florida (Miami-Dade, Broward, Palm Beach) commands a 15-20% premium due to higher cost of living, greater contractor demand, and more complex county permit requirements. Broward and Miami-Dade also impose additional environmental review fees and utility connection surcharges that add 5-10% to total project cost.<br><br>
+SW Florida (Lee, Collier, Sarasota) has seen rapid growth-driven demand, pushing labor rates 15% above the statewide average. Fewer FOG-specialized contractors in this market also extends scheduling timelines, especially for vault interceptor installations requiring pre-cast concrete delivery. The Panhandle runs 10-12% below average but may have longer lead times for specialty materials. Jacksonville and NE Florida run approximately 8% below the statewide average.</div>
+    <div class="btn-row"><button class="btn btn-outline" onclick="prevStep(3)">&#x2190; Back</button><button class="btn btn-blue" onclick="calcCost()">Calculate My Estimate &#x2192;</button></div>
+  </div>
+
+  <div id="result-section">
+    <hr class="divider">
+    <div class="section-title">Your Florida Estimate</div>
+    <div id="result-summary-text" class="section-sub" style="margin-bottom:14px"></div>
+    <div class="card card-blue">
+      <div class="card-title blue">&#x1F4B0; Estimated Cost Range</div>
+      <div id="cost-range" style="font-size:30px;font-weight:800;color:var(--blue);margin-bottom:8px"></div>
+      <div id="cost-detail" style="font-size:11px;color:var(--muted);line-height:1.5"></div>
+    </div>
+    <div class="card card-gold">
+      <div class="card-title gold">&#x1F4DC; FL DEP / County FOG Ordinance Note</div>
+      <div id="fog-note" style="font-size:12px;color:var(--text);line-height:1.6"></div>
+    </div>
+    <div id="warn-card" class="card" style="border-color:var(--orange);background:rgba(249,115,22,.05);display:none">
+      <div class="card-title orange">&#x26A0;&#xFE0F; FL Admin Code Sizing Warning</div>
+      <div id="warn-note" style="font-size:12px;color:var(--text);line-height:1.6"></div>
+    </div>
+    <div class="card card-green">
+      <div class="card-title green">&#x1F49A; Annual Savings Potential</div>
+      <div id="savings-note" style="font-size:12px;color:var(--text);line-height:1.6"></div>
+    </div>
+    <div id="hydro-card" class="card card-teal" style="display:none">
+      <div class="card-title teal">&#x2139;&#xFE0F; Hydromechanical Sizing Advisory</div>
+      <div id="hydro-note" style="font-size:12px;color:var(--text);line-height:1.6"></div>
+    </div>
+    <button class="btn btn-gold" onclick="showToast()" style="margin-bottom:8px">&#x1F4DE; Get a Free On-Site Quote &mdash; (561) 555-PIPE</button>
+    <button class="btn btn-outline" onclick="resetWizard()" style="margin-top:6px">&#x21BA; Start Over</button>
+  </div>
+</div>
+
+<!-- TAB 2 -->
+<div id="tab-1" class="tab-panel">
+  <div class="section-title">FL FOG Laws &amp; Sizing Guide</div>
+  <div class="section-sub">Florida-specific regulations, sizing requirements, county ordinances, and compliance facts every food service operator and property manager needs to know.</div>
+
+  <div class="card">
+    <div class="card-title blue">&#x2696;&#xFE0F; 5 Critical Florida FOG Regulation Facts</div>
+    <div id="fog-facts"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title blue">&#x1F4CA; Table A: Grease Trap Sizing by FL Kitchen Type</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">Sizing requirements based on Florida Administrative Code Chapter 64E-6, PDI G101 Plumbing &amp; Drainage Institute standards, and Florida county FOG program guidelines. All sizing must be confirmed by a FL-licensed engineer or master plumber for permitted installations. GPM = minimum gallons-per-minute flow rate the interceptor must handle at peak kitchen operation.</div>
+    <div class="table-note">&#x2190; Scroll horizontally to view all columns &#x2192;</div>
+    <div class="table-wrap"><table id="table-a"></table></div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-top:8px">Note: These are baseline minimums. Your county FOG program may require larger units. Dual compartment interceptors may be required for kitchens with pre-rinse spray valves, dishwashers, and multiple fryers operating simultaneously. Always request a site-specific DFU (Drainage Fixture Unit) calculation from your licensed plumbing contractor.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title gold">&#x1F5FA;&#xFE0F; Table B: FL County FOG Ordinance Comparison</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">Requirements as of 2024-2025. Florida county FOG programs update frequently. Always verify current requirements directly with your local water/wastewater utility and county health department. Where state and local requirements differ, the more stringent standard applies. All food service establishment owners should confirm their specific county program requirements annually at permit renewal time.</div>
+    <div class="table-note">&#x2190; Scroll horizontally to view all columns &#x2192;</div>
+    <div class="table-wrap"><table id="table-b"></table></div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-top:8px">Manifest = written record of pump-out service including date, volume removed, hauler license number, and disposal facility address. FL law requires retention for 3 years minimum. Several counties now require electronic submission through county portals within 15-30 days of each pump-out service event.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">&#x2699;&#xFE0F; Table C: Grease Trap Type Comparison</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">Side-by-side technical and cost comparison of the four interceptor types used in Florida commercial food service operations. Use this reference when evaluating options with your licensed plumbing contractor or county FOG program coordinator.</div>
+    <div class="table-note">&#x2190; Scroll horizontally to view all columns &#x2192;</div>
+    <div class="table-wrap"><table id="table-c"></table></div>
+  </div>
+
+  <div class="card card-gold">
+    <div class="card-title gold">&#x1F4DE; Need Help Interpreting FL Requirements?</div>
+    <div style="font-size:12px;color:var(--text);margin-bottom:14px;line-height:1.6">Florida's FOG regulations span state administrative code, county utility ordinances, and health department food service rules - and all three can apply simultaneously to your operation. Our Florida-licensed commercial plumbers stay current on requirements in every major county and know exactly what inspectors look for during compliance audits. We handle permit applications, sizing calculations, installation, manifests, and ongoing maintenance programs - so you can focus on running your kitchen. We have active working relationships with FOG program coordinators in Miami-Dade, Broward, Palm Beach, Hillsborough, Pinellas, Duval, Lee, Collier, Orange, and Sarasota counties.</div>
+    <button class="btn btn-gold" onclick="showToast()">&#x1F4DE; Free Compliance Consultation &mdash; (561) 555-PIPE</button>
+  </div>
+</div>
+
+<!-- TAB 3 -->
+<div id="tab-2" class="tab-panel">
+  <div class="section-title">FOG Compliance Checklist</div>
+  <div class="section-sub">Track your Florida FOG compliance status. Tap each item to mark it complete. Full compliance protects your food service permit and shields you from county fines and emergency shutdowns.</div>
+
+  <div class="card">
+    <div class="progress-bar-wrap"><div class="progress-bar" id="checklist-bar" style="width:0%"></div></div>
+    <div class="progress-label" id="checklist-label">0 of 16 items complete &mdash; 0% compliant</div>
+    <div id="checklist-items"></div>
+  </div>
+
+  <div class="card card-teal">
+    <div class="card-title teal">&#x1F4CB; What Your Compliance Score Means</div>
+    <div class="score-band band-red"><strong style="color:var(--red)">0-4 items (0-25%) &mdash; High Violation Risk:</strong> Your operation likely does not meet Florida FOG compliance standards. A county inspector could issue an immediate notice of violation, a corrective action order, or a stop-service order. The risk of emergency plumbing situations and FOG-related sewer blockages is elevated. Contact a licensed Florida plumber for an emergency compliance audit before your next scheduled inspection.</div>
+    <div class="score-band band-orange"><strong style="color:var(--orange)">5-10 items (31-62%) &mdash; Moderate Risk:</strong> Basic practices are in place but significant compliance gaps remain. Most Florida county health inspectors will identify multiple deficiencies during a routine inspection, which can result in written violations, mandatory corrective action timelines, and re-inspection fees. Schedule a professional FOG compliance review within 30 days.</div>
+    <div class="score-band band-blue"><strong style="color:var(--blue)">11-14 items (69-87%) &mdash; Good Standing:</strong> Your operation demonstrates strong compliance intent with only minor gaps remaining. Address the outstanding items promptly to achieve full legal protection against permit actions and county fines. At this level, most routine inspections will pass without major issues.</div>
+    <div class="score-band band-green"><strong style="color:var(--green)">15-16 items (94-100%) &mdash; Excellent Compliance:</strong> Your operation meets or exceeds Florida FOG compliance standards. Maintain your scheduled pump-outs, keep manifests organized and current, document your annual licensed plumber inspection, and stay in contact with your county FOG program coordinator for any regulatory updates. You are in the lowest risk category for permit issues and fines.</div>
+  </div>
+
+  <div class="card card-blue">
+    <div class="card-title blue">&#x1F50D; Schedule Your Free FOG Inspection</div>
+    <div style="font-size:12px;color:var(--text);margin-bottom:14px;line-height:1.6">Our FL-licensed commercial plumbers conduct comprehensive FOG compliance audits at no charge for qualifying food service establishments. During the inspection we verify trap sizing against your actual drain fixture count, inspect baffles and tees for damage or displacement, check access cover clearance, review your pump-out manifest history, and assess your drain system for FOG risk factors. You receive a written compliance report suitable for presentation to county health inspectors, plus a prioritized action plan for any issues discovered.</div>
+    <div class="form-group"><label class="form-label">Your Name *</label><input class="form-input" id="f-name" type="text" placeholder="First &amp; Last Name"></div>
+    <div class="form-group"><label class="form-label">Business Name *</label><input class="form-input" id="f-biz" type="text" placeholder="Restaurant or Kitchen Name"></div>
+    <div class="form-group"><label class="form-label">Phone Number *</label><input class="form-input" id="f-phone" type="tel" placeholder="(561) 555-PIPE"></div>
+    <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" id="f-email" type="email" placeholder="your@email.com"></div>
+    <div class="form-group"><label class="form-label">Florida County</label>
+      <select class="form-select" id="f-county">
+        <option value="">Select your county...</option>
+        <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+        <option>Hillsborough</option><option>Pinellas</option><option>Duval</option>
+        <option>Lee</option><option>Collier</option><option>Orange</option><option>Sarasota</option>
+        <option>Manatee</option><option>Brevard</option><option>Volusia</option>
+        <option>Escambia</option><option>Leon</option><option>Okaloosa</option>
+        <option>Bay</option><option>St. Johns</option><option>Alachua</option>
+        <option>Other Florida County</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Current Grease Trap Type</label>
+      <select class="form-select" id="f-trap">
+        <option value="">Select trap type...</option>
+        <option>Hydromechanical (under-sink)</option>
+        <option>In-ground passive interceptor</option>
+        <option>Automatic Grease Removal Unit (AGRU)</option>
+        <option>Outdoor vault interceptor</option>
+        <option>No grease trap / unsure</option>
+      </select>
+    </div>
+    <button class="btn btn-gold" onclick="showToast()">&#x1F50D; Schedule Free FOG Inspection</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">&#x23F0; FL Pump-Out Frequency Guide</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">Minimum recommended frequencies for Florida commercial food service kitchens. Many counties require more frequent service based on your kitchen's actual grease generation rate. Always confirm your specific county's binding requirements. These frequencies assume average kitchen output; high-volume fryer operations may require service more often.</div>
+    <div class="table-wrap"><table id="table-pumpout"></table></div>
+    <div class="warn-box"><strong style="color:var(--red)">&#x26A0;&#xFE0F; Florida's 25% Rule:</strong> Most Florida county FOG programs enforce the "25% rule" - if the combined depth of the floating grease cap plus settled bottom solids exceeds 25% of the total liquid depth of the trap, it must be pumped immediately regardless of schedule. Keep a long measuring rod or dipstick near your trap access port. Document each manual check with date and measurement reading to demonstrate proactive compliance if a county inspector visits outside a scheduled inspection date. Many operators check their traps weekly during slow business periods.</div>
+  </div>
+</div>
+
+<!-- TAB 4 -->
+<div id="tab-3" class="tab-panel">
+  <div class="section-title">FOG Cost &amp; Compliance ROI</div>
+  <div class="section-sub">See the true financial impact of proper grease trap management for your Florida food service business. Adjust the inputs below to match your operation and calculate your multi-year cost outlook.</div>
+
+  <div class="card">
+    <div class="card-title blue">&#x2699;&#xFE0F; Your Kitchen Details</div>
+    <div class="slider-wrap">
+      <div class="slider-label-row"><span class="slider-title">Number of kitchen drains</span><span class="slider-value" id="val-drains">4</span></div>
+      <input type="range" id="sl-drains" min="1" max="20" value="4" oninput="updateSlider('drains',this.value);calcROI()">
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-label-row"><span class="slider-title">Average meals served per day</span><span class="slider-value" id="val-meals">80</span></div>
+      <input type="range" id="sl-meals" min="10" max="500" value="80" oninput="updateSlider('meals',this.value);calcROI()">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Current Annual FOG Violation Costs</label>
+      <select class="form-select" id="sl-violations" onchange="calcROI()">
+        <option value="0">$0 - No current violations or fines</option>
+        <option value="1250">$500-$2,000 - Minor fines or notices of violation</option>
+        <option value="6500">$2,000-$10,000 - Significant fines or repeat violations</option>
+        <option value="35000">Shut-down risk - Permit suspension or SSO liability</option>
+      </select>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-label-row"><span class="slider-title">Years to calculate</span><span class="slider-value" id="val-years">5</span></div>
+      <input type="range" id="sl-years" min="1" max="10" value="5" oninput="updateSlider('years',this.value);calcROI()">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title green">&#x1F4D0; Recommended Trap Specifications</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-val" id="rec-gpm" style="color:var(--blue)">-</div><div class="stat-desc">Minimum GPM Required</div></div>
+      <div class="stat-card"><div class="stat-val" id="rec-gal" style="color:var(--teal)">-</div><div class="stat-desc">Minimum Gallon Capacity</div></div>
+    </div>
+    <div id="rec-type" style="font-size:12px;color:var(--text);padding:10px;background:var(--bg);border-radius:8px;line-height:1.6"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title gold">&#x1F4B0; Annual Cost Breakdown</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-val" id="annual-maint" style="color:var(--green)">-</div><div class="stat-desc">Est. Annual Maintenance Cost</div></div>
+      <div class="stat-card"><div class="stat-val" id="annual-fine" style="color:var(--red)">-</div><div class="stat-desc">Annual Fine Risk Avoided</div></div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title" id="chart-title">5-Year: Compliance Cost vs. Non-Compliance Risk</div>
+    <div id="roi-chart"></div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span>Compliance maintenance cost</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div><span>Non-compliance risk exposure</span></div>
+    </div>
+  </div>
+
+  <div class="card card-green">
+    <div class="card-title green">&#x1F4CA; Total Analysis Summary</div>
+    <div id="roi-summary" style="font-size:12px;color:var(--text);line-height:1.7"></div>
+    <div class="roi-note" id="roi-note"></div>
+  </div>
+
+  <div class="card card-blue">
+    <div class="card-title blue">&#x1F680; Protect Your Florida Business</div>
+    <div style="font-size:12px;color:var(--text);margin-bottom:14px;line-height:1.6">Our team of Florida-licensed commercial plumbers handles your entire FOG compliance program - trap sizing calculations per FL Admin Code 64E-6, county permit applications, professional installation, licensed waste hauler coordination, manifest management, and annual inspection documentation. We operate throughout Florida and maintain active relationships with FOG program coordinators in all major counties. Most permits approved and installations scheduled within 10 business days of initial consultation.</div>
+    <div class="form-group"><label class="form-label">Your Name</label><input class="form-input" id="r-name" type="text" placeholder="Full Name"></div>
+    <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="r-phone" type="tel" placeholder="(561) 555-PIPE"></div>
+    <button class="btn btn-gold" onclick="showToast()">&#x1F4DE; Get Your Custom FOG Plan &mdash; (561) 555-PIPE</button>
+  </div>
+</div>
+
+</div>
+
+<div class="toast" id="toast">&#x1F4DE; We'll call you within 2 hours!<br><span style="font-size:12px;font-weight:400;opacity:.85">Stand by for our FL plumbing team &mdash; (561) 555-PIPE</span></div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const COSTS={hydromechanical:{cafe:[800,2200],mid:[1200,3500],large:[2000,6000],cafeteria:[3000,8000]},in_ground:{cafe:[2500,6000],mid:[4000,10000],large:[7000,18000],cafeteria:[12000,30000]},agru:{cafe:[3000,8000],mid:[5000,14000],large:[9000,25000],cafeteria:[15000,40000]},vault:{cafe:[4000,10000],mid:[7000,20000],large:[12000,35000],cafeteria:[20000,60000]}};
+const EMULT={none:1.0,replacing:0.85,adding:1.20,pumpout:0.15};
+const RMULT={south:1.20,tampa:1.0,jax:0.92,swfl:1.15,panhandle:0.88};
+const S={trap:'',volume:'',existing:'',region:''};
+let curStep=1;
+
+function switchTab(idx){
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+}
+
+function selectOption(step,val,el){
+  el.closest('.option-grid').querySelectorAll('.option-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  const keys=['','trap','volume','existing','region'];
+  S[keys[step]]=val;
+}
+
+function nextStep(n){
+  const keys=['','trap','volume','existing','region'];
+  if(n>1&&!S[keys[n-1]]){alert('Please select an option to continue.');return;}
+  document.getElementById('step-'+(n-1)).classList.remove('active');
+  document.getElementById('step-'+n).classList.add('active');
+  curStep=n; updateDots(n);
+}
+
+function prevStep(n){
+  document.getElementById('step-'+(n+1)).classList.remove('active');
+  document.getElementById('step-'+n).classList.add('active');
+  curStep=n; updateDots(n);
+}
+
+function updateDots(a){
+  for(let i=1;i<=4;i++){
+    const d=document.getElementById('sd-'+i);
+    d.classList.remove('active','done');
+    if(i<a)d.classList.add('done');
+    else if(i===a)d.classList.add('active');
+  }
+}
+
+function fmtD(n){return'$'+n.toLocaleString();}
+
+function calcCost(){
+  if(!S.trap||!S.volume||!S.existing||!S.region){alert('Please complete all 4 steps first.');return;}
+  const base=COSTS[S.trap][S.volume];
+  const mult=EMULT[S.existing]*RMULT[S.region];
+  const lo=Math.round(base[0]*mult/100)*100;
+  const hi=Math.round(base[1]*mult/100)*100;
+  renderResults(lo,hi);
+}
+
+function renderResults(lo,hi){
+  const tNames={hydromechanical:'Hydromechanical',in_ground:'In-Ground Passive',agru:'AGRU',vault:'Vault Interceptor'};
+  const vNames={cafe:'Small Cafe/Deli',mid:'Mid-Size Restaurant',large:'Large Restaurant',cafeteria:'Commercial/Hotel Kitchen'};
+  const eNames={none:'New Installation',replacing:'Replacement',adding:'Adding 2nd Unit',pumpout:'Pump-Out Only'};
+  const rNames={south:'South Florida',tampa:'Tampa Bay',jax:'Jacksonville/NE FL',swfl:'SW Florida',panhandle:'Panhandle'};
+  document.getElementById('result-summary-text').textContent=tNames[S.trap]+' · '+vNames[S.volume]+' · '+eNames[S.existing]+' · '+rNames[S.region];
+  document.getElementById('cost-range').textContent=fmtD(lo)+' – '+fmtD(hi);
+  document.getElementById('cost-detail').textContent='Includes materials, labor, excavation where applicable, and standard county permit fees. Final pricing varies based on site conditions, soil type, distance from building, and any required concrete cutting or paving restoration. Prices reflect 2024-2025 Florida commercial plumbing market rates.';
+  const fogMsgs={south:'South Florida operates some of the strictest FOG enforcement in the state. Miami-Dade Water and Sewer Department (WASD) requires all food service establishments to register their grease interceptor, submit electronic pump-out manifests through the WASD portal within 30 days of each service, and retain 3 years of records on-site for inspector review. Broward County Environmental Protection enforces quarterly minimum pump-out requirements and conducts unannounced compliance inspections at registered establishments. Palm Beach County Water Utilities requires interceptor registration, quarterly pump-outs, and electronic manifest submission. All three counties assess daily fines up to $1,000 per violation and can suspend food service permits for repeat offenders.',tampa:'Hillsborough County Environmental Protection Commission (EPC) and Pinellas County Environmental Management both operate active FOG programs with teeth. Hillsborough requires manifests to be submitted within 15 days of pump-out service, conducts periodic compliance inspections, and can issue consent orders with mandatory corrective action timelines. The Tampa Bay area significantly increased FOG enforcement after 2021, following multiple sanitary sewer overflow events linked to restaurant grease discharge. Pasco County is expanding its FOG program as restaurant development in the New Port Richey and Wesley Chapel corridors accelerates. Hillsborough EPC fines can reach $10,000 per day per violation for willful non-compliance.',jax:'JEA (Jacksonville Electric Authority) operates one of Florida\'s most comprehensive and well-funded FOG programs, widely regarded as a national model. All food service establishments in Duval County must register with JEA\'s FOG program, maintain current electronic pump-out manifests, and submit to periodic compliance inspections by JEA field inspectors. JEA actively monitors sewer flow meters for unusual FOG surges and has the analytical capability to trace FOG sources to specific upstream restaurant connections. JEA imposes monthly FOG surcharge fees for establishments with documented grease discharge above threshold levels. Clay, St. Johns, and Flagler counties follow state minimums but are expanding local FOG programs as northeastern Florida\'s restaurant economy grows.',swfl:'Lee County Utilities, the City of Naples Utilities, and Collier County Utilities maintain separate FOG programs with slightly different administrative requirements. Lee County requires quarterly pump-outs for most food service establishments and electronic manifests within 30 days of service. Collier County has dramatically expanded FOG enforcement with rapid growth in Naples\' restaurant and resort districts along Fifth Avenue South and the US-41 corridor. Fort Myers requires grease trap registration separately with the City Public Works Department, distinct from the Lee County Utility FOG program - meaning some establishments must comply with two separate programs simultaneously. Sarasota County and the City of Sarasota have different FOG requirements, adding complexity for operators whose facilities straddle jurisdictional boundaries.',panhandle:'The Panhandle generally follows Florida state minimums under Chapter 64E-6, though individual counties have expanded requirements. Escambia County (Pensacola) operates a formal FOG program through Emerald Coast Utilities Authority (ECUA) with electronic manifest requirements. Leon County (Tallahassee) runs an enhanced FOG inspection program through Tallahassee Utilities with annual compliance checks for all registered establishments. Bay County (Panama City) significantly expanded its FOG program following Hurricane Michael recovery-era restaurant construction. Okaloosa County (Fort Walton Beach / Destin) has increased enforcement as the tourist-season restaurant economy has grown. While historically less aggressive than South Florida, all panhandle county programs have increased fines and inspection frequency since 2020.'};
+  document.getElementById('fog-note').textContent=fogMsgs[S.region];
+  const wc=document.getElementById('warn-card');
+  if(S.volume==='large'||S.volume==='cafeteria'){
+    wc.style.display='block';
+    document.getElementById('warn-note').textContent='High-volume kitchens (150+ seats or institutional operations) are subject to stricter sizing review under FL Administrative Code 64E-6. For these establishments, interceptor capacity must be calculated using actual DFU counts by a licensed Florida engineer or master plumber, and the sizing worksheet must be submitted with the permit application. Most Florida county health departments require a pre-permit site inspection for large installations. County FOG program coordinators typically review large interceptor projects separately from routine permits. Improperly sized traps at large facilities are subject to mandatory corrective orders that can delay food service permit renewals and require complete reinstallation.';
+  } else {wc.style.display='none';}
+  const blockage={cafe:2500,mid:5000,large:10000,cafeteria:18000}[S.volume];
+  const pumpYear={cafe:900,mid:1800,large:3200,cafeteria:4800}[S.volume];
+  document.getElementById('savings-note').textContent='A properly maintained grease trap prevents costly emergency sewer blockages and county fines. The average FOG-related emergency plumbing call in Florida costs '+fmtD(Math.round(blockage*0.15))+'-'+fmtD(Math.round(blockage*0.25))+', while a full sewer blockage clearing runs '+fmtD(blockage)+' or more. County fines for a single FOG violation range from $500 to $10,000. An annual pump-out maintenance program costs approximately '+fmtD(pumpYear)+'/year - a fraction of a single enforcement action. Five-year savings from proper maintenance vs. no maintenance: estimated '+fmtD((blockage+2000)*5-(pumpYear*5))+' not including lost revenue during any forced closures (typically $3,500-$8,000 per day for a mid-size FL restaurant).';
+  const hc=document.getElementById('hydro-card');
+  if(S.trap==='hydromechanical'&&(S.volume==='large'||S.volume==='cafeteria')){
+    hc.style.display='block';
+    document.getElementById('hydro-note').textContent='Hydromechanical (under-sink) grease interceptors are rated for relatively low flow rates and are explicitly prohibited by most Florida county FOG programs for high-volume kitchens. For establishments serving 150 or more seats, FL Administrative Code and the county ordinances in Miami-Dade, Broward, Hillsborough, Pinellas, Duval, Lee, Collier, Orange, and most other major FL counties require in-ground passive interceptors or vault-type units. A hydromechanical unit for this kitchen volume would very likely be rejected at the permit application stage and could result in a stop-work order if installed without proper approval. We strongly recommend selecting In-Ground Passive or Vault Interceptor for your kitchen size to ensure your installation permit is approved on the first submission.';
+  } else {hc.style.display='none';}
+  document.getElementById('result-section').style.display='block';
+  document.getElementById('step-'+curStep).classList.remove('active');
+  setTimeout(()=>document.getElementById('result-section').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function resetWizard(){
+  S.trap='';S.volume='';S.existing='';S.region='';
+  document.getElementById('result-section').style.display='none';
+  for(let i=1;i<=4;i++){
+    document.getElementById('step-'+i).classList.remove('active');
+    document.querySelectorAll('#step-'+i+' .option-card').forEach(c=>c.classList.remove('selected'));
+  }
+  document.getElementById('step-1').classList.add('active');
+  curStep=1;updateDots(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+
+function buildTable(id,headers,rows){
+  const tbl=document.getElementById(id);
+  const thead=document.createElement('thead');
+  const hrow=document.createElement('tr');
+  headers.forEach(h=>{const th=document.createElement('th');th.textContent=h;hrow.appendChild(th);});
+  thead.appendChild(hrow);tbl.appendChild(thead);
+  const tbody=document.createElement('tbody');
+  rows.forEach(row=>{
+    const tr=document.createElement('tr');
+    row.forEach(cell=>{const td=document.createElement('td');td.textContent=cell;tr.appendChild(td);});
+    tbody.appendChild(tr);
+  });
+  tbl.appendChild(tbody);
+}
+
+function initTableA(){
+  buildTable('table-a',
+    ['Kitchen Type','Min GPM','Min Gallons','Recommended Type','FL Code Ref','Pump Frequency'],
+    [
+      ['Cafe / Bakery (light fry)','10 GPM','250 gal','Hydromechanical or 250-gal in-ground','64E-6.011(1)(a)','Monthly to quarterly'],
+      ['Full-Service Restaurant','25 GPM','1,000 gal','In-ground passive interceptor','64E-6.011(2)','Quarterly minimum'],
+      ['Fast Food / Quick-Serve','20 GPM','750 gal','In-ground passive, 750-gal min','64E-6.011(2)','Every 30-60 days'],
+      ['Hotel / Resort Kitchen','50 GPM','1,500 gal','In-ground passive or vault','64E-6.011(3)','Monthly'],
+      ['Hospital Cafeteria','75 GPM','2,000 gal','Vault interceptor required','64E-6.011(3)','Monthly or bi-monthly'],
+      ['School Cafeteria','40 GPM','1,000 gal','In-ground passive interceptor','64E-6.011(2)','Quarterly'],
+      ['Food Truck Commissary','15 GPM','500 gal','In-ground passive, 500-gal','64E-6.011(1)(b)','Monthly'],
+      ['Bar / Lounge (with kitchen)','10 GPM','250 gal','Hydromechanical or in-ground','64E-6.011(1)(a)','Quarterly'],
+      ['Catering / Event Facility','35 GPM','1,000 gal','In-ground passive or AGRU','64E-6.011(2)','Monthly'],
+      ['Grocery Store Deli / Prep','20 GPM','500 gal','In-ground passive interceptor','64E-6.011(2)','Quarterly minimum'],
+    ]
+  );
+}
+
+function initTableB(){
+  buildTable('table-b',
+    ['County','Ordinance / Program','Min Interceptor Size','Pump Frequency','Manifest Required','Online Reporting'],
+    [
+      ['Miami-Dade','WASD FOG Ord. Sec 24-43.1','1,000 gal (food service)','Quarterly minimum','Yes - within 30 days','Yes (WASD eMani portal)'],
+      ['Broward','Broward Env. Prot. Sec 27-306','750 gal (100+ seats)','Quarterly minimum','Yes - retain 3 years','Yes (BCenv portal)'],
+      ['Palm Beach','PBCWUD FOG Policy 4.02','500 gal minimum','Quarterly','Yes - retain 3 years','Partial (email submit)'],
+      ['Hillsborough','HillsEnv FOG Rule 1-3','750 gal (mid and above)','Every 90 days','Yes - within 15 days','Yes (HillsEnv portal)'],
+      ['Pinellas','Pinellas Code Sec 102-31','500 gal minimum','Quarterly','Yes - paper manifests','No (paper only, 2025)'],
+      ['Duval','JEA FOG Program Sec WW-5','1,000 gal (restaurants)','Quarterly per 25% rule','Yes - online required','Yes (JEA FOG portal)'],
+      ['Lee','Lee Cnty Util. Ord. Sec 34-91','750 gal (food service)','Every 90 days','Yes - retain 3 years','No (paper currently)'],
+      ['Collier','Collier Util. Std. Sec 3.12','750 gal minimum','Quarterly','Yes - retain 3 years','Partial (email ok)'],
+      ['Orange','OUC FOG Program Sec WS-11','500 gal (cafe and above)','Quarterly minimum','Yes - within 30 days','Yes (OUC online portal)'],
+      ['Sarasota','Sarasota Code Sec 46-41','500 gal minimum','Every 90 days','Yes - paper or email','No (paper currently)'],
+    ]
+  );
+}
+
+function initTableC(){
+  buildTable('table-c',
+    ['Feature','Hydromechanical','In-Ground Passive','AGRU','Vault Interceptor'],
+    [
+      ['Typical size range','25-100 gallons','250-2,500 gallons','50-300 gallons','1,000-10,000 gallons'],
+      ['Flow rate capacity','5-50 GPM','25-200 GPM','10-100 GPM','50-500+ GPM'],
+      ['Install cost (FL)','$800-$6,000','$2,500-$30,000','$3,000-$40,000','$4,000-$60,000'],
+      ['Monthly maintenance','Weekly-monthly cleaning','$150-$500 per pump-out','Automated + monthly check','$300-$1,500 per pump-out'],
+      ['Typical pump freq.','Weekly to monthly','Quarterly to monthly','Monthly inspection','Monthly to quarterly'],
+      ['Best for','Small cafes, delis, bars','Most FL restaurants','High-grease, limited space','Hotels, cafeterias, chains'],
+      ['FL code compliance','Limited (small ops only)','Excellent - widely accepted','Good (with proper permit)','Excellent - all volumes'],
+      ['Expected lifespan','5-10 years','20-30+ years','10-15 years','30-50+ years'],
+      ['Space requirement','Under-sink (minimal)','Excavation required outside','Small room or under-sink','Large outdoor area needed'],
+      ['Odor control risk','Low (indoor, vented)','Medium (needs proper venting)','Low (sealed unit)','Medium-High if neglected'],
+    ]
+  );
+}
+
+function initPumpoutTable(){
+  buildTable('table-pumpout',
+    ['Trap Type','Typical Pumping Interval','When to Call NOW'],
+    [
+      ['Hydromechanical (under-sink)','Weekly to monthly based on volume','If 25% or more full of grease at any inspection'],
+      ['In-Ground Passive Interceptor','Quarterly (every 90 days) minimum','If grease layer exceeds 25% of liquid depth'],
+      ['AGRU (Auto Grease Removal Unit)','Self-cleaning + monthly inspection','If alarm triggers or skimmer malfunction detected'],
+      ['Outdoor Vault Interceptor','Every 30-90 days based on volume','If grease layer exceeds 1/4 of total capacity'],
+    ]
+  );
+}
+
+function initFogFacts(){
+  const facts=[
+    ['FACT 01 - Florida Admin Code Chapter 64E-6',
+     'Florida Administrative Code Chapter 64E-6 governs food service establishment sanitation statewide, including all grease interceptor requirements. Every commercial kitchen producing grease-laden wastewater must install an approved interceptor sized to handle peak flow rates from all connected drainage fixtures. The sizing formula required under 64E-6 accounts for drainage fixture units (DFUs), minimum grease retention time of 24 minutes, and the expected grease-to-water ratio based on kitchen type and menu. Non-functional or improperly sized interceptors are grounds for immediate food service permit suspension under Florida Statute Section 381.0072. Licensed plumbers submitting interceptor permit applications must include a sizing calculation worksheet signed or stamped by the engineer of record or master plumber of record for the project.'],
+    ['FACT 02 - Florida County FOG Programs Override State Minimums',
+     'Florida counties have full authority to adopt FOG ordinances that are more stringent than state minimums under Chapter 64E-6 - and most major Florida counties have exercised this authority aggressively. Miami-Dade WASD, Broward County Environmental Protection, Hillsborough County EPC, and JEA in Duval County all operate FOG programs with requirements that significantly exceed state minimums in areas including minimum interceptor size, pump-out frequency, manifest submission timelines, and online reporting requirements. Restaurant owners must simultaneously satisfy both state law and all applicable county programs. The most stringent standard always applies, regardless of which jurisdiction issued the food service permit. This dual-compliance requirement is a major source of confusion for multi-location Florida restaurant operators who must track different requirements for each county in which they operate.'],
+    ['FACT 03 - Manifest Recordkeeping Is a Legal Requirement',
+     'Florida law requires all grease trap pump-out manifests to be retained on-site for a minimum of three (3) consecutive years, accessible to any authorized inspector upon demand. Each manifest must be completed and signed by the licensed waste hauler who performed the service and must include the date and time of service, the volume of material removed (in gallons), the FL-licensed hauler name and contractor license number, and the name and address of the licensed disposal facility where the material was taken. Incomplete, missing, or fraudulently altered manifests are independently citable violations subject to fines separate from any trap maintenance violations. Several Florida counties now require electronic manifest submission through county-operated web portals within 15 to 30 calendar days of each pump-out service event, with automatic enforcement triggers for late or missing submissions.'],
+    ['FACT 04 - FOG Non-Compliance Creates Civil and Criminal Liability',
+     'Under Florida utility law, environmental regulations, and Florida Statute Section 403, food service establishments that cause FOG-related sanitary sewer overflows (SSOs) can be held financially liable for the complete cost of cleanup and mitigation. A single SSO event in Florida routinely costs $5,000 to $50,000 or more to remediate, including vacuum truck services, soil sampling, environmental reporting, and public notice requirements. Florida DEP can assess administrative penalties up to $10,000 per day per violation for SSOs caused by negligent FOG management. Multiple Florida counties have also established monthly FOG surcharge fees on utility bills for food service establishments with documented grease discharge above threshold levels, adding hundreds to thousands of dollars per year to operating costs for non-compliant operators.'],
+    ['FACT 05 - Food Service Permits Are Directly Tied to FOG Compliance',
+     'Florida food service establishment permits, issued annually by county health departments under contract with FDOH, are explicitly and legally linked to grease interceptor compliance status. Annual permit renewal applications require current pump-out manifest documentation. Florida health inspectors are trained to check grease trap condition during routine unannounced inspections and are authorized to issue immediate stop-service orders if a trap is found to be non-functional, overfull, inaccessible, or if manifests cannot be produced on demand. Operating a food service establishment on a suspended permit is a first-degree misdemeanor under Florida law, carrying penalties of up to one year in county jail and fines up to $1,000 per day. Food service permit fees in Florida range from approximately $225 to $1,400 annually based on establishment size, seating capacity, and county administrative fee schedules.'],
+  ];
+  const container=document.getElementById('fog-facts');
+  facts.forEach(([num,text])=>{
+    const item=document.createElement('div');item.className='fact-item';
+    const numEl=document.createElement('div');numEl.className='fact-num';numEl.textContent=num;
+    const textEl=document.createElement('div');textEl.className='fact-text';textEl.textContent=text;
+    item.appendChild(numEl);item.appendChild(textEl);container.appendChild(item);
+  });
+}
+
+const CHECKLIST_ITEMS=[
+  'Verified grease trap is properly sized per FL Admin Code 64E-6 based on actual DFU count and kitchen flow rate',
+  'Obtained and currently displaying valid food service establishment permit from county health department',
+  'Grease trap registered with local water utility or county FOG program (required in most major FL counties)',
+  'Established and documented pumping schedule - quarterly minimum frequency in most FL counties',
+  'Using only a licensed FL septic tank contractor or waste hauler for all pump-out services (required by FL law)',
+  'Maintaining pump-out manifests on-site - FL law requires 3-year retention, available for inspector review on demand',
+  'Baffles and inlet and outlet tees inspected quarterly for corrosion, displacement, or structural damage',
+  'Drain screens in place at all sinks to prevent food scraps and solids from entering grease trap system',
+  'Kitchen staff trained on proper FOG disposal - cooking oils, animal fats, and food waste in trash, not drains',
+  'No hot water flushing, grease-dissolving enzymes, surfactants, or solvents poured into drains to mask FOG buildup',
+  'Grease trap access covers are completely unobstructed and can be opened without tools within 2 minutes',
+  'Annual inspection by a Florida-licensed master plumber documented in writing and kept with maintenance records',
+  'Secondary overflow containment measures in place for all underground and vault-type interceptor installations',
+  'Current copy of your county sewer use ordinance on file - reviewed for any requirements beyond state minimum standards',
+  'Lift station (if applicable) is fully operational with working alarm, and maintenance log is current and accessible',
+  'Emergency pump-out contractor name and direct phone number posted visibly inside the kitchen near the trap access',
+];
+
+const checkState=new Array(16).fill(false);
+
+function initChecklist(){
+  const container=document.getElementById('checklist-items');
+  CHECKLIST_ITEMS.forEach((item,i)=>{
+    const div=document.createElement('div');div.className='check-item';div.onclick=()=>toggleCheck(i);
+    const box=document.createElement('div');box.className='check-box';box.id='cb-'+i;
+    const text=document.createElement('div');text.className='check-text';text.textContent=item;text.id='ct-'+i;
+    div.appendChild(box);div.appendChild(text);container.appendChild(div);
+  });
+}
+
+function toggleCheck(idx){
+  checkState[idx]=!checkState[idx];
+  const box=document.getElementById('cb-'+idx);
+  const text=document.getElementById('ct-'+idx);
+  box.classList.toggle('checked',checkState[idx]);
+  box.textContent=checkState[idx]?'✓':'';
+  text.classList.toggle('checked',checkState[idx]);
+  updateProgress();
+}
+
+function updateProgress(){
+  const done=checkState.filter(Boolean).length;
+  const pct=Math.round(done/16*100);
+  document.getElementById('checklist-bar').style.width=pct+'%';
+  document.getElementById('checklist-label').textContent=done+' of 16 items complete — '+pct+'% compliant';
+}
+
+function updateSlider(key,val){document.getElementById('val-'+key).textContent=val;}
+
+function calcROI(){
+  const drains=parseInt(document.getElementById('sl-drains').value)||4;
+  const meals=parseInt(document.getElementById('sl-meals').value)||80;
+  const violStr=document.getElementById('sl-violations').value;
+  const years=parseInt(document.getElementById('sl-years').value)||5;
+  const annFine=parseInt(violStr)||0;
+  const gpm=Math.max(10,Math.round(drains*2.5+meals/18));
+  const gallons=Math.max(250,gpm*10);
+  document.getElementById('rec-gpm').textContent=gpm+' GPM';
+  document.getElementById('rec-gal').textContent=gallons.toLocaleString()+' gal';
+  let trapRec='hydromechanical interceptor';
+  if(gallons>=1500)trapRec='outdoor vault interceptor (pre-cast concrete or fiberglass)';
+  else if(gallons>=750)trapRec='in-ground passive interceptor (concrete or fiberglass, minimum '+gallons.toLocaleString()+' gal)';
+  else if(gallons>=400)trapRec='in-ground passive or AGRU interceptor';
+  document.getElementById('rec-type').textContent='Recommended: '+trapRec+'. Based on '+drains+' kitchen drains and '+meals+' meals/day, your facility requires a minimum '+gpm+' GPM grease interceptor with at least '+gallons.toLocaleString()+' gallons of retention capacity per FL Admin Code 64E-6. This estimate must be confirmed with a formal DFU calculation by a licensed FL plumber before permit submittal.';
+  const pumpsPerYear=gpm>60?12:gpm>30?6:4;
+  const pumpEach=gallons>=1500?680:gallons>=750?450:280;
+  const annMaint=pumpsPerYear*pumpEach+350;
+  document.getElementById('annual-maint').textContent='$'+annMaint.toLocaleString();
+  document.getElementById('annual-fine').textContent='$'+annFine.toLocaleString();
+  document.getElementById('chart-title').textContent=years+'-Year Compliance vs. Non-Compliance';
+  buildChart(annMaint,annFine,years);
+  buildSummary(annMaint,annFine,years,gpm,gallons);
+}
+
+function buildChart(annMaint,annFine,years){
+  const chart=document.getElementById('roi-chart');
+  chart.innerHTML='';
+  const ncBase=annFine*1.4+annMaint*0.2;
+  const maxVal=Math.max(annMaint,ncBase)*years*1.1||1;
+  for(let y=1;y<=years;y++){
+    const cc=annMaint*y;
+    const ncc=Math.round(ncBase*y+annFine*0.8);
+    const cp=Math.round(cc/maxVal*100);
+    const np=Math.round(ncc/maxVal*100);
+    const row=document.createElement('div');row.className='chart-row';
+    const lbl=document.createElement('div');lbl.className='chart-year';lbl.textContent='Yr '+y;
+    const bars=document.createElement('div');bars.className='chart-bars';
+    const gb=document.createElement('div');gb.className='chart-bar bar-g';gb.style.width=Math.max(cp,5)+'%';
+    const gv=document.createElement('span');gv.className='bar-val';gv.textContent='$'+(cc/1000).toFixed(1)+'k';gb.appendChild(gv);
+    const rb=document.createElement('div');rb.className='chart-bar bar-r';rb.style.width=Math.max(np,5)+'%';
+    const rv=document.createElement('span');rv.className='bar-val';rv.textContent='$'+(ncc/1000).toFixed(1)+'k';rb.appendChild(rv);
+    bars.appendChild(gb);bars.appendChild(rb);row.appendChild(lbl);row.appendChild(bars);chart.appendChild(row);
+  }
+}
+
+function buildSummary(annMaint,annFine,years,gpm,gallons){
+  const tc=annMaint*years;
+  const ncBase=annFine*1.4+annMaint*0.2;
+  const tnc=Math.round(ncBase*years+annFine*0.8);
+  const save=Math.max(0,tnc-tc);
+  document.getElementById('roi-summary').textContent='Over '+years+' year'+(years>1?'s':'')+', maintaining proper FOG compliance costs an estimated $'+tc.toLocaleString()+' in scheduled pump-outs, inspections, and routine maintenance - averaging $'+annMaint.toLocaleString()+' per year for a kitchen of this size. Without proper FOG management, your estimated total risk exposure reaches $'+tnc.toLocaleString()+' over the same period, incorporating county fines, emergency pump-out calls, unscheduled plumbing repairs, and potential permit reinstatement fees. That represents a net financial benefit of $'+save.toLocaleString()+' from maintaining full compliance across the '+years+'-year projection window.';
+  document.getElementById('roi-note').textContent='These estimates exclude lost revenue during forced closures (typically $3,500-$8,000 per day for a mid-size FL restaurant), the cost of emergency plumbing calls ($350-$800 each, with non-compliant operations averaging 2-5 per year), reputational damage from health department closure notices, and potential civil liability from FOG-caused SSO events in public sewers. Including those factors, the true 5-year cost differential between compliant and non-compliant operations commonly exceeds $50,000-$100,000 for a full-service Florida restaurant.';
+}
+
+function init(){
+  initTableA();initTableB();initTableC();initPumpoutTable();initFogFacts();initChecklist();calcROI();
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

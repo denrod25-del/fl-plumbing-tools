@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FL Radiant Floor &amp; Hydronic Heating Cost Estimator | (561) 555-PIPE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:0 12px 80px}
+.tab-bar{display:flex;background:#0F1629;border-bottom:2px solid #1E2940;position:sticky;top:0;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.6)}
+.tab-btn{flex:1;padding:10px 3px;background:none;border:none;color:#94A3B8;font-size:10.5px;font-weight:700;cursor:pointer;text-align:center;letter-spacing:.4px;text-transform:uppercase;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;line-height:1.2}
+.tab-btn.active{color:#00B4FF;border-bottom-color:#00B4FF}
+.tab-btn:hover:not(.active){color:#E2E8F0}
+.tab-panel{display:none;padding-top:14px}
+.tab-panel.active{display:block}
+.hero{background:linear-gradient(135deg,#0F1629 0%,#141929 60%,#0A1020 100%);border:1px solid #1E2940;border-radius:12px;padding:20px 16px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(0,180,255,.08) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;background:#001829;border:1px solid #00B4FF;color:#00B4FF;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+.hero h1{font-size:19px;font-weight:800;color:#E2E8F0;line-height:1.25;margin-bottom:6px}
+.hero h1 span{color:#00B4FF}
+.hero p{color:#94A3B8;font-size:12.5px;line-height:1.5}
+.hero .phone{color:#F4B942;font-size:17px;font-weight:800;display:block;margin-top:10px;letter-spacing:.5px}
+.hero .lic{font-size:10.5px;color:#64748B;margin-top:4px}
+.card{background:#0F1629;border:1px solid #1E2940;border-radius:10px;padding:16px;margin-bottom:12px}
+.card h2{font-size:15px;font-weight:700;margin-bottom:10px;color:#E2E8F0;display:flex;align-items:center;gap:6px}
+.card h3{font-size:13px;font-weight:600;margin-bottom:6px;color:#00B4FF}
+.step-label{font-size:11.5px;color:#94A3B8;text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin-bottom:10px}
+.step-num{display:inline-flex;align-items:center;justify-content:center;background:#00B4FF;color:#0A0E1A;border-radius:50%;width:20px;height:20px;font-size:11px;font-weight:800;margin-right:6px;flex-shrink:0}
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.option-btn{background:#141929;border:2px solid #1E2940;border-radius:8px;padding:11px 8px;color:#E2E8F0;font-size:12px;font-weight:500;cursor:pointer;text-align:center;transition:all .18s;line-height:1.4;width:100%}
+.option-btn:hover{border-color:#00B4FF;color:#00B4FF;background:#001020}
+.option-btn.selected{border-color:#00B4FF;background:#001829;color:#00B4FF;font-weight:700}
+.option-btn .sub{font-size:10px;color:#64748B;display:block;margin-top:2px}
+.option-btn.selected .sub{color:#4DB8E8}
+.progress-bar{height:4px;background:#1E2940;border-radius:2px;margin-bottom:14px;overflow:hidden}
+.progress-fill{height:4px;background:linear-gradient(90deg,#00B4FF,#14B8A6);border-radius:2px;transition:width .35s ease}
+.result-card{border-radius:8px;padding:14px 14px 13px;margin-bottom:10px}
+.result-blue{background:#00182A;border-left:3px solid #00B4FF}
+.result-gold{background:#1C1400;border-left:3px solid #F4B942}
+.result-orange{background:#1C0A00;border-left:3px solid #F97316}
+.result-green{background:#001C0A;border-left:3px solid #22C55E}
+.result-teal{background:#001C1A;border-left:3px solid #14B8A6}
+.r-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.9px;margin-bottom:5px}
+.result-blue .r-label{color:#00B4FF}
+.result-gold .r-label{color:#F4B942}
+.result-orange .r-label{color:#F97316}
+.result-green .r-label{color:#22C55E}
+.result-teal .r-label{color:#14B8A6}
+.r-val{font-size:22px;font-weight:800;color:#E2E8F0;line-height:1.2}
+.r-note{font-size:11.5px;color:#94A3B8;margin-top:5px;line-height:1.5}
+.tbl-wrap{overflow-x:auto;margin-bottom:6px;-webkit-overflow-scrolling:touch;border-radius:6px}
+.tbl-wrap::-webkit-scrollbar{height:4px}
+.tbl-wrap::-webkit-scrollbar-track{background:#0A0E1A}
+.tbl-wrap::-webkit-scrollbar-thumb{background:#1E2940;border-radius:2px}
+table{width:100%;border-collapse:collapse;font-size:11px;min-width:580px}
+th{background:#141929;color:#00B4FF;padding:8px 7px;text-align:left;font-weight:700;border-bottom:2px solid #1E2940;white-space:nowrap;font-size:10.5px}
+td{padding:7px 7px;border-bottom:1px solid #1A2035;color:#E2E8F0;vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#0D1220}
+tr:hover td{background:#141929}
+.tbl-footer{font-size:10px;color:#64748B;margin-top:5px;line-height:1.5}
+.check-item{display:flex;align-items:flex-start;gap:11px;padding:11px 4px;border-bottom:1px solid #1A2035;cursor:pointer;border-radius:6px;transition:background .15s}
+.check-item:last-child{border-bottom:none}
+.check-item:hover{background:#080C18}
+.check-box{width:22px;height:22px;flex-shrink:0;border:2px solid #2D3A50;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px}
+.check-box.done{background:#22C55E;border-color:#22C55E}
+.check-box.done::after{content:'✓';color:#0A0E1A;font-size:13px;font-weight:900}
+.check-text-wrap{flex:1}
+.check-text{font-size:13px;color:#E2E8F0;font-weight:500}
+.check-text.done{text-decoration:line-through;color:#64748B}
+.check-detail{font-size:11px;color:#64748B;margin-top:3px;line-height:1.5}
+label{display:block;font-size:11.5px;color:#94A3B8;margin-bottom:4px;font-weight:600;letter-spacing:.3px}
+input,select{width:100%;background:#0A0E1A;border:1px solid #1E2940;border-radius:7px;padding:10px 12px;color:#E2E8F0;font-size:14px;margin-bottom:12px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+input:focus,select:focus{border-color:#00B4FF;box-shadow:0 0 0 2px rgba(0,180,255,.12)}
+input::placeholder{color:#4A5568}
+select option{background:#0F1629}
+.btn-gold{width:100%;background:linear-gradient(135deg,#F4B942,#E5A830);color:#0A0E1A;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;transition:opacity .2s;letter-spacing:.3px;box-shadow:0 4px 16px rgba(244,185,66,.25)}
+.btn-gold:hover{opacity:.92}
+.btn-blue{background:#00B4FF;color:#0A0E1A;border:none;border-radius:7px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-blue:hover{opacity:.9}
+.btn-outline{background:none;border:1px solid #1E2940;color:#94A3B8;border-radius:7px;padding:8px 16px;font-size:12px;cursor:pointer;transition:all .2s}
+.btn-outline:hover{border-color:#00B4FF;color:#00B4FF}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(0);background:linear-gradient(135deg,#F4B942,#E5A830);color:#0A0E1A;padding:14px 22px;border-radius:10px;font-size:14px;font-weight:800;box-shadow:0 8px 32px rgba(244,185,66,.45);z-index:9999;animation:fadeup .3s ease;max-width:320px;text-align:center;white-space:nowrap}
+@keyframes fadeup{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.slider-wrap{margin-bottom:16px}
+.slider-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.slider-label{font-size:12px;color:#94A3B8;font-weight:600}
+.slider-val{color:#00B4FF;font-weight:800;font-size:13px}
+input[type=range]{background:none;border:none;padding:0;margin-bottom:0;-webkit-appearance:none;width:100%;height:4px;cursor:pointer;border-radius:2px;accent-color:#00B4FF}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:#1E2940;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#00B4FF;margin-top:-7px;box-shadow:0 2px 8px rgba(0,180,255,.4)}
+input[type=range]:focus{outline:none}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.metric-card{background:#141929;border-radius:8px;padding:12px 10px;text-align:center;border:1px solid #1E2940}
+.metric-val{font-size:20px;font-weight:800;color:#00B4FF}
+.metric-label{font-size:10px;color:#64748B;margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.bar-chart{display:flex;gap:6px;align-items:flex-end;height:120px;padding:0 2px;margin-top:14px}
+.bar-group{flex:1;display:flex;gap:3px;align-items:flex-end;justify-content:center}
+.bar{flex:1;border-radius:3px 3px 0 0;transition:height .45s ease;min-height:3px}
+.bar.teal{background:linear-gradient(to top,#14B8A6,#0EA5A0)}
+.bar.gray{background:linear-gradient(to top,#334155,#475569)}
+.chart-footer{display:flex;justify-content:space-between;padding:0 2px;margin-top:4px}
+.chart-yr{font-size:9.5px;color:#64748B;text-align:center;flex:1}
+.faq-item{border-bottom:1px solid #1A2035;padding-bottom:13px;margin-bottom:13px}
+.faq-item:last-child{border-bottom:none;margin-bottom:0}
+.faq-q{font-size:13px;font-weight:700;color:#F4B942;margin-bottom:6px;line-height:1.4}
+.faq-a{font-size:12px;color:#94A3B8;line-height:1.65}
+.fact-item{display:flex;gap:12px;margin-bottom:15px;padding-bottom:15px;border-bottom:1px solid #1A2035}
+.fact-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.fact-icon{font-size:24px;flex-shrink:0;line-height:1}
+.fact-text h4{font-size:13px;font-weight:700;color:#00B4FF;margin-bottom:5px}
+.fact-text p{font-size:12px;color:#94A3B8;line-height:1.65}
+.wizard-nav{display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding-top:10px;border-top:1px solid #1A2035}
+.section-title{font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.9px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1A2035}
+.legend{display:flex;gap:14px;font-size:10.5px;color:#64748B;margin-bottom:8px}
+.legend span{display:flex;align-items:center;gap:5px}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1A2035;font-size:12.5px}
+.price-row:last-child{border-bottom:none}
+.price-item{color:#94A3B8}
+.price-val{color:#E2E8F0;font-weight:600}
+.hidden{display:none!important}
+.region-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.region-card{background:#141929;border-radius:8px;padding:10px;border:1px solid #1E2940}
+.region-card .region-label{font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.region-card .region-days{font-size:16px;font-weight:800}
+.region-card .region-note{font-size:10px;color:#94A3B8}
+@media(max-width:380px){.option-grid{grid-template-columns:1fr}.hero h1{font-size:17px}th,td{font-size:10px;padding:6px 5px}}
+@media(max-width:320px){.metrics-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero" style="margin-top:12px">
+  <div class="hero-badge">Florida's Radiant Floor Specialists</div>
+  <h1>Radiant Floor &amp; <span>Hydronic Heating</span><br>Cost Estimator</h1>
+  <p>Sunrooms · Luxury Renovations · Tile Floors · New Construction · Commercial Spaces</p>
+  <span class="phone">&#128222; (561) 555-PIPE</span>
+  <div class="lic">Licensed FL Plumbing &amp; Mechanical Contractor &middot; Serving All 67 FL Counties</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" onclick="switchTab(0)">Estimator</button>
+  <button class="tab-btn" onclick="switchTab(1)">FL Guide</button>
+  <button class="tab-btn" onclick="switchTab(2)">Checklist</button>
+  <button class="tab-btn" onclick="switchTab(3)">Savings</button>
+</div>
+
+<!-- TAB 1: COST ESTIMATOR -->
+<div class="tab-panel active" id="tab0">
+  <div class="card">
+    <div class="progress-bar"><div class="progress-fill" id="wizProgress" style="width:25%"></div></div>
+
+    <!-- STEP 1 -->
+    <div id="step1">
+      <div class="step-label"><span class="step-num">1</span>Select System Type</div>
+      <div class="option-grid">
+        <button class="option-btn" onclick="selOpt('system','electric_mat',this)">
+          &#9889; Electric Mat<span class="sub">In-floor resistance heating</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('system','hydronic_pex',this)">
+          &#128309; Hydronic PEX<span class="sub">Water-based tubing</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('system','electric_cable',this)">
+          &#128268; Electric Cable<span class="sub">Custom layout runs</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('system','hydronic_hpwh',this)">
+          &#9851; Hydronic + HPWH<span class="sub">Heat pump water heater</span>
+        </button>
+      </div>
+      <div class="wizard-nav">
+        <span style="font-size:11px;color:#64748B">Step 1 of 4</span>
+        <button class="btn-blue" onclick="goStep(2)" id="s1next" disabled>Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2" class="hidden">
+      <div class="step-label"><span class="step-num">2</span>Room / Area Type</div>
+      <div class="option-grid">
+        <button class="option-btn" onclick="selOpt('room','bathroom',this)">
+          &#128703; Bathroom<span class="sub">Tile floor</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('room','sunroom',this)">
+          &#9728; Sunroom<span class="sub">Florida room</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('room','kitchen',this)">
+          &#127859; Kitchen<span class="sub">Tile or stone</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('room','bedroom',this)">
+          &#128716; Master Bedroom<span class="sub">Luxury upgrade</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('room','whole_house',this)">
+          &#127968; Whole House<span class="sub">New construction</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('room','commercial',this)">
+          &#127970; Commercial<span class="sub">Large tile space</span>
+        </button>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-outline" onclick="goStep(1)">&larr; Back</button>
+        <button class="btn-blue" onclick="goStep(3)" id="s2next" disabled>Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step3" class="hidden">
+      <div class="step-label"><span class="step-num">3</span>Square Footage</div>
+      <div class="option-grid">
+        <button class="option-btn" onclick="selOpt('sqft','tiny',this)">
+          Under 100<span class="sub">sq ft</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('sqft','small',this)">
+          100 &ndash; 300<span class="sub">sq ft</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('sqft','medium',this)">
+          300 &ndash; 600<span class="sub">sq ft</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('sqft','large',this)">
+          600 &ndash; 1,200<span class="sub">sq ft</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('sqft','xlarge',this)" style="grid-column:span 2">
+          Over 1,200 sq ft<span class="sub">Large area / commercial</span>
+        </button>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-outline" onclick="goStep(2)">&larr; Back</button>
+        <button class="btn-blue" onclick="goStep(4)" id="s3next" disabled>Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div id="step4" class="hidden">
+      <div class="step-label"><span class="step-num">4</span>FL Region</div>
+      <div class="option-grid">
+        <button class="option-btn" onclick="selOpt('region','south',this)">
+          &#127796; South FL<span class="sub">Miami / Broward / Palm Beach</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('region','tampa',this)">
+          &#9940; Tampa Bay<span class="sub">Hillsborough / Pinellas</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('region','jax',this)">
+          &#127751; Jacksonville<span class="sub">NE Florida / St. Johns</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('region','swfl',this)">
+          &#129413; SW Florida<span class="sub">Naples / Fort Myers</span>
+        </button>
+        <button class="option-btn" onclick="selOpt('region','panhandle',this)" style="grid-column:span 2">
+          &#127958; Panhandle &mdash; Pensacola &middot; Panama City &middot; Tallahassee
+        </button>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-outline" onclick="goStep(3)">&larr; Back</button>
+        <button class="btn-blue" onclick="calcResult()" id="s4next" disabled>Calculate &rarr;</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results" class="hidden">
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="font-size:10px;color:#64748B;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px">Your Personalized Estimate</div>
+        <div style="font-size:12px;color:#94A3B8;font-weight:500" id="resultMeta"></div>
+      </div>
+      <div class="result-card result-blue">
+        <div class="r-label">Estimated Install Cost</div>
+        <div class="r-val" id="rCost"></div>
+        <div class="r-note" id="rCostNote"></div>
+      </div>
+      <div class="result-card result-gold">
+        <div class="r-label">FL Energy Rebate Opportunity</div>
+        <div class="r-val" style="font-size:15px" id="rRebateTitle"></div>
+        <div class="r-note" id="rRebateNote"></div>
+      </div>
+      <div class="result-card result-orange hidden" id="rWholeHouse">
+        <div class="r-label">Whole-House Planning Note</div>
+        <div class="r-val" style="font-size:14px">Boiler / Heat Pump Sizing Required</div>
+        <div class="r-note">Whole-house hydronic requires a dedicated mechanical room or utility closet for a boiler or heat pump water heater, plus expansion tank, manifolds, zone valves, and controls. Budget an additional <strong style="color:#F97316">$3,500&ndash;$9,000</strong> for the mechanical system above the floor installation costs shown. Consult a licensed FL mechanical contractor for a full Manual J sizing calculation before ordering equipment.</div>
+      </div>
+      <div class="result-card result-green">
+        <div class="r-label">FL Operating Cost Advantage</div>
+        <div class="r-val" style="font-size:15px" id="rSavings"></div>
+        <div class="r-note" id="rSavingsNote"></div>
+      </div>
+      <div class="result-card result-teal hidden" id="rLicense">
+        <div class="r-label">FL Licensing Requirement</div>
+        <div class="r-val" style="font-size:14px">Licensed Plumber Required</div>
+        <div class="r-note">PEX hydronic systems require a State-licensed plumbing contractor in Florida &mdash; NOT an HVAC-only scope. Verify your contractor holds a FL State Plumbing License (CFC or MP license prefix) before signing any contract. Improperly licensed hydronic installs fail permit inspection and may void homeowner&rsquo;s insurance. Call us at <strong style="color:#14B8A6">(561) 555-PIPE</strong> &mdash; we hold all required FL licenses.</div>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+        <button class="btn-gold" onclick="showQuoteForm()">Get a Free In-Home Quote &rarr;</button>
+        <button class="btn-outline" style="width:100%;text-align:center" onclick="resetWizard()">&larr; Start Over</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK FORM -->
+  <div id="quickForm" class="card hidden">
+    <h2>&#128222; Request a Free Quote</h2>
+    <p style="font-size:12px;color:#94A3B8;margin-bottom:14px">We&rsquo;ll call you within 2 hours to discuss your project. No obligation &mdash; just a friendly conversation with a licensed FL plumbing contractor.</p>
+    <label for="qName">Your Name</label>
+    <input type="text" id="qName" placeholder="Jane Smith">
+    <label for="qPhone">Phone Number</label>
+    <input type="tel" id="qPhone" placeholder="(561) 555-1234">
+    <button class="btn-gold" onclick="submitQuick()">Call Me Within 2 Hours &rarr;</button>
+    <div style="font-size:11px;color:#64748B;text-align:center;margin-top:10px">Licensed FL Plumbing Contractor &middot; (561) 555-PIPE &middot; 7 days/week</div>
+  </div>
+
+  <!-- QUICK REFERENCE CARD -->
+  <div class="card">
+    <h2>&#128202; FL Radiant System Quick Reference</h2>
+    <div style="font-size:12px;color:#94A3B8;margin-bottom:12px;line-height:1.6">Choosing between electric and hydronic radiant heating is the most important decision for any FL project. Below are 2024 FL contractor price benchmarks by system type.</div>
+    <div class="price-row"><span class="price-item">Electric Mat &mdash; installed cost/sqft</span><span class="price-val">$8 &ndash; $18</span></div>
+    <div class="price-row"><span class="price-item">Electric Cable &mdash; installed cost/sqft</span><span class="price-val">$6 &ndash; $14</span></div>
+    <div class="price-row"><span class="price-item">Hydronic PEX &mdash; installed cost/sqft</span><span class="price-val">$14 &ndash; $32</span></div>
+    <div class="price-row"><span class="price-item">Hydronic + HPWH &mdash; installed cost/sqft</span><span class="price-val">$18 &ndash; $45</span></div>
+    <div class="price-row"><span class="price-item">FL permit fees (residential avg)</span><span class="price-val">$150 &ndash; $450</span></div>
+    <div class="price-row"><span class="price-item">FL heating season length</span><span class="price-val">2 &ndash; 5 months</span></div>
+    <div class="price-row"><span class="price-item">Typical project completion time</span><span class="price-val">1 &ndash; 5 days</span></div>
+    <div style="margin-top:12px;padding:10px;background:#141929;border-radius:6px;font-size:11.5px;color:#94A3B8;line-height:1.6"><strong style="color:#F4B942">FL Pro Tip:</strong> For bathrooms and sunrooms under 300 sqft, electric mat systems offer the fastest payback in Florida due to lower install cost and FL&rsquo;s mild heating season. For whole-house or large commercial projects, hydronic PEX with an efficient heat pump water heater delivers 40&ndash;65% lower long-term operating costs and qualifies for FPL/Duke rebates plus federal IRA tax credits.</div>
+  </div>
+</div>
+
+<!-- TAB 2: FL GUIDE -->
+<div class="tab-panel" id="tab1">
+  <div class="card">
+    <h2>&#127796; Why Radiant Heating Makes Sense in Florida</h2>
+    <div class="fact-item">
+      <div class="fact-icon">&#9728;</div>
+      <div class="fact-text">
+        <h4>Sunroom &amp; Florida Room Comfort Year-Round</h4>
+        <p>Enclosed sunrooms and screen-room conversions experience dramatic temperature swings &mdash; 88&deg;F in summer afternoons to below 48&deg;F during winter cold fronts in December through February. Even in South Florida, Broward and Palm Beach County regularly see overnight lows in the low 50s during winter. Radiant floor heating keeps tile and stone floors comfortable during the November&ndash;March season without the noise, dust circulation, and drafts of forced-air heating systems. Florida homeowners who add radiant heating to their sunrooms report year-round usability of these spaces, turning a seasonal room into a full-time living area that significantly boosts home resale value. In the Tampa Bay and Jacksonville areas, cold snaps in January and February can bring temperatures below 32&deg;F overnight, making sunroom heating genuinely essential for comfortable living.</p>
+      </div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-icon">&#128161;</div>
+      <div class="fact-text">
+        <h4>FPL &amp; Duke Energy Rebates &mdash; Up to $4,000 in Incentives</h4>
+        <p>Florida Power &amp; Light (FPL) and Duke Energy Florida offer rebates on qualifying heat pump water heaters (HPWH) used as the heat source for hydronic radiant systems &mdash; typically $200&ndash;$500 per unit depending on unit efficiency (UEF rating). The federal Inflation Reduction Act (IRA) provides a 30% tax credit on qualifying HPWHs, capped at $2,000 annually, through tax year 2032. A typical HPWH unit costing $1,200&ndash;$2,500 can generate $600&ndash;$1,200 in combined federal tax credits plus utility rebates. Smart thermostats (Nest, ecobee) paired with radiant systems may qualify for an additional $25&ndash;$100 smart thermostat rebate through FPL&rsquo;s Smart Usage program. Always verify current rebate availability at fpl.com/save or duke-energy.com/home/products before installation &mdash; rebate programs change annually and funds are limited.</p>
+      </div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-icon">&#129521;</div>
+      <div class="fact-text">
+        <h4>Tile &amp; Stone &mdash; Florida&rsquo;s Perfect Radiant Flooring</h4>
+        <p>Florida&rsquo;s most popular flooring &mdash; ceramic tile, porcelain tile, and natural stone &mdash; are the optimal conductors of radiant heat. Tile&rsquo;s high thermal mass stores warmth from heating elements and releases it slowly, creating one of the most energy-efficient radiant configurations possible. FL contractors must use modified polymer thinset meeting ANSI A118.4 or A118.11 and plan for thermal expansion gaps (&frac18;&Prime;&ndash;&frac14;&Prime;) at all room perimeters, transitions, and fixed objects. The Florida tile market is particularly well-developed for radiant: major FL distributors like Tile Shop, Floor &amp; Decor, and Daltile all stock radiant-compatible underlayments and appropriate thinsets specifically recommended for slab-on-grade heated applications.</p>
+      </div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-icon">&#128167;</div>
+      <div class="fact-text">
+        <h4>FL Humidity &mdash; Critical Moisture Testing Before Any Install</h4>
+        <p>Florida&rsquo;s average relative humidity of 74% year-round (rising to 84% in summer in South FL) creates unique installation challenges. Concrete slab moisture vapor transmission (MVT) must be tested before any radiant system installation. The ASTM F2170 in-situ relative humidity test is the gold standard, requiring probes embedded in the slab for 72 hours. The ASTM F1869 calcium chloride test is acceptable but less accurate in FL&rsquo;s high ambient humidity. Results must show RH below 80% for most adhesives and thinsets. When RH exceeds threshold, a moisture vapor emission reduction coating (MVERC) or epoxy moisture barrier must be applied before proceeding. Skipping moisture testing is the #1 cause of radiant system failures in Florida &mdash; always insist on documented moisture test results before installation begins.</p>
+      </div>
+    </div>
+    <div class="fact-item">
+      <div class="fact-icon">&#128203;</div>
+      <div class="fact-text">
+        <h4>FL Building Permits, Code &amp; Licensing Requirements</h4>
+        <p>Every radiant floor heating system in Florida requires a building permit. Electric systems are governed by NEC Article 424 as adopted in the Florida Building Code (FBC) 7th Edition. Hydronic systems require separate permits from both the building department and the plumbing department, and in some jurisdictions also require a mechanical permit for the heat pump installation. The 2023 Florida Building Code references ASHRAE 90.1-2019 for commercial and ASHRAE 90.2 for residential energy compliance. COMcheck (commercial) or ResCheck (residential) documentation is required before permit issuance. Always verify that your contractor holds the correct FL license: State-Certified Plumbing Contractor (CFC prefix) or Master Plumber (MP prefix) for any hydronic PEX work. Electrical circuits must be installed by a State-Certified Electrical Contractor (EC prefix).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE A -->
+  <div class="card">
+    <h2>Table A &mdash; Radiant System by FL Use Case</h2>
+    <p style="font-size:11.5px;color:#94A3B8;margin-bottom:10px;line-height:1.6">Real-world FL contractor pricing and performance data. Costs reflect 2024 South-to-Central Florida market rates. See Tab 1 estimator for your regional multiplier.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Use Case</th><th>Best System</th><th>Install $/sqft</th><th>Annual Op $/sqft</th><th>Comfort</th><th>FL Permit</th><th>Best Flooring</th></tr></thead><tbody id="tableABody"></tbody></table></div>
+    <div class="tbl-footer">&#9733;&#9733;&#9733;&#9733;&#9733; = Excellent &middot; &#9733;&#9733;&#9733;&#9733; = Very Good &middot; &#9733;&#9733;&#9733; = Good. Op cost: FL avg 12&cent;/kWh, 4hr/day, 5-month season. All installs require building permit minimum.</div>
+  </div>
+
+  <!-- TABLE B -->
+  <div class="card">
+    <h2>Table B &mdash; FL Flooring Compatibility</h2>
+    <p style="font-size:11.5px;color:#94A3B8;margin-bottom:10px;line-height:1.6">Florida&rsquo;s high humidity and warm climate create specific flooring compatibility rules that differ from northern US radiant installations. Always verify with your flooring manufacturer in writing before installing radiant heat beneath any product.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Flooring Type</th><th>Elec Mat</th><th>Hydronic</th><th>Max Temp</th><th>Install Notes</th><th>FL Climate Notes</th></tr></thead><tbody id="tableBBody"></tbody></table></div>
+    <div class="tbl-footer">Max recommended radiant floor surface temperature: 85&deg;F (29&deg;C). Most FL systems target 75&ndash;80&deg;F surface. &#10003; = Recommended &middot; &#9888; = Caution/verify warranty &middot; &#10007; = Not recommended.</div>
+  </div>
+
+  <!-- TABLE C -->
+  <div class="card">
+    <h2>Table C &mdash; PEX Tubing Specs &amp; FL Code</h2>
+    <p style="font-size:11.5px;color:#94A3B8;margin-bottom:10px;line-height:1.6">FL Plumbing Code (FPC) Chapter 6 governs all PEX tubing installations. All PEX used in FL must meet ASTM F876/F877 and NSF/ANSI 14 standards. UV resistance is critical for FL projects due to year-round sun exposure during construction phases.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>PEX Type</th><th>Material</th><th>Max Temp</th><th>Max PSI</th><th>FL Code Ref</th><th>Best Use</th><th>Warranty</th><th>UV Resist</th><th>$/ft</th></tr></thead><tbody id="tableCBody"></tbody></table></div>
+    <div class="tbl-footer">Prices reflect 2024 FL wholesale for 1/2&Prime; diameter tubing. Installed costs include fittings, manifolds, and labor. Always sleeve or conduit UV-vulnerable PEX exposed during FL construction staging.</div>
+  </div>
+</div>
+
+<!-- TAB 3: CHECKLIST -->
+<div class="tab-panel" id="tab2">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h2 style="margin:0">&#10003; FL Installation Checklist</h2>
+      <div style="font-size:12px;color:#94A3B8;font-weight:600"><span id="checkCount" style="color:#22C55E;font-size:15px;font-weight:800">0</span>/16 done</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="checkProgress" style="width:0%;background:linear-gradient(90deg,#22C55E,#14B8A6)"></div></div>
+    <p style="font-size:11.5px;color:#64748B;margin-bottom:12px">Tap each item to mark complete. Use this checklist from pre-install through FL building final inspection.</p>
+    <div id="checkList"></div>
+  </div>
+
+  <!-- LEAD FORM -->
+  <div class="card">
+    <h2>Get a Free Radiant Floor Quote</h2>
+    <p style="font-size:12px;color:#94A3B8;margin-bottom:16px;line-height:1.6">A licensed FL plumbing contractor will contact you within 2 business hours to schedule a free, no-obligation in-home estimate. We serve all of South Florida, Tampa Bay, Southwest FL, Jacksonville, and the Panhandle.</p>
+    <label for="fname">Full Name *</label>
+    <input type="text" id="fname" placeholder="Jane Smith">
+    <label for="fphone">Phone Number *</label>
+    <input type="tel" id="fphone" placeholder="(561) 555-1234">
+    <label for="femail">Email Address</label>
+    <input type="email" id="femail" placeholder="jane@example.com">
+    <label for="fcounty">FL County</label>
+    <select id="fcounty">
+      <option value="">-- Select Your County --</option>
+      <option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option>
+      <option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option>
+      <option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option>
+      <option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option>
+      <option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option>
+      <option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option>
+      <option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option>
+      <option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option>
+      <option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option>
+      <option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option>
+      <option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>St. Johns</option>
+      <option>St. Lucie</option><option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>Sumter</option>
+      <option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option>
+      <option>Walton</option><option>Washington</option>
+    </select>
+    <label for="fsystem">System Interest</label>
+    <select id="fsystem">
+      <option value="">-- Select System Type --</option>
+      <option>Electric Mat (in-floor resistance heating)</option>
+      <option>Hydronic PEX Tubing (water-based)</option>
+      <option>Electric Cable (custom layout)</option>
+      <option>Hydronic + Heat Pump Water Heater</option>
+      <option>Not sure -- need expert guidance</option>
+    </select>
+    <label for="fsqft">Approximate Square Footage</label>
+    <input type="number" id="fsqft" placeholder="e.g. 250 sq ft" min="1">
+    <label for="fnotes">Project Notes (optional)</label>
+    <input type="text" id="fnotes" placeholder="e.g. sunroom addition, new tile, existing slab">
+    <button class="btn-gold" onclick="submitLead()">Get a Free Radiant Floor Quote &rarr;</button>
+    <div style="font-size:11px;color:#64748B;text-align:center;margin-top:10px;line-height:1.6">Or call us: <strong style="color:#00B4FF">(561) 555-PIPE</strong> &middot; 7 days/week, 8am&ndash;7pm</div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="card">
+    <h2>FL Sunroom Radiant Heating FAQ</h2>
+    <div id="faqList"></div>
+  </div>
+</div>
+
+<!-- TAB 4: ENERGY SAVINGS -->
+<div class="tab-panel" id="tab3">
+  <div class="card">
+    <h2>&#9889; FL Energy Savings Calculator</h2>
+    <p style="font-size:12px;color:#94A3B8;margin-bottom:16px;line-height:1.6">Estimate your annual operating cost for radiant floor heating and compare it to conventional baseboard or forced-air resistance heat. Adjust the sliders to match your FL project.</p>
+
+    <div class="slider-wrap">
+      <div class="slider-row"><span class="slider-label">Room Area</span><span class="slider-val" id="areaVal">200 sq ft</span></div>
+      <input type="range" id="areaSlider" min="50" max="2000" step="25" value="200" oninput="updateCalc()">
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-row"><span class="slider-label">System Type</span></div>
+      <select id="sysCalc" onchange="updateCalc()">
+        <option value="electric_mat">Electric Mat (resistance, 12W/sqft)</option>
+        <option value="hydronic_pex">Hydronic PEX (gas/electric boiler, 9W equiv)</option>
+        <option value="hydronic_hpwh">Hydronic + Heat Pump Water Heater (4.2W equiv)</option>
+      </select>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-row"><span class="slider-label">FL Utility Rate</span><span class="slider-val" id="rateVal">12 &cent;/kWh</span></div>
+      <input type="range" id="rateSlider" min="8" max="18" step="0.5" value="12" oninput="updateCalc()">
+      <div style="font-size:10px;color:#64748B;margin-top:3px">FPL avg: 11&ndash;13&cent; &middot; Duke Energy FL: 11&ndash;14&cent; &middot; TECO: 11&ndash;13&cent; &middot; JEA: 10&ndash;12&cent;</div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-row"><span class="slider-label">Daily Use (heating season)</span><span class="slider-val" id="hoursVal">4 hrs/day</span></div>
+      <input type="range" id="hoursSlider" min="1" max="12" step="1" value="4" oninput="updateCalc()">
+      <div style="font-size:10px;color:#64748B;margin-top:3px">FL morning comfort: 2&ndash;4 hrs &middot; All-day comfort: 6&ndash;8 hrs &middot; Continuous: 10&ndash;12 hrs</div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-val" id="mDaily">--</div><div class="metric-label">Daily Cost</div></div>
+      <div class="metric-card"><div class="metric-val" id="mMonthly">--</div><div class="metric-label">Monthly Cost</div></div>
+      <div class="metric-card"><div class="metric-val" id="mAnnual">--</div><div class="metric-label">Season Total</div></div>
+      <div class="metric-card"><div class="metric-val" id="mSavings" style="color:#22C55E">--</div><div class="metric-label">vs Baseboard</div></div>
+    </div>
+
+    <div class="section-title">5-Year Cumulative Operating Cost</div>
+    <div class="legend">
+      <span><span class="leg-dot" style="background:#14B8A6"></span>Radiant System</span>
+      <span><span class="leg-dot" style="background:#475569"></span>Baseboard / Forced-Air</span>
+    </div>
+    <div class="bar-chart" id="barChart"></div>
+    <div class="chart-footer">
+      <span class="chart-yr">Year 1</span><span class="chart-yr">Year 2</span><span class="chart-yr">Year 3</span><span class="chart-yr">Year 4</span><span class="chart-yr">Year 5</span>
+    </div>
+    <div id="savingsNote" style="font-size:11.5px;color:#94A3B8;margin-top:12px;text-align:center;line-height:1.6;padding:10px;background:#141929;border-radius:6px"></div>
+  </div>
+
+  <!-- HEATING SEASON EXPLAINER -->
+  <div class="card">
+    <h2>FL Heating Season by Region</h2>
+    <p style="font-size:12px;color:#94A3B8;line-height:1.7;margin-bottom:12px">Florida&rsquo;s heating season is dramatically shorter than any other US state. The calculator uses a 5-month season (November through March) as the maximum, reflecting Panhandle and North FL conditions. Actual heating days vary significantly by region:</p>
+    <div class="region-grid">
+      <div class="region-card"><div class="region-label">South FL (Miami/PB/Broward)</div><div class="region-days" style="color:#22C55E">20&ndash;35</div><div class="region-note">heating days/year</div></div>
+      <div class="region-card"><div class="region-label">Tampa Bay / SW Florida</div><div class="region-days" style="color:#F4B942">40&ndash;60</div><div class="region-note">heating days/year</div></div>
+      <div class="region-card"><div class="region-label">Jacksonville / NE Florida</div><div class="region-days" style="color:#F97316">65&ndash;85</div><div class="region-note">heating days/year</div></div>
+      <div class="region-card"><div class="region-label">Panhandle (Pensacola/Tally)</div><div class="region-days" style="color:#EF4444">80&ndash;110</div><div class="region-note">heating days/year</div></div>
+    </div>
+    <p style="font-size:12px;color:#94A3B8;line-height:1.7;margin-bottom:10px">Even with FL&rsquo;s short heating season, sunrooms, luxury master baths, and commercial lobbies often run radiant systems more frequently for comfort than strict necessity &mdash; particularly during early morning hours when tile floors feel cold even when air temperature is comfortable. Adjust the &ldquo;Daily Use&rdquo; slider above to reflect your actual expected usage pattern.</p>
+    <p style="font-size:12px;color:#94A3B8;line-height:1.7">Heat pump hydronic systems (HPWH) achieve the greatest savings &mdash; typically 40&ndash;65% less energy consumed than baseboard resistance heat, due to COP (Coefficient of Performance) of 2.5&ndash;4.0. At Florida&rsquo;s current electric rates of 11&ndash;14&cent;/kWh, a HPWH system typically pays back the premium installation cost within 5&ndash;9 years depending on system size and actual usage pattern.</p>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <div style="font-size:22px;margin-bottom:8px">&#128222;</div>
+    <div style="font-size:15px;font-weight:700;color:#E2E8F0;margin-bottom:4px">Ready to Get Started?</div>
+    <div style="font-size:12px;color:#94A3B8;margin-bottom:14px">A licensed FL plumbing contractor will visit your home and provide a free, detailed estimate with system recommendations tailored to your specific space and budget.</div>
+    <button class="btn-gold" onclick="switchTab(2);setTimeout(function(){document.getElementById('fname').focus()},200)">Book a Free In-Home Estimate &rarr;</button>
+    <div style="margin-top:12px;font-size:13px;color:#94A3B8">&#128222; <a href="tel:5615557473" style="color:#00B4FF;text-decoration:none;font-weight:700">(561) 555-PIPE</a> &middot; 7 days/week, 8am&ndash;7pm</div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+<div class="toast hidden" id="toast"></div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+const sel = { system:null, room:null, sqft:null, region:null };
+
+const COSTS = {
+  electric_mat:   { bathroom:[800,2500],    sunroom:[1500,4000],  kitchen:[1200,3500],  bedroom:[1000,3000],  whole_house:[8000,20000],  commercial:[5000,15000]  },
+  hydronic_pex:   { bathroom:[2000,5000],   sunroom:[3500,9000],  kitchen:[3000,8000],  bedroom:[2500,7000],  whole_house:[15000,40000], commercial:[10000,30000] },
+  electric_cable: { bathroom:[600,2000],    sunroom:[1200,3500],  kitchen:[1000,3000],  bedroom:[800,2500],   whole_house:[7000,18000],  commercial:[4000,12000]  },
+  hydronic_hpwh:  { bathroom:[3000,7000],   sunroom:[5000,13000], kitchen:[4500,12000], bedroom:[4000,10000], whole_house:[20000,55000], commercial:[15000,45000] }
+};
+const SQ_MULT = { tiny:0.70, small:1.0, medium:1.30, large:1.65, xlarge:2.20 };
+const MULT    = { south:1.20, tampa:1.0, jax:0.92, swfl:1.15, panhandle:0.88 };
+
+function selOpt(key, val, el) {
+  sel[key] = val;
+  el.closest('.option-grid').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  var nextMap = { system:'s1next', room:'s2next', sqft:'s3next', region:'s4next' };
+  var btn = document.getElementById(nextMap[key]);
+  if (btn) btn.disabled = false;
+}
+
+function goStep(n) {
+  [1,2,3,4].forEach(function(i) {
+    var el = document.getElementById('step' + i);
+    if (el) el.classList.toggle('hidden', i !== n);
+  });
+  document.getElementById('results').classList.add('hidden');
+  var pct = { 1:25, 2:50, 3:75, 4:100 };
+  document.getElementById('wizProgress').style.width = (pct[n] || 25) + '%';
+}
+
+function fmtM(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function calcResult() {
+  if (!sel.system || !sel.room || !sel.sqft || !sel.region) return;
+  var base = COSTS[sel.system][sel.room];
+  var sm = SQ_MULT[sel.sqft];
+  var rm = MULT[sel.region];
+  var lo = Math.round(base[0] * sm * rm / 100) * 100;
+  var hi = Math.round(base[1] * sm * rm / 100) * 100;
+  [1,2,3,4].forEach(function(i){ var el = document.getElementById('step'+i); if(el) el.classList.add('hidden'); });
+
+  var sysN = { electric_mat:'Electric Mat', hydronic_pex:'Hydronic PEX', electric_cable:'Electric Cable', hydronic_hpwh:'Hydronic + HPWH' };
+  var roomN = { bathroom:'Bathroom', sunroom:'Sunroom/FL Room', kitchen:'Kitchen', bedroom:'Master Bedroom', whole_house:'Whole House', commercial:'Commercial Space' };
+  var regN = { south:'South FL', tampa:'Tampa Bay', jax:'Jacksonville/NE FL', swfl:'SW Florida', panhandle:'Panhandle' };
+
+  setText('resultMeta', sysN[sel.system] + ' · ' + roomN[sel.room] + ' · ' + regN[sel.region]);
+  setText('rCost', fmtM(lo) + ' – ' + fmtM(hi));
+  setText('rCostNote', 'Includes materials, labor, controls, and permit fees for FL ' + regN[sel.region] + '. Does not include finish flooring tile/stone or furniture removal.');
+
+  var rebT = { electric_mat:'Smart Thermostat Rebate Available', hydronic_pex:'Up to $800 in Combined Incentives', electric_cable:'FPL Home Energy Assessment Rebate', hydronic_hpwh:'Up to $4,000 in Combined Incentives' };
+  var rebN = {
+    electric_mat:'Standard electric mat systems do not qualify for utility rebates, but a qualifying smart thermostat (Nest, ecobee) may earn $25–$100 through FPL’s Smart Usage program. Federal 30% tax credit may apply to thermostat costs.',
+    hydronic_pex:'FPL/Duke utility rebate: $100–$300 depending on connected heat source efficiency. Federal 30% IRA tax credit may apply to qualifying heat pump equipment if used as the hydronic heat source.',
+    electric_cable:'FPL Home Energy Assessment program may offer a free energy audit. Smart thermostat rebate ($25–$100) available with programmable thermostat installation.',
+    hydronic_hpwh:'Best rebate potential in FL: $200–$500 FPL/Duke utility rebate + 30% federal IRA tax credit (up to $2,000) on HPWH equipment. Combined incentive potential: $1,500–$4,000 depending on unit cost and your tax situation.'
+  };
+  setText('rRebateTitle', rebT[sel.system]);
+  setText('rRebateNote', rebN[sel.system]);
+
+  var savT = { electric_mat:'10–20% Lower Energy Cost vs. Central Forced Air', hydronic_pex:'25–45% Lower Energy Cost vs. Electric Forced Air', electric_cable:'10–18% Lower Energy Cost vs. Baseboard Electric', hydronic_hpwh:'40–65% Lower Energy Cost vs. Resistance Heating' };
+  var savN = {
+    electric_mat:'Zone control means only occupied rooms are heated. In FL’s mild winters, electric mat systems draw power only during brief cold periods. A 150 sqft bathroom mat costs roughly $1.50–$3.00/week during peak heating season.',
+    hydronic_pex:'Hydronic efficiency depends on the connected heat source. A high-efficiency gas boiler (90%+ AFUE) or heat pump water heater drives significant savings over whole-house forced-air electric heat in FL’s mild winters.',
+    electric_cable:'Custom cable layouts enable precise zone control in irregular spaces. Smart thermostats with floor sensors prevent overheating, reducing energy use 15–25% vs. older timer-based controls.',
+    hydronic_hpwh:'Heat pump water heaters achieve COP 2.5–4.0 — meaning 2.5–4x more heat energy per kWh vs. resistance heating. This is the most energy-efficient radiant option available for FL. The higher install cost typically pays back within 5–9 years in FL’s mild climate.'
+  };
+  setText('rSavings', savT[sel.system]);
+  setText('rSavingsNote', savN[sel.system]);
+
+  document.getElementById('rWholeHouse').classList.toggle('hidden', sel.room !== 'whole_house');
+  document.getElementById('rLicense').classList.toggle('hidden', !(sel.system === 'hydronic_pex' || sel.system === 'hydronic_hpwh'));
+  document.getElementById('results').classList.remove('hidden');
+  document.getElementById('wizProgress').style.width = '100%';
+}
+
+function showQuoteForm() {
+  document.getElementById('quickForm').classList.remove('hidden');
+  document.getElementById('quickForm').scrollIntoView({ behavior:'smooth' });
+}
+
+function submitQuick() {
+  showToast('✅ We’ll call you within 2 hours!');
+  document.getElementById('qName').value = '';
+  document.getElementById('qPhone').value = '';
+}
+
+function resetWizard() {
+  sel.system = sel.room = sel.sqft = sel.region = null;
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('quickForm').classList.add('hidden');
+  document.querySelectorAll('.option-btn').forEach(function(b){ b.classList.remove('selected'); });
+  ['s1next','s2next','s3next','s4next'].forEach(function(id){ var el = document.getElementById(id); if(el) el.disabled = true; });
+  goStep(1);
+}
+
+function setText(id, text) { var el = document.getElementById(id); if(el) el.textContent = text; }
+
+function switchTab(n) {
+  document.querySelectorAll('.tab-btn').forEach(function(b,i){ b.classList.toggle('active', i===n); });
+  document.querySelectorAll('.tab-panel').forEach(function(p,i){ p.classList.toggle('active', i===n); });
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function(){ t.classList.add('hidden'); }, 4500);
+}
+
+var tableAData = [
+  ['Master Bath Tile','Electric Mat','$8–$18','$0.20–$0.45','★★★★★','Building + Elec','Porcelain / Ceramic'],
+  ['Sunroom / FL Room','Electric Mat or Hydronic PEX','$10–$28','$0.25–$0.60','★★★★★','Building + Elec/Plbg','Porcelain / Travertine'],
+  ['Kitchen Tile','Electric Mat','$9–$16','$0.18–$0.40','★★★★','Building + Elec','Ceramic / Porcelain'],
+  ['Open-Plan Living Area','Hydronic PEX (zoned)','$14–$30','$0.28–$0.65','★★★★★','Building + Plumbing','Polished Concrete / Tile'],
+  ['Outdoor Covered Lanai','Electric Cable (custom)','$6–$14','$0.15–$0.35','★★★','Building + Elec','Travertine / Slate / Paver'],
+  ['Home Addition / Bonus Room','Hydronic PEX or HPWH','$15–$38','$0.26–$0.58','★★★★★','Building + Plumbing','Any tile or polished concrete'],
+  ['Commercial Lobby','Hydronic PEX (manifold zoned)','$12–$28','$0.20–$0.48','★★★★★','Mech + Plbg + Bldg','Marble / Polished Concrete'],
+  ['Medical / Dental Office','Electric Mat (zoned by room)','$10–$20','$0.22–$0.50','★★★★','Elec + Building','Luxury Vinyl Tile / Porcelain'],
+  ['School Classroom','Hydronic PEX','$11–$24','$0.18–$0.42','★★★★','Building + Plumbing','Polished Concrete / Rubber Tile'],
+  ['Retail Showroom','Hydronic + HPWH','$16–$40','$0.14–$0.32','★★★★★','Mech + Plbg + Bldg','Polished Concrete / Large-Format Tile'],
+];
+
+function buildTableA() {
+  var tbody = document.getElementById('tableABody');
+  tableAData.forEach(function(row) {
+    var tr = document.createElement('tr');
+    row.forEach(function(cell, i) {
+      var td = document.createElement('td');
+      td.textContent = cell;
+      if (i === 4) { td.style.color = cell.length >= 5 ? '#22C55E' : (cell.length === 4 ? '#F4B942' : '#94A3B8'); }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+var tableBData = [
+  ['Ceramic Tile','✅ Excellent','✅ Excellent','85°F / 29°C','Use modified polymer thinset (ANSI A118.4); allow 28-day cure before activating heat; 1/8″ expansion joints at all perimeters and transitions','Ideal for FL — impervious to humidity, no warping risk, stores radiant heat efficiently; most cost-effective FL radiant flooring choice; widely available at FL tile distributors'],
+  ['Porcelain Tile','✅ Excellent','✅ Excellent','85°F / 29°C','Low water absorption (<0.5%) makes it easiest tile for radiant; use large-format rectified tile for more even heat distribution; back-butter tiles for best bond','Best overall FL choice — completely impervious to moisture, very high thermal mass, easiest to clean; preferred by FL luxury homeowners for heated bathroom and sunroom floors'],
+  ['Natural Stone','✅ Very Good','✅ Excellent','82°F / 28°C','Seal before and after installation; some limestone and travertine are affected by moisture vapor; consult stone fabricator for radiant specifications and compatible sealers','Travertine and marble very popular in FL luxury homes; requires annual re-sealing in coastal/humid areas; excellent heat conductor; inspect grout joints seasonally for thermal movement'],
+  ['Luxury Vinyl Plank (LVP)','✅ Good','⚠ Limited','82°F / 28°C','Must be specifically "radiant rated" LVP; many FL brands void warranty above 80°F floor surface temp; always get written approval; floating LVP needs proper transition strips at all thresholds','Very popular in FL additions and rentals; check manufacturer warranty letter before purchase; floating LVP over heated slab can buckle in FL’s temperature swings without proper perimeter gaps'],
+  ['Engineered Hardwood','⚠ Caution','⚠ Caution','80°F / 27°C','Max 5°F temp change per day; acclimate 48–72 hours to FL humidity before install; narrower planks (under 4″) more stable; use rift-sawn for best dimensional stability','FL humidity (RH 70–85%) causes expansion and cupping — radiant adds another thermal cycle; engineered only, never solid hardwood; high-risk choice in FL coastal areas; specify very carefully'],
+  ['Solid Hardwood','❌ Not Recommended','❌ Not Recommended','N/A','Solid wood expands/contracts dramatically with FL humidity swings even without radiant heat — adding radiant guarantees warping, gapping, or cupping','Always problematic in FL climate even without radiant; avoid solid hardwood with any radiant system; use engineered hardwood if wood appearance is required; most FL flooring contractors refuse solid hardwood in radiant applications'],
+  ['Polished Concrete','✅ Excellent','✅ Excellent','90°F / 32°C','Hydronic tubing ideally embedded in pour; diamond polish applied after cure; sealer required to protect against FL humidity penetration; re-seal every 3–5 years','Most energy-efficient radiant combination in FL; very popular in modern additions, commercial spaces, and whole-house new construction; zero warping or humidity risk; very low maintenance'],
+  ['Carpet','❌ Avoid','⚠ Avoid if R>1.5','75°F / 24°C','Carpet R-value above 1.5 blocks most radiant heat transfer and defeats system efficiency; if carpet must be used, only thin low-pile with thin foam pad','In FL, carpet + humidity = significant mold and mildew risk even without radiant heat; radiant is counterproductive under carpet; FL contractors strongly discourage carpet with any radiant application'],
+  ['Laminate','⚠ Verify','❌ Not Recommended','77°F / 25°C','Most laminate is NOT suitable for radiant; must be specifically stamped "suitable for radiant floor heating"; floating floor expands unevenly at seams over heated slab','FL humidity causes laminate joint swelling and peaking even without radiant heat; floating laminate over heated slab is a high-risk combination in FL coastal areas; verify in writing with manufacturer'],
+  ['Marble','✅ Very Good','✅ Excellent','82°F / 28°C','Highly thermally conductive; stabilized thinset required (ANSI A118.4); inspect grout joints annually for thermal expansion cracking; professional grouting recommended','Very popular in FL luxury master baths and entry foyers; seal regularly (every 1–2 years in coastal FL); white/light marble shows less thermal staining than dark varieties; premium radiant flooring choice'],
+];
+
+function buildTableB() {
+  var tbody = document.getElementById('tableBBody');
+  tableBData.forEach(function(row) {
+    var tr = document.createElement('tr');
+    row.forEach(function(cell, i) {
+      var td = document.createElement('td');
+      td.textContent = cell;
+      if (i === 1 || i === 2) {
+        if (cell.indexOf('✅') === 0) td.style.color = '#22C55E';
+        else if (cell.indexOf('⚠') === 0) td.style.color = '#F97316';
+        else if (cell.indexOf('❌') === 0) td.style.color = '#EF4444';
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+var tableCData = [
+  ['PEX-A (Uponor/Wirsbo)','Cross-linked HDPE — Engel peroxide method; highest crosslink density (>70%); highest flexibility','200°F / 93°C','160 PSI @ 73°F','FPC §604.1; ASTM F876/F877; NSF/ANSI 14','Radiant floor — most flexible, tight bends without kinking, best for embedding in slab and manifold home runs; preferred by FL hydronic specialists','25 years','Poor — must sleeve any exposed FL UV runs','$0.55–$0.95/ft'],
+  ['PEX-B (Standard/Generic)','Cross-linked HDPE — silane moisture-cure; ~65% crosslink density; less flexible than PEX-A; widely stocked at FL distributors','200°F / 93°C','160 PSI @ 73°F','FPC §604.1; ASTM F876/F877; NSF/ANSI 14','General hydronic radiant; widely available at FL plumbing distributors and big-box stores; good for longer straight runs with few bends','25 years','Poor — sleeve all exterior/UV exposed runs','$0.35–$0.65/ft'],
+  ['PEX-C (Electron Beam)','Cross-linked HDPE — electron beam irradiation; ~60% crosslink density; stiffest of the three types','200°F / 93°C','160 PSI @ 73°F','FPC §604.1; ASTM F876/F877; NSF/ANSI 14','Potable water and hydronic combined systems; best for long straight horizontal runs with few bends; often used in FL multi-family applications','15–20 years','Poor','$0.30–$0.58/ft'],
+  ['PEX-AL-PEX (Barrier)','Three-layer: PEX-B + aluminum foil layer + PEX-B outer jacket; provides full oxygen barrier','200°F / 93°C','145 PSI @ 73°F','FPC §605.14; ASTM F1281; PR1PE1 listed','Hydronic radiant ONLY (not potable); aluminum layer provides oxygen barrier protecting cast iron boiler components from corrosion; holds bends without springing back','20–25 years','Fair — outer PEX layer degrades faster in FL UV','$0.75–$1.30/ft'],
+  ['Oxygen Barrier PEX','PEX-B with co-extruded EVOH (ethylene vinyl alcohol) barrier layer; meets DIN 4726 oxygen barrier standard','200°F / 93°C','160 PSI @ 73°F','FPC §604.1; ASTM F876 + DIN 4726 oxygen barrier','Required for all closed-loop hydronic systems with iron or steel components (boiler, cast iron pump); prevents dissolved oxygen corrosion that destroys metal manifolds and heat exchangers','25 years','Poor — EVOH layer has no UV protection; sleeve all exposed runs','$0.60–$0.90/ft'],
+  ['Pre-Insulated PEX','PEX-A or PEX-B enclosed in polyurethane foam insulation with HDPE outer jacket for soil contact','180°F / 82°C','100 PSI @ 73°F','FPC §604.1; local AHJ approval for burial depth and bedding','Outdoor underground runs (less common in FL’s flat terrain); district heating on campus or multi-building commercial sites; maintains water temperature over long outdoor runs in FL heat','20 years','Good — HDPE outer jacket protects UV; foam insulation adds R-value for FL ground applications','$2.50–$5.50/ft'],
+  ['Flexible PEX Composite','PEX with polymer mesh reinforcement layer; more rigid than standard PEX; maintains shape after routing','180°F / 82°C','130 PSI @ 73°F','FPC §605.14; local AHJ approval required for this type','Complex manifold layouts in tight mechanical rooms; easier to route than rigid copper and maintains shape better than standard PEX; popular in FL commercial and luxury residential installs','15 years','Fair — outer coating provides limited UV protection','$1.10–$2.10/ft'],
+  ['Manifold-Ready PEX (Color-Coded)','Standard PEX-B in red (supply) and blue (return); 1/2″ most common size for FL residential radiant','200°F / 93°C','160 PSI @ 73°F','FPC §604.1; ASTM F876/F877; manifold must meet ASSE 1061','Zoned radiant systems — color coding simplifies balancing, labeling, and troubleshooting at manifold; FL standard practice for multi-zone residential radiant installations','25 years','Poor — same as standard PEX-B; sleeve all exterior runs','$0.40–$0.75/ft'],
+  ['High-Temp PEX','PEX-A rated to 210°F per ASTM F876 Annex A; heavier wall thickness for additional safety factor','210°F / 99°C','160 PSI @ 73°F','FPC §604.1; ASTM F876 Annex A high-temp listing','High-temperature commercial boiler systems; hospital/data center auxiliary heating in FL; snowmelt applications (very rare in FL) requiring sustained high water temperature','25 years','Poor — conduit or sleeve all exposed runs in FL','$0.70–$1.15/ft'],
+  ['Commercial Grade PEX','Heavy-wall PEX-A or PEX-B (SDR 9 or thicker); available in larger diameters up to 2″ for commercial distribution','200°F / 93°C','250 PSI @ 73°F','FPC Chapter 6; FBC Commercial §M2103; ASPE Design Standard','Hotels, medical facilities, school HVAC hydronic systems in FL; higher wall thickness provides safety factor for commercial pressure requirements; engineered system design required by FL law','25–30 years','Poor — requires conduit or sleeve for all FL exterior runs','$1.20–$2.60/ft'],
+];
+
+function buildTableC() {
+  var tbody = document.getElementById('tableCBody');
+  tableCData.forEach(function(row) {
+    var tr = document.createElement('tr');
+    row.forEach(function(cell) {
+      var td = document.createElement('td');
+      td.textContent = cell;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+var checkItems = [
+  { t:'Subfloor inspected and level (max 3/16″ variance per 10 ft)', d:'Use a 6-ft or 10-ft straightedge across the entire floor area. High spots must be ground down with an angle grinder; low spots filled with self-leveling compound (SLC) rated for radiant systems. Unevenness causes tile cracking and heating element hot spots over time.' },
+  { t:'Concrete slab moisture tested — critical step in FL humidity', d:'Perform ASTM F2170 in-situ relative humidity test (72-hr probe soak) or ASTM F1869 calcium chloride test. Slab RH must be below 80% for most adhesives. Florida’s high ambient humidity makes this step more critical than in northern states. Skipping moisture testing is the #1 cause of FL radiant installation failures — always document results for permit file.' },
+  { t:'Insulation board installed below heating elements', d:'FL Energy Code requires minimum R-3 insulation under radiant elements in slab-on-grade construction. Use 1/2″ XPS foam board (R-2.5) or 1″ EPS (R-4). Foil-faced board reflects heat upward for 10–15% efficiency improvement. Secure with appropriate adhesive rated for under-floor use and foot traffic during installation.' },
+  { t:'System type confirmed compatible with specified flooring', d:'Obtain written manufacturer approval for your chosen flooring product over radiant heat. LVP, engineered hardwood, and laminate manufacturers often have specific max temperature requirements (typically 77–82°F surface). Keep documentation on file for permit inspection and future warranty claims.' },
+  { t:'Circuit capacity verified with licensed electrician (electric systems)', d:'Electric mat: 12W/sqft load calculation. A 150 sqft mat draws ~1,800W requiring a dedicated 15A, 240V circuit with GFCI protection per NEC Article 424. Larger areas (300+ sqft) typically need a 20A or 30A dedicated circuit. All new circuits in FL require a licensed electrical contractor (EC prefix license).' },
+  { t:'PEX manifold location planned and accessible (hydronic systems)', d:'FL plumbing code requires shutoff valves at each manifold port. Locate manifold in a mechanical closet, utility room, or accessible wall cavity. Allow minimum 18″ clearance in front for balancing and service. Label each circuit by zone at the manifold during installation — required by FL inspectors at final approval. Flow meters at each port recommended for balancing.' },
+  { t:'Thermostat and floor sensor locations finalized', d:'Dual-sensor thermostat recommended for FL radiant: floor sensor (embedded in thinset between tiles at 6″ depth) plus air sensor. Mount thermostat at 60″ AFF on an interior wall, away from HVAC supply registers, windows, exterior walls, and direct sunlight. In FL sunrooms, shade thermostat from late-afternoon western sun to prevent false warm readings.' },
+  { t:'Building permit pulled from local FL building department', d:'Required in all 67 FL counties — no exceptions. Electric radiant: building + electrical permit. Hydronic: building + plumbing permit (separate applications, separate fees). Commercial: also requires mechanical permit and engineer-stamped drawings. Never allow a contractor to skip permits — unpermitted radiant work flagged at home sale and may void homeowner’s insurance.' },
+  { t:'Flooring installer briefed on radiant heat compatibility requirements', d:'Your tile setter MUST use modified polymer thinset meeting ANSI A118.4 or A118.11 over heating cables, mats, or PEX tubing — standard thinset will crack from thermal expansion. Install crack-isolation membrane (e.g. Schluter DITRA-HEAT or Mapei UltraFlex RS) if subfloor is wood frame rather than concrete slab. Schedule tile install after heating system pressure test passes.' },
+  { t:'Thermal expansion joints planned at all room perimeters and transitions', d:'Required at all walls, columns, door frames, and floor transitions to other floor types. Use 1/8″–1/4″ joint filled with ASTM C920 flexible sealant (color-matched caulk or silicone). In FL where daily temperature swings can exceed 30°F, thermal movement in large tile floors is significant. Omitting expansion joints is a leading cause of tile cracking in FL radiant installations.' },
+  { t:'System pressure tested before any floor covering is installed', d:'Hydronic: pressurize to 1.5× operating pressure (minimum 100 PSI) and hold for 4 hours with zero pressure drop. Document with dated photos of test gauge. Electric: test resistance (ohm reading) and continuity per manufacturer specs and NFPA 70 Article 424. Keep all test documentation in permit file — FL plumbing inspector will require evidence of successful test.' },
+  { t:'Floor sensor and thermostat calibrated to flooring type', d:'Floor sensor must be in direct thermal contact with the flooring surface layer. For tile: embed sensor in thinset between tiles, centered in the heating zone, minimum 6″ from walls and heating element. For LVP: place sensor between mat and flooring per manufacturer instructions. Calibrate target surface temp to 75–80°F for comfort in FL applications — never exceed the flooring manufacturer’s maximum temperature rating.' },
+  { t:'FL Energy Code compliance verified (COMcheck or ResCheck)', d:'Residential projects: submit ResCheck analysis showing R-values, window U-factors, and system efficiency meet FL Energy Code (7th Edition). Commercial: COMcheck software documentation required. Radiant heating systems must demonstrate compliance with ASHRAE 90.2 (residential) or 90.1-2019 (commercial). Submit documentation with permit application — required before FL permit issuance in all jurisdictions.' },
+  { t:'Heat loss calculation completed (Manual J equivalent)', d:'Manual J load calculation (ACCA-approved software) required for all FL residential HVAC permit applications, including radiant heating. For sunrooms and additions, perform a room-by-room analysis. In FL, radiant design heat is typically 8–18 BTU/hr/sqft depending on insulation and glass area. Sunrooms with high glass area may require 15–20 BTU/hr/sqft due to high UA values through glass.' },
+  { t:'Hydronic leak test passed and documented for permit file', d:'FL plumbing inspectors require written documentation of the pressure test (date, pressure value, hold time, results, licensed contractor signature and license number). Some FL counties (Broward, Miami-Dade, Palm Beach) require a 24-hour hold test at 100 PSI for hydronic radiant systems. Keep test chart or pressure logger data as part of permanent project file.' },
+  { t:'Final inspection scheduled with FL building official', d:'Schedule final building inspection after ALL work is complete and system is operational. FL inspector will verify: permit card posted at job site, GFCI protection on electric circuits, thermostat location and basic operation, insulation compliance, visible expansion joints at perimeters, and hydronic pressure test records on file. Residential inspections in FL typically take 2–5 business days to schedule. Have your licensed contractor present.' },
+];
+
+var checkState = new Array(16).fill(false);
+
+function buildChecklist() {
+  var container = document.getElementById('checkList');
+  checkItems.forEach(function(item, i) {
+    var div = document.createElement('div');
+    div.className = 'check-item';
+    div.onclick = function(){ toggleCheck(i); };
+
+    var box = document.createElement('div');
+    box.className = 'check-box';
+    box.id = 'box' + i;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'check-text-wrap';
+
+    var p = document.createElement('div');
+    p.className = 'check-text';
+    p.id = 'ct' + i;
+    p.textContent = (i + 1) + '. ' + item.t;
+
+    var detail = document.createElement('div');
+    detail.className = 'check-detail';
+    detail.textContent = item.d;
+
+    wrap.appendChild(p);
+    wrap.appendChild(detail);
+    div.appendChild(box);
+    div.appendChild(wrap);
+    container.appendChild(div);
+  });
+}
+
+function toggleCheck(i) {
+  checkState[i] = !checkState[i];
+  document.getElementById('box' + i).classList.toggle('done', checkState[i]);
+  document.getElementById('ct' + i).classList.toggle('done', checkState[i]);
+  var done = checkState.filter(Boolean).length;
+  document.getElementById('checkCount').textContent = done;
+  document.getElementById('checkProgress').style.width = (done / 16 * 100) + '%';
+}
+
+var faqs = [
+  { q:'Does a Florida sunroom really need floor heating?', a:'Yes — more than most FL homeowners initially expect. Enclosed Florida rooms and sunroom additions experience temperatures below 55°F during winter cold fronts in December through February, especially in Broward, Palm Beach, and Central FL counties. Tile and stone floors feel dramatically colder than air temperature because of their very high thermal conductivity — a 58°F tile floor in a 65°F room feels uncomfortable to walk on barefoot. Radiant heating makes the floor feel warm (75–80°F surface temperature) even when the room itself is relatively cool, transforming a seasonal space into comfortable year-round living. Homeowners who add radiant heating to FL sunrooms typically report year-round usage of the space, adding functional square footage and demonstrably increasing home resale value.' },
+  { q:'Electric radiant mat vs. mini-split: which is better for a FL sunroom?', a:'They solve fundamentally different comfort problems and most FL luxury sunroom owners install both. A mini-split handles summer cooling (essential in FL) and can provide heating during extended cold periods. Radiant electric mat provides floor-level warmth on cool mornings and evenings — the specific comfort sensation that mini-splits cannot replicate because they heat the air rather than the floor surface. The electric mat adds only $1,500–$4,000 to a typical FL sunroom project and draws power only when the thermostat calls for floor heat. For a 200 sqft sunroom, operating cost during FL’s 4-month heating season is approximately $60–$120 per year at current FPL rates — very low cost for year-round comfort. In summary: the mini-split is essential for FL summers; radiant mat makes FL winters comfortable at minimal additional cost.' },
+  { q:'What FL utility rebates are available for radiant heating?', a:'Rebates vary by system type and utility provider. Heat pump water heaters (HPWH) used as the hydronic heat source are the best rebate opportunity in FL: FPL offers $200–$500 per unit through their On-Call program, and Duke Energy Florida offers similar rebates. Beyond utility rebates, the federal Inflation Reduction Act (IRA) provides a 30% Residential Clean Energy Credit on qualifying HPWH equipment, up to $2,000 annually, through tax year 2032. A homeowner purchasing a $1,800 HPWH could receive $540 in federal tax credit plus a $300 FPL rebate — reducing net equipment cost to $960 before labor. Standard electric mat systems do not qualify for utility rebates, but smart thermostats (Nest, ecobee) installed with any radiant system may qualify for FPL’s $25–$100 Smart Thermostat program. Always verify current rebate availability at your utility’s website before purchase, as rebates change annually and funds are limited.' },
+  { q:'What permits are required for radiant floor heating in Florida?', a:'All FL radiant projects require a building permit from your county or municipal building department — no exceptions or exemptions exist for any radiant heating system type. Electric mat and cable systems require both a building permit and an electrical permit; a licensed FL electrical contractor (EC license prefix) must pull the electrical permit and install the dedicated circuit with required GFCI protection. Hydronic (PEX) systems require a building permit plus a separate plumbing permit — pulled by a licensed FL plumbing contractor (CFC or MP license prefix). Commercial projects also require a mechanical permit and engineer-stamped drawings. Permit fees vary by county: typically $150–$450 for residential, $400–$2,000+ for commercial depending on project value. Unpermitted radiant work will be identified during home inspection at resale (infrared cameras routinely detect floor heating elements), can void homeowner’s insurance for related claims, and creates personal liability if the system causes a fire or flooding incident.' },
+  { q:'What is the best flooring for radiant heat in Florida’s humid climate?', a:'Porcelain and ceramic tile are overwhelmingly the best choice for radiant floors in Florida. They are completely impervious to humidity (porcelain absorbs <0.5% moisture), conduct heat efficiently, will not warp or swell regardless of FL climate swings, and are easiest to install correctly using the required modified thinset. Natural stone (marble, travertine, slate, limestone) is also excellent but requires annual sealing, especially important in humid coastal FL environments. Luxury vinyl plank can work in FL if specifically rated for radiant use by the manufacturer — always get written warranty confirmation before purchasing. Engineered hardwood is risky in coastal FL given high ambient humidity (RH 75–85%) combined with radiant heat cycling — if you must have a wood look, choose high-quality engineered product with thick wear layer and shorter plank widths (under 4″). Solid hardwood is not recommended with any radiant system in any FL location.' },
+];
+
+function buildFAQ() {
+  var container = document.getElementById('faqList');
+  faqs.forEach(function(item) {
+    var div = document.createElement('div');
+    div.className = 'faq-item';
+    var q = document.createElement('div');
+    q.className = 'faq-q';
+    q.textContent = '❓ ' + item.q;
+    var a = document.createElement('div');
+    a.className = 'faq-a';
+    a.textContent = item.a;
+    div.appendChild(q);
+    div.appendChild(a);
+    container.appendChild(div);
+  });
+}
+
+function submitLead() {
+  var name = document.getElementById('fname').value.trim();
+  var phone = document.getElementById('fphone').value.trim();
+  if (!name || !phone) { showToast('⚠️ Please enter your name and phone number'); return; }
+  showToast('✅ We’ll call you within 2 hours!');
+  ['fname','fphone','femail','fsqft','fnotes'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('fcounty').selectedIndex = 0;
+  document.getElementById('fsystem').selectedIndex = 0;
+}
+
+var SYS_WATTS = { electric_mat:12, hydronic_pex:9, hydronic_hpwh:4.2 };
+var BASELINE_WATTS = 15;
+
+function updateCalc() {
+  var area = parseInt(document.getElementById('areaSlider').value);
+  var sys = document.getElementById('sysCalc').value;
+  var rate = parseFloat(document.getElementById('rateSlider').value);
+  var hours = parseInt(document.getElementById('hoursSlider').value);
+  document.getElementById('areaVal').textContent = area.toLocaleString() + ' sq ft';
+  document.getElementById('rateVal').textContent = rate.toFixed(1) + ' ¢/kWh';
+  document.getElementById('hoursVal').textContent = hours + ' hr' + (hours > 1 ? 's' : '') + '/day';
+  var radKwh = area * SYS_WATTS[sys] / 1000 * hours;
+  var daily = radKwh * rate / 100;
+  var monthly = daily * 30;
+  var seasonal = daily * 30 * 5;
+  var baseKwh = area * BASELINE_WATTS / 1000 * hours;
+  var baseSeasonal = baseKwh * rate / 100 * 30 * 5;
+  var savePct = baseSeasonal > 0 ? Math.round((1 - seasonal / baseSeasonal) * 100) : 0;
+  document.getElementById('mDaily').textContent = '$' + daily.toFixed(2);
+  document.getElementById('mMonthly').textContent = '$' + Math.round(monthly);
+  document.getElementById('mAnnual').textContent = '$' + Math.round(seasonal);
+  document.getElementById('mSavings').textContent = savePct > 0 ? savePct + '% less' : 'Similar';
+  buildBarChart(seasonal, baseSeasonal);
+  var notes = {
+    electric_mat:'Electric mat operates at 12W/sqft. Smart thermostat reduces runtime 20–35% in FL mild winters — adjust hours to reflect thermostat cycling. For a 200 sqft FL sunroom, total season cost is typically $60–$120/year at current FPL rates.',
+    hydronic_pex:'Hydronic PEX efficiency (9W equivalent) assumes an 85% efficient heat source. A heat pump water heater drops effective watts to 4.2W — select "Hydronic + HPWH" above for that more efficient scenario.',
+    hydronic_hpwh:'Heat pump water heater achieves COP ~2.8, reducing effective wattage to 4.2W/sqft vs. 12W for resistance heating. This is the most energy-efficient radiant option in FL. The 5-year chart shows compounding savings vs. baseboard.'
+  };
+  document.getElementById('savingsNote').textContent = 'FL heating season: ~5 months (Nov–Mar). ' + notes[sys];
+}
+
+function buildBarChart(radiant, baseline) {
+  var chart = document.getElementById('barChart');
+  chart.innerHTML = '';
+  var maxVal = Math.max(radiant * 5, baseline * 5, 1) * 1.12;
+  for (var yr = 1; yr <= 5; yr++) {
+    var rCum = radiant * yr;
+    var bCum = baseline * yr;
+    var rH = Math.max(3, Math.round(rCum / maxVal * 110));
+    var bH = Math.max(3, Math.round(bCum / maxVal * 110));
+    var grp = document.createElement('div');
+    grp.className = 'bar-group';
+    grp.title = 'Yr ' + yr + ': Radiant $' + Math.round(rCum) + ' vs Baseboard $' + Math.round(bCum);
+    var b1 = document.createElement('div');
+    b1.className = 'bar teal';
+    b1.style.height = rH + 'px';
+    var b2 = document.createElement('div');
+    b2.className = 'bar gray';
+    b2.style.height = bH + 'px';
+    grp.appendChild(b1);
+    grp.appendChild(b2);
+    chart.appendChild(grp);
+  }
+}
+
+function init() {
+  buildTableA();
+  buildTableB();
+  buildTableC();
+  buildChecklist();
+  buildFAQ();
+  updateCalc();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
