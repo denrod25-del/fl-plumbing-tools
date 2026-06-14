@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**79 interactive cost calculators** for Florida homeowners.
+**82 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -8,6 +8,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 ## Tools
 
 - [FL Ada Aging In Place Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/ada-aging-in-place/fl_ada_aging.html)
+- [FL Adu Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/adu-plumbing/fl_adu_plumbing.html)
 - [FL Backflow Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow/fl_backflow.html)
 - [FL Bathroom Addition Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-addition/fl_bathroom_addition.html)
 - [FL Bathroom Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-cost/fl_bathroom_cost.html)
@@ -57,6 +58,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pool Equipment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-equipment/fl_pool_equipment.html)
 - [FL Pool Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-leak/fl_pool_leak.html)
 - [FL Prv Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/prv-replacement/fl_prv_replacement.html)
+- [FL Reclaimed Water Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/reclaimed-water/fl_reclaimed_water.html)
 - [FL Repipe Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repipe-cost/fl_repipe_cost.html)
 - [FL Repiping Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping/fl_repiping.html)
 - [FL Septic To Sewer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-to-sewer/fl_septic_to_sewer.html)
@@ -64,6 +66,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Sewage Ejector Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewage-ejector/fl_sewage_ejector.html)
 - [FL Sewer Line Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-line-cost/fl_sewer_line_cost.html)
 - [FL Sewer Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-line/fl_sewer_line_guide.html)
+- [FL Shower Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-leak/fl_shower_leak.html)
 - [FL Shower Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-remodel/fl_shower_remodel.html)
 - [FL Shower Valve Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-valve/fl_shower_valve.html)
 - [FL Slab Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-leak/fl_slab_leak.html)
