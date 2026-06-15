@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Plumbing Code Violations Guide | (561) 555-PIPE</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;line-height:1.5;font-size:14px}
+.wrap{max-width:480px;margin:0 auto}
+header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);padding:18px 16px 14px;border-bottom:2px solid #1E2A40;text-align:center}
+.logo{font-size:21px;font-weight:800;color:#00B4FF;letter-spacing:-0.5px;line-height:1.2}
+.logo span{color:#F4B942}
+.tagline{font-size:11px;color:#94A3B8;margin-top:3px}
+.phone-banner{margin-top:10px;background:#1E2A40;border-radius:8px;padding:9px 12px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:700;color:#F4B942;text-decoration:none}
+.phone-banner a{color:inherit;text-decoration:none}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);background:#0F1629;border-bottom:2px solid #1E2A40;position:sticky;top:0;z-index:100}
+.tab-btn{padding:10px 2px 9px;font-size:10px;font-weight:600;color:#94A3B8;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;text-align:center;line-height:1.3;letter-spacing:.1px}
+.tab-btn.active{color:#00B4FF;border-bottom-color:#00B4FF;background:rgba(0,180,255,.04)}
+.tab-btn:hover:not(.active){color:#E2E8F0}
+.tab-panel{display:none;padding:14px 14px 24px}
+.tab-panel.active{display:block}
+.card{background:#0F1629;border-radius:10px;padding:15px;margin-bottom:12px;border:1px solid #1E2A40}
+.card2{background:#141929;border-radius:10px;padding:13px;margin-bottom:10px;border:1px solid #1E2A40}
+h2{font-size:17px;font-weight:800;margin-bottom:14px;color:#E2E8F0}
+h3{font-size:14px;font-weight:700;margin-bottom:7px}
+h4{font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px}
+p{font-size:13px;line-height:1.55}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.badge-red{background:rgba(239,68,68,.14);color:#EF4444;border:1px solid rgba(239,68,68,.25)}
+.badge-gold{background:rgba(244,185,66,.14);color:#F4B942;border:1px solid rgba(244,185,66,.25)}
+.badge-blue{background:rgba(0,180,255,.14);color:#00B4FF;border:1px solid rgba(0,180,255,.25)}
+.badge-green{background:rgba(34,197,94,.14);color:#22C55E;border:1px solid rgba(34,197,94,.25)}
+.badge-orange{background:rgba(249,115,22,.14);color:#F97316;border:1px solid rgba(249,115,22,.25)}
+.badge-teal{background:rgba(20,184,166,.14);color:#14B8A6;border:1px solid rgba(20,184,166,.25)}
+.badge-purple{background:rgba(147,51,234,.14);color:#A855F7;border:1px solid rgba(147,51,234,.25)}
+.step-row{display:flex;align-items:center;gap:0;margin-bottom:18px}
+.step-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;border:2px solid #1E2A40;color:#94A3B8;background:#141929;transition:all .3s}
+.step-dot.done{background:#22C55E;border-color:#22C55E;color:#fff}
+.step-dot.active{background:#00B4FF;border-color:#00B4FF;color:#fff;box-shadow:0 0 12px rgba(0,180,255,.35)}
+.step-line{flex:1;height:2px;background:#1E2A40;transition:background .3s}
+.step-line.done{background:#22C55E}
+.step-lbl{font-size:13px;font-weight:600;color:#E2E8F0;margin-bottom:14px}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+.opt-grid.col1{grid-template-columns:1fr}
+.opt-btn{padding:9px 11px;background:#141929;border:2px solid #1E2A40;border-radius:8px;color:#94A3B8;font-size:12px;font-weight:600;cursor:pointer;text-align:left;transition:all .18s;line-height:1.35;outline:none}
+.opt-btn:hover{border-color:#00B4FF;color:#E2E8F0}
+.opt-btn.sel{border-color:#00B4FF;background:rgba(0,180,255,.09);color:#00B4FF}
+.btn{width:100%;padding:13px;border-radius:8px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.1px}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn-primary{background:#00B4FF;color:#fff}
+.btn-primary:hover:not(:disabled){background:#009fe0;box-shadow:0 4px 14px rgba(0,180,255,.3)}
+.btn-gold{background:#F4B942;color:#0A0E1A}
+.btn-gold:hover{background:#e0a930;box-shadow:0 4px 14px rgba(244,185,66,.35)}
+.btn-outline{background:transparent;color:#00B4FF;border:2px solid #00B4FF;margin-top:8px}
+.btn-outline:hover{background:rgba(0,180,255,.07)}
+.btn-back{background:#141929;color:#94A3B8;border:1px solid #1E2A40;margin-bottom:10px;width:auto;padding:7px 14px;font-size:12px;border-radius:6px}
+.result-hero{background:linear-gradient(135deg,rgba(0,180,255,.06),rgba(244,185,66,.05));border:1px solid rgba(0,180,255,.22);border-radius:10px;padding:15px;margin-bottom:14px}
+.cost-range{font-size:30px;font-weight:800;color:#F4B942;letter-spacing:-1px}
+.cost-sub{font-size:11px;color:#94A3B8;margin-top:2px}
+.timeline-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.3);border-radius:20px;padding:4px 11px;font-size:11px;font-weight:600;color:#14B8A6;margin-top:9px}
+.steps-ol{list-style:none;margin-bottom:14px}
+.steps-ol li{padding:8px 0;border-bottom:1px solid #1E2A40;font-size:13px;display:flex;gap:9px;align-items:flex-start}
+.steps-ol li:last-child{border-bottom:none}
+.s-num{width:21px;height:21px;border-radius:50%;background:#00B4FF;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.lead-form{display:grid;gap:9px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+input,select,textarea{width:100%;padding:10px 12px;background:#141929;border:1.5px solid #1E2A40;border-radius:7px;color:#E2E8F0;font-size:13px;outline:none;transition:border-color .2s;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:#00B4FF}
+input::placeholder,textarea::placeholder{color:#94A3B8}
+select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394A3B8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;background-size:10px}
+select option{background:#141929}
+.fact-card{background:#0F1629;border-radius:10px;padding:14px;margin-bottom:9px;border-left:3px solid #00B4FF;border-top:1px solid #1E2A40;border-right:1px solid #1E2A40;border-bottom:1px solid #1E2A40}
+.fact-card h3{font-size:12px;font-weight:700;margin-bottom:6px}
+.fact-card p{font-size:12px;color:#94A3B8;line-height:1.55}
+.tbl-wrap{overflow-x:auto;margin-bottom:0;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:11px;min-width:380px}
+th{background:#141929;padding:8px 7px;text-align:left;color:#94A3B8;font-weight:600;white-space:nowrap;border-bottom:2px solid #1E2A40;font-size:10px;text-transform:uppercase;letter-spacing:.4px}
+td{padding:7px 7px;border-bottom:1px solid #1E2A40;color:#E2E8F0;vertical-align:top;line-height:1.4}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.ck-group-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ck-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #1E2A40}
+.ck-item:last-child{border-bottom:none}
+.ck-box{width:22px;height:22px;border:2px solid #1E2A40;border-radius:5px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px;background:#141929}
+.ck-box.chkd{background:#22C55E;border-color:#22C55E}
+.ck-box.chkd::after{content:'✓';color:#fff;font-size:13px;font-weight:800}
+.ck-lbl{font-size:13px;flex:1;cursor:pointer;line-height:1.4}
+.ck-lbl.chkd{text-decoration:line-through;color:#94A3B8}
+.prog-bar{height:8px;background:#1E2A40;border-radius:4px;overflow:hidden;margin-bottom:5px}
+.prog-fill{height:100%;background:linear-gradient(90deg,#00B4FF,#14B8A6);border-radius:4px;transition:width .4s ease}
+.prog-txt{font-size:11px;color:#94A3B8;margin-bottom:14px}
+.pro-tip{background:rgba(244,185,66,.05);border:1px solid rgba(244,185,66,.18);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12px;color:#E2E8F0;display:flex;gap:9px;line-height:1.45}
+.pro-tip span:first-child{flex-shrink:0;font-size:14px}
+.ci-grp{margin-bottom:14px}
+.ci-lbl{font-size:12px;font-weight:600;color:#94A3B8;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.ci-lbl .ci-val{color:#F4B942;font-weight:700;font-size:13px}
+input[type=range]{-webkit-appearance:none;appearance:none;height:5px;border-radius:3px;background:#1E2A40;cursor:pointer;padding:0;border:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:#00B4FF;cursor:pointer;box-shadow:0 2px 8px rgba(0,180,255,.35)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#00B4FF;cursor:pointer;border:none}
+.tog-wrap{display:flex;border:1.5px solid #1E2A40;border-radius:7px;overflow:hidden}
+.tog-btn{flex:1;padding:9px;font-size:13px;font-weight:600;background:#141929;border:none;color:#94A3B8;cursor:pointer;transition:all .2s}
+.tog-btn.act{background:#00B4FF;color:#fff}
+.res-card{background:#141929;border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid #1E2A40;gap:10px}
+.res-lbl{font-size:11px;color:#94A3B8;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.res-sub{font-size:10px;color:#94A3B8;margin-top:2px;line-height:1.4}
+.res-val{font-size:15px;font-weight:800;color:#E2E8F0;text-align:right;flex-shrink:0}
+.r-critical{color:#EF4444}.r-high{color:#F97316}.r-medium{color:#F4B942}.r-low{color:#22C55E}
+.bar-grp{margin-bottom:11px}
+.bar-lbl{font-size:11px;color:#94A3B8;margin-bottom:4px;display:flex;justify-content:space-between}
+.bar-bg{height:30px;background:#141929;border-radius:5px;overflow:hidden;border:1px solid #1E2A40}
+.bar-fill{height:100%;border-radius:4px;transition:width .9s cubic-bezier(.16,1,.3,1);display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;min-width:40px}
+.urgency{background:linear-gradient(90deg,rgba(239,68,68,.08),rgba(249,115,22,.08));border:1px solid rgba(249,115,22,.25);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#F97316;display:flex;gap:8px;align-items:center;line-height:1.4}
+.cta-box{background:linear-gradient(135deg,rgba(0,180,255,.06),rgba(244,185,66,.04));border:1px solid rgba(0,180,255,.18);border-radius:10px;padding:15px;text-align:center}
+.cta-box p{font-size:13px;color:#94A3B8;margin-bottom:12px;line-height:1.45}
+.section-hdr{font-size:16px;font-weight:800;margin-bottom:13px;color:#E2E8F0;display:flex;align-items:center;gap:8px}
+.divider{height:1px;background:#1E2A40;margin:16px 0}
+.risk-note{font-size:11px;color:#94A3B8;font-style:italic}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(120px);background:#F4B942;color:#0A0E1A;padding:13px 22px;border-radius:10px;font-size:14px;font-weight:700;z-index:9999;transition:transform .42s cubic-bezier(.16,1,.3,1);box-shadow:0 4px 24px rgba(244,185,66,.45);max-width:310px;text-align:center;pointer-events:none;white-space:nowrap}
+#toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo">🔧 FL Plumbing <span>Code Violations</span></div>
+  <div class="tagline">Licensed Florida Plumbing Contractors — Serving All FL Counties</div>
+  <a class="phone-banner" href="tel:5615557473">📞 (561) 555-PIPE &nbsp;·&nbsp; Free Violation Assessment</a>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" data-tab="0" role="tab">💰<br>Estimator</button>
+  <button class="tab-btn" data-tab="1" role="tab">⚖️<br>FL Laws</button>
+  <button class="tab-btn" data-tab="2" role="tab">✅<br>Checklist</button>
+  <button class="tab-btn" data-tab="3" role="tab">🧮<br>Calculator</button>
+</nav>
+
+<div class="tab-panel active" id="panel-0"><div id="wizard"></div></div>
+<div class="tab-panel" id="panel-1"><div id="laws-content"></div></div>
+<div class="tab-panel" id="panel-2"><div id="chk-content"></div></div>
+<div class="tab-panel" id="panel-3"><div id="calc-content"></div></div>
+
+</div>
+
+<div id="toast">We'll call you within 2 hours! ☎️</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg || "We'll call you within 2 hours! ☎️";
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3800);
+}
+
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + idx).classList.add('active');
+    });
+  });
+}
+
+// ─── WIZARD DATA ───
+const VIOLATIONS = [
+  { id:'bath',  label:'Unpermitted bathroom addition', low:850,  high:4300,
+    steps:['Pull after-the-fact permit ($350–$800)','Schedule structural & plumbing inspection','Remediate any code-deficient work ($500–$3,500)','Pass final inspection for Certificate of Completion'],
+    timeline:'3–8 weeks', note:'Highest complexity — inspector may require destructive access to hidden work.' },
+  { id:'wh',   label:'Unpermitted water heater', low:250, high:600,
+    steps:['Apply for permit ($100–$200)','Add seismic strapping, drain pan & TPR if missing','Schedule rough & final inspection','Obtain inspection card sign-off'],
+    timeline:'1–2 weeks', note:'Most counties resolve quickly. Easiest after-the-fact permit in FL.' },
+  { id:'vent', label:'Improper venting', low:400, high:1800,
+    steps:['Camera-map existing vent stack','Open walls/ceiling at problem vents','Install AAV or extend vent through roof','Re-inspect and restore surfaces'],
+    timeline:'2–5 days', note:'Active sewer gas risk — address immediately. Can fail whole-house inspection.' },
+  { id:'poly', label:'Polybutylene pipe', low:2500, high:8500,
+    steps:['Shut off water at main','Remove all gray poly-B supply lines','Install PEX-A or CPVC replacement','Pull permit, restore drywall, pass final inspection'],
+    timeline:'2–5 days (whole house)', note:'Most FL insurers now cancel policies with active poly-B. Act before renewal.' },
+  { id:'galv', label:'Old galvanized pipe', low:3500, high:12000,
+    steps:['Full camera inspection & flow test','Permit application with engineer sign-off if needed','Complete repipe in copper or PEX','Drywall restoration and final county inspection'],
+    timeline:'3–7 days', note:'Corroded galvanized leaches lead. FL lenders flag during appraisal.' },
+  { id:'bfp',  label:'No backflow preventer', low:250, high:800,
+    steps:['Select device type (RPZ, PVB, or DC assembly)','Install on irrigation/hose bibb supply line','Submit to water utility for certification','Annual test & tag required by FL code'],
+    timeline:'1 day', note:'Mandatory on all irrigation systems in FL since 1997. Quick citation target.' },
+  { id:'sep',  label:'Improper septic setback', low:1500, high:5000,
+    steps:['Commission licensed surveyor to document setback','Apply for variance with FL DOH county office','Engineering report if system must be relocated','May require full system relocation ($5k–$20k+)'],
+    timeline:'4–12 weeks (county approval)', note:'FL DOH enforces aggressively. Disclose to buyers or face fraud liability.' },
+  { id:'gas',  label:'Unpermitted gas line', low:600, high:1700,
+    steps:['Shut off gas & perform pressure test','Apply for gas line permit ($200–$500)','Schedule utility or county gas inspection','Repair any failed joints, retest, get approval'],
+    timeline:'1–3 weeks', note:'Fire and explosion risk. Utility provider may shut off gas pending permit.' },
+  { id:'cpvc', label:'CPVC in hot climate', low:1500, high:6000,
+    steps:['Visual & pressure assessment of all CPVC runs','Identify cracked, discolored or chlorine-damaged sections','Partial or full repipe in PEX-A','Pull permit and pass final county inspection'],
+    timeline:'1–4 days', note:'FL heat degrades CPVC faster than northern states. Pinhole leaks common after 15 years.' },
+  { id:'prv',  label:'No PRV installed', low:350, high:750,
+    steps:['Verify pressure >80 PSI at main with gauge','Install PRV on main supply line at meter','Adjust to 50–70 PSI, verify with gauge','Check and install expansion tank if needed'],
+    timeline:'1 day', note:'High pressure voids fixture warranties, damages appliances, and causes hammer.' },
+  { id:'swr',  label:'Illegal sewer connection', low:1500, high:6000,
+    steps:['Camera inspect to confirm and document illegal tie-in','Obtain permit from county utilities department','Disconnect, reroute to proper sewer or septic','Backfill trench, restore surface, pass inspection'],
+    timeline:'2–10 days', note:'Environmental violation with potential DEP involvement. High fine exposure.' },
+  { id:'co',   label:'Missing cleanout access', low:250, high:600,
+    steps:['Locate main drain line with ground probe or camera','Install 4" two-way cleanout at property line','Add interior cleanout at base of stack if needed','Pull permit and schedule county inspection'],
+    timeline:'1 day', note:'Blocks permit sign-off. Required by FBC at every building.' }
+];
+
+const STATUS_OPTS = ['Selling home soon','Received citation from county','Failed inspection','Pre-purchase inspection finding','Remodeling discovered it','Rental property compliance'];
+const TYPE_OPTS   = ['Single-family','Condo','Duplex','Mobile home','Commercial'];
+const COUNTY_OPTS = ['Palm Beach','Miami-Dade','Broward','Orange','Hillsborough','Other FL'];
+
+let W = { step:1, viol:null, status:null, type:null, county:null };
+
+// ─── WIZARD RENDER ───
+function renderWizard() {
+  const el = document.getElementById('wizard');
+  if      (W.step===1) el.innerHTML = buildStep1();
+  else if (W.step===2) el.innerHTML = buildStep2();
+  else if (W.step===3) el.innerHTML = buildStep3();
+  else if (W.step===4) el.innerHTML = buildStep4();
+  else                 el.innerHTML = buildResult();
+  wireWizard();
+}
+
+function stepInd(cur) {
+  let h = '<div class="step-row">';
+  for (let i=1;i<=4;i++) {
+    const cls = i<cur?'done':i===cur?'active':'';
+    h += `<div class="step-dot ${cls}">${i<cur?'✓':i}</div>`;
+    if(i<4) h += `<div class="step-line ${i<cur?'done':''}"></div>`;
+  }
+  return h+'</div>';
+}
+
+function buildStep1() {
+  let h = '<div class="card">'+stepInd(1);
+  h += '<div class="step-lbl">What type of code violation do you have?</div>';
+  h += '<div class="opt-grid col1">';
+  VIOLATIONS.forEach((v,i) => {
+    h += `<button class="opt-btn${W.viol===i?' sel':''}" data-s1="${i}">${esc(v.label)}</button>`;
+  });
+  h += '</div><button class="btn btn-primary" id="n1" '+(W.viol===null?'disabled':'')+'>Next: Your Situation →</button></div>';
+  return h;
+}
+
+function buildStep2() {
+  let h = '<div class="card">'+stepInd(2);
+  h += '<button class="btn btn-back" id="bk">← Back</button>';
+  h += '<div class="step-lbl">What best describes your situation?</div>';
+  h += '<div class="opt-grid">';
+  STATUS_OPTS.forEach((s,i) => {
+    h += `<button class="opt-btn${W.status===i?' sel':''}" data-s2="${i}">${esc(s)}</button>`;
+  });
+  h += '</div><button class="btn btn-primary" id="n2" '+(W.status===null?'disabled':'')+'>Next: Property Type →</button></div>';
+  return h;
+}
+
+function buildStep3() {
+  let h = '<div class="card">'+stepInd(3);
+  h += '<button class="btn btn-back" id="bk">← Back</button>';
+  h += '<div class="step-lbl">Property type?</div>';
+  h += '<div class="opt-grid">';
+  TYPE_OPTS.forEach((p,i) => {
+    h += `<button class="opt-btn${W.type===i?' sel':''}" data-s3="${i}">${esc(p)}</button>`;
+  });
+  h += '</div><button class="btn btn-primary" id="n3" '+(W.type===null?'disabled':'')+'>Next: Your County →</button></div>';
+  return h;
+}
+
+function buildStep4() {
+  let h = '<div class="card">'+stepInd(4);
+  h += '<button class="btn btn-back" id="bk">← Back</button>';
+  h += '<div class="step-lbl">Which county is the property in?</div>';
+  h += '<div class="opt-grid">';
+  COUNTY_OPTS.forEach((c,i) => {
+    h += `<button class="opt-btn${W.county===i?' sel':''}" data-s4="${i}">${esc(c)}</button>`;
+  });
+  h += '</div><button class="btn btn-primary" id="n4" '+(W.county===null?'disabled':'')+'>View My Cost Estimate →</button></div>';
+  return h;
+}
+
+function buildResult() {
+  const v   = VIOLATIONS[W.viol];
+  const cty = COUNTY_OPTS[W.county];
+  const sts = STATUS_OPTS[W.status];
+  const urgent = W.status===1;
+  let h = '<div class="card">';
+  if(urgent) h += '<div class="urgency">⚠️ <span>Active citation — fines may be accruing every day. Call now to stop the clock.</span></div>';
+  h += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px">';
+  h += `<h3 style="color:#00B4FF;font-size:13px;flex:1">${esc(v.label)}</h3>`;
+  h += `<span class="badge badge-teal">${esc(cty)}</span>`;
+  h += '</div>';
+  h += '<div class="result-hero">';
+  h += `<div class="cost-range">$${v.low.toLocaleString()} – $${v.high.toLocaleString()}</div>`;
+  h += '<div class="cost-sub">Estimated total remediation cost · Florida market rates · Permit fees included</div>';
+  h += `<div class="timeline-pill">⏱ ${esc(v.timeline)}</div>`;
+  h += '</div>';
+  if(v.note) h += `<div class="pro-tip"><span>💡</span><span>${esc(v.note)}</span></div>`;
+  h += '<h4 style="margin-top:12px;margin-bottom:9px">Step-by-Step Remediation</h4><ol class="steps-ol">';
+  v.steps.forEach((s,i) => { h += `<li><div class="s-num">${i+1}</div><span>${esc(s)}</span></li>`; });
+  h += '</ol><div class="cta-box"><p>Get a licensed FL plumber to handle every step — permit to final inspection.</p>';
+  h += '<form class="lead-form" id="rl"><div class="form-row"><input placeholder="First name" id="rn" autocomplete="given-name"><input placeholder="Phone number" id="rp" type="tel" autocomplete="tel"></div>';
+  h += '<input placeholder="Property address / city" id="ra">';
+  h += '<button type="submit" class="btn btn-gold">📞 Get Free Assessment — We Call Within 2 Hours</button></form></div>';
+  h += '<button class="btn btn-outline" id="rst">← Start Over</button></div>';
+  return h;
+}
+
+function wireWizard() {
+  const pick = (sel, key) => document.querySelectorAll(`[${sel}]`).forEach(b => {
+    b.addEventListener('click', () => {
+      W[key] = parseInt(b.dataset[sel.replace('data-','')]);
+      document.querySelectorAll(`[${sel}]`).forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+      const nxts = {s1:'n1',s2:'n2',s3:'n3',s4:'n4'};
+      const nb = document.getElementById(nxts[sel.replace('data-','')]);
+      if(nb) nb.disabled = false;
+    });
+  });
+  pick('data-s1','viol'); pick('data-s2','status'); pick('data-s3','type'); pick('data-s4','county');
+  const bind = (id, fn) => { const el = document.getElementById(id); if(el) el.addEventListener('click',fn); };
+  bind('n1',()=>{W.step=2;renderWizard()});
+  bind('n2',()=>{W.step=3;renderWizard()});
+  bind('n3',()=>{W.step=4;renderWizard()});
+  bind('n4',()=>{W.step=5;renderWizard()});
+  bind('bk', ()=>{W.step--;renderWizard()});
+  bind('rst',()=>{W={step:1,viol:null,status:null,type:null,county:null};renderWizard()});
+  const rl = document.getElementById('rl');
+  if(rl) rl.addEventListener('submit',e=>{e.preventDefault();showToast("We'll call you within 2 hours! ☎️")});
+}
+
+// ─── FL LAWS ───
+const FACT_CARDS = [
+  { col:'#00B4FF', icon:'📋',
+    title:'Florida Building Code (FBC) — 7th Edition 2020',
+    text:'All plumbing work in FL must comply with the FBC, based on the International Plumbing Code (IPC) with Florida-specific amendments. There is NO grandfather exemption for safety violations. Even older unpermitted work must meet current code if a permit is pulled, a violation is cited, or property is sold.' },
+  { col:'#F4B942', icon:'📄',
+    title:'Permit After-the-Fact — FL Stat. 553.79',
+    text:'Florida law explicitly allows retroactive permits for unpermitted work. The inspector must be able to physically inspect all work — destructive access (opening walls, ceilings) may be required. Most counties charge 2× the normal permit fee. The permit protects sellers from future fraud liability and clears title.' },
+  { col:'#EF4444', icon:'⚠️',
+    title:'Citation Fines: $100–$1,000 Per Day',
+    text:'FL county building departments can issue daily citations for known unresolved violations. Palm Beach, Miami-Dade, and Broward are the most aggressive enforcers in the state. Fines compound: a $250/day citation running 60 days = $15,000 before remediation costs. Citations attach to the property record.' },
+  { col:'#F97316', icon:'🏠',
+    title:'Real Estate Disclosure — FL Stat. 689.261',
+    text:'Florida sellers must disclose all known building defects, including unpermitted plumbing work. Failure to disclose is considered fraud and creates civil liability. Sellers have been successfully sued post-closing when buyers discover undisclosed unpermitted work. "I forgot" is not a defense once cited.' },
+  { col:'#14B8A6', icon:'🚰',
+    title:'Polybutylene Insurance Mandate',
+    text:'Major FL insurers — Citizens Property, Heritage Insurance, Universal Property & Casualty, People\'s Trust, and FedNat — now refuse to issue or renew policies on homes with active polybutylene (poly-B) supply lines. Non-renewal notices have been issued statewide since 2022. Replacement is the only solution.' },
+  { col:'#00B4FF', icon:'📝',
+    title:'Title Insurance Impact on Closings',
+    text:'Unpermitted plumbing work can cloud title and prevent closing. Buyer\'s lenders (Fannie/Freddie guidelines) routinely require full remediation, permits, and inspections before funding. A single unpermitted water heater discovered during title search has derailed closings. Escrow holdbacks rarely satisfy lenders.' },
+  { col:'#94A3B8', icon:'🔒',
+    title:'FL DBPR Contractor Enforcement — FL Stat. 489.103',
+    text:'Licensed plumbing contractors (CFC) who perform or allow unpermitted work face DBPR license suspension, fines, and criminal charges. The owner-builder exemption (FL Stat. 489.103) ONLY applies to homeowners who physically occupy the property — investors, landlords, and flippers do not qualify.' }
+];
+
+const T1 = [
+  ['#','Violation','FBC Code Ref','Risk Level','Typical Fine / Impact'],
+  ['1','Unpermitted bathroom addition','R306, P2701','🔴 Critical','$500–$5,000 + remediation'],
+  ['2','Polybutylene supply lines','P2906','🔴 Critical','Policy cancellation'],
+  ['3','Improper/missing venting','P3103–P3113','🔴 Critical','$250–$1,000/day citation'],
+  ['4','Unpermitted gas line','G2407–G2420','🔴 Critical','Gas shutoff + $500–$2,000'],
+  ['5','Galvanized repipe needed','P2906.4','🟠 High','$100–$500/day + repipe cost'],
+  ['6','No backflow preventer','P2902','🟠 High','$250–$750 fine'],
+  ['7','Improper septic setback','64E-6 FAC','🟠 High','$250–$2,500 + variance'],
+  ['8','Illegal sewer connection','P3004','🟠 High','$500–$5,000 + DEP fine'],
+  ['9','No PRV installed','P2903.3.1','🟡 Medium','Inspection fail; $100–$400'],
+  ['10','CPVC degradation in FL heat','P2906.5','🟡 Medium','Inspection fail; leak liability'],
+  ['11','Missing cleanout access','P3005.2','🟡 Medium','Permit hold; $150–$400'],
+  ['12','Unpermitted water heater','M1307','🟢 Lower','$200–$600 after-the-fact']
+];
+
+const T2 = [
+  ['County','ATF Fee','Timeline','Key Requirement'],
+  ['Palm Beach','2× permit + $150','4–8 weeks','All unpermitted work must be exposed for visual inspection'],
+  ['Miami-Dade','2× permit + $200','6–12 weeks','Affidavit of existing work; licensed CFC contractor required'],
+  ['Broward','2.5× permit fee','4–8 weeks','Permit history search required; engineering may be needed'],
+  ['Orange','2× permit fee','3–6 weeks','Online application accepted; virtual inspection option available'],
+  ['Hillsborough','2× permit fee','3–5 weeks','Owner-builder allowed only if owner-occupant; must pass all inspections'],
+  ['Pinellas','2× permit + $100','4–7 weeks','Licensed contractor of record required for all trade permits']
+];
+
+const T3 = [
+  ['Insurer','Poly-B','Galvanized','CPVC (FL)','Notes'],
+  ['Citizens Insurance','Deny ✗','Deny ✗','Surcharge +','State insurer of last resort — strictest standards in FL'],
+  ['Heritage P&C','Deny ✗','Surcharge +','OK','Non-renewal notices sent statewide 2023–2024'],
+  ['Universal P&C','Deny ✗','Surcharge +','OK','Requires licensed plumber affidavit for pipe condition'],
+  ["People's Trust",'Deny ✗','Deny ✗','OK','Has own repair crews; aggressive inspection program'],
+  ['FedNat/Monarch','Surcharge +','Surcharge +','OK','Reviews case-by-case for pipes >20 years old'],
+  ['UPC Insurance','Deny ✗','Surcharge +','Surcharge +','Tightening underwriting after merger; review all policies'],
+  ['Slide Insurance','Deny ✗','OK','OK','Newer carrier; gaining market share; competitive pricing']
+];
+
+const T4 = [
+  ['Days to Close','Priority Action','Why It Matters'],
+  ['120 days','Repipe poly-B/galvanized; resolve open permits','Insurers need 60–90 days; lenders need 30 days for review'],
+  ['90 days','Fix septic setbacks; remedy venting; get permits','County variance takes 4–12 weeks; plan ahead'],
+  ['60 days','Complete after-the-fact permit process; get CO/CC','Title search 30–45 days before close — violations surface here'],
+  ['30 days','Install backflow, PRV, cleanouts; get documentation','Quick fixes that satisfy inspection contingency conditions'],
+  ['14 days','Compile all inspection reports, permits, contractor receipts','Provide lender package; request title commitment update']
+];
+
+function buildTable(title, rows) {
+  let h = `<div class="card"><h4>${esc(title)}</h4><div class="tbl-wrap"><table>`;
+  rows.forEach((row,i) => {
+    h += i===0
+      ? '<tr>'+row.map(c=>`<th>${esc(c)}</th>`).join('')+'</tr>'
+      : '<tr>'+row.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>';
+  });
+  return h+'</table></div></div>';
+}
+
+function buildLaws() {
+  let h = '<div class="section-hdr">⚖️ FL Plumbing Laws & Code Facts</div>';
+  FACT_CARDS.forEach(fc => {
+    h += `<div class="fact-card" style="border-left-color:${fc.col}">`;
+    h += `<h3 style="color:${fc.col}">${esc(fc.icon)} ${esc(fc.title)}</h3>`;
+    h += `<p>${esc(fc.text)}</p></div>`;
+  });
+  h += '<div class="divider"></div><div class="section-hdr">📊 Reference Tables</div>';
+  h += buildTable('Top 12 FL Plumbing Code Violations by Frequency', T1);
+  h += buildTable('Permit-After-the-Fact Process by County (ATF = After-the-Fact)', T2);
+  h += buildTable('Major FL Insurer Stance on Problem Pipe Types', T3);
+  h += buildTable('Pre-Sale Remediation Timeline Guide', T4);
+  h += '<div class="cta-box"><p>Our licensed FL plumbers handle the full process — from permit application through final county inspection.</p>';
+  h += '<a href="tel:5615557473" class="btn btn-gold" style="display:block;text-decoration:none;padding:13px;border-radius:8px;font-weight:700;font-size:14px;font-family:inherit">📞 Call (561) 555-PIPE — Free Code Assessment</a></div>';
+  document.getElementById('laws-content').innerHTML = h;
+}
+
+// ─── CHECKLIST ───
+const CK_DATA = {
+  'Immediate Safety Issues': {
+    badge:'badge-red', emoji:'🚨',
+    items:[
+      'Sewer gas odor detected inside — improper or missing venting suspected',
+      'Gray polybutylene (poly-B) supply lines are present and active under pressure',
+      'Unpermitted gas line work discovered — possible leak or failed joint',
+      'Water heater lacks seismic strapping, drain pan, or working TPR relief valve'
+    ]
+  },
+  'Insurance-Trigger Items': {
+    badge:'badge-orange', emoji:'🏛️',
+    items:[
+      'Polybutylene or galvanized pipes identified by insurer or inspector',
+      'CPVC showing cracking, discoloration, or chlorine damage (FL climate issue)',
+      'No backflow preventer installed on irrigation system connection',
+      'Water pressure exceeds 80 PSI at meter — no pressure reducing valve (PRV)'
+    ]
+  },
+  'Pre-Sale Must-Fix': {
+    badge:'badge-gold', emoji:'🏠',
+    items:[
+      'All unpermitted plumbing work has after-the-fact permits pulled and closed',
+      'No open building permits or unresolved citations on property record',
+      'Septic system is within required setbacks and has current county inspection',
+      'Two-way cleanout access is present and accessible at property line'
+    ]
+  },
+  'Documentation Needed': {
+    badge:'badge-blue', emoji:'📁',
+    items:[
+      'Copies of all plumbing permits (original + after-the-fact) on file',
+      'Licensed contractor (CFC) receipts for all major plumbing work performed',
+      'Inspection reports from county building department (passed inspections)',
+      'Current insurance policy endorsement confirming plumbing system is accepted'
+    ]
+  }
+};
+
+const TIPS = [
+  { i:'💡', t:'Pull your property\'s full permit history free at your county building portal — reveals open permits from prior owners that become YOUR problem at closing.' },
+  { i:'⚡', t:'Never disclose violations verbally first. Get everything assessed and remediated before listing. A $600 permit costs far less than a $15,000 price reduction.' },
+  { i:'🔒', t:'An after-the-fact permit costs 2× but protects you from fraud liability, title problems, and inspector discoveries during buyer due diligence.' },
+  { i:'📋', t:'Rental property owners have ZERO owner-builder exemption. All plumbing work must be permitted and performed by a licensed CFC contractor or fines apply.' },
+  { i:'⏰', t:'Begin remediation 120+ days before target closing. County permit review and inspection scheduling is unpredictable in FL — budget extra time.' }
+];
+
+let ckState = {};
+
+function buildChecklist() {
+  let h = '<div class="section-hdr">✅ Code Compliance Checklist</div>';
+  h += '<div class="prog-bar"><div class="prog-fill" id="pf" style="width:0%"></div></div>';
+  h += '<div class="prog-txt" id="pt">0 of 16 items completed — 0%</div>';
+  let idx = 0;
+  Object.entries(CK_DATA).forEach(([grp, data]) => {
+    h += `<div class="card"><div class="ck-group-hdr"><span class="badge ${data.badge}">${data.emoji} ${esc(grp)}</span></div>`;
+    data.items.forEach(item => {
+      const id = 'c'+idx; ckState[id] = false;
+      h += `<div class="ck-item"><div class="ck-box" id="bx-${id}" data-ck="${id}"></div><span class="ck-lbl" id="lb-${id}" data-ck="${id}">${esc(item)}</span></div>`;
+      idx++;
+    });
+    h += '</div>';
+  });
+  h += '<div class="section-hdr" style="margin-top:4px">💡 Pro Tips</div>';
+  TIPS.forEach(tp => { h += `<div class="pro-tip"><span>${tp.i}</span><span>${esc(tp.t)}</span></div>`; });
+  h += '<div class="cta-box" style="margin-top:14px"><p>Get a free code compliance walkthrough from a licensed FL plumber — we identify every issue before your buyer does.</p>';
+  h += '<form class="lead-form" id="clf"><div class="form-row"><input placeholder="Name" id="cn" autocomplete="name"><input placeholder="Phone" id="cp" type="tel"></div>';
+  h += '<button type="submit" class="btn btn-gold">📞 Get Free Compliance Assessment</button></form></div>';
+  document.getElementById('chk-content').innerHTML = h;
+  document.querySelectorAll('[data-ck]').forEach(el => el.addEventListener('click', ()=>toggleCk(el.dataset.ck)));
+  const clf = document.getElementById('clf');
+  if(clf) clf.addEventListener('submit', e => { e.preventDefault(); showToast("We'll call you within 2 hours! ☎️"); });
+}
+
+function toggleCk(id) {
+  ckState[id] = !ckState[id];
+  const box = document.getElementById('bx-'+id);
+  const lbl = document.getElementById('lb-'+id);
+  box.classList.toggle('chkd', ckState[id]);
+  lbl.classList.toggle('chkd', ckState[id]);
+  const total = Object.keys(ckState).length;
+  const done  = Object.values(ckState).filter(Boolean).length;
+  const pct   = Math.round(done/total*100);
+  document.getElementById('pf').style.width = pct+'%';
+  document.getElementById('pt').textContent = `${done} of ${total} items completed — ${pct}%`;
+}
+
+// ─── PENALTY CALCULATOR ───
+let CS = { v:3, d:365, cty:'high', sell:'asap', ins:true };
+
+function buildCalc() {
+  const h = `<div class="section-hdr">🧮 Violation Cost &amp; Risk Calculator</div>
+<div class="card">
+  <div class="ci-grp">
+    <div class="ci-lbl">Number of known violations <span class="ci-val" id="v-val">${CS.v}</span></div>
+    <input type="range" min="1" max="10" value="${CS.v}" id="v-sl">
+  </div>
+  <div class="ci-grp">
+    <div class="ci-lbl">Days violation existed without permit <span class="ci-val" id="d-val">${CS.d}</span> days</div>
+    <input type="range" min="0" max="3650" step="30" value="${CS.d}" id="d-sl">
+  </div>
+  <div class="ci-grp">
+    <div class="ci-lbl">County enforcement level</div>
+    <select id="ct-sel">
+      <option value="high">Palm Beach / Miami-Dade / Broward — HIGH</option>
+      <option value="medium">Orange / Hillsborough — MEDIUM</option>
+      <option value="low">Other FL County — LOW</option>
+    </select>
+  </div>
+  <div class="ci-grp">
+    <div class="ci-lbl">Selling timeline</div>
+    <select id="se-sel">
+      <option value="asap">ASAP — Within 30 days</option>
+      <option value="3mo">3 months from now</option>
+      <option value="6mo">6 months from now</option>
+      <option value="none">Not selling</option>
+    </select>
+  </div>
+  <div class="ci-grp">
+    <div class="ci-lbl">Insurance renewal coming up?</div>
+    <div class="tog-wrap">
+      <button class="tog-btn act" id="iy">Yes — Renewal Soon</button>
+      <button class="tog-btn" id="in">No / Already Renewed</button>
+    </div>
+  </div>
+</div>
+<div id="calc-res"></div>
+<div class="card"><h4>Cost Comparison: Fix Now vs. Wait</h4><div id="chart"></div></div>
+<div class="cta-box">
+  <p>Don't let code violations kill your sale or cancel your insurance. Our licensed plumbers assess and remediate fast.</p>
+  <form class="lead-form" id="calcf">
+    <div class="form-row"><input placeholder="Name" id="calc-n"><input placeholder="Phone" type="tel" id="calc-p"></div>
+    <select id="calc-cty"><option value="">Select your county...</option><option>Palm Beach</option><option>Miami-Dade</option><option>Broward</option><option>Orange</option><option>Hillsborough</option><option>Pinellas</option><option>Other FL County</option></select>
+    <button type="submit" class="btn btn-gold">🚨 Get Emergency Remediation Quote</button>
+  </form>
+</div>`;
+  document.getElementById('calc-content').innerHTML = h;
+  wireCalc();
+  runCalc();
+}
+
+function wireCalc() {
+  document.getElementById('v-sl').oninput = function(){CS.v=+this.value;document.getElementById('v-val').textContent=this.value;runCalc()};
+  document.getElementById('d-sl').oninput = function(){CS.d=+this.value;document.getElementById('d-val').textContent=this.value;runCalc()};
+  document.getElementById('ct-sel').onchange = function(){CS.cty=this.value;runCalc()};
+  document.getElementById('se-sel').onchange = function(){CS.sell=this.value;runCalc()};
+  document.getElementById('iy').onclick = ()=>{CS.ins=true;document.getElementById('iy').classList.add('act');document.getElementById('in').classList.remove('act');runCalc()};
+  document.getElementById('in').onclick = ()=>{CS.ins=false;document.getElementById('in').classList.add('act');document.getElementById('iy').classList.remove('act');runCalc()};
+  document.getElementById('calcf').onsubmit = e=>{e.preventDefault();showToast("We'll call you within 2 hours! ☎️")};
+}
+
+function calcRisk(cty, v, ins, sell) {
+  let s = (cty==='high'?3:cty==='medium'?2:1) + Math.min(v*0.5,3) + (ins?2:0) + (sell==='asap'?2:sell==='3mo'?1:0);
+  if(s>=7.5) return {lbl:'CRITICAL',sub:'Policy cancellation very likely at renewal',cls:'r-critical'};
+  if(s>=5.5) return {lbl:'HIGH',sub:'Cancellation or surcharge at next renewal',cls:'r-high'};
+  if(s>=3.5) return {lbl:'MEDIUM',sub:'Inspector visit or premium surcharge likely',cls:'r-medium'};
+  return {lbl:'LOW',sub:'Monitor; disclose to insurer proactively',cls:'r-low'};
+}
+
+function runCalc() {
+  const {v,d,cty,sell,ins} = CS;
+  const daily    = cty==='high'?500:cty==='medium'?250:150;
+  const remBase  = v*1600;
+  const remHigh  = v*4200;
+  const fineExp  = v*daily*Math.min(d,365);
+  const rsk      = calcRisk(cty,v,ins,sell);
+  const delay    = sell==='asap'?'6–12 weeks':sell==='3mo'?'2–4 weeks':sell==='6mo'?'1–2 weeks':'N/A';
+  const discount = remHigh>12000?'6–8%':remHigh>6000?'4–6%':'3–5%';
+  const rows = [
+    {lbl:'Estimated Remediation Cost', sub:`${v} violation${v>1?'s':''} × avg FL market rates`, val:`$${remBase.toLocaleString()} – $${remHigh.toLocaleString()}`, cls:''},
+    {lbl:'Potential Fine Exposure',    sub:`$${daily}/day × ${Math.min(d,365)} days × ${v} violations`, val:'$'+fineExp.toLocaleString(), cls:fineExp>50000?'r-critical':fineExp>20000?'r-high':fineExp>5000?'r-medium':'r-low'},
+    {lbl:'Insurance Cancellation Risk',sub:rsk.sub, val:rsk.lbl, cls:rsk.cls},
+    {lbl:'Sale Delay Risk',            sub:'If violations found during buyer due diligence', val:delay, cls:sell==='asap'?'r-high':'r-medium'},
+    {lbl:'As-Is Value Discount',       sub:'Typical FL buyer negotiation with known violations', val:discount+' off list price', cls:'r-high'}
+  ];
+  let h = '<div style="margin-bottom:12px">';
+  rows.forEach(r => {
+    h += `<div class="res-card"><div><div class="res-lbl">${esc(r.lbl)}</div><div class="res-sub">${esc(r.sub)}</div></div><div class="res-val ${r.cls}">${esc(r.val)}</div></div>`;
+  });
+  document.getElementById('calc-res').innerHTML = h+'</div>';
+  renderBars(remBase, remHigh, fineExp, v);
+}
+
+function renderBars(remLow, remHigh, fineExp, v) {
+  const fixNow    = Math.round((remLow+remHigh)/2);
+  const fixCited  = Math.round(fixNow*1.45 + Math.min(fineExp*0.15,8000));
+  const sellAsIs  = Math.round(fixNow*2.4);
+  const afterClose= Math.round(fixNow*3.2+12000);
+  const insCxl    = v*9000;
+  const maxV      = Math.max(fixNow,fixCited,sellAsIs,afterClose,insCxl,1);
+  const bars = [
+    {lbl:'✅ Fix NOW — proactive approach', v:fixNow, col:'#22C55E'},
+    {lbl:'⚠️ Fix after citation issued',   v:fixCited,col:'#F4B942'},
+    {lbl:'🏚️ Sell as-is (price reduction)', v:sellAsIs, col:'#F97316'},
+    {lbl:'😱 Buyer discovers post-closing', v:afterClose,col:'#EF4444'},
+    {lbl:'🚫 Insurance cancellation impact',v:insCxl,  col:'#A855F7'}
+  ];
+  let h = '';
+  bars.forEach(b => {
+    const pct = Math.max(6, Math.round(b.v/maxV*100));
+    const lbl = b.v>=1000?'$'+Math.round(b.v/1000)+'k':'$'+b.v;
+    h += `<div class="bar-grp"><div class="bar-lbl">${esc(b.lbl)}</div>`;
+    h += `<div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${b.col}">${esc(lbl)}</div></div></div>`;
+  });
+  document.getElementById('chart').innerHTML = h;
+}
+
+// ─── COUNTY COST MULTIPLIERS ───
+const CTY_MULT = {
+  'Palm Beach':   { m:1.18, note:'Palm Beach County charges 2× permit fees + $150 surcharge. Enforcement is aggressive — citations issued within 10 business days of a complaint.' },
+  'Miami-Dade':   { m:1.22, note:'Miami-Dade has the highest permit fees in FL. After-the-fact permits require a licensed CFC contractor affidavit and may take 6–12 weeks.' },
+  'Broward':      { m:1.15, note:'Broward charges 2.5× permit fee for after-the-fact work. Engineering sign-off is commonly required for structural plumbing modifications.' },
+  'Orange':       { m:1.08, note:'Orange County (Orlando area) offers online permit submission and virtual inspections, making the process faster than South FL counties.' },
+  'Hillsborough': { m:1.06, note:'Hillsborough (Tampa) has a streamlined after-the-fact process with 3–5 week typical timelines. Owner-occupants can self-permit basic work.' },
+  'Other FL':     { m:1.00, note:'Most rural FL counties have lower fees and shorter timelines. However, enforcement varies widely — some counties respond to complaints same week.' }
+};
+
+// ─── FAQ DATA ───
+const FAQS = [
+  { q:'Can I sell my home with unpermitted plumbing work in Florida?',
+    a:'Technically yes, but you MUST disclose all known defects per FL Stat. 689.261. In practice, buyer lenders (Fannie/Freddie) usually require remediation before funding. Cash buyers may accept a price reduction, but they can later sue you if violations were known and undisclosed. Best practice: remediate before listing.' },
+  { q:'What happens if I don\'t disclose a known plumbing violation at closing?',
+    a:'You face civil fraud liability and potential criminal charges under FL Stat. 689.261 and 817.034. Florida courts have awarded buyers the full cost of remediation plus attorneys\' fees. Sellers have also faced punitive damages. "I didn\'t think it was a big deal" is not a legal defense in FL real estate transactions.' },
+  { q:'How long does an after-the-fact (ATF) permit take to get in Florida?',
+    a:'It varies by county and complexity. Simple violations (water heater, PRV, cleanout) typically take 1–3 weeks. Complex work (unpermitted bathroom, gas lines, full repipe) ranges from 3–12 weeks depending on inspection scheduling, engineering requirements, and county workload. South FL counties run longer. Plan accordingly before listing.' },
+  { q:'Will polybutylene pipes affect my home sale in Florida?',
+    a:'Absolutely. Most major FL insurers (Citizens, Heritage, Universal, People\'s Trust) now refuse to write or renew policies on homes with active poly-B supply lines. Without homeowner\'s insurance, buyers cannot get a mortgage. Even cash buyers are increasingly walking away. Full replacement with PEX or copper is the only permanent solution in FL.' },
+  { q:'Can I do my own plumbing work in Florida without a contractor?',
+    a:'Only if you own and occupy the property as your primary residence (owner-builder exemption, FL Stat. 489.103). You must still pull permits, pass inspections, and cannot use this exemption for rental properties, investment properties, or properties you intend to sell within 1 year. Work must still meet FBC standards and pass county inspection.' },
+  { q:'Do I need a permit to replace a water heater in Florida?',
+    a:'Yes. Water heater replacement requires a mechanical/plumbing permit in virtually all FL counties. This surprises many homeowners. The permit triggers an inspection that verifies seismic strapping, drain pan, TPR relief valve sizing and discharge piping, and proper gas or electrical connections. Permits typically cost $75–$200.' },
+  { q:'What\'s the difference between a code violation notice and a building permit issue?',
+    a:'A code violation notice is issued by the county code enforcement department when someone complains or an inspector spots a problem. It carries daily fines ($100–$1,000/day). A building permit issue means work was done without a required permit — often discovered during routine inspection, title search, or real estate transaction. Both require remediation; violations also require fine payment or negotiation.' },
+  { q:'How much can I negotiate with the county to reduce citation fines?',
+    a:'Most FL counties have a citation reduction process. If you remediate quickly and pull proper permits, many counties will reduce accumulated fines by 50–80% at a Code Enforcement Board hearing. The key is showing good faith: permit pulled, work in progress, licensed contractor on file. Ignoring citations makes reduction much harder. Contact our team — we have relationships with county offices across FL.' }
+];
+
+function buildFAQ() {
+  let h = '<div class="divider"></div><div class="section-hdr">❓ Florida Plumbing Violation FAQ</div>';
+  FAQS.forEach((faq, i) => {
+    h += `<div class="card" style="margin-bottom:9px">`;
+    h += `<details><summary style="cursor:pointer;font-size:13px;font-weight:700;color:#00B4FF;list-style:none;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:0">`;
+    h += `<span>${esc(faq.q)}</span><span style="color:#94A3B8;flex-shrink:0;font-size:16px;margin-top:-1px">▾</span></summary>`;
+    h += `<p style="margin-top:10px;font-size:12px;color:#94A3B8;line-height:1.55;padding-top:8px;border-top:1px solid #1E2A40">${esc(faq.a)}</p></details></div>`;
+  });
+  return h;
+}
+
+// ─── SERVICES SECTION ───
+const SERVICES = [
+  { icon:'🔍', title:'Free Code Assessment', desc:'We review your property record, pull permit history, and identify all open violations — at no cost.' },
+  { icon:'📋', title:'After-the-Fact Permits', desc:'We handle the full ATF permit process: application, county coordination, inspections, and sign-off.' },
+  { icon:'🔧', title:'Full Remediation', desc:'Licensed CFC contractors perform all remediation work to current FBC standards, documented and warranted.' },
+  { icon:'📞', title:'Emergency Response', desc:'Active citation? Failed inspection? Pre-closing crisis? We respond same day — 7 days a week.' }
+];
+
+function buildServices() {
+  let h = '<div class="divider"></div><div class="section-hdr">🔧 Our Services</div>';
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">';
+  SERVICES.forEach(s => {
+    h += `<div class="card2" style="margin-bottom:0"><div style="font-size:22px;margin-bottom:6px">${s.icon}</div>`;
+    h += `<div style="font-size:12px;font-weight:700;color:#E2E8F0;margin-bottom:4px">${esc(s.title)}</div>`;
+    h += `<div style="font-size:11px;color:#94A3B8;line-height:1.4">${esc(s.desc)}</div></div>`;
+  });
+  h += '</div>';
+  return h;
+}
+
+// ─── COUNTY INSIGHTS FOR CALC ───
+const CTY_INSIGHTS = {
+  high: [
+    '⚡ South FL counties (Palm Beach, Miami-Dade, Broward) issue citations fastest — often within 5–10 business days of a complaint.',
+    '📋 After-the-fact permits in these counties cost 2–2.5× normal fee and often require licensed contractor affidavits.',
+    '🚨 Miami-Dade code enforcement has a 24/7 complaint hotline — neighbor complaints are common triggers.',
+    '💼 Broward requires permit history searches for all after-the-fact applications — prior owners\' unpermitted work becomes your problem.'
+  ],
+  medium: [
+    '📅 Orange and Hillsborough counties offer online permit submission, cutting processing time by 1–2 weeks vs. in-person.',
+    '✅ Orlando area counties accept virtual inspections for some work types, speeding up the process.',
+    '🔔 Medium-enforcement counties still fine — they just take longer to issue citations after complaints.'
+  ],
+  low: [
+    '🌾 Rural FL counties typically have longer response times but lower fine amounts.',
+    '⚠️ Do not confuse "lower enforcement" with "no enforcement" — all FL properties must comply with FBC.',
+    '📞 Many smaller counties accept calls to negotiate remediation timelines before formal citations are issued.'
+  ]
+};
+
+function buildCountyInsights() {
+  const insights = CTY_INSIGHTS[CS.cty] || CTY_INSIGHTS.low;
+  let h = '<div class="card2" style="margin-bottom:12px"><h4 style="margin-bottom:8px">County-Specific Intelligence</h4>';
+  insights.forEach(ins => {
+    h += `<div class="pro-tip" style="margin-bottom:6px"><span>${ins.slice(0,2)}</span><span style="font-size:11px;color:#94A3B8">${esc(ins.slice(2).trim())}</span></div>`;
+  });
+  h += '</div>';
+  return h;
+}
+
+// ─── EXPANDED runCalc WITH COUNTY INSIGHTS ───
+function runCalc() {
+  const {v,d,cty,sell,ins} = CS;
+  const daily    = cty==='high'?500:cty==='medium'?250:150;
+  const mult     = cty==='high'?1.18:cty==='medium'?1.08:1.0;
+  const remBase  = Math.round(v*1600*mult);
+  const remHigh  = Math.round(v*4200*mult);
+  const fineExp  = v*daily*Math.min(d,365);
+  const rsk      = calcRisk(cty,v,ins,sell);
+  const delay    = sell==='asap'?'6–12 weeks':sell==='3mo'?'2–4 weeks':sell==='6mo'?'1–2 weeks':'N/A';
+  const discount = remHigh>12000?'6–8%':remHigh>6000?'4–6%':'3–5%';
+  const rows = [
+    {lbl:'Estimated Remediation Cost',  sub:`${v} violation${v>1?'s':''} · ${cty==='high'?'South FL':'Central/North FL'} market rates`, val:`$${remBase.toLocaleString()} – $${remHigh.toLocaleString()}`, cls:''},
+    {lbl:'Potential Fine Exposure',     sub:`$${daily}/day · ${Math.min(d,365)} days · ${v} violation${v>1?'s':''}`, val:'$'+fineExp.toLocaleString(), cls:fineExp>50000?'r-critical':fineExp>20000?'r-high':fineExp>5000?'r-medium':'r-low'},
+    {lbl:'Insurance Cancellation Risk', sub:rsk.sub, val:rsk.lbl, cls:rsk.cls},
+    {lbl:'Sale Delay Risk',             sub:'If violations surface during buyer due diligence or title search', val:delay, cls:sell==='asap'?'r-high':'r-medium'},
+    {lbl:'As-Is Value Discount',        sub:'Typical FL buyer negotiation with violations disclosed', val:discount+' off list price', cls:'r-high'}
+  ];
+  let h = '<div style="margin-bottom:12px">';
+  rows.forEach(r => {
+    h += `<div class="res-card"><div><div class="res-lbl">${esc(r.lbl)}</div><div class="res-sub">${esc(r.sub)}</div></div><div class="res-val ${r.cls}">${esc(r.val)}</div></div>`;
+  });
+  h += '</div>';
+  h += buildCountyInsights();
+  document.getElementById('calc-res').innerHTML = h;
+  renderBars(remBase, remHigh, fineExp, v);
+}
+
+// ─── EXPANDED buildLaws WITH FAQ + SERVICES ───
+function buildLawsWithExtras() {
+  let h = '<div class="section-hdr">⚖️ FL Plumbing Laws &amp; Code Facts</div>';
+  FACT_CARDS.forEach(fc => {
+    h += `<div class="fact-card" style="border-left-color:${fc.col}">`;
+    h += `<h3 style="color:${fc.col}">${esc(fc.icon)} ${esc(fc.title)}</h3>`;
+    h += `<p>${esc(fc.text)}</p></div>`;
+  });
+  h += '<div class="divider"></div><div class="section-hdr">📊 Reference Tables</div>';
+  h += buildTable('Top 12 FL Plumbing Code Violations by Frequency', T1);
+  h += buildTable('Permit-After-the-Fact Process by County', T2);
+  h += buildTable('Major FL Insurer Stance on Problem Pipe Types', T3);
+  h += buildTable('Pre-Sale Remediation Timeline Guide', T4);
+  h += buildFAQ();
+  h += buildServices();
+  h += '<div class="cta-box"><p>Our licensed FL plumbers handle the full process — permit application through final county inspection.</p>';
+  h += '<a href="tel:5615557473" class="btn btn-gold" style="display:block;text-decoration:none;padding:13px;border-radius:8px;font-weight:700;font-size:14px;font-family:inherit">📞 Call (561) 555-PIPE — Free Code Assessment</a></div>';
+  document.getElementById('laws-content').innerHTML = h;
+}
+
+// ─── EXPANDED buildResult WITH COUNTY CONTEXT ───
+function buildResultWithCounty() {
+  const v   = VIOLATIONS[W.viol];
+  const cty = COUNTY_OPTS[W.county];
+  const sts = STATUS_OPTS[W.status];
+  const cm  = CTY_MULT[cty] || CTY_MULT['Other FL'];
+  const adjLow  = Math.round(v.low  * cm.m);
+  const adjHigh = Math.round(v.high * cm.m);
+  const urgent  = W.status === 1;
+  const pt      = TYPE_OPTS[W.type];
+  const condoNote = W.type===1 ? ' Note: Condos may have HOA permit requirements in addition to county permits.' : '';
+  let h = '<div class="card">';
+  if(urgent) h += '<div class="urgency">⚠️ <span>Active citation — fines may be accruing every day. Call now to stop the clock.</span></div>';
+  h += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px">';
+  h += `<h3 style="color:#00B4FF;font-size:13px;flex:1">${esc(v.label)}</h3>`;
+  h += `<span class="badge badge-teal">${esc(cty)}</span>`;
+  h += '</div>';
+  h += '<div class="result-hero">';
+  h += `<div class="cost-range">$${adjLow.toLocaleString()} – $${adjHigh.toLocaleString()}</div>`;
+  h += `<div class="cost-sub">${esc(cty)} adjusted estimate · ${esc(pt)} · All-in including permit fees</div>`;
+  h += `<div class="timeline-pill">⏱ ${esc(v.timeline)}</div>`;
+  h += '</div>';
+  if(cm.note) h += `<div class="pro-tip" style="margin-bottom:10px"><span>🏛️</span><span style="font-size:11px">${esc(cm.note)}${esc(condoNote)}</span></div>`;
+  if(v.note)  h += `<div class="pro-tip"><span>💡</span><span>${esc(v.note)}</span></div>`;
+  h += '<h4 style="margin-top:12px;margin-bottom:9px">Step-by-Step Remediation</h4><ol class="steps-ol">';
+  v.steps.forEach((s,i) => { h += `<li><div class="s-num">${i+1}</div><span>${esc(s)}</span></li>`; });
+  h += '</ol>';
+  h += '<div style="background:#141929;border-radius:8px;padding:10px 12px;margin-bottom:12px;border:1px solid #1E2A40">';
+  h += '<div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Risk Snapshot</div>';
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';
+  const riskItems = [
+    { label:'Sale Risk',    val: W.status===0||W.status===2?'HIGH':'MEDIUM', cls:W.status===0?'r-high':'r-medium' },
+    { label:'Fine Risk',    val: W.status===1?'ACTIVE':'Potential', cls:W.status===1?'r-critical':'r-medium' },
+    { label:'Insurance',    val: v.id==='poly'||v.id==='galv'?'CRITICAL':'MEDIUM', cls:v.id==='poly'||v.id==='galv'?'r-critical':'r-medium' },
+    { label:'Title Impact', val: W.status===1||W.status===2?'HIGH':'MEDIUM', cls:W.status===1?'r-high':'r-medium' }
+  ];
+  riskItems.forEach(ri => {
+    h += `<div style="background:#0F1629;border-radius:6px;padding:7px 8px;border:1px solid #1E2A40"><div style="font-size:10px;color:#94A3B8">${esc(ri.label)}</div><div style="font-size:13px;font-weight:700" class="${ri.cls}">${esc(ri.val)}</div></div>`;
+  });
+  h += '</div></div>';
+  h += '<div class="cta-box"><p>Get a licensed FL plumber to handle every step — permit application to final county inspection.</p>';
+  h += '<form class="lead-form" id="rl"><div class="form-row"><input placeholder="First name" id="rn" autocomplete="given-name"><input placeholder="Phone number" id="rp" type="tel" autocomplete="tel"></div>';
+  h += '<input placeholder="Property address / city" id="ra">';
+  h += '<button type="submit" class="btn btn-gold">📞 Get Free Assessment — We Call Within 2 Hours</button></form></div>';
+  h += '<button class="btn btn-outline" id="rst">← Start Over</button></div>';
+  return h;
+}
+
+// ─── PATCH buildResult to use enhanced version ───
+function buildResult() { return buildResultWithCounty(); }
+
+// ─── PATCH buildLaws to use enhanced version ───
+function buildLaws() { buildLawsWithExtras(); }
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', () => {
+  initTabs();
+  renderWizard();
+  buildLaws();
+  buildChecklist();
+  buildCalc();
+});
+</script>
+</body>
+</html>

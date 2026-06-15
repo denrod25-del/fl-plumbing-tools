@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**88 interactive cost calculators** for Florida homeowners.
+**91 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -15,6 +15,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Bathroom Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-remodel/fl_bathroom_remodel.html)
 - [FL Bathtub Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathtub-replacement/fl_bathtub_replacement.html)
 - [FL Booster Pump Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/booster-pump/fl_booster_pump.html)
+- [FL Code Violations Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/code-violations/fl_code_violations.html)
 - [FL Commercial Kitchen Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-kitchen/fl_commercial_kitchen.html)
 - [FL Condo Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/condo-plumbing/fl_condo_plumbing.html)
 - [FL Construction Defect Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/construction-defect/fl_construction_defect.html)
@@ -82,6 +83,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Toilet Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/toilet-repair/fl_toilet_repair.html)
 - [FL Toilet Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/toilet-replacement/fl_toilet_replacement.html)
 - [FL Trenchless Lining Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/trenchless-lining/fl_trenchless_lining.html)
+- [FL Utility Locating Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/utility-locating/fl_utility_locating.html)
 - [FL Vacation Rental Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/vacation-rental-plumbing/fl_vacation_rental_plumbing.html)
 - [FL Water Bill Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-bill/fl_water_bill.html)
 - [FL Water Damage Claim Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-damage-claim/fl_water_damage_claim.html)
@@ -89,6 +91,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Heater Efficiency Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-efficiency/fl_water_heater_efficiency.html)
 - [FL Water Heater Maintenance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-maintenance/fl_water_heater_maintenance.html)
 - [FL Water Heater Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater/fl_water_heater.html)
+- [FL Water Meter Shutoff Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-meter-shutoff/fl_water_meter_shutoff.html)
 - [FL Water Pressure Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-pressure/fl_water_pressure.html)
 - [FL Water Safety Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-safety/fl_water_safety.html)
 - [FL Water Softener Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-softener/fl_water_softener.html)
