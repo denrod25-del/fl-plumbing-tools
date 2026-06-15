@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FL Commercial Plumbing Fixture Count & Code Tool</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:0 0 40px}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);padding:20px 16px;text-align:center;border-bottom:2px solid #00B4FF}
+.header h1{font-size:1.25rem;color:#00B4FF;margin-bottom:4px}
+.header p{color:#94A3B8;font-size:.82rem}
+.badge{display:inline-block;background:#F4B942;color:#0A0E1A;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:6px}
+.tabs{display:flex;overflow-x:auto;border-bottom:2px solid #1e2a45;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:80px;padding:11px 6px;text-align:center;font-size:.76rem;font-weight:600;color:#94A3B8;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent}
+.tab.active{color:#00B4FF;border-bottom-color:#00B4FF;background:#0F1629}
+.panel{display:none;padding:16px;max-width:480px;margin:0 auto}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1e2a45;border-radius:10px;padding:16px;margin-bottom:14px}
+.card h3{font-size:.92rem;color:#00B4FF;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:5px;margin-top:10px}
+select,input{width:100%;background:#141929;border:1px solid #2d3a55;border-radius:6px;color:#E2E8F0;padding:10px 12px;font-size:.88rem;-webkit-appearance:none}
+select:focus,input:focus{outline:none;border-color:#00B4FF}
+.biz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.biz-btn{background:#141929;border:2px solid #1e2a45;border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;font-size:.75rem;color:#94A3B8}
+.biz-btn.active{border-color:#00B4FF;background:#0d1a2e;color:#00B4FF}
+.biz-btn .icon{font-size:1.4rem;display:block;margin-bottom:4px}
+.result-card{background:#141929;border:1px solid #2d3a55;border-radius:8px;padding:12px;margin-top:10px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1e2a45;font-size:.83rem}
+.result-row:last-child{border-bottom:none}
+.result-row .val{font-weight:700;color:#00B4FF}
+.fixture-chip{display:inline-flex;align-items:center;gap:4px;background:#0A0E1A;border:1px solid #2d3a55;border-radius:6px;padding:6px 10px;font-size:.8rem;margin:3px}
+.fixture-count{font-size:1.3rem;font-weight:700;color:#F4B942;margin-right:2px}
+.section-title{font-size:.78rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 8px;padding-left:2px}
+.alert-box{padding:10px;border-radius:6px;margin-top:10px;font-size:.8rem;line-height:1.5}
+.alert-orange{background:#1f1000;border:1px solid #F97316;color:#F97316}
+.alert-red{background:#1f0000;border:1px solid #EF4444;color:#EF4444}
+.alert-green{background:#001510;border:1px solid #22C55E;color:#22C55E}
+.alert-blue{background:#00122a;border:1px solid #00B4FF;color:#00B4FF}
+.alert-yellow{background:#1a1500;border:1px solid #F4B942;color:#F4B942}
+.code-card{background:#141929;border:1px solid #2d3a55;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.code-header{display:flex;justify-content:space-between;align-items:center;padding:12px;cursor:pointer;user-select:none}
+.code-header h4{font-size:.88rem;font-weight:600;color:#E2E8F0;display:flex;align-items:center;gap:6px}
+.code-header .chevron{color:#94A3B8;transition:transform .2s;font-size:.9rem}
+.code-header.open .chevron{transform:rotate(180deg)}
+.code-body{display:none;padding:12px;border-top:1px solid #1e2a45;font-size:.8rem;line-height:1.6;color:#94A3B8}
+.code-body.open{display:block}
+.code-body strong{color:#E2E8F0}
+.code-body ul{margin-top:6px;padding-left:14px}
+.code-body ul li{margin-bottom:3px}
+.fl-callout{background:#00122a;border-left:3px solid #00B4FF;padding:8px 10px;border-radius:0 6px 6px 0;margin-top:8px;font-size:.78rem;color:#00B4FF}
+.timeline-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1e2a45;font-size:.8rem}
+.timeline-row:last-child{border-bottom:none}
+.timeline-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.dot-blue{background:#00B4FF;color:#0A0E1A}
+.dot-gold{background:#F4B942;color:#0A0E1A}
+.dot-green{background:#22C55E;color:#0A0E1A}
+.dot-gray{background:#2d3a55;color:#94A3B8}
+.permit-chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;margin:2px}
+.chip-req{background:#EF4444;color:#fff}
+.chip-opt{background:#F4B942;color:#0A0E1A}
+.chip-no{background:#22C55E;color:#0A0E1A}
+.cost-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:10px}
+.cost-table th{background:#141929;color:#94A3B8;padding:8px 6px;text-align:left;font-weight:600;border-bottom:2px solid #1e2a45}
+.cost-table td{padding:7px 6px;border-bottom:1px solid #1e2a45}
+.cost-table tr:last-child td{border-bottom:none}
+.form-group{margin-bottom:12px}
+input[type=text],input[type=email],input[type=tel],textarea{width:100%;background:#141929;border:1px solid #2d3a55;border-radius:6px;color:#E2E8F0;padding:10px 12px;font-size:.88rem}
+textarea{min-height:80px;resize:vertical}
+.btn{width:100%;background:#F4B942;color:#0A0E1A;border:none;border-radius:8px;padding:14px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:10px}
+.btn-blue{background:#00B4FF}
+.trust{text-align:center;font-size:.78rem;color:#94A3B8;margin-top:14px;line-height:1.6}
+.trust strong{color:#00B4FF}
+.cfc-badge{background:linear-gradient(135deg,#00B4FF,#0080cc);color:#fff;border-radius:8px;padding:12px;text-align:center;margin-bottom:12px}
+.cfc-badge div:first-child{font-size:1.1rem;font-weight:700;margin-bottom:2px}
+.cfc-badge div:last-child{font-size:.8rem;opacity:.85}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:8px;font-weight:700;font-size:.9rem;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(244,185,66,.4)}
+.fixture-summary{background:#0A0E1A;border-radius:8px;padding:12px;margin-top:10px}
+.fixture-summary h4{font-size:.85rem;color:#E2E8F0;margin-bottom:8px}
+.fixture-grid{display:flex;flex-wrap:wrap;gap:4px}
+.progress-bar{background:#1e2a45;border-radius:4px;height:6px;margin-top:12px}
+.progress-fill{height:100%;border-radius:4px;background:#00B4FF;transition:width .5s}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🏢 FL Commercial Plumbing Code Tool</h1>
+  <p>FBC fixture counts, code requirements & permit timelines</p>
+  <span class="badge">Licensed CFC · Commercial Plumbing Specialists</span>
+</div>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">Fixture Requirements</div>
+  <div class="tab" onclick="switchTab(1)">Code Reference</div>
+  <div class="tab" onclick="switchTab(2)">Permits & Costs</div>
+  <div class="tab" onclick="switchTab(3)">Get a Quote</div>
+</div>
+
+<!-- TAB 0: Business Type & Fixture Requirements -->
+<div class="panel active" id="tab0">
+  <div class="card">
+    <h3>🏪 Select Your Business Type</h3>
+    <div class="biz-grid" id="bizGrid"></div>
+  </div>
+  <div class="card" id="occupancyCard" style="display:none">
+    <h3>👥 Occupancy & Building Details</h3>
+    <label>Occupancy / Seating / Maximum persons</label>
+    <input type="number" id="occupancy" value="50" min="1" max="5000" oninput="calcFixtures()">
+    <label>Building square footage</label>
+    <input type="number" id="sqft" value="2000" min="100" max="500000" oninput="calcFixtures()">
+    <label>Gender-separated restrooms?</label>
+    <select id="genderSep" onchange="calcFixtures()">
+      <option value="yes">Yes — separate male/female restrooms</option>
+      <option value="no">No — unisex/single occupancy</option>
+    </select>
+    <button class="btn btn-blue" onclick="calcFixtures()">Calculate Required Fixtures</button>
+  </div>
+  <div id="fixtureResults" style="display:none">
+    <div class="card">
+      <h3>✅ Required Fixtures (FBC Table 403.1)</h3>
+      <div id="fixtureDisplay"></div>
+      <div id="specialFixtures"></div>
+      <div id="bizNote" style="margin-top:10px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 1: Code Requirements Summary -->
+<div class="panel" id="tab1">
+  <div class="card">
+    <h3>📋 Florida Plumbing Code Reference</h3>
+    <p style="font-size:.8rem;color:#94A3B8;margin-bottom:10px">Applicable FL codes by business type. All commercial plumbing requires a licensed CFC (Certified Plumbing Contractor).</p>
+    <div id="codeCards"></div>
+  </div>
+</div>
+
+<!-- TAB 2: Permit Timeline & Cost Estimator -->
+<div class="panel" id="tab2">
+  <div class="card">
+    <h3>🏛️ Permit Timeline & Cost Estimator</h3>
+    <label>Business type</label>
+    <select id="permitBiz">
+      <option value="restaurant">Restaurant / Food Service</option>
+      <option value="salon">Hair Salon / Barbershop</option>
+      <option value="nail">Nail Salon</option>
+      <option value="medical">Medical / Dental Office</option>
+      <option value="retail">Retail Store</option>
+      <option value="office">Office Building</option>
+      <option value="laundry">Laundry / Dry Cleaner</option>
+      <option value="carwash">Car Wash</option>
+      <option value="hotel">Hotel / Motel</option>
+      <option value="gym">Gym / Fitness Center</option>
+      <option value="daycare">Daycare / School</option>
+      <option value="autoshop">Auto Shop / Garage</option>
+    </select>
+    <label>FL County</label>
+    <select id="permitCounty">
+      <option value="miami">Miami-Dade</option><option value="broward">Broward</option>
+      <option value="pbch">Palm Beach</option><option value="orange">Orange</option>
+      <option value="hillsborough">Hillsborough</option><option value="pinellas">Pinellas</option>
+      <option value="duval">Duval</option><option value="seminole">Seminole</option>
+      <option value="pasco">Pasco</option><option value="volusia">Volusia</option>
+      <option value="sarasota">Sarasota</option><option value="polk">Polk</option>
+      <option value="lake">Lake</option><option value="osceola">Osceola</option>
+      <option value="manatee">Manatee</option><option value="brevard">Brevard</option>
+      <option value="lee">Lee</option><option value="collier">Collier</option>
+      <option value="alachua">Alachua</option><option value="leon">Leon</option>
+      <option value="marion">Marion</option><option value="other">Other FL County</option>
+    </select>
+    <label>Project type</label>
+    <select id="projectType">
+      <option value="new">New construction</option>
+      <option value="tenant">Tenant improvement / renovation</option>
+      <option value="equipment">Equipment replacement only</option>
+    </select>
+    <button class="btn btn-blue" onclick="calcPermit()">Estimate Permit Timeline & Costs</button>
+  </div>
+  <div id="permitResults" style="display:none">
+    <div class="card">
+      <h3>📅 Permit Requirements</h3>
+      <div id="permitDisplay"></div>
+    </div>
+    <div class="card">
+      <h3>💰 Estimated Plumbing Costs</h3>
+      <div id="costDisplay"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: Commercial Quote Request -->
+<div class="panel" id="tab3">
+  <div class="cfc-badge">
+    <div>Licensed CFC / Commercial Plumbing Specialists</div>
+    <div>Florida Commercial Plumbing · Permitted & Inspected Work</div>
+  </div>
+  <div class="card">
+    <h3>📝 Request a Commercial Plumbing Quote</h3>
+    <p style="font-size:.8rem;color:#94A3B8;margin-bottom:10px">Our licensed CFC commercial team handles everything from FBC code compliance to permit applications. All work fully permitted and inspected.</p>
+    <div class="form-group">
+      <label>Business name</label>
+      <input type="text" id="bizName" placeholder="Your business name">
+    </div>
+    <div class="form-group">
+      <label>Contact name</label>
+      <input type="text" id="contactName" placeholder="Your name">
+    </div>
+    <div class="form-group">
+      <label>Phone number</label>
+      <input type="tel" id="leadPhone" placeholder="(561) 555-PIPE">
+    </div>
+    <div class="form-group">
+      <label>Email address</label>
+      <input type="email" id="leadEmail" placeholder="your@business.com">
+    </div>
+    <div class="form-group">
+      <label>City & County</label>
+      <input type="text" id="leadLocation" placeholder="e.g. Fort Lauderdale, Broward County">
+    </div>
+    <div class="form-group">
+      <label>Project type</label>
+      <select id="quoteProjectType">
+        <option>New construction</option>
+        <option>Renovation / tenant improvement</option>
+        <option>Code violation correction</option>
+        <option>Health inspection follow-up</option>
+        <option>Emergency repair</option>
+        <option>Scheduled maintenance</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Timeline needed</label>
+      <select id="quoteTimeline">
+        <option>ASAP / Emergency</option>
+        <option>Within 30 days</option>
+        <option>Planning phase (1–3 months)</option>
+        <option>Future project (3+ months)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Describe your project</label>
+      <textarea id="quoteNotes" placeholder="Business type, square footage, scope of work, any specific code requirements or violations noted..."></textarea>
+    </div>
+    <button class="btn" onclick="submitQuote()">Submit Quote Request →</button>
+    <div class="trust">
+      <strong>(561) 555-PIPE</strong> — Licensed CFC Plumbing Contractor<br>
+      Commercial Specialists · Serving All of Florida<br>
+      Permit Applications Handled · Health Dept. Coordination
+    </div>
+  </div>
+  <div class="card">
+    <h3>⚡ Why Licensed CFC for Commercial Work?</h3>
+    <div class="result-card">
+      <div class="result-row"><span>FL Law (FS 489)</span><span class="val" style="color:#EF4444">CFC Required</span></div>
+      <div class="result-row"><span>Commercial permits</span><span class="val">CFC license on permit</span></div>
+      <div class="result-row"><span>Health dept. approval</span><span class="val blue">CFC sign-off needed</span></div>
+      <div class="result-row"><span>Unlicensed work penalty</span><span class="val" style="color:#EF4444">Up to $10,000 fine</span></div>
+      <div class="result-row"><span>Insurance coverage</span><span class="val green">Void without license</span></div>
+    </div>
+    <div class="alert-red" style="margin-top:10px">
+      🚨 Florida Statute 489 requires a licensed Certified Plumbing Contractor (CFC) for all commercial plumbing work. Unlicensed commercial plumbing can result in failed inspections, forced demolition, and health department closure of your business.
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🏢</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+let selectedBiz = null;
+
+const BIZ_TYPES = [
+  {id:'restaurant',label:'Restaurant',icon:'🍕'},
+  {id:'salon',label:'Hair Salon',icon:'✂️'},
+  {id:'nail',label:'Nail Salon',icon:'💅'},
+  {id:'medical',label:'Medical/Dental',icon:'🏥'},
+  {id:'retail',label:'Retail Store',icon:'🛍️'},
+  {id:'office',label:'Office Bldg',icon:'🏢'},
+  {id:'laundry',label:'Laundry',icon:'👕'},
+  {id:'carwash',label:'Car Wash',icon:'🚗'},
+  {id:'hotel',label:'Hotel/Motel',icon:'🏨'},
+  {id:'gym',label:'Gym/Fitness',icon:'💪'},
+  {id:'daycare',label:'Daycare/School',icon:'🎒'},
+  {id:'autoshop',label:'Auto Shop',icon:'🔧'}
+];
+
+const BIZ_FIXTURE_RULES = {
+  restaurant: {
+    toiletsPerOcc: 1/50, urinalPct: 0.5, lavsPerOcc: 1/50, dfPerOcc: 1/500, serviceSinks: 1,
+    minToilets: 1, special: [
+      '3-compartment sink required in all food prep areas (FL DOH)',
+      'Separate hand-washing sink in each food prep area (FL DOH Rule 64E-11)',
+      'Grease trap/interceptor required (check local utility requirements)',
+      'Mop sink / service sink required',
+      'Pre-rinse spray valve required at dish stations'
+    ],
+    note: 'Florida DOH Rule 64E-11 governs food service establishment plumbing. Restroom fixtures are in addition to required food-prep sinks. Health department and building department inspections are both required.'
+  },
+  salon: {
+    toiletsPerOcc: 1/40, urinalPct: 0.5, lavsPerOcc: 1/40, dfPerOcc: 1/1000, serviceSinks: 1,
+    minToilets: 1, special: [
+      'One shampoo bowl per operator station (FL DBPR Rule 61G5)',
+      'Chemical storage sink or mixing area required',
+      'Color-mixing area should have dedicated utility sink',
+      'State requires hot/cold water at each shampoo bowl'
+    ],
+    note: 'FL DBPR Chapter 61G5 governs cosmetology establishments. Shampoo bowls are licensed equipment and count toward plumbing permit. Inspections required by both building dept. and FL DBPR.'
+  },
+  nail: {
+    toiletsPerOcc: 1/40, urinalPct: 0, lavsPerOcc: 1/40, dfPerOcc: 1/1000, serviceSinks: 1,
+    minToilets: 1, special: [
+      'Dedicated pedicure bowl plumbing at each station (FL DBPR)',
+      'Hot/cold water at each manicure station',
+      'Ventilation with exhaust meeting OSHA/ASHRAE 62.1',
+      'Chemical storage area with plumbing access'
+    ],
+    note: 'FL DBPR Chapter 61G5 governs nail salon licensing. Pedicure chairs require individual drain connections and are considered plumbing fixtures.'
+  },
+  medical: {
+    toiletsPerOcc: 1/25, urinalPct: 0.33, lavsPerOcc: 1/25, dfPerOcc: 1/500, serviceSinks: 1,
+    minToilets: 1, special: [
+      'Hand-washing sink in every exam room (FL AHCA standard)',
+      'Scrub sink near procedure/surgical areas',
+      'Medical gas connections (oxygen/nitrous) if applicable',
+      'Autoclave/sterilizer drain with appropriate trap primer',
+      'Backflow preventer on all connections to medical equipment',
+      'Hot water max 110°F at patient-accessible fixtures (ASSE 1070)',
+      'Emergency eyewash stations in lab/chemical storage areas'
+    ],
+    note: 'FL AHCA (Agency for Health Care Administration) regulates healthcare facility plumbing. Requirements vary by facility class. Dental offices require amalgam separators (FL AHCA Ch.59A-6).'
+  },
+  retail: {
+    toiletsPerOcc: 1/500, urinalPct: 0.5, lavsPerOcc: 1/750, dfPerOcc: 1/1000, serviceSinks: 1,
+    minToilets: 1, special: [
+      'Employee restroom required if > 5 employees (FL rule)',
+      'Customer restrooms required based on occupancy',
+      'Service sink in stockroom area recommended',
+      'Floor drains required in loading areas (local AHJ may require)'
+    ],
+    note: 'Retail plumbing follows FBC Table 403.1 (mercantile occupancy). Many small retail spaces qualify for reduced fixture counts. ADA accessibility required throughout.'
+  },
+  office: {
+    toiletsPerOcc: 1/50, urinalPct: 0.5, lavsPerOcc: 1/80, dfPerOcc: 1/100, serviceSinks: 1,
+    minToilets: 1, special: [
+      'Break room/kitchen sink required in multi-tenant buildings',
+      'Janitorial/mop sink on each floor (recommended)',
+      'RPZ backflow preventer on main water service',
+      'Recirculating hot water system for buildings >25,000 SF (energy code)'
+    ],
+    note: 'Office plumbing is Business Occupancy under FBC. Water conservation fixtures required per Florida Energy Code (low-flow toilets ≤1.28 gpf, faucets ≤0.5 gpm).'
+  },
+  laundry: {
+    toiletsPerOcc: 1/100, urinalPct: 0.5, lavsPerOcc: 1/100, dfPerOcc: 1/1000, serviceSinks: 1,
+    minToilets: 1, special: [
+      'Lint interceptor on all commercial washer drains',
+      'Floor drain at each washing machine',
+      'Hot water supply line 3/4" minimum per machine',
+      'Individual shut-off valves at each machine connection',
+      'Backflow preventer on water supply'
+    ],
+    note: 'Commercial laundries must comply with local wastewater pretreatment requirements. Lint traps prevent sewer blockages. Large facilities (>15 machines) may require grease trap equivalent.'
+  },
+  carwash: {
+    toiletsPerOcc: 1/100, urinalPct: 0.5, lavsPerOcc: 1/100, dfPerOcc: 0, serviceSinks: 1,
+    minToilets: 1, special: [
+      'Oil/water separator on all floor drains and wash bay drains',
+      'Grit interceptor on solids-bearing drains',
+      'High-pressure wash water reclamation system (many FL counties)',
+      'Chemical injection backflow preventer (RPZ type)',
+      'Floor drains every 10 feet in wash bays',
+      'Heated water system sized for peak demand'
+    ],
+    note: 'Car wash facilities require pretreatment systems per local wastewater authority rules. FL Water Management Districts may require reclamation systems. SWFWMD, SFWMD, and SJRWMD all have different requirements.'
+  },
+  hotel: {
+    toiletsPerOcc: 1, urinalPct: 0, lavsPerOcc: 1, dfPerOcc: 0, serviceSinks: 1,
+    minToilets: 1, perRoom: true, special: [
+      '1 full bath per guest room (toilet, lavatory, tub/shower)',
+      'Lobby restrooms for guests: 1 toilet per 50 lobby occupants',
+      'Pool/spa bathrooms if amenity exists',
+      'Laundry room connections if on-site laundry',
+      'Backflow prevention on pool fill valves',
+      'Legionella prevention program for HVAC condensate systems'
+    ],
+    note: 'Hotel/motel plumbing follows FL DBPR Division of Hotels & Restaurants (Chapter 509). Each guest room is considered its own fixture allocation. Pool and spa plumbing regulated by FL Dept. of Health.'
+  },
+  gym: {
+    toiletsPerOcc: 1/75, urinalPct: 0.5, lavsPerOcc: 1/75, dfPerOcc: 1/150, serviceSinks: 1,
+    minToilets: 2, special: [
+      'Shower facilities: 1 per 50 peak users (FL rec. standard)',
+      'Locker room drench showers (required if hazardous chemicals used)',
+      'Pool/spa connections if applicable (FL DOH Chapter 64E-9)',
+      'Water fountain every 150 members (accessibility)',
+      'Floor drains in all locker/wet areas'
+    ],
+    note: 'Gym/fitness plumbing follows Assembly Occupancy FBC standards. Large facilities with pools require FL DOH Chapter 64E-9 compliance. Locker room hot water temperature must be ≤120°F to prevent scalding.'
+  },
+  daycare: {
+    toiletsPerOcc: 1/20, urinalPct: 0, lavsPerOcc: 1/20, dfPerOcc: 1/100, serviceSinks: 1,
+    minToilets: 2, special: [
+      'Child-height fixtures required for ages 2–5 (ANSI A117.1)',
+      'Hand-washing sinks adjacent to toilet rooms',
+      'Diaper changing station with plumbing access',
+      'Drinking fountains at child height',
+      'Hot water maximum 110°F (child safety scald prevention)',
+      'Janitor sink on premises'
+    ],
+    note: 'Daycare plumbing regulated by FL DCF (Dept. of Children & Families) Chapter 65C-22. Child-height fixtures must coexist with ADA-compliant adult fixtures. Annual FL DCF inspection required.'
+  },
+  autoshop: {
+    toiletsPerOcc: 1/100, urinalPct: 0.5, lavsPerOcc: 1/100, dfPerOcc: 0, serviceSinks: 2,
+    minToilets: 1, special: [
+      'Oil/water separator on all service bay floor drains (mandatory)',
+      'Waste oil storage tank with secondary containment',
+      'Solvent/parts washer drain to approved interceptor',
+      'Eye wash station at battery service areas',
+      '3-bay compartment sink for parts washing',
+      'Compressed air blowdown valve on air compressor drain',
+      'FDEP hazardous waste manifest for waste oil disposal'
+    ],
+    note: 'Auto shop floor drains must NOT connect to sanitary sewer without an oil/water separator (FDEP requirement). FL DEP Chapter 62-550 governs underground storage tanks. Local fire marshal approval needed for flammable liquid storage.'
+  }
+};
+
+const CODE_CARDS = [
+  {biz:'restaurant', title:'🍕 Restaurant / Food Service', codes:[
+    {name:'FL DOH Rule 64E-11',desc:'Food service establishment standards. Governs all plumbing in food prep areas, handwashing requirements, and 3-compartment sink specifications.'},
+    {name:'FBC Plumbing Section 403.1',desc:'Florida Building Code fixture count table for assembly occupancy (A-2 for restaurants).'},
+    {name:'FL Fire Code 409.5',desc:'Grease interceptor requirements for commercial kitchens. Size based on fixtures and meals served.'},
+    {name:'FSSA Chapter 500',desc:'Florida Food Safety Act — applies to food manufacturing and processing facilities.'}
+  ],flNote:'Florida requires both building department plumbing permit AND health department plan review for all food service establishments. Do not open without both approvals.'},
+  {biz:'medical', title:'🏥 Medical / Dental Office', codes:[
+    {name:'FL AHCA Chapter 59A',desc:'Agency for Health Care Administration rules for healthcare facility plumbing design.'},
+    {name:'ASSE 1070 Thermostatic Mixing Valves',desc:'Required at patient-accessible fixtures to limit hot water to 110°F.'},
+    {name:'FGI Guidelines 2022',desc:'Facility Guidelines Institute — industry standard for healthcare plumbing design adopted by FL AHCA.'},
+    {name:'FL AHCA Ch. 59A-6 (Dental)',desc:'Dental offices must install amalgam separators per FL rule. ISO 11143 compliant units required.'}
+  ],flNote:'Healthcare facility plumbing must be inspected by FL AHCA in addition to the local building department. Life safety systems require separate inspection track.'},
+  {biz:'salon', title:'✂️ Salon & Cosmetology', codes:[
+    {name:'FL DBPR Chapter 61G5',desc:'Cosmetology establishment rules requiring plumbing at each station. Shampoo bowl specifications and water temperature requirements.'},
+    {name:'FBC Plumbing 403.1',desc:'Fixture count table for personal services occupancy. One toilet per 40 occupants.'},
+    {name:'ASHRAE 62.1 Ventilation',desc:'Chemical vapor ventilation in salons — exhaust must be separate from HVAC return.'}
+  ],flNote:'FL DBPR salon inspections are separate from building department. Both approvals required before opening. DBPR citation for plumbing violations can result in license suspension.'},
+  {biz:'carwash', title:'🚗 Car Wash / Auto Services', codes:[
+    {name:'FDEP Chapter 62-550',desc:'Underground storage tank rules. Applies if waste oil or chemicals are stored underground.'},
+    {name:'FL DEP Chapter 62-302',desc:'Surface water quality standards — car wash runoff must not reach storm drains untreated.'},
+    {name:'Local WMD Rules',desc:'Water Management District rules vary: SFWMD, SWFWMD, SJRWMD, SRWMD, NWFWMD each have separate water reclamation requirements for car washes.'},
+    {name:'FBC Plumbing 1003',desc:'Interceptor requirements for oil, grease, and solids from vehicle service areas.'}
+  ],flNote:'FL WMD permitting is separate from building permits. Many South FL car washes must recycle 70%+ of wash water. Contact your local WMD for specific requirements.'},
+  {biz:'daycare', title:'🎒 Daycare / School', codes:[
+    {name:'FL DCF Chapter 65C-22',desc:'Child care facility standards including plumbing fixture requirements, water temperature limits, and sanitation.'},
+    {name:'FBC Plumbing 403.1',desc:'Educational occupancy fixture table. Children\'s facilities require 1 toilet per 20 children.'},
+    {name:'ANSI A117.1 Accessibility',desc:'Child-height fixtures (toilets 11–12" AFF, sinks 22" AFF) required in addition to ADA-height adult fixtures.'},
+    {name:'FL DOH Chapter 64E-6',desc:'Onsite sewage treatment rules if not connected to central sewer system.'}
+  ],flNote:'FL DCF requires annual plumbing inspections. Scalding incidents must be reported to DCF. Hot water tempering valves at child-accessible fixtures are mandatory, not optional.'},
+  {biz:'hotel', title:'🏨 Hotel / Motel', codes:[
+    {name:'FL DBPR Division of Hotels',desc:'Chapter 509 regulates all hotel/motel plumbing. Annual license renewal requires passing inspection.'},
+    {name:'FL DOH Chapter 64E-9',desc:'Public swimming pool and spa plumbing standards. Applies to all hotel pool facilities.'},
+    {name:'CDC MMWR Legionella Guidelines',desc:'Legionella water management program required for all large building water systems including hotels.'},
+    {name:'FBC Plumbing Section 403',desc:'Fixture counts for hotel occupancies including lobby, restaurant, and pool areas.'}
+  ],flNote:'FL DBPR hotel inspections are mandatory and occur at license renewal. Plumbing violations are scored on the inspection report and can result in license suspension. Legionella prevention is now a standard inspection item.'},
+  {biz:'gym', title:'💪 Gym / Fitness Center', codes:[
+    {name:'FBC Plumbing 403.1 (A-3)',desc:'Assembly occupancy fixture table for recreational/sports facilities.'},
+    {name:'FL DOH Chapter 64E-9',desc:'Public pool and spa code — applies to all gym pool and hot tub installations.'},
+    {name:'ASHRAE 55 Thermal Comfort',desc:'Locker room plumbing designed to maintain appropriate temperature and humidity.'},
+    {name:'FL Statute 553',desc:'Florida Building Code law requiring all commercial plumbing to be permitted and inspected.'}
+  ],flNote:'Gyms with pools must comply with both building department and FL DOH Chapter 64E-9. Pool inspections occur quarterly for commercial facilities. Spa/hot tub setpoint must not exceed 104°F.'},
+  {biz:'autoshop', title:'🔧 Auto Shop / Garage', codes:[
+    {name:'FDEP Chapter 62-770',desc:'Petroleum contamination cleanup rules. Applies if auto shop has underground tanks or has had fuel spills.'},
+    {name:'FL DEP Chapter 62-550 (UST)',desc:'Underground storage tank registration and monitoring. Auto shops with waste oil tanks must register.'},
+    {name:'FBC Plumbing 1003 (Interceptors)',desc:'Oil/water separator sizing and installation requirements for vehicle service bays.'},
+    {name:'OSHA 29 CFR 1910.141',desc:'Employee sanitation — toilet and hand-washing facilities required for all employees.'}
+  ],flNote:'FL DEP audits auto shops for illegal floor drain connections. Oil/water separators must be inspected and cleaned regularly — records required. Improper disposal of used motor oil is a felony in FL.'}
+];
+
+const COUNTY_TIER = {
+  miami:'fast',broward:'fast',pbch:'fast',orange:'medium',hillsborough:'medium',
+  pinellas:'medium',duval:'medium',seminole:'medium',pasco:'slow',volusia:'medium',
+  sarasota:'medium',polk:'slow',lake:'slow',osceola:'slow',manatee:'medium',
+  brevard:'medium',lee:'medium',collier:'slow',alachua:'medium',leon:'medium',
+  marion:'slow',other:'slow'
+};
+
+const PERMIT_TIMELINES = {
+  fast:{label:'Tier 1 — Fast Track',weeks:'2–4 weeks',description:'Major urban counties with dedicated commercial plan review staff'},
+  medium:{label:'Tier 2 — Standard',weeks:'3–6 weeks',description:'Mid-size counties with regular commercial review cycles'},
+  slow:{label:'Tier 3 — Extended',weeks:'4–12 weeks',description:'Smaller/rural counties with limited commercial review capacity'}
+};
+
+const BIZ_PERMIT_TYPES = {
+  restaurant:{type:'Commercial Building Permit + Health Dept. Review',healthDept:true,fireMarsh:true,typeLabel:'Full commercial package'},
+  salon:{type:'Commercial Building Permit + DBPR Review',healthDept:false,fireMarsh:false,typeLabel:'Building + state license'},
+  nail:{type:'Commercial Building Permit + DBPR Review',healthDept:false,fireMarsh:false,typeLabel:'Building + state license'},
+  medical:{type:'Commercial Building + AHCA Review',healthDept:false,fireMarsh:true,typeLabel:'Healthcare track'},
+  retail:{type:'Commercial Building Permit',healthDept:false,fireMarsh:false,typeLabel:'Standard commercial'},
+  office:{type:'Commercial Building Permit',healthDept:false,fireMarsh:false,typeLabel:'Standard commercial'},
+  laundry:{type:'Commercial Building Permit + Pretreatment Review',healthDept:false,fireMarsh:false,typeLabel:'Commercial + utility'},
+  carwash:{type:'Commercial Building + WMD Environmental Permit',healthDept:false,fireMarsh:false,typeLabel:'Commercial + environmental'},
+  hotel:{type:'Commercial Building + DBPR Hotels Review',healthDept:false,fireMarsh:true,typeLabel:'Hospitality track'},
+  gym:{type:'Commercial Building + DOH Pool Review',healthDept:true,fireMarsh:false,typeLabel:'Recreational + DOH'},
+  daycare:{type:'Commercial Building + DCF Review',healthDept:false,fireMarsh:true,typeLabel:'Education/childcare track'},
+  autoshop:{type:'Commercial Building + FDEP Review',healthDept:false,fireMarsh:true,typeLabel:'Hazmat track'}
+};
+
+const COST_RANGES = {
+  new:{restaurant:'$18,000–$65,000',salon:'$8,000–$22,000',nail:'$6,000–$18,000',medical:'$25,000–$90,000',retail:'$5,000–$20,000',office:'$8,000–$35,000',laundry:'$12,000–$40,000',carwash:'$30,000–$120,000',hotel:'$2,500–$8,500 per room',gym:'$20,000–$80,000',daycare:'$10,000–$35,000',autoshop:'$15,000–$55,000'},
+  tenant:{restaurant:'$8,000–$30,000',salon:'$3,500–$12,000',nail:'$2,500–$9,000',medical:'$10,000–$45,000',retail:'$2,000–$10,000',office:'$3,000–$15,000',laundry:'$5,000–$20,000',carwash:'$15,000–$60,000',hotel:'$1,500–$5,000 per room',gym:'$8,000–$35,000',daycare:'$4,000–$18,000',autoshop:'$6,000–$25,000'},
+  equipment:{restaurant:'$1,500–$8,000',salon:'$800–$3,500',nail:'$600–$2,500',medical:'$1,500–$8,000',retail:'$500–$3,000',office:'$500–$3,000',laundry:'$800–$4,000',carwash:'$2,000–$12,000',hotel:'$800–$3,500',gym:'$1,000–$5,000',daycare:'$800–$4,000',autoshop:'$1,500–$8,000'}
+};
+
+function switchTab(n) {
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+}
+
+function buildBizGrid() {
+  document.getElementById('bizGrid').innerHTML = BIZ_TYPES.map((b,i) => `
+    <div class="biz-btn" id="biz_${i}" onclick="selectBiz('${esc(b.id)}',${i})">
+      <span class="icon">${esc(b.icon)}</span>${esc(b.label)}
+    </div>
+  `).join('');
+}
+
+function selectBiz(id, idx) {
+  selectedBiz = id;
+  document.querySelectorAll('.biz-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.getElementById('occupancyCard').style.display = 'block';
+  calcFixtures();
+}
+
+function calcFixtures() {
+  if(!selectedBiz) return;
+  const occ = parseInt(document.getElementById('occupancy').value) || 50;
+  const sep = document.getElementById('genderSep').value === 'yes';
+  const rule = BIZ_FIXTURE_RULES[selectedBiz];
+  if(!rule) return;
+
+  let totalToilets, maleToilets, femaleToilets, urinals;
+  if(rule.perRoom) {
+    totalToilets = occ;
+    maleToilets = femaleToilets = Math.ceil(occ/2);
+    urinals = 0;
+  } else {
+    totalToilets = Math.max(rule.minToilets, Math.ceil(occ * rule.toiletsPerOcc));
+    if(sep) {
+      maleToilets = Math.ceil(totalToilets/2);
+      femaleToilets = Math.ceil(totalToilets/2);
+      urinals = rule.urinalPct > 0 ? Math.ceil(maleToilets * rule.urinalPct) : 0;
+    } else {
+      maleToilets = femaleToilets = 0;
+      urinals = 0;
+    }
+  }
+  const lavs = Math.max(1, Math.ceil(occ * rule.lavsPerOcc));
+  const df = rule.dfPerOcc > 0 ? Math.max(1, Math.ceil(occ * rule.dfPerOcc)) : 0;
+  const svcSinks = rule.serviceSinks || 0;
+
+  function chip(icon, label, count) {
+    return `<div class="fixture-chip"><span class="fixture-count">${count}</span>${esc(icon)} ${esc(label)}</div>`;
+  }
+
+  let html = '<div class="fixture-summary"><h4>Required Fixtures</h4><div class="fixture-grid">';
+  if(sep && maleToilets > 0) {
+    html += chip('🚹','Male Toilets', maleToilets);
+    html += chip('🚺','Female Toilets', femaleToilets);
+    if(urinals) html += chip('🚽','Urinals (male)', urinals);
+  } else {
+    html += chip('🚽','Toilets', totalToilets);
+  }
+  html += chip('🚿','Lavatories (sinks)', lavs);
+  if(df) html += chip('💧','Drinking Fountains', df);
+  html += chip('🪣','Service/Mop Sinks', svcSinks);
+  html += '</div></div>';
+
+  html += '<div class="result-card" style="margin-top:10px">';
+  html += '<div class="result-row"><span>Total fixture count</span><span class="val">'+(totalToilets+lavs+df+svcSinks+urinals)+' fixtures</span></div>';
+  html += '<div class="result-row"><span>Occupancy used</span><span class="val blue">'+occ+' persons</span></div>';
+  html += '<div class="result-row"><span>FBC section</span><span class="val" style="color:#94A3B8">Table 403.1</span></div>';
+  html += '<div class="result-row"><span>CFC license required?</span><span class="val" style="color:#EF4444">Yes — always</span></div>';
+  html += '</div>';
+  document.getElementById('fixtureDisplay').innerHTML = html;
+
+  if(rule.special && rule.special.length) {
+    let spec = '<div class="section-title">Business-Specific Requirements</div>';
+    spec += '<div class="alert-orange"><strong>Required in addition to restroom fixtures:</strong><ul style="margin-top:6px;padding-left:14px">';
+    rule.special.forEach(s => { spec += '<li style="margin-bottom:4px">'+esc(s)+'</li>'; });
+    spec += '</ul></div>';
+    document.getElementById('specialFixtures').innerHTML = spec;
+  } else {
+    document.getElementById('specialFixtures').innerHTML = '';
+  }
+
+  document.getElementById('bizNote').innerHTML = rule.note
+    ? '<div class="fl-callout">🏛️ '+esc(rule.note)+'</div>'
+    : '';
+  document.getElementById('fixtureResults').style.display = 'block';
+}
+
+function buildCodeCards() {
+  const el = document.getElementById('codeCards');
+  el.innerHTML = CODE_CARDS.map((c,i) => `
+    <div class="code-card">
+      <div class="code-header" id="ch_${i}" onclick="toggleCode(${i})">
+        <h4>${esc(c.title)}</h4>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="code-body" id="cb_${i}">
+        ${c.codes.map(code => `
+          <div style="margin-bottom:10px">
+            <strong>${esc(code.name)}</strong>
+            <p style="margin-top:3px">${esc(code.desc)}</p>
+          </div>
+        `).join('')}
+        <div class="fl-callout">🏛️ FL-Specific: ${esc(c.flNote)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCode(i) {
+  const header = document.getElementById('ch_'+i);
+  const body = document.getElementById('cb_'+i);
+  const isOpen = body.classList.contains('open');
+  header.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+function calcPermit() {
+  const biz = document.getElementById('permitBiz').value;
+  const county = document.getElementById('permitCounty').value;
+  const projType = document.getElementById('projectType').value;
+  const tier = COUNTY_TIER[county] || 'slow';
+  const timeline = PERMIT_TIMELINES[tier];
+  const permitInfo = BIZ_PERMIT_TYPES[biz];
+  const costRange = COST_RANGES[projType]?.[biz] || 'Contact for estimate';
+  const countyNames = {miami:'Miami-Dade',broward:'Broward',pbch:'Palm Beach',orange:'Orange',hillsborough:'Hillsborough',pinellas:'Pinellas',duval:'Duval',seminole:'Seminole',pasco:'Pasco',volusia:'Volusia',sarasota:'Sarasota',polk:'Polk',lake:'Lake',osceola:'Osceola',manatee:'Manatee',brevard:'Brevard',lee:'Lee',collier:'Collier',alachua:'Alachua',leon:'Leon',marion:'Marion',other:'Your County'};
+  const countyName = countyNames[county] || county;
+  const permitFeeRanges = {fast:'$350–$1,200',medium:'$200–$800',slow:'$150–$600'};
+
+  let html = `
+    <div class="result-card">
+      <div class="result-row"><span>County</span><span class="val blue">${esc(countyName)}</span></div>
+      <div class="result-row"><span>Review tier</span><span class="val">${esc(timeline.label)}</span></div>
+      <div class="result-row"><span>Estimated timeline</span><span class="val" style="color:#F4B942">${esc(timeline.weeks)}</span></div>
+      <div class="result-row"><span>Permit type</span><span class="val" style="color:#94A3B8;font-size:.78rem">${esc(permitInfo.type)}</span></div>
+      <div class="result-row"><span>Estimated permit fee</span><span class="val">${esc(permitFeeRanges[tier])}</span></div>
+      <div class="result-row"><span>CFC license required</span><span class="val" style="color:#EF4444">Yes — mandatory</span></div>
+    </div>
+    <div class="section-title">Required Inspections</div>
+    <div class="result-card">
+      <div class="timeline-row"><div class="timeline-dot dot-blue">1</div><div><strong>Rough-in inspection</strong> — before covering pipes</div></div>
+      <div class="timeline-row"><div class="timeline-dot dot-gold">2</div><div><strong>Final plumbing inspection</strong> — before CO</div></div>
+      ${permitInfo.fireMarsh?'<div class="timeline-row"><div class="timeline-dot dot-gold">3</div><div><strong>Fire marshal inspection</strong> — separate approval</div></div>':''}
+      ${permitInfo.healthDept?'<div class="timeline-row"><div class="timeline-dot dot-blue">4</div><div><strong>Health dept. inspection</strong> — required before opening</div></div>':''}
+      <div class="timeline-row"><div class="timeline-dot dot-green">✓</div><div><strong>Certificate of Occupancy / Completion</strong></div></div>
+    </div>
+  `;
+  if(permitInfo.healthDept) {
+    html += '<div class="alert-orange" style="margin-top:10px">⚠️ Health department approval is required for this business type and must be obtained before you can open. Schedule the health inspection separately from the building inspection.</div>';
+  }
+  document.getElementById('permitDisplay').innerHTML = html;
+
+  let costHtml = `
+    <table class="cost-table">
+      <thead><tr><th>Cost Item</th><th>Estimated Range</th></tr></thead>
+      <tbody>
+        <tr><td>Plumbing labor & materials</td><td style="color:#F4B942;font-weight:600">${esc(costRange)}</td></tr>
+        <tr><td>Permit fee</td><td>${esc(permitFeeRanges[tier])}</td></tr>
+        <tr><td>Plan review fee (separate)</td><td>$150–$500</td></tr>
+        <tr><td>Inspection fee(s)</td><td>$75–$250 per inspection</td></tr>
+        ${permitInfo.healthDept?'<tr><td>Health dept. review fee</td><td>$200–$800</td></tr>':''}
+      </tbody>
+    </table>
+    <div class="alert-green" style="margin-top:10px">
+      ✅ <strong>All costs are estimates for ${esc(countyName)} County.</strong> Final pricing depends on scope, accessibility, existing conditions, and material costs. Contact us for a site-specific quote.
+    </div>
+  `;
+  document.getElementById('costDisplay').innerHTML = costHtml;
+  document.getElementById('permitResults').style.display = 'block';
+}
+
+function submitQuote() {
+  const name = document.getElementById('contactName').value.trim();
+  const biz = document.getElementById('bizName').value.trim();
+  if(!name || !biz) { alert('Please enter your business name and contact name.'); return; }
+  const toast = document.getElementById('toast');
+  toast.style.display = 'block';
+  setTimeout(()=>toast.style.display='none', 3500);
+}
+
+function init() {
+  buildBizGrid();
+  buildCodeCards();
+}
+init();
+</script>
+
+<!-- EXPANSION: ADA + FAQ + Grease Trap + Code Violations -->
+<style>
+.faq-card{background:#141929;border:1px solid #2d3a55;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;font-size:.86rem;font-weight:600;color:#E2E8F0;user-select:none}
+.faq-q .faq-arrow{color:#94A3B8;font-size:.8rem;transition:transform .2s}
+.faq-q.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 14px 12px;font-size:.8rem;color:#94A3B8;line-height:1.6;border-top:1px solid #1e2a45}
+.faq-a.open{display:block}
+.ada-table{width:100%;border-collapse:collapse;font-size:.77rem;margin-top:10px}
+.ada-table th{background:#0A0E1A;color:#94A3B8;padding:7px 8px;text-align:left;font-weight:600;border-bottom:2px solid #1e2a45}
+.ada-table td{padding:7px 8px;border-bottom:1px solid #1e2a45;vertical-align:top}
+.ada-table tr:last-child td{border-bottom:none}
+.ada-table .req{color:#F4B942;font-weight:600}
+.grease-result{background:#141929;border:1px solid #2d3a55;border-radius:8px;padding:12px;margin-top:10px}
+.violation-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid #1e2a45;font-size:.79rem;gap:8px}
+.violation-row:last-child{border-bottom:none}
+.fine-badge{background:#EF4444;color:#fff;border-radius:4px;padding:2px 8px;font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0}
+</style>
+
+<script>
+// ADA restroom requirements data
+const ADA_REQUIREMENTS = [
+  {fixture:'Toilet',standard:'1 ADA-compliant toilet per gender per restroom',specs:'Seat height 17-19" AFF; 18" grab bar each side; 60"x60" turning radius; door clearance 42" min',code:'ADA §4.22 / FBC A117.1'},
+  {fixture:'Lavatory (sink)',standard:'1 ADA sink per restroom',specs:'Rim max 34" AFF; 27" min knee clearance below; no hot pipe exposure; lever/sensor faucet',code:'ADA §4.24 / FBC A117.1'},
+  {fixture:'Urinal',standard:'1 ADA urinal if urinals provided',specs:'Rim max 17" AFF; 13.5" min depth; side grab bars',code:'ADA §4.23'},
+  {fixture:'Drinking Fountain',standard:'High-low pair required in new construction',specs:'High: 38-43" AFF; Low: 38" max AFF; wheelchair clear floor space',code:'ADA §4.15'},
+  {fixture:'Mop/Service Sink',standard:'Not required to be ADA accessible',specs:'60"x60" clear floor space recommended; lever/sensor faucet',code:'Advisory only'},
+  {fixture:'Shower (if provided)',standard:'1 ADA roll-in or transfer shower',specs:'60"x36" roll-in OR 36"x36" transfer; fold-down bench; handheld showerhead',code:'ADA §4.21 / FBC A117.1'}
+];
+
+const FAQS = [
+  {q:'Do I need a permit for commercial plumbing repairs in Florida?',a:'Yes. Florida Statute 553.79 requires permits for all commercial plumbing work that involves new installation, relocation, replacement, or repair of any plumbing system component — including water supply, drainage, venting, and gas lines. The only exception is minor repairs like replacing faucet washers or toilet flapper valves. When in doubt, pull a permit — the cost of unpermitted work includes potential fines, forced demolition, and failed business inspections.'},
+  {q:'Can my general contractor do the plumbing, or do I need a separate CFC?',a:'Florida law (FS 489) requires a licensed Certified Plumbing Contractor (CFC) to perform, supervise, and permit all commercial plumbing work. A general contractor may coordinate the project, but cannot do plumbing work or pull a plumbing permit unless they also hold a CFC license. Violations can result in fines up to $10,000 per occurrence plus stop-work orders.'},
+  {q:'How does the health department interact with the plumbing permit?',a:'For food service, medical, and similar establishments, the health department approval is a SEPARATE requirement from the building permit. You must submit plans to both the local building department (for the plumbing permit) and the FL DOH or relevant agency. Health department approval is often required BEFORE the building department issues a Certificate of Occupancy. Plan for both timelines simultaneously.'},
+  {q:'What is FBC Table 403.1 and how does it determine fixture counts?',a:'Florida Building Code Plumbing (based on IPC) Table 403.1 lists minimum fixture requirements by occupancy type. It specifies ratios such as "1 toilet per 50 persons for assembly occupancy." Occupancy is determined by the building's design capacity or the number of fixed seats, not just actual employees. The table sets minimums — local health departments or AHCA may require more. Always verify with your local AHJ (Authority Having Jurisdiction).'},
+  {q:'What is a grease trap and when is it required in Florida?',a:'A grease trap (also called grease interceptor) captures fats, oils, and grease (FOG) before they enter the sanitary sewer system. Florida requires grease traps in all food service establishments, commercial kitchens, and any facility with cooking equipment. Sizing is based on the number and type of fixtures, flow rate, and local utility requirements. Most FL counties require both a permit for the grease trap installation AND quarterly cleaning/maintenance records.'},
+  {q:'What is a backflow preventer and when is it required?',a:'A backflow preventer stops contaminated water from flowing backward into the public water supply. Florida requires testable backflow preventers (RPZ type) on: all commercial connections, irrigation systems, fire suppression systems, medical/lab equipment connections, car wash water supplies, and anywhere chemicals could enter the water supply. Local utilities set specific requirements. Backflow preventers must be tested annually by a licensed tester and records kept on file.'},
+  {q:'How does FL hard water affect commercial plumbing?',a:'South and Central FL water hardness (often 200-375 ppm in Lee, Collier, and Manatee counties) accelerates scale buildup in commercial equipment. Water heaters in hard water areas may fail 30-40% earlier. Commercial dishwashers and coffee equipment are especially vulnerable. Many FL commercial facilities install water softeners or electronic descalers on incoming supply lines. Health department regulations for restaurants may require water quality logs.'},
+  {q:'What are the hot water temperature requirements for commercial facilities?',a:'Florida follows ASSE 1070 for patient-accessible and child-accessible fixtures (max 110°F). General commercial restrooms: minimum 105°F delivered hot water at fixtures per FBC. Healthcare: 110°F max per AHCA. Daycare/schools: 110°F max per DCF. Commercial kitchens: sanitizing rinse minimum 165°F at final rinse, or 120°F with chemical sanitizer. Anti-scald mixing valves are required wherever the code limits apply.'},
+  {q:'What happens if my business fails a plumbing inspection in Florida?',a:'A failed commercial plumbing inspection results in a "Correction Notice" requiring all deficiencies to be fixed before a re-inspection. If violations are life-safety related, the inspector can issue a Stop Work Order or, for existing businesses, coordinate with the health department to suspend operations. Re-inspection fees vary by county ($75-$250). Chronic violations can trigger a full plumbing reinspection requirement at license renewal.'},
+  {q:'What is an oil/water separator and which FL businesses need one?',a:'An oil/water separator (OWS) removes petroleum products from wastewater before it enters the sewer. Required in FL for: auto repair shops, car washes, parking garages, gas stations, fleet maintenance facilities, marinas, and any business that services vehicles or stores petroleum products. Sizing is per GPM (gallons per minute) of potential discharge. FDEP regulates OWS discharge quality — records of cleaning and maintenance are required.'},
+  {q:'Can I reduce fixture counts for single-employee businesses?',a:'FL law allows reduced fixture counts in limited circumstances. A single-toilet unisex restroom may serve a facility with ≤15 total occupants. Employee-only restrooms (not customer-accessible) may qualify for a single unisex toilet in some occupancy types. Restaurants, medical facilities, and child care facilities generally cannot reduce below code minimums regardless of occupancy. Always verify with your local building official and health department.'},
+  {q:'How long does a commercial plumbing permit last in Florida?',a:'Florida commercial plumbing permits are typically valid for 180 days after issuance, with the clock restarting each time a required inspection is passed. If no inspection is requested within 180 days, the permit expires and must be renewed. Most counties allow one extension (another 180 days) with a fee. Health department approvals have separate timelines — often valid for one year from plan approval date, after which re-review may be required.'}
+];
+
+const GREASE_FIXTURES = [
+  {label:'3-compartment sink',gpm:15},{label:'Prep sink (per sink)',gpm:10},
+  {label:'Floor sink (per sink)',gpm:10},{label:'Pre-rinse spray valve',gpm:9},
+  {label:'Dishwasher connection',gpm:15},{label:'Pot wash sink',gpm:15},
+  {label:'Wok range condensate',gpm:8},{label:'Mop sink',gpm:10}
+];
+
+function buildADASection() {
+  const el = document.getElementById('adaSection');
+  if(!el) return;
+  let html = '<table class="ada-table"><thead><tr><th>Fixture</th><th>Requirement</th><th>Key Specs</th><th>Code</th></tr></thead><tbody>';
+  ADA_REQUIREMENTS.forEach(r => {
+    html += `<tr>
+      <td style="font-weight:600;color:#E2E8F0">${esc(r.fixture)}</td>
+      <td class="req">${esc(r.standard)}</td>
+      <td>${esc(r.specs)}</td>
+      <td style="color:#00B4FF;font-size:.73rem">${esc(r.code)}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  html += '<div class="alert-orange" style="margin-top:10px">⚠️ <strong>ADA + FBC Accessibility:</strong> Florida's building code (FBC Chapter 11) incorporates ADA standards. All accessible features must be inspected and approved — accessibility violations are enforced at building permit final inspection AND can trigger DOJ complaints independently.</div>';
+  el.innerHTML = html;
+}
+
+function buildFAQ() {
+  const el = document.getElementById('faqSection');
+  if(!el) return;
+  el.innerHTML = FAQS.map((faq,i) => `
+    <div class="faq-card">
+      <div class="faq-q" id="fq_${i}" onclick="toggleFAQ(${i})">
+        <span>${esc(faq.q)}</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a" id="fa_${i}">${esc(faq.a)}</div>
+    </div>
+  `).join('');
+}
+
+function toggleFAQ(i) {
+  const q = document.getElementById('fq_'+i);
+  const a = document.getElementById('fa_'+i);
+  const isOpen = a.classList.contains('open');
+  q.classList.toggle('open',!isOpen);
+  a.classList.toggle('open',!isOpen);
+}
+
+let greaseSel = {};
+function toggleGrease(idx) {
+  greaseSel[idx] = !greaseSel[idx];
+  const el = document.getElementById('gf_'+idx);
+  el.classList.toggle('active', !!greaseSel[idx]);
+  calcGrease();
+}
+function calcGrease() {
+  let totalGPM = 0;
+  Object.keys(greaseSel).forEach(k => {
+    if(greaseSel[k]) totalGPM += GREASE_FIXTURES[k].gpm;
+  });
+  const retentionTime = 30; // minutes standard
+  const sizeGallons = Math.ceil(totalGPM * retentionTime);
+  const roundedSize = sizeGallons <= 250 ? 250 : sizeGallons <= 500 ? 500 : sizeGallons <= 750 ? 750 : sizeGallons <= 1000 ? 1000 : Math.ceil(sizeGallons/500)*500;
+  const el = document.getElementById('greaseResult');
+  if(!el) return;
+  if(totalGPM === 0) { el.innerHTML = '<p style="color:#94A3B8;font-size:.82rem">Select fixtures above to size your grease trap.</p>'; return; }
+  el.innerHTML = `
+    <div class="result-row"><span>Total flow rate</span><span class="val">${totalGPM} GPM</span></div>
+    <div class="result-row"><span>Calculated size</span><span class="val">${sizeGallons} gallons</span></div>
+    <div class="result-row"><span>Recommended interceptor</span><span class="val" style="color:#F4B942">${roundedSize}-gallon unit</span></div>
+    <div class="result-row"><span>Required cleaning freq.</span><span class="val">Quarterly (per FL rule)</span></div>
+    <div class="result-row"><span>Permit required?</span><span class="val" style="color:#EF4444">Yes — separate permit</span></div>
+    <div class="alert-blue" style="margin-top:8px;font-size:.78rem">Grease interceptor sizing per PDI G-101 standard. Local utilities (SFWMD, utility providers) may require larger units. Final sizing must be approved by the local AHJ and utility authority.</div>
+  `;
+}
+
+function buildGreaseTool() {
+  const el = document.getElementById('greaseSection');
+  if(!el) return;
+  let html = '<div class="biz-grid" style="grid-template-columns:repeat(2,1fr);gap:6px">';
+  GREASE_FIXTURES.forEach((f,i) => {
+    html += `<div class="biz-btn" id="gf_${i}" onclick="toggleGrease(${i})" style="text-align:left;padding:8px 10px;font-size:.78rem">
+      <span style="color:#F4B942;font-weight:700">${f.gpm} GPM</span> — ${esc(f.label)}
+    </div>`;
+  });
+  html += '</div><div class="grease-result" id="greaseResult"><p style="color:#94A3B8;font-size:.82rem">Select fixtures above to size your grease trap.</p></div>';
+  el.innerHTML = html;
+}
+
+const VIOLATIONS = [
+  {viol:'Unpermitted commercial plumbing work',fine:'$5,000–$10,000 per violation',consequence:'Stop work order + forced removal/redo',code:'FS 489.127'},
+  {viol:'Work by unlicensed contractor',fine:'$10,000 + criminal charges',consequence:'Business can be ordered closed; insurance void',code:'FS 489.531'},
+  {viol:'Missing grease trap / interceptor',fine:'$500–$5,000 + daily fines',consequence:'Health dept. can suspend food service license',code:'Local utility + FL DOH'},
+  {viol:'No backflow preventer on commercial connection',fine:'$200–$2,500',consequence:'Utility can terminate water service',code:'FL Plumbing Code 608'},
+  {viol:'Incorrect fixture count (under minimum)',fine:'$500–$2,000',consequence:'COO withheld; business cannot open',code:'FBC Table 403.1'},
+  {viol:'Hot water temp non-compliance (too hot/cold)',fine:'$1,000–$5,000',consequence:'Health code citation; license suspension risk',code:'FL DOH / AHCA'},
+  {viol:'Improper oil/water separator drainage',fine:'$5,000–$50,000 (FDEP)',consequence:'EPA/FDEP enforcement action; site cleanup liability',code:'FDEP Chapter 62'},
+  {viol:'Failed to obtain AHCA plumbing approval (medical)',fine:'$500–$5,000 per day',consequence:'AHCA can revoke facility operating license',code:'FL Statute 395'}
+];
+
+function buildViolationsTable() {
+  const el = document.getElementById('violationsSection');
+  if(!el) return;
+  let html = el.innerHTML;
+  VIOLATIONS.forEach(v => {
+    html += `<div class="violation-row">
+      <div>
+        <div style="font-weight:600;color:#E2E8F0;margin-bottom:3px">${esc(v.viol)}</div>
+        <div style="color:#94A3B8">${esc(v.consequence)}</div>
+        <div style="color:#00B4FF;font-size:.72rem;margin-top:2px">${esc(v.code)}</div>
+      </div>
+      <div class="fine-badge">${esc(v.fine)}</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+// Extend init
+const _origInit = init;
+init = function() {
+  _origInit();
+  buildADASection();
+  buildFAQ();
+  buildGreaseTool();
+  buildViolationsTable();
+};
+</script>
+
+<!-- ADDITIONAL UI SECTIONS injected by buildX() calls above -->
+<!-- These panels are loaded dynamically but we add static HTML hooks here -->
+<script>
+// After DOM ready, inject extra accordion sections into tab1 (code reference)
+document.addEventListener('DOMContentLoaded', function() {
+  const tab1 = document.getElementById('tab1');
+  if(!tab1) return;
+
+  // ADA Section
+  const adaDiv = document.createElement('div');
+  adaDiv.className = 'card';
+  adaDiv.innerHTML = '<h3>♿ ADA Accessibility Requirements</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:8px">Federal ADA standards apply to ALL commercial facilities serving the public. Florida's FBC Chapter 11 adopts these standards. Non-compliance exposes businesses to DOJ lawsuits independent of building permits.</p><div id="adaSection"></div>';
+  tab1.appendChild(adaDiv);
+  buildADASection();
+
+  // FAQ Section
+  const faqDiv = document.createElement('div');
+  faqDiv.className = 'card';
+  faqDiv.innerHTML = '<h3>❓ Commercial Plumbing Code FAQ</h3><div id="faqSection"></div>';
+  tab1.appendChild(faqDiv);
+  buildFAQ();
+
+  // Violations section
+  const violDiv = document.createElement('div');
+  violDiv.className = 'card';
+  violDiv.innerHTML = '<h3>⚠️ Common Violations & Fines</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:8px">Florida enforces commercial plumbing code violations aggressively. Fines escalate for repeat offenders and unlicensed work.</p><div id="violationsSection"></div>';
+  tab1.appendChild(violDiv);
+  buildViolationsTable();
+
+  // Grease Trap Sizer in Tab 0 for restaurants
+  const greaseDiv = document.createElement('div');
+  greaseDiv.className = 'card';
+  greaseDiv.style.cssText = '';
+  greaseDiv.innerHTML = '<h3>🪣 Grease Trap Sizer (Food Service)</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:10px">Select all kitchen fixtures connected to drain. Required by FL law for all food service establishments.</p><div id="greaseSection"></div>';
+  const tab0 = document.getElementById('tab0');
+  if(tab0) tab0.appendChild(greaseDiv);
+  buildGreaseTool();
+});
+</script>
+
+
+<script>
+// Commercial Water Heater Sizing Reference Data
+const WH_SIZING = [
+  {biz:'Restaurant (full-service)',demand:'High',peakGPH:80,recHWH:'100-gal tank or 200,000 BTU tankless',notes:'Dishwasher sanitize rinse requires 165°F; dedicated WH recommended'},
+  {biz:'Restaurant (fast food)',demand:'Med-High',peakGPH:40,recHWH:'80-gal tank or 150,000 BTU tankless',notes:'High turnover; size for peak lunch/dinner rush GPH'},
+  {biz:'Hair Salon (10 stations)',demand:'Medium',peakGPH:30,recHWH:'50-gal tank or 80,000 BTU tankless',notes:'Shampoo bowls use 2-3 GPM each; stagger bookings if on smaller WH'},
+  {biz:'Nail Salon (10 stations)',demand:'Low-Med',peakGPH:15,recHWH:'40-gal tank or 60,000 BTU tankless',notes:'Pedicure tubs heat independently; only hand-sinks need supply'},
+  {biz:'Medical Office',demand:'Low-Med',peakGPH:20,recHWH:'40-gal tank or 80,000 BTU tankless',notes:'Mixing valve required; 110°F max at patient fixtures per ASSE 1070'},
+  {biz:'Hotel (per room)',demand:'High',peakGPH:10,recHWH:'Central system: 1 gal storage per room + 1/2 gal recovery',notes:'Legionella control: maintain 140°F in storage, temper to 120°F at fixture'},
+  {biz:'Gym with showers',demand:'High',peakGPH:60,recHWH:'80-gal tank or 200,000 BTU tankless (per 10 showers)',notes:'Peak demand 7-9 AM and 5-7 PM; size for simultaneous use'},
+  {biz:'Laundry (commercial)',demand:'Very High',peakGPH:120,recHWH:'Commercial booster + storage tank system',notes:'Washers use 120-140°F; dedicated high-capacity system required'},
+  {biz:'Office Building',demand:'Low',peakGPH:8,recHWH:'30-gal tank per floor or point-of-use units',notes:'Primarily restroom handwashing; recirculation recommended for buildings >30,000 SF'}
+];
+
+// FL plumbing code chapter reference
+const CODE_CHAPTERS = [
+  {ch:'Chapter 1',title:'Administration',key:'Permits, inspections, fees, enforcement authority, licensing requirements (CFC)'},
+  {ch:'Chapter 2',title:'Definitions',key:'Official definitions for all plumbing terms used in FBC Plumbing'},
+  {ch:'Chapter 3',title:'General Regulations',key:'Material standards, testing requirements, protection of piping, concealed work'},
+  {ch:'Chapter 4',title:'Fixtures, Faucets & Fixture Fittings',key:'FBC TABLE 403.1 — minimum fixtures by occupancy; accessibility requirements; trap requirements'},
+  {ch:'Chapter 5',title:'Water Heaters',key:'Installation clearances, temperature/pressure relief valves, expansion tanks, efficiency standards'},
+  {ch:'Chapter 6',title:'Water Supply & Distribution',key:'Sizing, materials (copper, CPVC, PEX), backflow prevention, water softeners, pressure requirements'},
+  {ch:'Chapter 7',title:'Sanitary Drainage',key:'Drain sizing, slope requirements, cleanouts, material standards, floor drains'},
+  {ch:'Chapter 8',title:'Indirect/Special Waste',key:'Indirect waste connections, air gaps, fixture drains — includes grease interceptors (Section 1002)'},
+  {ch:'Chapter 9',title:'Vents',key:'Vent pipe sizing, locations, vent terminals, wet venting, AAVs (air admittance valves)'},
+  {ch:'Chapter 10',title:'Traps, Interceptors & Separators',key:'Trap requirements, grease interceptors, oil interceptors, sediment interceptors — CRITICAL for commercial'},
+  {ch:'Chapter 11',title:'Storm Drainage',key:'Roof drainage, overflow protection, leaders and conductors, storm system connections'},
+  {ch:'Chapter 12',title:'Special Piping',key:'Medical gas systems, oxygen, nitrous oxide — regulated separately via NFPA 99'},
+  {ch:'Chapter 13',title:'Gray Water Recycling',key:'FL allows gray water reuse for irrigation and toilet flushing — specific permit required'},
+  {ch:'Appendix D',title:'Degree Day & Design Temperatures',key:'FL climate zone data for water heater sizing and energy code compliance'}
+];
+
+function buildWHSizing() {
+  const el = document.getElementById('whSizingSection');
+  if(!el) return;
+  let html = '<table class="cost-table"><thead><tr><th>Business Type</th><th>Peak GPH</th><th>Recommended</th></tr></thead><tbody>';
+  WH_SIZING.forEach(r => {
+    html += `<tr>
+      <td style="font-weight:600">${esc(r.biz)}</td>
+      <td style="color:#F4B942;font-weight:700">${r.peakGPH}</td>
+      <td style="font-size:.75rem;color:#94A3B8">${esc(r.recHWH)}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  html += '<div class="alert-blue" style="margin-top:10px;font-size:.78rem">Water heater sizing is based on peak hourly demand. Undersized equipment causes failed health inspections (low water temp) and service disruptions. Always size 20-30% above calculated peak for commercial applications.</div>';
+  el.innerHTML = html;
+}
+
+function buildCodeChapters() {
+  const el = document.getElementById('codeChapterSection');
+  if(!el) return;
+  let html = '<div class="result-card">';
+  CODE_CHAPTERS.forEach(c => {
+    html += `<div class="result-row" style="flex-direction:column;align-items:flex-start;gap:3px">
+      <div style="display:flex;justify-content:space-between;width:100%">
+        <span style="font-weight:700;color:#E2E8F0">${esc(c.ch)} — ${esc(c.title)}</span>
+        ${c.ch === 'Chapter 10' || c.ch === 'Chapter 4' ? '<span class="permit-chip chip-req">KEY</span>' : ''}
+      </div>
+      <span style="font-size:.76rem;color:#94A3B8">${esc(c.key)}</span>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+// Inject water heater and code chapter sections into tab panels
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    const tab2 = document.getElementById('tab2');
+    if(tab2) {
+      const whDiv = document.createElement('div');
+      whDiv.className = 'card';
+      whDiv.innerHTML = '<h3>🌡️ Commercial Water Heater Sizing Guide</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:8px">Undersized water heaters are a top cause of failed health inspections. Size correctly for your business type.</p><div id="whSizingSection"></div>';
+      tab2.appendChild(whDiv);
+      buildWHSizing();
+
+      const codeChDiv = document.createElement('div');
+      codeChDiv.className = 'card';
+      codeChDiv.innerHTML = '<h3>📖 FBC Plumbing Chapter Guide</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:8px">Quick reference to Florida Building Code Plumbing chapters most relevant to commercial projects.</p><div id="codeChapterSection"></div>';
+      tab2.appendChild(codeChDiv);
+      buildCodeChapters();
+    }
+  }, 50);
+});
+</script>
+
+</body>
+</html>

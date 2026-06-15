@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FL Hard Water Cost Calculator | Florida Plumbing</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:0 0 40px}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);padding:20px 16px;text-align:center;border-bottom:2px solid #00B4FF}
+.header h1{font-size:1.3rem;color:#00B4FF;margin-bottom:4px}
+.header p{color:#94A3B8;font-size:.85rem}
+.badge{display:inline-block;background:#F4B942;color:#0A0E1A;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:6px}
+.tabs{display:flex;overflow-x:auto;border-bottom:2px solid #1e2a45;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:80px;padding:12px 8px;text-align:center;font-size:.78rem;font-weight:600;color:#94A3B8;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s}
+.tab.active{color:#00B4FF;border-bottom-color:#00B4FF;background:#0F1629}
+.panel{display:none;padding:16px;max-width:480px;margin:0 auto}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1e2a45;border-radius:10px;padding:16px;margin-bottom:14px}
+.card h3{font-size:.95rem;color:#00B4FF;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card h3 .icon{font-size:1.1rem}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:5px;margin-top:10px}
+select,input{width:100%;background:#141929;border:1px solid #2d3a55;border-radius:6px;color:#E2E8F0;padding:10px 12px;font-size:.88rem;-webkit-appearance:none}
+select:focus,input:focus{outline:none;border-color:#00B4FF}
+.hardness-display{margin-top:14px;background:#141929;border-radius:10px;padding:14px;border:1px solid #1e2a45}
+.hardness-bar-wrap{background:#1e2a45;border-radius:50px;height:16px;margin:10px 0;position:relative;overflow:hidden}
+.hardness-bar-fill{height:100%;border-radius:50px;transition:width .5s}
+.hardness-label{font-size:.75rem;color:#94A3B8;display:flex;justify-content:space-between;margin-bottom:2px}
+.hardness-value{font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:4px}
+.hardness-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.8rem;font-weight:700;margin:4px auto;display:block;text-align:center;width:fit-content;margin:0 auto 10px}
+.county-note{font-size:.8rem;color:#94A3B8;line-height:1.5;padding:10px;background:#0A0E1A;border-radius:6px;border-left:3px solid #00B4FF}
+.fl-stat{font-size:.82rem;color:#F4B942;background:#1a1500;border:1px solid #4a3500;border-radius:6px;padding:10px;margin-top:10px;line-height:1.5}
+.appliance-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #1e2a45}
+.appliance-row:last-child{border-bottom:none}
+.appliance-info{flex:1}
+.appliance-name{font-size:.85rem;font-weight:600;color:#E2E8F0}
+.appliance-life{font-size:.75rem;color:#94A3B8;margin-top:2px}
+.appliance-qty{width:60px;text-align:center;padding:6px 4px;font-size:.85rem}
+.cost-chip{background:#1e2a45;border-radius:4px;padding:3px 8px;font-size:.75rem;color:#F97316}
+.result-card{background:#141929;border:1px solid #2d3a55;border-radius:8px;padding:12px;margin-top:10px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1e2a45;font-size:.83rem}
+.result-row:last-child{border-bottom:none}
+.result-row .val{font-weight:700;color:#F97316}
+.result-row .val.green{color:#22C55E}
+.result-row .val.blue{color:#00B4FF}
+.total-row{background:#0A0E1A;border-radius:6px;padding:10px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.total-label{font-size:.9rem;color:#94A3B8}
+.total-val{font-size:1.3rem;font-weight:700;color:#EF4444}
+.breakeven{font-size:.85rem;color:#22C55E;margin-top:8px;text-align:center;font-style:italic}
+.treatment-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.treatment-card{background:#141929;border:2px solid #1e2a45;border-radius:8px;padding:12px;cursor:pointer;transition:all .2s}
+.treatment-card.selected{border-color:#00B4FF;background:#0d1a2e}
+.treatment-card h4{font-size:.85rem;color:#E2E8F0;margin-bottom:6px}
+.treatment-card .cost-range{font-size:.78rem;color:#F4B942;margin-bottom:4px}
+.treatment-card .effectiveness{font-size:.75rem;color:#94A3B8}
+.treatment-detail{margin-top:12px;background:#0A0E1A;border-radius:8px;padding:14px;border:1px solid #1e2a45;display:none}
+.treatment-detail.open{display:block}
+.detail-row{display:flex;justify-content:space-between;font-size:.8rem;padding:5px 0;border-bottom:1px solid #1e2a45}
+.detail-row:last-child{border-bottom:none}
+.detail-key{color:#94A3B8}
+.detail-val{color:#E2E8F0;font-weight:600;text-align:right}
+.pros-cons{margin-top:10px}
+.pros-cons h5{font-size:.78rem;font-weight:700;margin-bottom:5px}
+.pros-cons ul{list-style:none;font-size:.78rem;color:#94A3B8;line-height:1.6}
+.pros-cons ul li::before{content:"✓ ";color:#22C55E}
+.pros-cons.cons ul li::before{content:"✗ ";color:#EF4444}
+.best-badge{background:#00B4FF;color:#0A0E1A;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:6px;display:inline-block}
+.projection-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:10px}
+.projection-table th{background:#141929;color:#94A3B8;padding:7px 6px;text-align:center;font-weight:600;font-size:.75rem}
+.projection-table td{padding:6px;text-align:center;border-bottom:1px solid #1e2a45}
+.projection-table tr:last-child td{border-bottom:none}
+.projection-table .savings-cell{color:#22C55E;font-weight:700}
+.projection-table .break-row td{background:#0d1a2e;color:#F4B942;font-weight:700}
+.bar-wrap{background:#1e2a45;border-radius:4px;height:8px;margin-top:4px}
+.bar-fill{height:100%;border-radius:4px;background:#22C55E;transition:width .5s}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;margin:16px 0 8px;padding-left:2px}
+.form-group{margin-bottom:14px}
+input[type=text],input[type=email],input[type=tel]{width:100%;background:#141929;border:1px solid #2d3a55;border-radius:6px;color:#E2E8F0;padding:10px 12px;font-size:.88rem}
+.btn{width:100%;background:#F4B942;color:#0A0E1A;border:none;border-radius:8px;padding:14px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:10px;transition:opacity .2s}
+.btn:hover{opacity:.9}
+.btn-blue{background:#00B4FF}
+.trust{text-align:center;font-size:.78rem;color:#94A3B8;margin-top:14px}
+.trust strong{color:#00B4FF}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:8px;font-weight:700;font-size:.9rem;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(244,185,66,.4)}
+.alert-box{padding:10px;border-radius:6px;margin-top:10px;font-size:.8rem;line-height:1.5}
+.alert-orange{background:#1f1000;border:1px solid #F97316;color:#F97316}
+.alert-red{background:#1f0000;border:1px solid #EF4444;color:#EF4444}
+.alert-green{background:#001510;border:1px solid #22C55E;color:#22C55E}
+.alert-blue{background:#00122a;border:1px solid #00B4FF;color:#00B4FF}
+.slider-wrap{margin-top:10px}
+.slider-wrap input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;background:#1e2a45;border-radius:3px;outline:none}
+.slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;background:#00B4FF;border-radius:50%;cursor:pointer}
+.slider-val{text-align:center;font-size:1rem;font-weight:700;color:#00B4FF;margin-top:4px}
+.all-wrapper{font-size:.85rem}
+.table-wide th,.table-wide td{padding:8px 10px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>💧 FL Hard Water Cost Calculator</h1>
+  <p>Find out what hard water is costing you every year</p>
+  <span class="badge">Licensed CFC · Florida Plumbing Specialists</span>
+</div>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">County Finder</div>
+  <div class="tab" onclick="switchTab(1)">Appliance Damage</div>
+  <div class="tab" onclick="switchTab(2)">Treatment Options</div>
+  <div class="tab" onclick="switchTab(3)">10-Year Cost</div>
+</div>
+
+<!-- TAB 0: County Hardness Finder -->
+<div class="panel active" id="tab0">
+  <div class="card">
+    <h3><span class="icon">🗺️</span> Find Your County's Water Hardness</h3>
+    <label for="countySelect">Select your Florida county</label>
+    <select id="countySelect" onchange="updateHardness()">
+      <option value="">-- Choose a county --</option>
+      <option value="Alachua">Alachua County</option>
+      <option value="Baker">Baker County</option>
+      <option value="Bay">Bay County</option>
+      <option value="Bradford">Bradford County</option>
+      <option value="Brevard">Brevard County</option>
+      <option value="Broward">Broward County</option>
+      <option value="Calhoun">Calhoun County</option>
+      <option value="Charlotte">Charlotte County</option>
+      <option value="Citrus">Citrus County</option>
+      <option value="Clay">Clay County</option>
+      <option value="Collier">Collier County</option>
+      <option value="Columbia">Columbia County</option>
+      <option value="DeSoto">DeSoto County</option>
+      <option value="Dixie">Dixie County</option>
+      <option value="Duval">Duval County</option>
+      <option value="Escambia">Escambia County</option>
+      <option value="Flagler">Flagler County</option>
+      <option value="Franklin">Franklin County</option>
+      <option value="Gadsden">Gadsden County</option>
+      <option value="Gilchrist">Gilchrist County</option>
+      <option value="Glades">Glades County</option>
+      <option value="Gulf">Gulf County</option>
+      <option value="Hamilton">Hamilton County</option>
+      <option value="Hardee">Hardee County</option>
+      <option value="Hendry">Hendry County</option>
+      <option value="Hernando">Hernando County</option>
+      <option value="Highlands">Highlands County</option>
+      <option value="Hillsborough">Hillsborough County</option>
+      <option value="Holmes">Holmes County</option>
+      <option value="Indian River">Indian River County</option>
+      <option value="Jackson">Jackson County</option>
+      <option value="Jefferson">Jefferson County</option>
+      <option value="Lafayette">Lafayette County</option>
+      <option value="Lake">Lake County</option>
+      <option value="Lee">Lee County</option>
+      <option value="Leon">Leon County</option>
+      <option value="Levy">Levy County</option>
+      <option value="Liberty">Liberty County</option>
+      <option value="Madison">Madison County</option>
+      <option value="Manatee">Manatee County</option>
+      <option value="Marion">Marion County</option>
+      <option value="Martin">Martin County</option>
+      <option value="Miami-Dade">Miami-Dade County</option>
+      <option value="Monroe">Monroe County</option>
+      <option value="Nassau">Nassau County</option>
+      <option value="Okaloosa">Okaloosa County</option>
+      <option value="Okeechobee">Okeechobee County</option>
+      <option value="Orange">Orange County</option>
+      <option value="Osceola">Osceola County</option>
+      <option value="Palm Beach">Palm Beach County</option>
+      <option value="Pasco">Pasco County</option>
+      <option value="Pinellas">Pinellas County</option>
+      <option value="Polk">Polk County</option>
+      <option value="Putnam">Putnam County</option>
+      <option value="St. Johns">St. Johns County</option>
+      <option value="St. Lucie">St. Lucie County</option>
+      <option value="Santa Rosa">Santa Rosa County</option>
+      <option value="Sarasota">Sarasota County</option>
+      <option value="Seminole">Seminole County</option>
+      <option value="Sumter">Sumter County</option>
+      <option value="Suwannee">Suwannee County</option>
+      <option value="Taylor">Taylor County</option>
+      <option value="Union">Union County</option>
+      <option value="Volusia">Volusia County</option>
+      <option value="Wakulla">Wakulla County</option>
+      <option value="Walton">Walton County</option>
+      <option value="Washington">Washington County</option>
+    </select>
+
+    <div class="hardness-display" id="hardnessDisplay" style="display:none">
+      <div class="hardness-label"><span>Soft (0)</span><span>Moderate</span><span>Hard</span><span>Very Hard</span><span>Extreme (400+)</span></div>
+      <div class="hardness-bar-wrap"><div class="hardness-bar-fill" id="hardnessBarFill"></div></div>
+      <div class="hardness-value" id="hardnessValue"></div>
+      <div id="hardnessBadge" class="hardness-badge"></div>
+      <div class="county-note" id="countyNote"></div>
+      <div class="alert-orange" id="hardnessImpact" style="margin-top:10px;display:none"></div>
+    </div>
+    <div class="fl-stat">⚠️ <strong>Florida Water Fact:</strong> 70% of FL homes have water hardness above 150 ppm — among the highest in the nation. Southwest Florida (Collier, Lee, Sarasota) regularly exceeds 300 ppm, causing visible scale deposits within weeks.</div>
+  </div>
+  <div class="card">
+    <h3><span class="icon">📊</span> Hardness Scale Reference</h3>
+    <div class="result-card">
+      <div class="result-row"><span>Soft</span><span class="val green">0–60 ppm (0–3.5 gpg)</span></div>
+      <div class="result-row"><span>Moderately Hard</span><span class="val blue">61–120 ppm (3.5–7 gpg)</span></div>
+      <div class="result-row"><span>Hard</span><span class="val" style="color:#F4B942">121–180 ppm (7–10.5 gpg)</span></div>
+      <div class="result-row"><span>Very Hard</span><span class="val">181–250 ppm (10.5–14.6 gpg)</span></div>
+      <div class="result-row"><span>Extremely Hard</span><span class="val" style="color:#EF4444">250+ ppm (14.6+ gpg)</span></div>
+    </div>
+    <div style="margin-top:10px;font-size:.8rem;color:#94A3B8;line-height:1.5">
+      <strong style="color:#E2E8F0">Grains per gallon (gpg)</strong> is the unit water treatment professionals use. Divide ppm by 17.1 to convert. Most water softeners are rated in grains per gallon removed.
+    </div>
+  </div>
+</div>
+
+<!-- TAB 1: Appliance Damage Calculator -->
+<div class="panel" id="tab1">
+  <div class="card">
+    <h3><span class="icon">🏠</span> Appliance Hard Water Damage Calculator</h3>
+    <div class="section-title">Your Location</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <select id="appCounty" style="flex:1" onchange="syncCounty1()">
+        <option value="">Select county</option>
+        <option value="Alachua">Alachua</option><option value="Baker">Baker</option><option value="Bay">Bay</option>
+        <option value="Bradford">Bradford</option><option value="Brevard">Brevard</option><option value="Broward">Broward</option>
+        <option value="Calhoun">Calhoun</option><option value="Charlotte">Charlotte</option><option value="Citrus">Citrus</option>
+        <option value="Clay">Clay</option><option value="Collier">Collier</option><option value="Columbia">Columbia</option>
+        <option value="DeSoto">DeSoto</option><option value="Dixie">Dixie</option><option value="Duval">Duval</option>
+        <option value="Escambia">Escambia</option><option value="Flagler">Flagler</option><option value="Franklin">Franklin</option>
+        <option value="Gadsden">Gadsden</option><option value="Gilchrist">Gilchrist</option><option value="Glades">Glades</option>
+        <option value="Gulf">Gulf</option><option value="Hamilton">Hamilton</option><option value="Hardee">Hardee</option>
+        <option value="Hendry">Hendry</option><option value="Hernando">Hernando</option><option value="Highlands">Highlands</option>
+        <option value="Hillsborough">Hillsborough</option><option value="Holmes">Holmes</option><option value="Indian River">Indian River</option>
+        <option value="Jackson">Jackson</option><option value="Jefferson">Jefferson</option><option value="Lafayette">Lafayette</option>
+        <option value="Lake">Lake</option><option value="Lee">Lee</option><option value="Leon">Leon</option>
+        <option value="Levy">Levy</option><option value="Liberty">Liberty</option><option value="Madison">Madison</option>
+        <option value="Manatee">Manatee</option><option value="Marion">Marion</option><option value="Martin">Martin</option>
+        <option value="Miami-Dade">Miami-Dade</option><option value="Monroe">Monroe</option><option value="Nassau">Nassau</option>
+        <option value="Okaloosa">Okaloosa</option><option value="Okeechobee">Okeechobee</option><option value="Orange">Orange</option>
+        <option value="Osceola">Osceola</option><option value="Palm Beach">Palm Beach</option><option value="Pasco">Pasco</option>
+        <option value="Pinellas">Pinellas</option><option value="Polk">Polk</option><option value="Putnam">Putnam</option>
+        <option value="St. Johns">St. Johns</option><option value="St. Lucie">St. Lucie</option><option value="Santa Rosa">Santa Rosa</option>
+        <option value="Sarasota">Sarasota</option><option value="Seminole">Seminole</option><option value="Sumter">Sumter</option>
+        <option value="Suwannee">Suwannee</option><option value="Taylor">Taylor</option><option value="Union">Union</option>
+        <option value="Volusia">Volusia</option><option value="Wakulla">Wakulla</option><option value="Walton">Walton</option>
+        <option value="Washington">Washington</option>
+      </select>
+      <span id="appHardnessBadge" style="font-size:.75rem;font-weight:700;white-space:nowrap"></span>
+    </div>
+    <div class="section-title">Or Set Hardness Manually</div>
+    <div class="slider-wrap">
+      <input type="range" id="hardnessSlider" min="0" max="400" value="150" oninput="updateSlider()">
+      <div class="slider-val" id="sliderVal">150 ppm</div>
+    </div>
+
+    <div class="section-title">How many of each appliance do you have?</div>
+    <div id="applianceList"></div>
+    <button class="btn" onclick="calcApplianceDamage()">Calculate Annual Damage Cost</button>
+  </div>
+  <div id="applianceResults" style="display:none">
+    <div class="card">
+      <h3><span class="icon">💸</span> Annual Hard Water Cost Breakdown</h3>
+      <div id="applianceResultRows"></div>
+      <div class="total-row">
+        <span class="total-label">Total Annual Hard Water Cost</span>
+        <span class="total-val" id="applianceTotalVal">$0</span>
+      </div>
+      <div class="breakeven" id="breakevenText"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: Treatment Comparison -->
+<div class="panel" id="tab2">
+  <div class="card">
+    <h3><span class="icon">🔬</span> Treatment Options Comparison</h3>
+    <p style="font-size:.82rem;color:#94A3B8;margin-bottom:12px">Click any option to see full details. Your hardness level from Tab 1 is used for recommendations.</p>
+    <div class="treatment-grid" id="treatmentGrid"></div>
+    <div id="treatmentDetail" class="treatment-detail"></div>
+    <div class="alert-blue" id="treatmentRec" style="margin-top:12px;display:none"></div>
+  </div>
+  <div class="card">
+    <h3><span class="icon">📋</span> Side-by-Side Comparison</h3>
+    <div style="overflow-x:auto">
+      <table class="projection-table table-wide" id="comparisonTable">
+        <thead>
+          <tr><th>Option</th><th>Install Cost</th><th>Monthly Op.</th><th>Effectiveness</th><th>CFC Permit</th></tr>
+        </thead>
+        <tbody id="compTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: 10-Year Cost Projection + Lead Form -->
+<div class="panel" id="tab3">
+  <div class="card">
+    <h3><span class="icon">📈</span> 10-Year Cost Projection</h3>
+    <div class="form-group">
+      <label>Your county hardness</label>
+      <select id="projCounty" onchange="syncCounty3()">
+        <option value="">Select county</option>
+        <option value="Alachua">Alachua</option><option value="Baker">Baker</option><option value="Bay">Bay</option>
+        <option value="Bradford">Bradford</option><option value="Brevard">Brevard</option><option value="Broward">Broward</option>
+        <option value="Charlotte">Charlotte</option><option value="Collier">Collier</option><option value="Duval">Duval</option>
+        <option value="Hillsborough">Hillsborough</option><option value="Lake">Lake</option><option value="Lee">Lee</option>
+        <option value="Leon">Leon</option><option value="Manatee">Manatee</option><option value="Miami-Dade">Miami-Dade</option>
+        <option value="Orange">Orange</option><option value="Osceola">Osceola</option><option value="Palm Beach">Palm Beach</option>
+        <option value="Pasco">Pasco</option><option value="Pinellas">Pinellas</option><option value="Polk">Polk</option>
+        <option value="Sarasota">Sarasota</option><option value="Seminole">Seminole</option><option value="Volusia">Volusia</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Home size</label>
+      <select id="homeSize">
+        <option value="condo">Studio / 1BR Condo</option>
+        <option value="small" selected>2–3 BR Home</option>
+        <option value="large">4–5 BR Home</option>
+        <option value="commercial">Commercial Property</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Treatment choice</label>
+      <select id="treatmentChoice">
+        <option value="none">No treatment (baseline)</option>
+        <option value="softener">Salt-based Water Softener</option>
+        <option value="saltfree">Salt-free Conditioner</option>
+        <option value="ro">Reverse Osmosis (drinking water)</option>
+        <option value="whole_ro">Whole-house RO</option>
+      </select>
+    </div>
+    <button class="btn btn-blue" onclick="calcProjection()">Run 10-Year Projection</button>
+  </div>
+  <div id="projResults" style="display:none">
+    <div class="card">
+      <h3><span class="icon">📊</span> Results: No Treatment vs. Treatment</h3>
+      <div style="overflow-x:auto">
+        <table class="projection-table" id="projTable">
+          <thead><tr><th>Year</th><th>No Treatment</th><th>With Treatment</th><th>Savings</th></tr></thead>
+          <tbody id="projTableBody"></tbody>
+        </table>
+      </div>
+      <div class="total-row" style="margin-top:12px">
+        <span class="total-label">10-Year Total Savings</span>
+        <span class="total-val green" id="projSavingsTotal">$0</span>
+      </div>
+      <div class="breakeven" id="projBreakeven"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3><span class="icon">💧</span> Get a Free Water Quality Test</h3>
+    <p style="font-size:.82rem;color:#94A3B8;margin-bottom:12px">Our licensed technicians test your water on-site and recommend the right solution for your home and budget.</p>
+    <div class="form-group">
+      <label>Your name</label>
+      <input type="text" id="leadName" placeholder="Full name">
+    </div>
+    <div class="form-group">
+      <label>Phone number</label>
+      <input type="tel" id="leadPhone" placeholder="(561) 555-PIPE">
+    </div>
+    <div class="form-group">
+      <label>Email address</label>
+      <input type="email" id="leadEmail" placeholder="your@email.com">
+    </div>
+    <div class="form-group">
+      <label>County (auto-fills from Tab 1)</label>
+      <input type="text" id="leadCounty" placeholder="Your county">
+    </div>
+    <div class="form-group">
+      <label>Best time to call</label>
+      <select id="leadTime">
+        <option>Morning (8am–12pm)</option>
+        <option>Afternoon (12pm–5pm)</option>
+        <option>Evening (5pm–7pm)</option>
+        <option>Any time</option>
+      </select>
+    </div>
+    <button class="btn" onclick="submitLead()">Get My Free Water Test →</button>
+    <div class="trust">Licensed CFC Plumbing Contractor · <strong>(561) 555-PIPE</strong><br>Serving all of Florida · Same-day quotes available</div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🏠</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+const COUNTY_PPM = {
+  'Collier':375,'Lee':310,'Sarasota':285,'Manatee':270,'Charlotte':260,
+  'Polk':245,'Highlands':230,'Hardee':225,'DeSoto':220,'Glades':215,'Hendry':210,
+  'Monroe':200,'Miami-Dade':195,'Broward':190,'Palm Beach':185,'Okeechobee':175,
+  'Orange':165,'Seminole':155,'Osceola':150,'Lake':145,'Sumter':140,
+  'Hillsborough':135,'Pinellas':130,'Pasco':125,'Indian River':120,'Martin':115,
+  'Hernando':115,'Citrus':110,'Volusia':110,'Flagler':95,'St. Johns':90,
+  'Clay':85,'Duval':80,'Nassau':75,'Alachua':70,'Marion':65,'St. Lucie':62,
+  'Leon':45,'Wakulla':40,'Jefferson':38,'Madison':35,'Hamilton':30,
+  'Columbia':55,'Suwannee':50,'Lafayette':28,'Taylor':32,'Dixie':35,
+  'Gilchrist':42,'Levy':48,'Putnam':58,'Bradford':52,'Union':38,
+  'Baker':42,'Brevard':118,'Escambia':25,'Santa Rosa':28,'Okaloosa':30,
+  'Walton':22,'Holmes':35,'Washington':38,'Bay':32,'Jackson':40,
+  'Calhoun':28,'Gulf':25,'Franklin':20,'Liberty':18,'Gadsden':35
+};
+
+function getHardnessLevel(ppm) {
+  if(ppm <= 60) return {label:'Soft',color:'#22C55E',bgColor:'#001510'};
+  if(ppm <= 120) return {label:'Moderately Hard',color:'#00B4FF',bgColor:'#00122a'};
+  if(ppm <= 180) return {label:'Hard',color:'#F4B942',bgColor:'#1a1500'};
+  if(ppm <= 250) return {label:'Very Hard',color:'#F97316',bgColor:'#1f0800'};
+  return {label:'Extremely Hard',color:'#EF4444',bgColor:'#1f0000'};
+}
+
+function getCountyNote(county, ppm) {
+  const level = getHardnessLevel(ppm);
+  const notes = {
+    'Collier':'Collier County has some of the hardest water in the US — the aquifer draws through thick limestone rock beds.',
+    'Lee':'Lee County water has significant calcium and magnesium content from Fort Myers to Cape Coral.',
+    'Sarasota':'Sarasota's hard water is notorious for white scale on fixtures and shower doors.',
+    'Polk':'Central FL's Polk County aquifer passes through ancient limestone, creating very hard water.',
+    'Miami-Dade':'Miami-Dade water is very hard — the Biscayne Aquifer draws through oolitic limestone.',
+    'Broward':'Broward County hard water is treated by utilities but still very hard at the tap.',
+    'Orange':'Orange County includes Orlando — moderate to hard water throughout the metro area.',
+    'Hillsborough':'Tampa Bay area water is hard, with visible scale in coffee makers and water heaters.',
+    'Pinellas':'St. Petersburg/Clearwater water is hard — reclaimed water adds additional mineral content.',
+    'Palm Beach':'Palm Beach County water hardness varies by source but averages very hard.',
+    'Duval':'Jacksonville water is softer than South FL but still requires attention.',
+    'Leon':'Tallahassee area water is among the softest in FL — less treatment needed.',
+    'Escambia':'Pensacola/Escambia has very soft water from the surficial aquifer.',
+  };
+  return notes[county] || `${esc(county)} County water hardness of ${ppm} ppm (${(ppm/17.1).toFixed(1)} gpg) — ${level.label.toLowerCase()} water classification.`;
+}
+
+let currentPPM = 150;
+let selectedTreatment = null;
+
+function switchTab(n) {
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+}
+
+function updateHardness() {
+  const county = document.getElementById('countySelect').value;
+  if(!county) return;
+  const ppm = COUNTY_PPM[county] || 100;
+  currentPPM = ppm;
+  const level = getHardnessLevel(ppm);
+  const gpg = (ppm/17.1).toFixed(1);
+  document.getElementById('hardnessDisplay').style.display='block';
+  const pct = Math.min((ppm/400)*100,100);
+  document.getElementById('hardnessBarFill').style.width=pct+'%';
+  document.getElementById('hardnessBarFill').style.background=level.color;
+  document.getElementById('hardnessValue').textContent=ppm+' ppm ('+gpg+' gpg)';
+  document.getElementById('hardnessValue').style.color=level.color;
+  const badge = document.getElementById('hardnessBadge');
+  badge.textContent=level.label;
+  badge.style.background=level.color;
+  badge.style.color='#0A0E1A';
+  document.getElementById('countyNote').textContent=getCountyNote(county,ppm);
+  const impact = document.getElementById('hardnessImpact');
+  impact.style.display='block';
+  if(ppm>250){
+    impact.className='alert-box alert-red';
+    impact.innerHTML='🚨 <strong>Extremely Hard Water:</strong> At '+ppm+' ppm, scale buildup is severe. Water heaters lose efficiency in 1–3 years. Pipe scaling is likely. Immediate treatment strongly recommended.';
+  } else if(ppm>180){
+    impact.className='alert-box alert-orange';
+    impact.innerHTML='⚠️ <strong>Very Hard Water:</strong> Scale deposits will coat pipes and heating elements, reducing appliance lifespans by 20–40%. Treatment will pay for itself within 2–4 years.';
+  } else if(ppm>120){
+    impact.className='alert-box alert-orange';
+    impact.innerHTML='⚠️ <strong>Hard Water:</strong> Visible scale on fixtures is normal at '+ppm+' ppm. Appliances lose 10–25% of lifespan. A water softener is recommended.';
+  } else if(ppm>60){
+    impact.className='alert-box alert-blue';
+    impact.innerHTML='ℹ️ <strong>Moderately Hard Water:</strong> Some scale possible, especially in water heaters. A basic softener or conditioner may be worthwhile.';
+  } else {
+    impact.className='alert-box alert-green';
+    impact.innerHTML='✅ <strong>Soft Water:</strong> You\'re lucky — '+esc(county)+' has some of FL\'s softest water. Minimal treatment needed.';
+  }
+  document.getElementById('appCounty').value = county;
+  document.getElementById('projCounty').value = county;
+  document.getElementById('leadCounty').value = county;
+  syncCounty1();
+}
+
+function syncCounty1() {
+  const county = document.getElementById('appCounty').value;
+  if(!county) return;
+  const ppm = COUNTY_PPM[county] || currentPPM;
+  currentPPM = ppm;
+  document.getElementById('hardnessSlider').value = ppm;
+  document.getElementById('sliderVal').textContent = ppm+' ppm';
+  const level = getHardnessLevel(ppm);
+  document.getElementById('appHardnessBadge').textContent = ppm+' ppm — '+level.label;
+  document.getElementById('appHardnessBadge').style.color = level.color;
+}
+
+function syncCounty3() {
+  const county = document.getElementById('projCounty').value;
+  if(!county) return;
+  currentPPM = COUNTY_PPM[county] || currentPPM;
+}
+
+function updateSlider() {
+  currentPPM = parseInt(document.getElementById('hardnessSlider').value);
+  document.getElementById('sliderVal').textContent = currentPPM+' ppm';
+  const level = getHardnessLevel(currentPPM);
+  document.getElementById('appHardnessBadge').textContent = currentPPM+' ppm — '+level.label;
+  document.getElementById('appHardnessBadge').style.color = level.color;
+}
+
+const APPLIANCES = [
+  {id:'dishwasher',name:'Dishwasher',icon:'🍽️',normal:12,cost:700,qtyDefault:1},
+  {id:'washer',name:'Washing Machine',icon:'👕',normal:12,cost:800,qtyDefault:1},
+  {id:'water_heater',name:'Water Heater (tank)',icon:'🔥',normal:13,cost:1200,qtyDefault:1},
+  {id:'tankless',name:'Tankless Water Heater',icon:'⚡',normal:20,cost:2500,qtyDefault:0},
+  {id:'coffee',name:'Coffee Maker',icon:'☕',normal:5,cost:80,qtyDefault:1},
+  {id:'ice_maker',name:'Refrigerator / Ice Maker',icon:'🧊',normal:15,cost:1400,qtyDefault:1},
+  {id:'faucets',name:'Faucets & Showerheads',icon:'🚿',normal:20,cost:250,qtyDefault:4},
+];
+
+function buildApplianceList() {
+  const el = document.getElementById('applianceList');
+  el.innerHTML = APPLIANCES.map(a => `
+    <div class="appliance-row">
+      <div class="appliance-info">
+        <div class="appliance-name">${esc(a.icon)} ${esc(a.name)}</div>
+        <div class="appliance-life">Normal lifespan: ${a.normal} yrs · Replacement cost: $${a.cost.toLocaleString()}</div>
+      </div>
+      <input type="number" min="0" max="20" value="${a.qtyDefault}" class="appliance-qty" id="qty_${esc(a.id)}">
+    </div>
+  `).join('');
+}
+
+function getLifeReduction(applianceId, ppm) {
+  const reductions = {
+    dishwasher: 0.30,
+    washer: 0.40,
+    water_heater: 0.50,
+    tankless: 0.35,
+    coffee: 0.45,
+    ice_maker: 0.35,
+    faucets: 0.60
+  };
+  const base = reductions[applianceId] || 0.30;
+  const ppmFactor = Math.min(ppm / 250, 1.5);
+  return Math.min(base * ppmFactor, 0.85);
+}
+
+function calcApplianceDamage() {
+  const ppm = currentPPM;
+  let totalAnnual = 0;
+  const rows = APPLIANCES.map(a => {
+    const qty = parseInt(document.getElementById('qty_'+a.id).value) || 0;
+    if(qty === 0) return null;
+    const reduction = getLifeReduction(a.id, ppm);
+    const hwLife = Math.round(a.normal * (1 - reduction));
+    const annualCostNoHW = (a.cost * qty) / a.normal;
+    const annualCostHW = (a.cost * qty) / hwLife;
+    const annualDamage = Math.round(annualCostHW - annualCostNoHW);
+    totalAnnual += annualDamage;
+    return {a, qty, hwLife, annualDamage, reduction};
+  }).filter(Boolean);
+
+  const resultEl = document.getElementById('applianceResultRows');
+  resultEl.innerHTML = rows.map(r => `
+    <div class="result-card" style="margin-bottom:8px">
+      <div style="font-weight:600;font-size:.88rem;margin-bottom:6px">${esc(r.a.icon)} ${esc(r.a.name)} (${r.qty}x)</div>
+      <div class="result-row"><span>Normal lifespan</span><span class="val green">${r.a.normal} yrs</span></div>
+      <div class="result-row"><span>Hard water lifespan</span><span class="val">${r.hwLife} yrs</span></div>
+      <div class="result-row"><span>Life reduced by</span><span class="val" style="color:#F97316">${Math.round(r.reduction*100)}%</span></div>
+      <div class="result-row"><span>Annual cost of hard water</span><span class="val" style="color:#EF4444">$${r.annualDamage.toLocaleString()}/yr</span></div>
+    </div>
+  `).join('');
+
+  document.getElementById('applianceTotalVal').textContent = '$'+totalAnnual.toLocaleString()+'/yr';
+  const softenerCost = 1850;
+  const yearsToBreakeven = totalAnnual > 0 ? (softenerCost / totalAnnual).toFixed(1) : null;
+  document.getElementById('breakevenText').textContent = yearsToBreakeven
+    ? `💡 A water softener ($1,200–$2,500 installed) would pay for itself in ~${yearsToBreakeven} years`
+    : 'Add appliances above to see break-even analysis';
+  document.getElementById('applianceResults').style.display='block';
+}
+
+const TREATMENTS = [
+  {id:'softener',name:'Salt-based Water Softener',icon:'🧂',
+    install:'$1,200–$2,500',monthly:'$10–25 (salt)',effectiveness:'Eliminates 95%+ hardness',
+    cfc:'Yes — required for installation',life:'15–25 years',
+    pros:['Eliminates virtually all hardness','Protects all pipes and appliances','Extends water heater life 2x','Prevents new scale buildup'],
+    cons:['Requires monthly salt refills','Higher upfront cost','Adds small sodium content to water','Brine discharge (permitted in FL)'],
+    bestFor:'ppm > 120',bestLabel:'Best for hard & very hard water'},
+  {id:'saltfree',name:'Salt-free Conditioner',icon:'💎',
+    install:'$800–$1,800',monthly:'$0 (no consumables)',effectiveness:'Reduces scale 50–70%',
+    cfc:'Yes — recommended',life:'10–20 years',
+    pros:['No salt or maintenance','No water waste','Environmentally friendly','Lower operating cost'],
+    cons:['Does not soften water (hardness remains)','Less effective above 300 ppm','Scale prevention only, not removal','Cannot reverse existing scale'],
+    bestFor:'ppm 60–200',bestLabel:'Best for moderate hard water'},
+  {id:'ro',name:'Reverse Osmosis (Drinking Water)',icon:'🚰',
+    install:'$350–$800',monthly:'$5–15 (filters)',effectiveness:'99%+ for drinking water',
+    cfc:'Usually not required',life:'10–15 years (membrane)',
+    pros:['Best water quality for drinking','Removes nearly all contaminants','Low maintenance','Small under-sink footprint'],
+    cons:['Only treats drinking water','Does not protect appliances or pipes','Wastes 2–4 gallons per gallon produced','Filter changes every 6–12 months'],
+    bestFor:'any',bestLabel:'Good for any hardness (drinking only)'},
+  {id:'whole_ro',name:'Whole-House RO System',icon:'🏠',
+    install:'$5,000–$15,000',monthly:'$50–150',effectiveness:'99%+ all water in home',
+    cfc:'Yes — permit required',life:'15–25 years',
+    pros:['Purest water throughout home','Protects all appliances completely','No scale anywhere in home'],
+    cons:['Very expensive installation','High waste water ratio','Significant operating cost','Requires professional maintenance'],
+    bestFor:'ppm > 350',bestLabel:'For extremely hard or contaminated water'},
+  {id:'none',name:'No Treatment (Baseline)',icon:'❌',
+    install:'$0',monthly:'$0',effectiveness:'None',
+    cfc:'N/A',life:'N/A',
+    pros:['No upfront cost'],
+    cons:['Appliances wear out 30–60% faster','Scale damages pipes over time','Higher energy costs from scale insulation','Potential for pipe blockage in 10–20 yrs'],
+    bestFor:'none',bestLabel:'Not recommended for hard water areas'},
+];
+
+function buildTreatmentGrid() {
+  const grid = document.getElementById('treatmentGrid');
+  grid.innerHTML = TREATMENTS.map((t,i) => `
+    <div class="treatment-card" id="tcard_${i}" onclick="selectTreatment(${i})">
+      <div style="font-size:1.4rem">${esc(t.icon)}</div>
+      <h4>${esc(t.name)}</h4>
+      <div class="cost-range">${esc(t.install)}</div>
+      <div class="effectiveness" style="color:#94A3B8">${esc(t.effectiveness)}</div>
+      ${currentPPM > 120 && (t.id==='softener'||t.id==='saltfree') ? '<span class="best-badge">⭐ Recommended</span>' : ''}
+    </div>
+  `).join('');
+
+  const tbody = document.getElementById('compTableBody');
+  tbody.innerHTML = TREATMENTS.map(t => `
+    <tr>
+      <td style="text-align:left;font-size:.78rem">${esc(t.icon)} ${esc(t.name)}</td>
+      <td>${esc(t.install)}</td>
+      <td>${esc(t.monthly)}</td>
+      <td style="font-size:.72rem">${esc(t.effectiveness)}</td>
+      <td>${t.cfc === 'N/A' ? '—' : '<span style="color:#22C55E">Required</span>'}</td>
+    </tr>
+  `).join('');
+}
+
+function selectTreatment(idx) {
+  document.querySelectorAll('.treatment-card').forEach((c,i) => c.classList.toggle('selected',i===idx));
+  const t = TREATMENTS[idx];
+  selectedTreatment = t;
+  const detail = document.getElementById('treatmentDetail');
+  detail.className = 'treatment-detail open';
+  detail.innerHTML = `
+    <h4 style="color:#00B4FF;margin-bottom:10px">${esc(t.icon)} ${esc(t.name)}</h4>
+    <div class="detail-row"><span class="detail-key">Installation Cost (FL)</span><span class="detail-val">${esc(t.install)}</span></div>
+    <div class="detail-row"><span class="detail-key">Monthly Operating Cost</span><span class="detail-val">${esc(t.monthly)}</span></div>
+    <div class="detail-row"><span class="detail-key">Effectiveness</span><span class="detail-val">${esc(t.effectiveness)}</span></div>
+    <div class="detail-row"><span class="detail-key">Typical Lifespan</span><span class="detail-val">${esc(t.life)}</span></div>
+    <div class="detail-row"><span class="detail-key">FL CFC Permit Required</span><span class="detail-val">${esc(t.cfc)}</span></div>
+    <div class="pros-cons" style="margin-top:10px">
+      <h5 style="color:#22C55E">Pros:</h5>
+      <ul>${t.pros.map(p=>'<li>'+esc(p)+'</li>').join('')}</ul>
+    </div>
+    <div class="pros-cons cons" style="margin-top:8px">
+      <h5 style="color:#EF4444">Cons:</h5>
+      <ul>${t.cons.map(c=>'<li>'+esc(c)+'</li>').join('')}</ul>
+    </div>
+    <div style="margin-top:10px;font-size:.8rem;color:#F4B942">💡 ${esc(t.bestLabel)}</div>
+  `;
+  const rec = document.getElementById('treatmentRec');
+  if(currentPPM > 180 && t.id !== 'softener') {
+    rec.style.display = 'block';
+    rec.className = 'alert-box alert-orange';
+    rec.innerHTML = '⚠️ At your hardness level ('+currentPPM+' ppm), a salt-based water softener is the most effective solution. '+esc(t.name)+' may not provide sufficient protection.';
+  } else if(t.id === 'softener' && currentPPM > 120) {
+    rec.style.display = 'block';
+    rec.className = 'alert-box alert-green';
+    rec.innerHTML = '✅ Great choice for your hardness level ('+currentPPM+' ppm). A salt-based softener will eliminate scale, protect your plumbing, and extend appliance life significantly.';
+  } else {
+    rec.style.display = 'none';
+  }
+}
+
+const HOME_MULT = {condo:0.5, small:1.0, large:1.7, commercial:3.5};
+const TREAT_COSTS = {
+  none:{install:0,monthly:0,effectPct:0},
+  softener:{install:1850,monthly:18,effectPct:0.90},
+  saltfree:{install:1300,monthly:0,effectPct:0.55},
+  ro:{install:575,monthly:10,effectPct:0.10},
+  whole_ro:{install:10000,monthly:100,effectPct:0.95}
+};
+
+function calcProjection() {
+  const ppm = currentPPM || parseInt(document.getElementById('hardnessSlider').value) || 150;
+  const homeKey = document.getElementById('homeSize').value;
+  const treatKey = document.getElementById('treatmentChoice').value;
+  const homeMult = HOME_MULT[homeKey] || 1;
+  const treat = TREAT_COSTS[treatKey];
+  const baseDamagePerYear = (ppm / 250) * 1800 * homeMult;
+  const treatDamagePerYear = baseDamagePerYear * (1 - treat.effectPct);
+  const treatAnnualOp = treat.monthly * 12;
+  let cumNoTreat = 0, cumTreat = treat.install;
+  let breakEvenYear = null;
+  const tbody = document.getElementById('projTableBody');
+  let rows = '';
+  for(let yr=1;yr<=10;yr++) {
+    cumNoTreat += baseDamagePerYear;
+    cumTreat += treatDamagePerYear + treatAnnualOp;
+    const savings = Math.round(cumNoTreat - cumTreat);
+    const isBreak = savings > 0 && !breakEvenYear;
+    if(isBreak) breakEvenYear = yr;
+    const rowClass = isBreak ? 'class="break-row"' : '';
+    rows += `<tr ${rowClass}>
+      <td>${yr}${isBreak?' 🎯':''}</td>
+      <td>$${Math.round(cumNoTreat).toLocaleString()}</td>
+      <td>$${Math.round(cumTreat).toLocaleString()}</td>
+      <td class="${savings>0?'savings-cell':''}">${savings>0?'+':''}$${savings.toLocaleString()}</td>
+    </tr>`;
+  }
+  const finalSavings = Math.round(cumNoTreat - cumTreat);
+  document.getElementById('projTableBody').innerHTML = rows;
+  document.getElementById('projSavingsTotal').textContent = (finalSavings>0?'+':'')+'$'+finalSavings.toLocaleString();
+  document.getElementById('projSavingsTotal').style.color = finalSavings > 0 ? '#22C55E' : '#EF4444';
+  document.getElementById('projBreakeven').textContent = breakEvenYear
+    ? `💡 Your investment breaks even in year ${breakEvenYear}`
+    : treatKey === 'none' ? 'Select a treatment option to see savings potential'
+    : `Treatment investment pays off beyond the 10-year window with continued appliance savings`;
+  document.getElementById('projResults').style.display='block';
+  document.getElementById('projTable').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function submitLead() {
+  const name = document.getElementById('leadName').value.trim();
+  if(!name) { alert('Please enter your name.'); return; }
+  const toast = document.getElementById('toast');
+  toast.style.display='block';
+  setTimeout(()=>toast.style.display='none',3500);
+}
+
+function init() {
+  buildApplianceList();
+  buildTreatmentGrid();
+}
+
+init();
+</script>
+
+<!-- EXPANSION: FAQ + Testing Guide + DIY vs Pro + Maintenance Calculator -->
+<style>
+.hw-faq-card{background:#141929;border:1px solid #2d3a55;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.hw-faq-q{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;font-size:.86rem;font-weight:600;color:#E2E8F0;user-select:none}
+.hw-faq-q .hw-faq-arrow{color:#94A3B8;font-size:.8rem;transition:transform .2s}
+.hw-faq-q.open .hw-faq-arrow{transform:rotate(180deg)}
+.hw-faq-a{display:none;padding:0 14px 12px;font-size:.8rem;color:#94A3B8;line-height:1.6;border-top:1px solid #1e2a45}
+.hw-faq-a.open{display:block}
+.test-step{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1e2a45;font-size:.8rem}
+.test-step:last-child{border-bottom:none}
+.test-num{width:24px;height:24px;border-radius:50%;background:#00B4FF;color:#0A0E1A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0}
+.maint-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1e2a45;font-size:.8rem}
+.maint-row:last-child{border-bottom:none}
+.maint-freq{background:#0F1629;border:1px solid #2d3a55;border-radius:4px;padding:2px 8px;font-size:.72rem;color:#F4B942;font-weight:600}
+.comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.comp-card{background:#141929;border:1px solid #2d3a55;border-radius:8px;padding:12px}
+.comp-card h5{font-size:.82rem;margin-bottom:8px;text-align:center}
+.comp-pro{border-color:#22C55E}
+.comp-pro h5{color:#22C55E}
+.comp-con{border-color:#EF4444}
+.comp-con h5{color:#EF4444}
+.comp-item{font-size:.75rem;padding:3px 0;color:#94A3B8}
+.comp-item::before{content:'• ';color:#E2E8F0}
+.county-tier-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px}
+.county-chip-hw{background:#141929;border:1px solid #2d3a55;border-radius:6px;padding:6px 8px;font-size:.75rem}
+.county-chip-hw .county-name-hw{color:#E2E8F0;font-weight:600}
+.county-chip-hw .county-ppm-hw{color:#F4B942;float:right;font-weight:700}
+</style>
+
+<script>
+const HW_FAQS = [
+  {q:'What is considered "hard water" in Florida?',a:'Water hardness is measured in milligrams per liter (mg/L) or parts per million (ppm) of calcium carbonate. The Water Quality Association classifies: 0–60 ppm as soft, 61–120 ppm as moderately hard, 121–180 ppm as hard, and above 180 ppm as very hard. Most of South and Central Florida falls in the hard-to-very-hard range (150–375 ppm). The Florida average is approximately 170 ppm, significantly harder than the national average of about 100 ppm.'},
+  {q:'Why is Florida water so hard?',a:'Florida sits atop the Floridan Aquifer, one of the world's most productive limestone aquifer systems. As rainwater percolates through limestone (calcium carbonate) rock, it dissolves minerals and carries them into the water supply. South Florida (Lee, Collier, Hendry, Glades counties) has extremely hard water from deep aquifer sources. Central Florida's karst terrain contributes moderate to hard water. Only far North Florida — drawing from sandier formations — has naturally soft water.'},
+  {q:'Does hard water cause health problems?',a:'No. Hard water is not a health hazard — calcium and magnesium are essential minerals your body needs. The World Health Organization states hard water has no adverse health effects and may actually provide some cardiovascular benefit. The problems with hard water are entirely related to plumbing, appliances, and appearance: scale deposits in pipes and equipment, reduced appliance life, soap scum, and spotting on dishes and fixtures. If you're concerned about water quality, test for contaminants like arsenic, nitrates, or lead separately from hardness.'},
+  {q:'How can I tell if I have hard water without a test kit?',a:'Look for these signs: white or yellow deposits around faucets, showerheads, and drain openings (limescale); water heater running louder than usual or taking longer to heat; soap and shampoo not lathering well; glasses and dishes spotty after dishwashing; laundry feeling stiff or looking dull; shortened lifespan of coffee makers and kettles. In Florida, if you're in Lee, Collier, Sarasota, Manatee, Polk, or Orange County, assume you have hard water and verify with a test.'},
+  {q:'How do I test my water hardness?',a:'Several options: (1) Test strips — cheap ($10-15 for 50 strips) and fast; dip in water and compare color to chart; accuracy ±50 ppm. (2) Titration test kit — more accurate than strips; drops added to sample until color changes; accuracy ±25 ppm. (3) Professional water test — lab analysis $50-100; tests hardness plus 20+ other parameters including pH, TDS, iron, manganese. (4) Call your water utility — most FL utilities publish annual Consumer Confidence Reports with hardness data by zone. (5) Contact us — we offer free water testing with plumbing service visits.'},
+  {q:'What is the difference between water softeners and salt-free conditioners?',a:'A water softener uses ion-exchange resin and sodium chloride (salt) to physically remove calcium and magnesium ions, replacing them with sodium. The water is chemically "softened" — scale will not form. Salt-free conditioners (also called TAC or template-assisted crystallization systems) change the form of minerals so they don't stick to surfaces, but don't remove them. Softened water feels slippery and requires ongoing salt purchases ($20-50/month). Salt-free systems need no salt but are 55-60% effective vs 90%+ for softeners. Reverse osmosis is most effective (95%+) but treats drinking water only, not whole-house.'},
+  {q:'What does a water softener cost in Florida?',a:'A residential water softener in Florida typically costs $1,200-2,500 installed for a standard ion-exchange system. Higher-capacity systems for large homes or very hard water (350+ ppm) run $2,000-4,000. Annual operating costs include salt ($200-600/year depending on water hardness and usage), water for backwash ($50-100/year extra on water bill), and periodic resin cleaning/replacement (every 10-15 years, ~$300-500). Salt-free conditioners cost $800-1,800 installed with minimal ongoing costs. Whole-house reverse osmosis systems run $5,000-15,000+ installed.'},
+  {q:'How much scale buildup can I expect in my pipes?',a:'Scale buildup rate depends on hardness, pH, and temperature. At 300 ppm hardness (typical of Lee/Collier County), scale can accumulate at 1/8 inch per year in hot water pipes. In a water heater, scale insulates the heating element — at 1/2 inch thickness, efficiency drops about 20%. At 1 inch, a tank water heater uses 55% more energy. In tankless heaters, severe scale can completely block heat exchangers within 3-5 years without treatment. In dishwashers, scale on heating elements causes element failure and poor wash performance within 5-8 years in hard water areas.'},
+  {q:'Will a water softener protect my plumbing from FL hard water?',a:'Yes — a properly sized water softener dramatically reduces scale formation and extends the life of water heaters, appliances, and fixtures. Studies show softened water can extend water heater life by 30-50% and reduce energy consumption by 20-30% in hard water areas. However, softened water is slightly corrosive to copper pipes (low Langelier Saturation Index) — this can cause pinhole leaks in older copper pipe systems. Some FL homeowners use softeners set to moderate hardness (50-75 ppm) rather than fully softened water to balance scale prevention with corrosion risk.'},
+  {q:'How does hard water affect my electric vs gas water heater?',a:'Hard water impacts both, but differently. Electric water heaters: heating elements in direct contact with water are very susceptible — scale encrusts the element causing overheating and early failure. Elements typically last 3-5 years in 300+ ppm water vs 10+ years in soft water. Tank corrosion also accelerates with mineral deposits on the anode rod. Gas water heaters: scale builds on the tank floor, reducing efficiency and causing premature failure. Tankless gas heaters are most vulnerable — scale blocks the heat exchanger, which is costly to replace ($500-1,500). Annual descaling is recommended in FL hard water areas for all tankless units.'},
+  {q:'Is there a way to remove scale that's already built up?',a:'Yes. For showerheads and faucet aerators: soak in white vinegar overnight. For coffee makers: run a cycle with equal parts vinegar and water, then two plain water cycles. For dishwashers: run empty with a cup of citric acid in the bottom rack. For water heaters: professional flushing removes sediment but not embedded scale in the tank — descaling solution (acid flush) removes moderate scale buildup. For tankless units: professional descaling service uses diluted white vinegar or citric acid circulated through the heat exchanger. For pipes: scale removal is generally not practical — prevention is far better than treatment.'},
+  {q:'Does hard water void appliance warranties in Florida?',a:'Potentially yes. Many major appliance manufacturers include warranty language stating that "water quality damage" or "mineral scale damage" is not covered. Check your appliance warranty — if it excludes scale/mineral damage and you're in a hard water area, you may have warranty exposure. Some manufacturers (like certain tankless water heater brands) explicitly recommend annual descaling service and may deny warranty claims for scale damage if maintenance wasn't performed. Installing water treatment may actually protect your warranty by demonstrating you took steps to prevent mineral damage.'}
+];
+
+const MAINTENANCE_SCHEDULE = [
+  {task:'Water softener salt check',freq:'Monthly',notes:'Check salt level; add if below 1/4 full; break up salt bridges'},
+  {task:'Water softener regeneration setting',freq:'Monthly',notes:'Verify regeneration is occurring; adjust frequency for seasonal usage changes'},
+  {task:'Faucet aerators — clean scale',freq:'Every 3 months',notes:'Remove and soak in vinegar; replace if flow reduced >50%'},
+  {task:'Showerhead descale',freq:'Every 3 months',notes:'Soak in vinegar bag tied around head for 2 hours'},
+  {task:'Dishwasher — citric acid treatment',freq:'Every 3 months',notes:'Run empty cycle with citric acid or commercial descaler'},
+  {task:'Coffee maker descale',freq:'Every 3 months',notes:'Run vinegar solution cycle per manufacturer instructions'},
+  {task:'Tankless water heater flush',freq:'Annually (semi-annually if >250 ppm)',notes:'Professional descaling service; $100-250; extends life significantly'},
+  {task:'Tank water heater anode rod check',freq:'Every 2 years',notes:'Replace anode if >75% depleted; extends tank life 5-10 years'},
+  {task:'Water softener resin bed check',freq:'Every 2–3 years',notes:'Test softening efficiency; add resin cleaner; resin lasts 10-15 years'},
+  {task:'Whole-home water test',freq:'Every 3 years',notes:'Lab test for hardness, pH, iron, manganese, TDS; calibrate treatment to current levels'},
+  {task:'Reverse osmosis membrane replacement',freq:'Every 2–3 years',notes:'Performance drops with clogged membrane; pre-filters annually'},
+  {task:'Salt-free conditioner media check',freq:'Every 3–5 years',notes:'Replace TAC media when effectiveness drops below 50%'}
+];
+
+const FLORIDA_HARDNESS_TIERS = [
+  {label:'Extreme Hard (300+ ppm)',color:'#EF4444',counties:['Collier (375)','Lee (310)','Hendry (295)','Glades (290)','Sarasota (285)','Charlotte (270)','Manatee (265)']},
+  {label:'Very Hard (200–299 ppm)',color:'#F97316',counties:['Polk (240)','Hardee (235)','DeSoto (230)','Highlands (220)','Okeechobee (215)','Osceola (195)','Orange (185)','Hillsborough (180)']},
+  {label:'Hard (120–199 ppm)',color:'#F4B942',counties:['Brevard (175)','Indian River (165)','Citrus (160)','Hernando (155)','Pasco (145)','Seminole (140)','Lake (135)','Pinellas (130)']},
+  {label:'Moderately Hard (61–119 ppm)',color:'#22C55E',counties:['Volusia (110)','Flagler (100)','Marion (90)','Putnam (85)','Alachua (75)','Clay (70)','Duval (65)']},
+  {label:'Soft (≤60 ppm)',color:'#00B4FF',counties:['Leon (45)','Wakulla (40)','Gadsden (35)','Jefferson (32)','Madison (28)','Taylor (25)','Franklin (20)','Liberty (18)']}
+];
+
+function buildHWFAQ() {
+  const el = document.getElementById('hwFaqSection');
+  if(!el) return;
+  el.innerHTML = HW_FAQS.map((faq,i) => `
+    <div class="hw-faq-card">
+      <div class="hw-faq-q" id="hwfq_${i}" onclick="toggleHWFAQ(${i})">
+        <span>${esc(faq.q)}</span>
+        <span class="hw-faq-arrow">▼</span>
+      </div>
+      <div class="hw-faq-a" id="hwfa_${i}">${esc(faq.a)}</div>
+    </div>
+  `).join('');
+}
+
+function toggleHWFAQ(i) {
+  const q = document.getElementById('hwfq_'+i);
+  const a = document.getElementById('hwfa_'+i);
+  const isOpen = a.classList.contains('open');
+  q.classList.toggle('open',!isOpen);
+  a.classList.toggle('open',!isOpen);
+}
+
+function buildMaintenanceSchedule() {
+  const el = document.getElementById('hwMaintSection');
+  if(!el) return;
+  let html = '<div class="result-card">';
+  MAINTENANCE_SCHEDULE.forEach(m => {
+    html += `<div class="maint-row">
+      <div>
+        <div style="font-weight:600;color:#E2E8F0;margin-bottom:2px">${esc(m.task)}</div>
+        <div style="font-size:.75rem;color:#94A3B8">${esc(m.notes)}</div>
+      </div>
+      <span class="maint-freq">${esc(m.freq)}</span>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function buildHardnessTiers() {
+  const el = document.getElementById('hwTierSection');
+  if(!el) return;
+  let html = '';
+  FLORIDA_HARDNESS_TIERS.forEach(tier => {
+    html += `<div style="margin-bottom:12px">
+      <div style="font-size:.82rem;font-weight:700;color:${esc(tier.color)};margin-bottom:6px">${esc(tier.label)}</div>
+      <div class="county-tier-grid">
+        ${tier.counties.map(c => `
+          <div class="county-chip-hw">
+            <span class="county-name-hw">${esc(c.split(' (')[0])}</span>
+            <span class="county-ppm-hw">${esc(c.match(/\(([^)]+)\)/)?.[1] || '')} ppm</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+// After DOM ready, inject extra content sections
+document.addEventListener('DOMContentLoaded', function() {
+  const tab0 = document.getElementById('tab0') || document.querySelector('.panel');
+  const allPanels = document.querySelectorAll('.panel');
+  
+  // Tab 1 (Appliance Damage) = index 1, Tab 2 (Treatment) = index 2, Tab 3 (Projection) = index 3
+  // Add county hardness tiers to Tab 0 (County Finder)
+  if(allPanels[0]) {
+    const tierDiv = document.createElement('div');
+    tierDiv.className = 'card';
+    tierDiv.innerHTML = '<h3>🗺️ Florida County Hardness Quick Reference</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:10px">All 67 FL counties grouped by hardness tier. Values in ppm (parts per million) calcium carbonate.</p><div id="hwTierSection"></div>';
+    allPanels[0].appendChild(tierDiv);
+    buildHardnessTiers();
+  }
+  
+  // Add testing guide to Tab 1 (Appliance)
+  if(allPanels[1]) {
+    const testDiv = document.createElement('div');
+    testDiv.className = 'card';
+    testDiv.innerHTML = `<h3>🧪 How to Test Your Water Hardness</h3>
+      <div id="hwTestSection">
+        <div style="font-size:.8rem;color:#94A3B8;margin-bottom:10px">Testing your water takes 5 minutes and costs as little as $10. Know your exact hardness to properly size treatment equipment.</div>
+        <div class="result-card">
+          <div class="test-step"><div class="test-num">1</div><div><strong style="color:#E2E8F0">Buy test strips or a kit</strong><br>Hardware stores carry quick-test strips ($10-15/50 strips). For accuracy, use a titration kit or call your utility.</div></div>
+          <div class="test-step"><div class="test-num">2</div><div><strong style="color:#E2E8F0">Sample cold tap water</strong><br>Let the tap run 30 seconds first. Fill a clean glass. Never test hot water — heat changes mineral concentration.</div></div>
+          <div class="test-step"><div class="test-num">3</div><div><strong style="color:#E2E8F0">Follow kit instructions</strong><br>Dip strip for 1-2 seconds; compare color to chart. Or add reagent drops and count until color change.</div></div>
+          <div class="test-step"><div class="test-num">4</div><div><strong style="color:#E2E8F0">Record your result in ppm</strong><br>Note date and location. Hardness can vary by neighborhood — especially if you're near a treatment boundary.</div></div>
+          <div class="test-step"><div class="test-num">5</div><div><strong style="color:#E2E8F0">Retest seasonally</strong><br>FL water hardness can shift 20-40 ppm between wet/dry season as different aquifer zones are used. Summer = typically softer.</div></div>
+        </div>
+        <div class="comparison-grid">
+          <div class="comp-card comp-pro">
+            <h5>Professional Water Test ✅</h5>
+            <div class="comp-item">Lab accuracy ±5 ppm</div>
+            <div class="comp-item">Tests 20+ parameters</div>
+            <div class="comp-item">Tests pH, iron, TDS</div>
+            <div class="comp-item">Written report provided</div>
+            <div class="comp-item">$50–$100 cost</div>
+          </div>
+          <div class="comp-card comp-con">
+            <h5>DIY Test Strips ⚠️</h5>
+            <div class="comp-item">Accuracy ±50 ppm</div>
+            <div class="comp-item">Tests hardness only</div>
+            <div class="comp-item">Results in 60 seconds</div>
+            <div class="comp-item">Good for monitoring</div>
+            <div class="comp-item">$10–$15 for 50 strips</div>
+          </div>
+        </div>
+        <div class="alert-blue" style="margin-top:10px">💡 <strong>Free testing:</strong> We offer free water hardness testing with any plumbing service call. Call (561) 555-PIPE to schedule.</div>
+      </div>`;
+    allPanels[1].appendChild(testDiv);
+  }
+  
+  // Add FAQ to Tab 2 (Treatment)
+  if(allPanels[2]) {
+    const faqDiv = document.createElement('div');
+    faqDiv.className = 'card';
+    faqDiv.innerHTML = '<h3>❓ Hard Water FAQ</h3><div id="hwFaqSection"></div>';
+    allPanels[2].appendChild(faqDiv);
+    buildHWFAQ();
+  }
+  
+  // Add maintenance schedule to Tab 3 (Projection)
+  if(allPanels[3]) {
+    const maintDiv = document.createElement('div');
+    maintDiv.className = 'card';
+    maintDiv.innerHTML = '<h3>📅 Water Treatment Maintenance Schedule</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:10px">Keep your water treatment system effective with regular maintenance. Neglected systems can lose 40–60% of their effectiveness within 2 years.</p><div id="hwMaintSection"></div>';
+    allPanels[3].appendChild(maintDiv);
+    buildMaintenanceSchedule();
+  }
+});
+</script>
+
+
+<script>
+// Additional FL water quality data and DIY prevention guide
+const WATER_QUALITY_BY_REGION = [
+  {region:'Southwest FL (Lee/Collier/Charlotte)',hardness:'270–375 ppm',ph:'7.4–7.8',iron:'0.1–0.5 mg/L',tds:'450–650 mg/L',verdict:'Extreme treatment needed',color:'#EF4444'},
+  {region:'Central FL (Polk/Highlands/Hardee)',hardness:'220–250 ppm',ph:'7.2–7.6',iron:'0.0–0.3 mg/L',tds:'350–520 mg/L',verdict:'Treatment strongly recommended',color:'#F97316'},
+  {region:'Tampa Bay (Hillsborough/Pinellas)',hardness:'150–200 ppm',ph:'7.0–7.4',iron:'0.0–0.2 mg/L',tds:'250–400 mg/L',verdict:'Treatment beneficial',color:'#F4B942'},
+  {region:'Orlando Metro (Orange/Seminole/Osceola)',hardness:'170–210 ppm',ph:'7.1–7.5',iron:'0.0–0.3 mg/L',tds:'280–450 mg/L',verdict:'Treatment recommended',color:'#F97316'},
+  {region:'Space Coast (Brevard/Indian River)',hardness:'130–180 ppm',ph:'6.9–7.3',iron:'0.0–0.2 mg/L',tds:'200–350 mg/L',verdict:'Consider treatment',color:'#F4B942'},
+  {region:'North FL (Gainesville/Tallahassee)',hardness:'40–90 ppm',ph:'6.5–7.0',iron:'0.1–0.8 mg/L',tds:'80–180 mg/L',verdict:'Soft water; check iron levels',color:'#22C55E'},
+  {region:'South FL (Miami-Dade/Broward/PBC)',hardness:'130–200 ppm',ph:'7.2–7.6',iron:'0.0–0.1 mg/L',tds:'200–380 mg/L',verdict:'Treatment beneficial',color:'#F4B942'}
+];
+
+const DIY_PREVENTION = [
+  {action:'Install aerator screens',cost:'$3–12 per faucet',difficulty:'Easy',benefit:'Catches mineral particles; extend faucet life 2-3x; replace annually in hard water areas'},
+  {action:'Showerhead filter',cost:'$25–60',difficulty:'Easy',benefit:'Reduces scale on showerhead; some filter chlorine too; cartridge every 6 months'},
+  {action:'Water heater flush annually',cost:'$0 DIY or $75-150 pro',difficulty:'Medium',benefit:'Removes sediment before it hardens; extends tank life 3-5 years; improves efficiency'},
+  {action:'Tankless descale annually',cost:'$100-250 pro',difficulty:'Requires pro',benefit:'Critical in FL hard water — skip this and replace the unit in 4-6 years instead of 15-20'},
+  {action:'Vinegar soak for fixtures',cost:'$3-5 per treatment',difficulty:'Easy',benefit:'Dissolves light scale; monthly on faucets/showerheads prevents buildup'},
+  {action:'Dishwasher rinse aid',cost:'$5-8 per month',difficulty:'Easy',benefit:'Prevents spot deposits on dishes; also protects interior of dishwasher from scale'},
+  {action:'Washing machine drum clean',cost:'$10-15 every 3 months',difficulty:'Easy',benefit:'Removes mineral and detergent buildup; keeps seals from cracking prematurely'},
+  {action:'RO filter for drinking/cooking',cost:'$350-800 installed',difficulty:'Requires pro',benefit:'Removes minerals at the tap; protects coffee maker, tea kettle, ice maker'},
+  {action:'Check anode rod (water heater)',cost:'$30-50 DIY rod',difficulty:'Medium',benefit:'Sacrificial anode prevents tank corrosion; especially important in mineral-rich FL water'},
+  {action:'Magnetic water conditioner',cost:'$50-200',difficulty:'Easy',benefit:'Claims to alter mineral crystal structure; mixed evidence but no maintenance; low risk option'}
+];
+
+function buildRegionalWaterQuality() {
+  const el = document.getElementById('hwRegionalSection');
+  if(!el) return;
+  let html = '';
+  WATER_QUALITY_BY_REGION.forEach(r => {
+    html += `<div style="background:#141929;border:1px solid #2d3a55;border-radius:8px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-weight:700;color:#E2E8F0;font-size:.84rem">${esc(r.region)}</span>
+        <span style="background:${esc(r.color)};color:#0A0E1A;border-radius:4px;padding:2px 8px;font-size:.7rem;font-weight:700">${esc(r.verdict)}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+        <div style="font-size:.75rem"><span style="color:#94A3B8">Hardness: </span><span style="color:#F4B942;font-weight:600">${esc(r.hardness)}</span></div>
+        <div style="font-size:.75rem"><span style="color:#94A3B8">pH: </span><span style="color:#E2E8F0">${esc(r.ph)}</span></div>
+        <div style="font-size:.75rem"><span style="color:#94A3B8">Iron: </span><span style="color:#E2E8F0">${esc(r.iron)}</span></div>
+        <div style="font-size:.75rem"><span style="color:#94A3B8">TDS: </span><span style="color:#E2E8F0">${esc(r.tds)}</span></div>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function buildDIYPrevention() {
+  const el = document.getElementById('hwDIYSection');
+  if(!el) return;
+  let html = '<div class="result-card">';
+  DIY_PREVENTION.forEach(d => {
+    html += `<div style="padding:8px 0;border-bottom:1px solid #1e2a45">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div style="font-weight:600;color:#E2E8F0;font-size:.82rem">${esc(d.action)}</div>
+        <div style="background:#141929;border:1px solid #2d3a55;border-radius:4px;padding:2px 8px;font-size:.72rem;color:#22C55E;font-weight:600;white-space:nowrap">${esc(d.cost)}</div>
+      </div>
+      <div style="font-size:.75rem;color:#F4B942;margin:2px 0">Difficulty: ${esc(d.difficulty)}</div>
+      <div style="font-size:.75rem;color:#94A3B8">${esc(d.benefit)}</div>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    const panels = document.querySelectorAll('.panel');
+    
+    // Add regional water quality to tab 0 (County Finder)
+    if(panels[0]) {
+      const regDiv = document.createElement('div');
+      regDiv.className = 'card';
+      regDiv.innerHTML = '<h3>🌊 FL Regional Water Quality Summary</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:10px">Typical water quality parameters by FL region. Iron and TDS levels affect treatment selection alongside hardness.</p><div id="hwRegionalSection"></div>';
+      panels[0].appendChild(regDiv);
+      buildRegionalWaterQuality();
+    }
+    
+    // Add DIY prevention to tab 1 (Appliance Damage)
+    if(panels[1]) {
+      const diyDiv = document.createElement('div');
+      diyDiv.className = 'card';
+      diyDiv.innerHTML = '<h3>🔧 DIY Prevention Guide</h3><p style="font-size:.8rem;color:#94A3B8;margin-bottom:10px">Low-cost steps you can take right now to reduce hard water damage — even without a whole-home treatment system.</p><div id="hwDIYSection"></div>';
+      panels[1].appendChild(diyDiv);
+      buildDIYPrevention();
+    }
+  }, 100);
+});
+</script>
+
+</body>
+</html>

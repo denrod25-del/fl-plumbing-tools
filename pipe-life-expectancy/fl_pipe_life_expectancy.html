@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="description" content="Florida Plumbing System Age & Life Expectancy Planner — CFC Licensed Contractor. Free professional pipe assessment. (561) 555-PIPE">
+<title>FL Pipe Life Expectancy Planner — Tool #124 | (561) 555-PIPE</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+.app{max-width:480px;margin:0 auto;padding-bottom:80px}
+.hdr{background:linear-gradient(160deg,#0F1629 0%,#141929 100%);border-bottom:2px solid #00B4FF20;padding:14px 16px 12px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px #0A0E1A88}
+.hdr-eyebrow{font-size:10px;color:#94A3B8;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:3px}
+.hdr-title{font-size:19px;font-weight:800;color:#E2E8F0;letter-spacing:-0.3px}
+.hdr-sub{font-size:11px;color:#00B4FF;margin-top:2px;letter-spacing:0.3px}
+.hdr-pill{display:inline-flex;align-items:center;gap:5px;background:#00B4FF14;border:1px solid #00B4FF30;color:#00B4FF;font-size:10px;padding:3px 10px;border-radius:20px;margin-top:7px;letter-spacing:.8px;font-weight:600}
+.tabs-nav{display:flex;background:#0F1629;border-bottom:1px solid #1E2D4A;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs-nav::-webkit-scrollbar{display:none}
+.tb{flex:1;min-width:0;padding:11px 2px 10px;background:none;border:none;border-bottom:2px solid transparent;color:#94A3B8;font-size:9.5px;font-weight:700;letter-spacing:.4px;cursor:pointer;transition:all .2s;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:inherit}
+.tb.active{background:#00B4FF14;color:#00B4FF;border-bottom-color:#00B4FF}
+.tb:not(.active):hover{color:#CBD5E1}
+.panel{display:none;padding:14px 14px 4px}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2D4A;border-radius:12px;padding:15px;margin-bottom:11px}
+.card-alt{background:#141929;border:1px solid #1E2D4A;border-radius:10px;padding:13px;margin-bottom:10px}
+.card-title{font-size:13px;font-weight:700;color:#E2E8F0;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.card-title .icon{font-size:17px}
+label{display:block;font-size:10.5px;font-weight:700;color:#94A3B8;letter-spacing:.7px;text-transform:uppercase;margin-bottom:5px}
+select,input[type=text],input[type=email],input[type=tel]{width:100%;background:#141929;border:1.5px solid #1E2D4A;border-radius:8px;color:#E2E8F0;font-size:14px;padding:10px 12px;margin-bottom:12px;appearance:none;-webkit-appearance:none;outline:none;transition:border-color .2s;font-family:inherit}
+select:focus,input:focus{border-color:#00B4FF}
+select option{background:#141929}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+.sl-wrap{margin-bottom:16px}
+.sl-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.sl-big{font-size:26px;font-weight:900;color:#00B4FF;line-height:1}
+.sl-sm{font-size:10px;color:#94A3B8}
+input[type=range]{width:100%;height:5px;background:#1E2D4A;border-radius:3px;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;margin:0;padding:0}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:#00B4FF;cursor:pointer;border:3px solid #0A0E1A;box-shadow:0 0 10px #00B4FF55}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#00B4FF;cursor:pointer;border:3px solid #0A0E1A}
+.sl-ticks{display:flex;justify-content:space-between;margin-top:5px}
+.sl-tick{font-size:10px;color:#94A3B850}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;padding:12px 0 6px}
+.gauge-svg{width:220px;height:125px;overflow:visible}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.b-excellent{background:#22C55E18;color:#22C55E;border:1px solid #22C55E35}
+.b-good{background:#00B4FF18;color:#00B4FF;border:1px solid #00B4FF35}
+.b-fair{background:#F4B94218;color:#F4B942;border:1px solid #F4B94235}
+.b-poor{background:#F9731618;color:#F97316;border:1px solid #F9731635}
+.b-critical{background:#EF444418;color:#EF4444;border:1px solid #EF444435}
+.b-urgent{background:#EF444418;color:#EF4444;border:1px solid #EF444435}
+.b-soon{background:#F9731618;color:#F97316;border:1px solid #F9731635}
+.b-monitor{background:#F4B94218;color:#F4B942;border:1px solid #F4B94235}
+.b-good2{background:#22C55E18;color:#22C55E;border:1px solid #22C55E35}
+.b-blue{background:#00B4FF18;color:#00B4FF;border:1px solid #00B4FF35}
+.alert{border-radius:9px;padding:10px 12px;margin-bottom:9px;font-size:12px;line-height:1.55;display:flex;gap:9px;align-items:flex-start}
+.a-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.a-red{background:#EF444410;border:1px solid #EF444440;color:#EF4444}
+.a-gold{background:#F4B94210;border:1px solid #F4B94240;color:#F4B942}
+.a-blue{background:#00B4FF10;border:1px solid #00B4FF40;color:#00B4FF}
+.a-green{background:#22C55E10;border:1px solid #22C55E40;color:#22C55E}
+.a-orange{background:#F9731610;border:1px solid #F9731640;color:#F97316}
+.alert strong{font-weight:800}
+.pb-wrap{margin:5px 0 9px}
+.pb-track{height:8px;background:#1E2D4A;border-radius:4px;overflow:hidden}
+.pb-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.pb-g{background:linear-gradient(90deg,#22C55E,#16A34A)}
+.pb-y{background:linear-gradient(90deg,#F4B942,#D97706)}
+.pb-o{background:linear-gradient(90deg,#F97316,#EA580C)}
+.pb-r{background:linear-gradient(90deg,#EF4444,#DC2626)}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
+.ic{background:#141929;border:1px solid #1E2D4A;border-radius:9px;padding:10px 11px}
+.ic-icon{font-size:18px;margin-bottom:3px}
+.ic-val{font-size:20px;font-weight:800;color:#E2E8F0;line-height:1.1}
+.ic-lbl{font-size:10px;color:#94A3B8;margin-top:2px}
+.sys-row{border:1px solid #1E2D4A;border-radius:10px;margin-bottom:8px;overflow:hidden}
+.sys-hdr{display:flex;align-items:center;padding:11px 12px;cursor:pointer;background:#141929;gap:8px;transition:background .15s;-webkit-tap-highlight-color:transparent}
+.sys-hdr:hover,.sys-hdr:active{background:#192338}
+.sys-icon{font-size:17px;flex-shrink:0}
+.sys-name{font-size:13px;font-weight:600;color:#E2E8F0;flex:1;min-width:0}
+.sys-pct{font-size:12px;font-weight:800;min-width:34px;text-align:right}
+.sys-chev{color:#94A3B8;font-size:12px;flex-shrink:0;transition:transform .2s;margin-left:4px}
+.sys-pb{padding:0 12px 10px;background:#141929}
+.sys-detail{display:none;padding:11px 12px 13px;background:#0F1629;font-size:12px;color:#94A3B8;line-height:1.55;border-top:1px solid #1E2D4A}
+.sys-detail.open{display:block}
+.sys-stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.stat{background:#141929;border-radius:7px;padding:7px 9px}
+.stat-l{font-size:10px;color:#94A3B8}
+.stat-v{font-size:13px;font-weight:700;color:#E2E8F0;margin-top:1px}
+.maint-title{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.8px;margin:10px 0 5px}
+.maint-item{font-size:11px;color:#94A3B8;padding:4px 0;border-bottom:1px solid #1E2D4A14;display:flex;gap:6px;line-height:1.4}
+.maint-item:last-child{border-bottom:none}
+.why-box{background:#0A0E1A;border-radius:7px;padding:9px 11px;margin-bottom:10px;font-size:12px;color:#94A3B8;line-height:1.6;border-left:3px solid #00B4FF44}
+.pri-item{background:#141929;border:1px solid #1E2D4A;border-radius:10px;padding:13px 13px 11px;margin-bottom:9px;position:relative}
+.pri-num{position:absolute;top:-9px;left:11px;font-size:10px;font-weight:900;width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.pri-n-urgent{background:#EF4444;color:#fff}
+.pri-n-soon{background:#F97316;color:#fff}
+.pri-n-monitor{background:#F4B942;color:#0A0E1A}
+.pri-n-good{background:#22C55E;color:#0A0E1A}
+.pri-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;padding-top:4px;gap:8px}
+.pri-name{font-size:14px;font-weight:700;color:#E2E8F0;flex:1}
+.pri-cost{font-size:12px;font-weight:700;color:#F4B942;white-space:nowrap}
+.pri-meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.mt{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600}
+.mt-diy{background:#22C55E18;color:#22C55E}
+.mt-nodiy{background:#EF444418;color:#EF4444}
+.mt-water{background:#00B4FF18;color:#00B4FF}
+.mt-health{background:#EF444418;color:#EF4444}
+.mt-fail{background:#F9731618;color:#F97316}
+.pri-score{font-size:11px;color:#94A3B888;margin-top:8px}
+.action-steps{margin-top:10px;padding-top:10px;border-top:1px solid #1E2D4A}
+.action-step{display:flex;gap:7px;align-items:flex-start;font-size:11px;color:#94A3B8;padding:3px 0;line-height:1.4}
+.action-num{background:#00B4FF;color:#0A0E1A;font-size:9px;font-weight:900;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.rt-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1E2D4A;font-size:12px}
+.rt-row:last-child{border-bottom:none}
+.rt-lbl{color:#94A3B8}
+.rt-val{font-weight:700}
+.rv-g{color:#22C55E}.rv-w{color:#F4B942}.rv-d{color:#EF4444}.rv-b{color:#00B4FF}.rv-o{color:#F97316}
+.dfr-btns{display:flex;gap:6px;margin-bottom:13px}
+.dfr-btn{flex:1;background:#141929;border:1.5px solid #1E2D4A;border-radius:8px;color:#94A3B8;font-size:11px;font-weight:700;padding:9px 4px;cursor:pointer;text-align:center;transition:all .15s;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.dfr-btn.active{background:#00B4FF18;border-color:#00B4FF;color:#00B4FF}
+.cost-res{background:linear-gradient(135deg,#141929,#0F1629);border:1px solid #F4B94228;border-radius:12px;padding:16px;margin-top:11px}
+.cost-hl{font-size:11px;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.cost-big{font-size:34px;font-weight:900;color:#F4B942;line-height:1;margin-bottom:4px}
+.cost-delta{font-size:13px;color:#F97316;font-weight:700}
+.cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.cost-cell{background:#0A0E1A;border-radius:8px;padding:10px;text-align:center}
+.cost-cell-lbl{font-size:10px;color:#94A3B8;margin-bottom:3px}
+.cost-cell-val{font-size:15px;font-weight:800}
+.cv-r{color:#EF4444}.cv-g{color:#F4B942}.cv-o{color:#F97316}.cv-b{color:#00B4FF}
+.rm{margin:9px 0}
+.rm-hdr{display:flex;justify-content:space-between;font-size:11px;color:#94A3B8;margin-bottom:4px}
+.rm-track{height:10px;background:#1E2D4A;border-radius:5px;overflow:hidden}
+.rm-fill{height:100%;border-radius:5px;transition:width .45s}
+.lead-form{background:linear-gradient(135deg,#0F1629,#141929);border:1px solid #F4B94228;border-radius:12px;padding:16px;margin-top:13px}
+.lf-title{font-size:15px;font-weight:800;color:#E2E8F0;margin-bottom:3px}
+.lf-sub{font-size:12px;color:#94A3B8;margin-bottom:13px;line-height:1.55}
+.btn-gold{width:100%;background:linear-gradient(135deg,#F4B942,#D97706);border:none;border-radius:9px;color:#0A0E1A;font-size:15px;font-weight:800;padding:14px;cursor:pointer;transition:opacity .2s;letter-spacing:.2px;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.btn-gold:hover,.btn-gold:active{opacity:.88}
+.btn-blue{width:100%;background:linear-gradient(135deg,#00B4FF,#007ACC);border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:700;padding:12px;cursor:pointer;transition:opacity .2s;margin-top:8px;font-family:inherit}
+.btn-blue:hover,.btn-blue:active{opacity:.88}
+.btn-ghost{width:100%;background:none;border:1.5px solid #1E2D4A;border-radius:9px;color:#94A3B8;font-size:13px;font-weight:600;padding:11px;cursor:pointer;margin-top:8px;transition:all .2s;font-family:inherit}
+.btn-ghost:hover{border-color:#00B4FF;color:#00B4FF}
+.mat-fact-title{font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.warn-sign{font-size:11px;color:#94A3B8;padding:4px 0;display:flex;gap:7px;line-height:1.45;border-bottom:1px solid #1E2D4A14}
+.warn-sign:last-child{border-bottom:none}
+.warn-sign:before{content:'⚠';font-size:10px;flex-shrink:0;margin-top:2px;color:#F4B942}
+.county-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+.county-table th{background:#0A0E1A;color:#94A3B8;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:6px 8px;text-align:left;border-bottom:1px solid #1E2D4A}
+.county-table td{padding:5px 8px;border-bottom:1px solid #1E2D4A18;color:#E2E8F0}
+.county-table tr:last-child td{border-bottom:none}
+.county-table tr:hover td{background:#0A0E1A40}
+.hw-tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px}
+.hw-high{background:#EF444418;color:#EF4444}
+.hw-med{background:#F4B94218;color:#F4B942}
+.hw-low{background:#22C55E18;color:#22C55E}
+.faq-item{margin-bottom:8px;background:#141929;border:1px solid #1E2D4A;border-radius:9px;overflow:hidden}
+.faq-q{padding:11px 13px;cursor:pointer;font-size:12px;font-weight:700;color:#E2E8F0;display:flex;justify-content:space-between;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
+.faq-q:hover{background:#192338}
+.faq-a{display:none;padding:0 13px 12px;font-size:12px;color:#94A3B8;line-height:1.6}
+.faq-a.open{display:block}
+.faq-sep{height:1px;background:#1E2D4A;margin:0 13px 10px}
+.check-item{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #1E2D4A14;font-size:12px;color:#E2E8F0;line-height:1.4}
+.check-item:last-child{border-bottom:none}
+.check-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+.meth-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E2D4A;font-size:12px}
+.meth-row:last-child{border-bottom:none;padding-bottom:0}
+.phone-cta{background:linear-gradient(135deg,#0F1629,#141929);border:1px solid #00B4FF28;border-radius:10px;padding:12px 15px;display:flex;align-items:center;justify-content:space-between;margin-top:10px;text-decoration:none;gap:10px}
+.pcta-lbl{font-size:10px;color:#94A3B8;margin-bottom:2px}
+.pcta-num{font-size:17px;font-weight:800;color:#00B4FF}
+.pcta-icon{font-size:24px;flex-shrink:0}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:linear-gradient(135deg,#F4B942,#D97706);color:#0A0E1A;font-size:14px;font-weight:800;padding:13px 22px;border-radius:50px;box-shadow:0 8px 32px #F4B94240;z-index:9999;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);white-space:nowrap;max-width:88vw;text-align:center;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0)}
+.dvd{height:1px;background:#1E2D4A;margin:13px 0}
+.sec-title{font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:9px}
+.dash-summ{background:#0F1629;border:1px solid #1E2D4A;border-radius:10px;padding:11px 14px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ds-label{font-size:11px;color:#94A3B8;margin-bottom:2px}
+.ds-val{font-size:14px;font-weight:700;color:#E2E8F0}
+.watermark{text-align:center;font-size:10px;color:#1E2D4A;padding:14px 0 4px;letter-spacing:1.5px}
+.fw7{font-weight:700}.fw8{font-weight:800}.fw9{font-weight:900}
+.fs10{font-size:10px}.fs11{font-size:11px}.fs12{font-size:12px}.fs13{font-size:13px}
+.lh15{line-height:1.5}.lh16{line-height:1.6}
+.mt4{margin-top:4px}.mt8{margin-top:8px}.mt10{margin-top:10px}.mt12{margin-top:12px}
+.mb4{margin-bottom:4px}.mb8{margin-bottom:8px}.mb10{margin-bottom:10px}.mb12{margin-bottom:12px}
+.tb2{color:#00B4FF}.tg{color:#F4B942}.trd{color:#EF4444}.tgn{color:#22C55E}.to{color:#F97316}.tm{color:#94A3B8}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr">
+  <div class="hdr-eyebrow">Florida Plumbing Experts &middot; CFC Licensed Contractor</div>
+  <div class="hdr-title">&#x1F527; Pipe Life Expectancy Planner</div>
+  <div class="hdr-sub">Tool #124 &mdash; Professional Home Plumbing Assessment</div>
+  <div class="hdr-pill">&#128222; (561) 555-PIPE &nbsp;&middot;&nbsp; Free Estimates &nbsp;&middot;&nbsp; Same-Week Service</div>
+</div>
+<div class="tabs-nav">
+  <button class="tb active" id="tb1" onclick="switchTab(1)">&#127968;&nbsp;Home Age</button>
+  <button class="tb" id="tb2" onclick="switchTab(2)">&#128202;&nbsp;Dashboard</button>
+  <button class="tb" id="tb3" onclick="switchTab(3)">&#9889;&nbsp;Priority</button>
+  <button class="tb" id="tb4" onclick="switchTab(4)">&#128176;&nbsp;Cost Calc</button>
+</div>
+<div class="panel active" id="p1">
+  <div class="card">
+    <div class="card-title"><span class="icon">&#127959;&#65039;</span> Home Details</div>
+    <div class="sl-wrap">
+      <label>Year Built</label>
+      <div class="sl-hdr"><span class="sl-sm">Older</span><span class="sl-big" id="yr-disp">1985</span><span class="sl-sm">Newer</span></div>
+      <input type="range" id="yr-sl" min="1900" max="2025" value="1985" oninput="onYr(this.value)">
+      <div class="sl-ticks"><span class="sl-tick">1900</span><span class="sl-tick">1925</span><span class="sl-tick">1950</span><span class="sl-tick">1975</span><span class="sl-tick">2000</span><span class="sl-tick">2025</span></div>
+    </div>
+    <label>Primary Pipe Material</label>
+    <select id="mat-sel" onchange="onInp()">
+      <option value="copper">&#x1F536; Copper &mdash; Most common, 1960s&ndash;2000</option>
+      <option value="galvanized">&#9881;&#65039; Galvanized Steel &mdash; Pre-1980 homes</option>
+      <option value="cpvc">&#x1F7E1; CPVC Plastic &mdash; 1975&ndash;2005</option>
+      <option value="pex">&#x1F534; PEX Tubing &mdash; 1990s to present</option>
+      <option value="cast_iron">&#9899; Cast Iron &mdash; Pre-1970 drain pipes</option>
+      <option value="polybutylene">&#9888;&#65039; Polybutylene &mdash; Gray plastic, 1978&ndash;1995</option>
+      <option value="lead">&#9760;&#65039; Lead Pipes &mdash; Pre-1940s</option>
+      <option value="unknown">&#10067; Unknown / Not Sure</option>
+    </select>
+    <label>Home Type</label>
+    <select id="ht-sel" onchange="onInp()">
+      <option value="slab">&#127968; Slab Foundation (most common in FL)</option>
+      <option value="crawl">&#127962;&#65039; Crawl Space Foundation</option>
+      <option value="two_story">&#127960;&#65039; Two-Story Home</option>
+      <option value="condo">&#127962;&#65039; Condo / High-Rise Unit</option>
+    </select>
+    <label>Florida Region</label>
+    <select id="reg-sel" onchange="onInp()">
+      <option value="south_fl">&#127796; South FL &mdash; Miami-Dade, Broward, Palm Beach, Collier, Lee</option>
+      <option value="central_fl">&#127905; Central FL &mdash; Orange, Polk, Hillsborough, Osceola, Seminole</option>
+      <option value="gulf_coast">&#127754; Gulf Coast &mdash; Sarasota, Charlotte, Manatee, Collier</option>
+      <option value="north_fl">&#127794; North FL &mdash; Duval, Alachua, Leon, Volusia, Clay</option>
+    </select>
+  </div>
+  <div class="card" id="res-card">
+    <div class="card-title"><span class="icon">&#128207;</span> Life Expectancy Assessment</div>
+    <div id="assess-out"></div>
+  </div>
+  <div class="card" id="mat-card">
+    <div class="card-title"><span class="icon">&#128214;</span> Material Facts &amp; Warning Signs</div>
+    <div id="mat-out"></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="icon">&#128167;</span> FL Hard Water County Reference</div>
+    <p class="fs12 tm lh15 mb10">Hard water (high dissolved calcium &amp; magnesium) significantly reduces pipe lifespan. Your selected region factors this into all estimates automatically.</p>
+    <table class="county-table">
+      <thead><tr><th>County</th><th>Region</th><th>Hardness Level</th><th>Pipe Impact</th></tr></thead>
+      <tbody>
+        <tr><td>Collier</td><td>South / Gulf</td><td><span class="hw-tag hw-high">Very Hard</span></td><td class="rv-d">&minus;15%</td></tr>
+        <tr><td>Lee</td><td>Gulf Coast</td><td><span class="hw-tag hw-high">Very Hard</span></td><td class="rv-d">&minus;15%</td></tr>
+        <tr><td>Polk</td><td>Central FL</td><td><span class="hw-tag hw-high">Hard</span></td><td class="rv-d">&minus;15%</td></tr>
+        <tr><td>Orange</td><td>Central FL</td><td><span class="hw-tag hw-high">Hard</span></td><td class="rv-d">&minus;15%</td></tr>
+        <tr><td>Hillsborough</td><td>Central FL</td><td><span class="hw-tag hw-high">Hard</span></td><td class="rv-d">&minus;15%</td></tr>
+        <tr><td>Sarasota</td><td>Gulf Coast</td><td><span class="hw-tag hw-med">Moderate</span></td><td class="rv-w">&minus;10%</td></tr>
+        <tr><td>Miami-Dade</td><td>South FL</td><td><span class="hw-tag hw-med">Moderate</span></td><td class="rv-w">&minus;10%</td></tr>
+        <tr><td>Palm Beach</td><td>South FL</td><td><span class="hw-tag hw-med">Moderate</span></td><td class="rv-w">&minus;10%</td></tr>
+        <tr><td>Broward</td><td>South FL</td><td><span class="hw-tag hw-med">Moderate</span></td><td class="rv-w">&minus;8%</td></tr>
+        <tr><td>Duval</td><td>North FL</td><td><span class="hw-tag hw-low">Softer</span></td><td class="rv-g">Minimal</td></tr>
+        <tr><td>Alachua</td><td>North FL</td><td><span class="hw-tag hw-low">Softer</span></td><td class="rv-g">Minimal</td></tr>
+        <tr><td>Volusia</td><td>North FL</td><td><span class="hw-tag hw-med">Moderate</span></td><td class="rv-w">&minus;8%</td></tr>
+        <tr><td>Leon</td><td>North FL</td><td><span class="hw-tag hw-low">Soft</span></td><td class="rv-g">Minimal</td></tr>
+        <tr><td>Manatee</td><td>Gulf Coast</td><td><span class="hw-tag hw-med">Moderate</span></td><td class="rv-w">&minus;10%</td></tr>
+        <tr><td>Charlotte</td><td>Gulf Coast</td><td><span class="hw-tag hw-high">Hard</span></td><td class="rv-d">&minus;12%</td></tr>
+      </tbody>
+    </table>
+    <p class="fs11 tm mt8">Source: FL Dept. of Environmental Protection water quality monitoring. Hard water defined as &gt;150 mg/L as CaCO&#8323;. Data from municipal water quality reports and FL DEP monitoring stations.</p>
+  </div>
+  <div class="card" style="border-color:#F4B94228;">
+    <div class="card-title"><span class="icon">&#128222;</span> Get Your Free Professional Inspection</div>
+    <p class="fs12 tm lh15 mb10">Our CFC-licensed Florida plumbers provide comprehensive pipe inspection, pressure testing, and camera diagnostics &mdash; completely free. We identify problems before they become emergencies. Most inspections completed same day.</p>
+    <input type="text" id="t1n" placeholder="Your full name">
+    <input type="tel" id="t1p" placeholder="Best phone number">
+    <button class="btn-gold" onclick="submitLead('t1')">&#x1F527; Schedule Free Inspection &rarr;</button>
+    <a href="tel:5615557473" class="phone-cta">
+      <div><div class="pcta-lbl">Or call us directly &mdash; available now</div><div class="pcta-num">(561) 555-PIPE</div></div>
+      <span class="pcta-icon">&#128241;</span>
+    </a>
+  </div>
+</div>
+<div class="panel" id="p2">
+  <div class="dash-summ">
+    <div><div class="ds-label">Assessment For</div><div class="ds-val" id="d2-summ">Update Tab 1 inputs</div></div>
+    <div id="d2-badge"></div>
+  </div>
+  <div class="sec-title">All Major Plumbing Systems &mdash; Tap Any Row to Expand</div>
+  <div id="sys-list"></div>
+  <div class="card" style="border-color:#00B4FF25;margin-top:4px;">
+    <div class="card-title"><span class="icon">&#128161;</span> Reading This Dashboard</div>
+    <p class="fs12 tm lh15">Progress bars show life <em>used</em> (not remaining). Green (0&ndash;60%) = healthy. Yellow (60&ndash;75%) = monitor. Orange (75&ndash;90%) = plan replacement. Red (90%+) = replacement due or overdue. Tap any system to see maintenance tips, costs, and why it matters.</p>
+    <div class="dvd"></div>
+    <p class="fs12 tm lh15">Estimates assume average maintenance and typical Florida conditions. A licensed CFC plumber with camera inspection can confirm actual condition. Call <strong class="tb2">(561) 555-PIPE</strong> for a free professional assessment.</p>
+    <div class="alert a-blue mt10" style="margin-bottom:0;">
+      <span class="a-icon">&#x1F52C;</span>
+      <div><strong>Did you know?</strong> Camera inspection of all drain lines costs $200&ndash;$350 and can identify problems invisible from the outside &mdash; saving thousands in emergency repairs later.</div>
+    </div>
+  </div>
+</div>
+<div class="panel" id="p3">
+  <div class="card" style="padding:12px 15px;margin-bottom:9px;">
+    <div class="card-title" style="margin-bottom:6px;"><span class="icon">&#9889;</span> Replacement Priority Matrix</div>
+    <p class="fs12 tm lh15">Systems ranked by urgency &times; risk score. <span class="trd fw7">URGENT</span> items require immediate professional attention. Each item includes recommended next steps tailored to your home profile.</p>
+  </div>
+  <div id="pri-list"></div>
+  <div class="card" style="border-color:#EF444428;margin-top:4px;">
+    <div class="card-title"><span class="icon">&#x1F6A8;</span> FL Plumbing Emergency Checklist</div>
+    <p class="fs12 tm lh15 mb10">If you experience a plumbing emergency, follow these steps before calling a plumber:</p>
+    <div class="check-item"><span class="check-icon">1&#65039;&#8419;</span><div><strong>Locate and close the main shutoff valve</strong> &mdash; near the water meter at the street or in a utility closet. Closing this stops all water flow into the home immediately.</div></div>
+    <div class="check-item"><span class="check-icon">2&#65039;&#8419;</span><div><strong>Turn off your water heater</strong> &mdash; switch to &ldquo;pilot&rdquo; or shut off gas/electricity. Hot water in a burst line can cause scalding and additional structural damage.</div></div>
+    <div class="check-item"><span class="check-icon">3&#65039;&#8419;</span><div><strong>Open a faucet to release pressure</strong> &mdash; this relieves remaining pressure in the lines and reduces further leakage while you assess the situation.</div></div>
+    <div class="check-item"><span class="check-icon">4&#65039;&#8419;</span><div><strong>Document the damage thoroughly</strong> &mdash; photograph and video everything before any cleanup for insurance purposes. Wide shots and close-ups of damage origin are most useful.</div></div>
+    <div class="check-item"><span class="check-icon">5&#65039;&#8419;</span><div><strong>Call your CFC licensed plumber</strong> &mdash; not a handyman. Florida requires CFC or CFC1 licensing for structural plumbing repairs. Call <strong class="tb2">(561) 555-PIPE</strong> for 24/7 emergency response.</div></div>
+    <div class="check-item"><span class="check-icon">6&#65039;&#8419;</span><div><strong>Call your insurance company</strong> &mdash; sudden and accidental water damage is typically covered. Gradual leaks from lack of maintenance may not be. Report within 24&ndash;48 hours.</div></div>
+    <div class="dvd"></div>
+    <button class="btn-gold" onclick="switchTab(4);callUrgent()">&#x1F6A8; Report Emergency &mdash; We Call in 15 Min &rarr;</button>
+  </div>
+  <div class="card" style="border-color:#1E2D4A;">
+    <div class="card-title"><span class="icon">&#x1F3C5;</span> Priority Score Methodology</div>
+    <p class="fs12 tm lh15 mb10">Score = (System Age &divide; Max Lifespan) &times; Risk Multiplier. Hard water adds 15% to all scores in affected FL regions. Polybutylene and lead always ranked #1 regardless of age.</p>
+    <div class="meth-row"><span class="rt-lbl">Lead pipe &mdash; health risk multiplier</span><span class="fw7 trd">&times;3.0</span></div>
+    <div class="meth-row"><span class="rt-lbl">Shutoff valve &mdash; failure consequence</span><span class="fw7 to">&times;2.2</span></div>
+    <div class="meth-row"><span class="rt-lbl">Supply pipes &mdash; water damage risk</span><span class="fw7 to">&times;2.0</span></div>
+    <div class="meth-row"><span class="rt-lbl">Water heater &mdash; flood consequence</span><span class="fw7 to">&times;2.0</span></div>
+    <div class="meth-row"><span class="rt-lbl">Drain pipes &mdash; sewage risk</span><span class="fw7 rv-w">&times;1.8</span></div>
+    <div class="meth-row"><span class="rt-lbl">Hose bibs &mdash; wall moisture risk</span><span class="fw7 rv-b">&times;1.2</span></div>
+    <div class="meth-row"><span class="rt-lbl">Hard water region bonus</span><span class="fw7 rv-w">&times;1.15</span></div>
+    <div class="meth-row"><span class="rt-lbl">Polybutylene override rank</span><span class="fw7 trd">Always #1</span></div>
+    <div class="meth-row" style="border-bottom:none;"><span class="rt-lbl">Lead pipe override rank</span><span class="fw7 trd">Always #1</span></div>
+    <div class="dvd"></div>
+    <p class="fs12 tm lh15">Priority scores are estimates only. A licensed CFC inspection with camera diagnostics provides definitive condition assessment. Call <a href="tel:5615557473" style="color:#00B4FF;font-weight:700;text-decoration:none;">(561) 555-PIPE</a> for a free professional assessment.</p>
+  </div>
+</div>
+<div class="panel" id="p4">
+  <div class="card">
+    <div class="card-title"><span class="icon">&#128176;</span> What Does Waiting Really Cost?</div>
+    <p class="fs12 tm lh15 mb10">Florida's hard water and humidity accelerate pipe deterioration <strong class="tg">8&ndash;15% per year</strong> beyond national averages. Every month of delay compounds your repair cost and water damage risk. See the real math below.</p>
+    <label>System to Replace</label>
+    <select id="dfr-sys" onchange="calcDeferral()">
+      <option value="supply">&#x1F535; Supply Pipes (Main Water Lines)</option>
+      <option value="drain">&#9899; Drain / Waste Pipes</option>
+      <option value="water_heater">&#x1F525; Water Heater</option>
+      <option value="toilets">&#x1F6BD; Toilets (Full Replacement)</option>
+      <option value="faucets">&#x1F6B0; Faucets &amp; Fixtures</option>
+      <option value="shutoffs">&#x1F529; Shutoff Valves</option>
+      <option value="hose_bibs">&#128167; Hose Bibs (Outdoor)</option>
+      <option value="disposal">&#9881;&#65039; Garbage Disposal</option>
+      <option value="softener">&#x1F4A0; Water Softener / Filter</option>
+    </select>
+    <label>Deferral Period</label>
+    <div class="dfr-btns">
+      <button class="dfr-btn" onclick="setDefer(0.5,this)">6 Months</button>
+      <button class="dfr-btn active" onclick="setDefer(1,this)">1 Year</button>
+      <button class="dfr-btn" onclick="setDefer(2,this)">2 Years</button>
+      <button class="dfr-btn" onclick="setDefer(5,this)">5 Years</button>
+    </div>
+    <div id="dfr-out"></div>
+  </div>
+  <div class="lead-form">
+    <div class="lf-title">&#x1F6D1; Stop the Clock on Rising Costs</div>
+    <div class="lf-sub">Get a no-obligation estimate from a CFC-licensed Florida plumber. Most repairs completed same week. We guarantee a callback within 2 hours &mdash; or your first hour of labor is free.</div>
+    <input type="text" id="t4n" placeholder="Your full name">
+    <input type="tel" id="t4p" placeholder="Best phone number">
+    <input type="email" id="t4e" placeholder="Email address (for written estimate)">
+    <select id="t4u">
+      <option value="">&#8212; How urgent is your situation? &#8212;</option>
+      <option value="emergency">&#x1F6A8; Emergency &mdash; active leak or water damage now</option>
+      <option value="urgent">&#9888;&#65039; Urgent &mdash; needs attention within 1 week</option>
+      <option value="soon">&#128197; Soon &mdash; planning within the next month</option>
+      <option value="planning">&#128172; Exploring &mdash; just want a free estimate</option>
+    </select>
+    <button class="btn-gold" onclick="submitLead('t4')">&#128222; Get My Free Estimate &mdash; We Call in 2 Hours &rarr;</button>
+    <button class="btn-blue" onclick="callNow()">&#128241; Call (561) 555-PIPE Right Now</button>
+    <button class="btn-ghost" onclick="switchTab(3)">&larr; See My Full Priority List First</button>
+  </div>
+  <div class="card mt10">
+    <div class="card-title"><span class="icon">&#10067;</span> Florida Plumbing FAQ</div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="togFaq('f1','fc1')">How do I know if I have hard water? <span class="sys-chev" id="f1">&#9660;</span></div>
+      <div class="faq-a" id="fc1"><div class="faq-sep"></div>Common signs of hard water include white or gray scale deposits around faucets and showerheads, soap that doesn&rsquo;t lather well, spots on dishes and glassware after washing, and a metallic or chalky taste in tap water. You can confirm with a $10 water hardness test kit from any hardware store, or ask us &mdash; we test for free during any inspection visit in the greater South Florida area. Water hardness above 150 mg/L as CaCO&#8323; significantly shortens pipe life in FL.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="togFaq('f2','fc2')">Is polybutylene pipe really that dangerous? <span class="sys-chev" id="f2">&#9660;</span></div>
+      <div class="faq-a" id="fc2"><div class="faq-sep"></div>Yes &mdash; seriously. Polybutylene (PB, gray plastic pipe used 1978&ndash;1995) was the subject of a $1 billion class-action settlement (Cox v. Shell Oil, 1995) because chlorine in municipal water causes micro-cracks that accumulate invisibly until the pipe fails &mdash; suddenly and completely. Some Florida insurance companies now deny claims on homes with PB pipe or charge significantly higher premiums. We strongly recommend immediate replacement regardless of visible condition or age.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="togFaq('f3','fc3')">What does a CFC license mean in Florida? <span class="sys-chev" id="f3">&#9660;</span></div>
+      <div class="faq-a" id="fc3"><div class="faq-sep"></div>CFC stands for Certified Plumbing Contractor in Florida. Florida Statute 489 requires a CFC or CFC1 license for all structural plumbing work including pipe replacement, water heater installation, and any work that opens walls or floors. Unlicensed plumbers cannot legally pull permits, and unpermitted work can cause insurance claim denials, difficulty selling your home, and code violations. Always verify your plumber&rsquo;s CFC license at myfloridalicense.com before hiring.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="togFaq('f4','fc4')">Does homeowner&rsquo;s insurance cover pipe replacement? <span class="sys-chev" id="f4">&#9660;</span></div>
+      <div class="faq-a" id="fc4"><div class="faq-sep"></div>Standard homeowner&rsquo;s policies cover sudden and accidental water damage &mdash; a pipe that bursts unexpectedly. They generally do NOT cover gradual leaks, corrosion, or wear-and-tear pipe replacement. However, the water damage caused by a burst pipe (drywall, flooring, contents) is typically covered after your deductible. The pipe replacement itself is usually your responsibility. Florida homeowners with older pipes should discuss a scheduled maintenance endorsement with their insurance agent.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="togFaq('f5','fc5')">How long does a whole-house repipe take? <span class="sys-chev" id="f5">&#9660;</span></div>
+      <div class="faq-a" id="fc5"><div class="faq-sep"></div>A typical Florida slab home repipe with PEX tubing takes 2&ndash;4 days from start to final inspection, including: Day 1 &mdash; pipe installation and rough-in; Day 2 &mdash; drywall patching and connection; Day 3 &mdash; city/county inspection and pressure test; Day 4 &mdash; texture, paint touch-up, fixture reconnection. Water is restored within 24 hours in most cases. We work around your household schedule and offer weekend scheduling for working families at no extra charge.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="togFaq('f6','fc6')">PEX vs. copper &mdash; which is better for Florida? <span class="sys-chev" id="f6">&#9660;</span></div>
+      <div class="faq-a" id="fc6"><div class="faq-sep"></div>For Florida specifically, PEX has significant advantages: it&rsquo;s completely immune to the pinhole corrosion that affects copper in hard water areas, it&rsquo;s significantly less expensive to install (fewer fittings, faster labor), and it&rsquo;s inherently flexible which matters in slab homes where ground movement is common. Copper remains excellent where water quality is good and is preferred by some buyers for its longevity track record. We recommend PEX-A (expansion type) for most Florida repipes due to superior connection reliability vs. PEX-B or CPVC.</div>
+    </div>
+  </div>
+  <div class="alert a-gold mt10" style="margin-bottom:6px;">
+    <span class="a-icon">&#x1F3C6;</span>
+    <div><strong>Why choose a CFC-licensed pro:</strong> Properly permitted repipes include city/county inspection, warranty on all work, and documentation that protects your home&rsquo;s resale value. Our CFC contractors handle all permits &mdash; included in quoted price. No surprises, no hidden fees.</div>
+  </div>
+  <div class="watermark">TOOL #124 &middot; FL PIPE LIFE EXPECTANCY PLANNER &middot; CFC LICENSED &middot; (561) 555-PIPE</div>
+</div>
+</div>
+<div id="toast">&#x1F3C6; We'll call you within 2 hours!</div>
+<script>
+'use strict';
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const MATS={
+copper:{name:'Copper',icon:'🔶',min:50,max:70,hwCut:.15,critical:false,health:false,first:false,
+history:'The gold standard of plumbing pipe from the 1960s through 2000. Required by Florida building code in most residential applications until PEX gained acceptance in the 2000s. Antimicrobial and highly durable under most conditions.',
+desc:'Most common supply pipe in FL homes built 1960-2000. Naturally antimicrobial and highly durable, but susceptible to pinhole leaks in high-mineral (hard water) environments common across South and Central Florida. Slab-embedded copper is especially vulnerable to slow leaks from outside soil chemistry.',
+urgency:'Replace within 3-5 years of reaching end-of-life. Consider proactive replacement if you see green staining, low pressure, or discolored water — these are early corrosion indicators that worsen over time.',
+warns:['Greenish or blue-green stains on sinks, tubs, and toilet bowls indicating copper corrosion','Sudden or gradual reduction in water pressure throughout the entire home','Metallic or slightly sour taste in tap water — affecting all fixtures, not just one','Small unexplained damp spots on ceilings or walls with no obvious source (slab leak indicator)','Visible green verdigris or pitting corrosion on exposed pipe joints and fittings','Water bills increasing without a change in usage — suggests a slow hidden slab leak']},
+galvanized:{name:'Galvanized Steel',icon:'⚙️',min:20,max:50,hwCut:.15,critical:false,health:false,first:false,
+history:'Standard residential pipe material from approximately 1880-1960. The zinc coating was intended to prevent rust, but Florida water chemistry accelerates interior corrosion. Most homes built before 1980 that have not been repiped still have original galvanized supply lines.',
+desc:'Steel pipe hot-dip galvanized with zinc coating. Corrodes from the inside outward as zinc depletes, producing iron oxide (rust) that narrows the pipe interior and contaminates drinking water with rust particles. In FL hard water counties, galvanized pipes commonly reach failure at 20-30 years.',
+urgency:'Replacement is strongly recommended for any galvanized supply pipes over 30 years old. Discolored water, scale at fixtures, and low pressure all indicate advanced interior corrosion. Galvanized is never appropriate for new FL installations in hard water regions.',
+warns:['Brown, orange, or rusty water — especially noticeable first thing in the morning before running water','Drastically reduced water flow at fixtures furthest from the main (upper floors, rear of home)','Visible reddish-orange rust streaks in sink basins and toilet bowls throughout home','Scale and mineral deposits forming rapidly on faucet aerators and showerheads','Low and uneven pressure: some fixtures normal while others are severely reduced','Corroded or rusty appearance on exterior of visible pipes near water meter or hose bibs']},
+cpvc:{name:'CPVC Plastic',icon:'🟡',min:50,max:75,hwCut:.10,critical:false,health:false,first:false,
+history:'Chlorinated polyvinyl chloride was the plastic pipe of choice from roughly 1975-2005. Initially praised as a lower-cost alternative to copper, CPVC became extremely common in Florida building boom years of the 1980s and 1990s — particularly common in Central and South Florida tract homes.',
+desc:'Cream or off-white plastic pipe joined with solvent cement. Generally reliable but becomes progressively brittle as chlorine and UV exposure degrade the polymer chains over decades. Any exposed CPVC in Florida sun degrades faster. Internal mineral scoring from hard water reduces wall thickness.',
+urgency:'Inspect all solvent-welded joints carefully after 30 years. CPVC in sun-exposed areas may need replacement sooner. Any snap, crack, or brittleness during routine maintenance is a warning sign requiring immediate professional assessment.',
+warns:['Hairline cracks appearing near fittings, especially at solvent-welded joints under cabinets','Brittle texture — pipe snaps or breaks easily when bumped during routine maintenance','Slight yellowing of the cream-colored pipe indicating UV and heat exposure','Small drips or seeps at threaded adaptors and transition fittings connecting to metal','Clicking, ticking, or creaking sounds during temperature changes throughout the day','Flaking or chalky white residue appearing in aerator screens and shower fixtures']},
+pex:{name:'PEX Tubing',icon:'🔴',min:40,max:50,hwCut:0,critical:false,health:false,first:false,
+history:'Cross-linked polyethylene arrived in the US in the 1980s but gained widespread code acceptance after 2000. By 2010 it became the dominant choice for new residential construction. PEX is now specified for virtually all new Florida homes and repipe projects due to its corrosion resistance.',
+desc:'Flexible, color-coded tubing (red=hot, blue=cold, white=either). Highly resistant to scale, corrosion, and freezing damage. The pipe itself rarely fails — connection points (crimp rings, expansion fittings, manifold connections) are the most common failure location. Rodent damage in crawl spaces is a known risk.',
+urgency:'PEX pipe itself has an excellent track record and rarely needs replacement before 35-40 years. Focus inspection on connection points and manifold fittings every 5 years. In crawl space homes, annual inspection for rodent damage is essential.',
+warns:['Drips or seeps at crimp ring connections or expansion fittings (most common PEX failure point)','Water damage appearing near manifolds — often inside utility closets or mechanical rooms','Pinhole punctures or visible gnaw damage in crawl space homes (rodent activity)','Faint plastic odor in water in very new installations (typically clears within 2-6 weeks)','Kinks or collapse points where pipe makes tight bends without proper support clamps','Reduced pressure at one specific fixture while all others remain normal (isolated connection issue)']},
+cast_iron:{name:'Cast Iron',icon:'⚫',min:75,max:100,hwCut:0,critical:false,health:false,first:false,
+history:'The standard for drain, waste, and vent (DWV) piping from the early 1900s through roughly 1970-1975. Extremely durable and effective at muffling drain sounds — cast iron was replaced in most new construction by ABS and PVC plastic beginning in the early 1970s for cost reasons.',
+desc:'Heavy gray iron pipe used exclusively in drain, waste, and vent systems — not used for pressurized supply lines. Internal scale buildup from decades of use narrows the drain opening and slows flow. Eventually, the pipe walls rust through from exposure to hydrogen sulfide gas and moisture in the drain environment.',
+urgency:'Cast iron in homes 50+ years old deserves a camera inspection to assess interior scale and corrosion levels. Slow drains throughout the entire home (not isolated to one fixture) indicate cast iron narrowing. Budget for replacement or trenchless lining around 60-70 years.',
+warns:['Persistent slow drains throughout the entire home — not isolated to just one fixture (which would be a clog)','Gurgling, bubbling, or gurgling sounds in unexpected plumbing locations indicating venting issues','Sulfur or sewage odor emanating from floor drains, clean-outs, or washing machine connections','Dark rust staining or reddish-brown marks on exterior of exposed pipe sections near floor drains','Crumbling, flaking, or visibly damaged pipe material at joints, cleanouts, and connections','Wet spots in the yard or driveway above the sewer line indicating exterior drain line failure']},
+polybutylene:{name:'Polybutylene',icon:'⚠️',min:10,max:15,hwCut:0,critical:true,health:false,first:true,
+history:'Polybutylene was marketed as "the pipe of the future" — cheap, flexible, and fast to install. Used in an estimated 6-10 million US homes from 1978-1995, the Cox v. Shell Oil class action (1995) resulted in a $1 billion settlement when pipes began failing nationwide. Production stopped in 1995.',
+desc:'Gray or dark-blue plastic pipe typically stamped "PB" or "PB2110". Chlorine and chloramine in municipal water attack the pipe from the inside, creating micro-fractures that accumulate over years before causing sudden catastrophic rupture. The pipe looks normal right up until the moment it fails with no warning whatsoever.',
+urgency:'REPLACE IMMEDIATELY regardless of pipe age or apparent visible condition. There is no safe age for polybutylene. Some FL insurance companies deny coverage for homes with PB pipe. Contact a CFC plumber for emergency assessment — this is not optional.',
+warns:['Gray or silvery-blue plastic pipe visible under sinks, near water heater, or in utility areas — this is not PEX','Fittings are plastic (off-white or gray acetal — NOT brass or copper like normal plumbing)','Pipe stamped "PB2110" — check inside cabinets and behind access panels throughout home','Home built between 1978 and 1995 with what appears to be original gray plastic plumbing','Any previous small leaks repaired with compression fittings (a sign of band-aid repairs over time)','Insurance company has flagged the property or added a surcharge for plumbing condition']},
+lead:{name:'Lead Pipes',icon:'☠️',min:100,max:100,hwCut:0,critical:false,health:true,first:true,
+history:'Lead was used for water service lines and interior plumbing from ancient Rome through roughly 1935-1940 in the United States. The word "plumbing" comes from the Latin "plumbum" for lead. The Safe Drinking Water Act of 1986 banned lead pipe in new construction, but millions of older homes still have original lead lines.',
+desc:'Dull gray, extremely soft metal pipe that can be scratched with a key and bent by hand. Lead does not rust or corrode structurally — it is mechanically durable — but it continuously leaches neurotoxic lead into drinking water. Lead exposure causes irreversible neurological damage particularly in children under 6 years of age.',
+urgency:'REPLACE IMMEDIATELY. This is a public health emergency. Do not use tap water for drinking, cooking, or infant formula preparation until replacement is complete. Run cold water 2+ minutes before using. Use only NSF/ANSI 53 certified filters rated for lead removal as a temporary measure.',
+warns:['Soft, gray pipe that can be dented with your fingernail or scratched with a coin or key','Home built before 1940 — probability of original lead service line is very high','Known use of 50/50 lead-tin solder on copper joints in homes built before 1986 (joint risk)','Previous water testing showing elevated lead levels above 5 ppb — action required immediately','Elevated blood lead levels detected in household occupants, especially in children under 6','Slightly sweet or metallic taste in water that has been sitting in pipes overnight (standing water test)']},
+unknown:{name:'Unknown (est. as Galvanized)',icon:'❓',min:20,max:50,hwCut:.15,critical:false,health:false,first:false,
+history:'When pipe material is unknown, we apply conservative assumptions using galvanized steel parameters — the most common material in pre-1980 Florida homes and the one with the most significant failure risk profile from hard water exposure over time.',
+desc:'Without knowing the pipe material, we cannot provide a precise assessment. We conservatively model as galvanized steel, which represents the most likely worst-case scenario for most Florida homes (excluding polybutylene and lead). A licensed plumber can identify pipe material definitively during inspection without opening walls.',
+urgency:'Schedule a professional pipe inspection to identify your material definitively. This is the single most important step. Material identification changes both the urgency level and the best replacement strategy significantly — and it is free when you call us.',
+warns:['Schedule a professional camera inspection to identify pipe material definitively before any other action','Check under kitchen sink — supply pipes are typically exposed and identifiable by appearance','Look at exposed pipes near water heater and outdoor hose bibs for material clues','Review original building permits, home inspection reports, or seller disclosure documents','Gray plastic pipes anywhere in the home = possible polybutylene (urgent — call immediately)','Soft gray metal pipe that scratches or bends = possible lead (urgent health concern — stop using water)']}
+};
+const SYSTS=[
+{id:'supply',name:'Supply Pipes',icon:'🔵',life:60,wh:true,diy:false,cMin:2500,cMax:8500,rm:2.0,
+why:'Supply pipes carry all pressurized water in your home to every fixture, appliance, and hose bib. When a supply pipe fails (especially slab-embedded lines in FL slab homes), the resulting leak can flood a home in minutes and cause tens of thousands in structural damage, mold remediation, and flooring replacement. In Florida slab homes, detecting failures before they occur requires professional pressure testing and thermal imaging.',
+maint:['Annual professional pressure test to detect slow leaks — $75-125 typical, invaluable for slab homes','Inspect all exposed supply pipes under sinks and in utility areas every quarter','Install a whole-house water softener — the single best investment to extend FL pipe life in hard water areas','Know the exact location of your main shutoff valve and test its operation twice per year','Install a smart water shutoff device ($200-400) that automatically shuts water on leak detection','Get camera inspection every 5 years for copper pipes in hard water FL counties to assess interior condition','Budget for proactive repipe at 80% of pipe lifespan to avoid emergency replacement costs']},
+{id:'drain',name:'Drain / Waste Pipes',icon:'⚫',life:70,wh:true,diy:false,cMin:1800,cMax:6000,rm:1.8,
+why:'Drain and waste lines carry sewage and gray water from fixtures to the municipal sewer or septic system. Failures range from slow drains and persistent odors to complete sewage backups — one of the most expensive and biologically hazardous plumbing emergencies possible. In Florida, root intrusion from tropical landscaping is extremely common in older cast iron drain lines within 15 years of landscaping maturation.',
+maint:['Annual professional hydro-jetting prevents major buildup in cast iron drain lines ($150-400)','Never pour cooking grease, fats, or oils into kitchen drains — always scrape into trash instead','Use enzyme drain treatment monthly — completely safe for pipes and septic systems, reduces organic buildup','Install hair catchers on all shower and tub drains — the single largest cause of bathroom drain clogs','Schedule annual camera inspection for cast iron pipes 40+ years old to monitor internal condition','Trim trees and shrubs within 10 feet of underground drain lines to prevent root intrusion and damage','Test all floor drains seasonally by pouring a bucket of water to ensure traps are sealed and functioning']},
+{id:'water_heater',name:'Water Heater',icon:'🔥',life:10,wh:true,diy:false,cMin:900,cMax:2200,rm:2.0,
+why:'Water heaters are the number one source of catastrophic water damage claims in Florida. A failed 50-gallon tank can release its entire contents onto your floor in minutes, causing flood damage that often exceeds $15,000 when structural, flooring, and drywall repairs are included. Florida hard water dramatically accelerates anode rod depletion and tank sediment buildup — local water heaters typically last only 7-10 years versus 12+ in soft water areas.',
+maint:['Annual sediment flush — connect garden hose to drain valve and flush until water runs clear ($0 DIY)','Inspect anode rod every 2-3 years — replace when 50%+ depleted (prevents internal tank corrosion)','Set water temperature to exactly 120 degrees F — lower risks Legionella bacteria, higher risks scalding','Test T&P (temperature-pressure) relief valve annually by briefly lifting the test lever to ensure operation','Install a drain pan with electronic water alarm under all tank water heaters — $25-40 investment','Consider tankless water heater upgrade at 8+ years — eliminates catastrophic tank flood risk entirely','Annual professional inspection of burner, pilot, and gas connections on gas units — safety critical']},
+{id:'toilets',name:'Toilets',icon:'🚽',life:30,wh:false,diy:true,cMin:300,cMax:900,rm:0.8,
+why:'Toilet internals — flappers, fill valves, float assemblies — wear out much faster than the porcelain fixture itself which can last 50+ years. A running toilet wastes 200-500 gallons per day and can add $50-150 per month to water bills silently. In Florida hard water regions, mineral deposits destroy rubber flapper seals in 2-3 years, causing constant slow leaks that are invisible until the water bill arrives.',
+maint:['Replace rubber flapper valve every 2-3 years (DIY repair, $8-15 part, 15 minutes) — best ROI in plumbing','Annual dye tablet test: drop tablet in tank, wait 15 minutes without flushing, check bowl for color','Inspect fill valve mechanism annually — hard water deposits cause valves to run intermittently','Descale bowl and under rim monthly with toilet bowl cleaner in all FL hard water areas','Check wax ring seal every 5 years — soft or spongy floor near base indicates ring failure and must be addressed','Replace entire fill valve assembly every 5-7 years (DIY, $25-40 complete kit from hardware store)','Test shutoff valve behind toilet annually — these valves commonly seize in FL from mineral deposits']},
+{id:'faucets',name:'Faucets & Fixtures',icon:'🚰',life:15,wh:false,diy:true,cMin:150,cMax:600,rm:0.7,
+why:'Faucet cartridges, seats, springs, and O-rings all degrade with use and mineral exposure. In Florida hard water counties, cartridges that should last 10 years often fail in 3-5 years due to mineral abrasion and chlorine attack on rubber components. Leaky faucets waste 3,000+ gallons per year and signal advancing wear. Showerheads in hard water areas become clogged with calcium deposits within weeks of installation.',
+maint:['Clean aerator screens monthly in FL hard water homes — calcium deposits clog them rapidly','Replace cartridges at first drip — delay turns a $30 DIY repair into a $200 service call within months','Descale showerheads quarterly: soak in white vinegar overnight sealed in a plastic bag with rubber band','Upgrade to ceramic disc cartridge faucets — they last 3-5 times longer than ball or compression types','Apply food-grade silicone grease to all O-rings during any cartridge replacement procedure','Install whole-house water softener or filter to extend cartridge and fixture life dramatically in FL','Replace supply hoses (braided stainless preferred over plastic) every 5-7 years — they fail without warning']},
+{id:'shutoffs',name:'Shutoff Valves',icon:'🔩',life:9,wh:true,diy:false,cMin:200,cMax:800,rm:2.2,
+why:'Shutoff valves are only truly important when something goes wrong — but in that moment they are absolutely critical to stopping water damage. A gate valve that has not been operated in 10+ years will typically seize fully open, making it impossible to stop a flood without shutting the entire home water supply. Ball valves last longer but still require annual exercise. This is the most underrated maintenance item in Florida residential plumbing.',
+maint:['Exercise every shutoff valve in the home twice per year — open fully, close fully, then reopen fully','Replace all gate valves with quarter-turn ball valves — gate valves fail to fully close after years of non-use','Replace any valve that drips around its stem immediately — the drip becomes a flood within months','Label all shutoff valves with waterproof labels: under sinks, behind toilets, at appliances, at water heater','Locate and exercise the main home shutoff valve with a wrench at least once per year','Upgrade to full-port ball valves for cleaner flow and significantly longer service life','Install water hammer arrestors near washing machine shutoffs to prevent valve seat and seal damage']},
+{id:'hose_bibs',name:'Hose Bibs (Outdoor)',icon:'💧',life:25,wh:true,diy:true,cMin:80,cMax:250,rm:1.2,
+why:'Outdoor hose bibs are exposed to UV radiation, physical impact from landscaping equipment, thermal cycling, and irrigation system back-pressure. In Florida they are in use year-round and rarely inspected thoroughly. A leaking hose bib wastes thousands of gallons annually and, if the leak develops behind the escutcheon plate, can cause significant hidden water damage to the exterior wall cavity and framing over time.',
+maint:['Disconnect all hoses when not actively in use — attached hoses create back-pressure stress on valve seats','Install backflow preventers on all outdoor spigots — required by FL building code for irrigation connections','Check for drips or seeps around the escutcheon (wall plate) after irrigation system pressure cycles','Replace the rubber seat washer annually ($2, 5 minutes, standard flathead screwdriver only)','Inspect for UV-related degradation on any plastic escutcheon or handle components annually in FL sun','Isolate and check hose bibs before extended vacations in unoccupied FL homes for hidden leaks','Install quarter-turn ball valve isolation valves inside the wall for easy future isolation during repairs']},
+{id:'disposal',name:'Garbage Disposal',icon:'⚙️',life:10,wh:false,diy:false,cMin:200,cMax:500,rm:0.6,
+why:'Garbage disposals have both mechanical (motor, grind ring, impellers) and rubber (splash guard, seal) components that wear with regular use. Hard water deposits on grinding components reduce efficiency over time. The most common failures are motor burnout from overloading with hard materials and seal failure that allows water into the motor housing. Replacement is usually more cost-effective than repair beyond 8 years of service.',
+maint:['Always run cold water for 30 seconds after each use to thoroughly flush waste through drain lines','Monthly cleaning: grind ice cubes to remove scale and sharpen impellers, then grind citrus peels','Never dispose of grease, fibrous vegetables (celery, artichokes), bones, pits, or starchy foods like pasta','If unit hums but will not start: use 1/4-inch hex key in center underside port to manually free seized impeller','Reset button located on the bottom of the unit — press if disposal will not run and no humming sound','Annual inspection of rubber gaskets, splash guard, and underside seals for mold, cracks, and deterioration','Plan for replacement at 8 years if used frequently with challenging foods or if motor runs hot or slow']},
+{id:'softener',name:'Water Softener / Filter',icon:'💠',life:12,wh:false,diy:false,cMin:600,cMax:2500,rm:0.5,
+why:'A water softener is the single most effective protection investment for all downstream plumbing in Florida. Without it, hard water deposits attack copper pipes, CPVC, water heaters, and appliances simultaneously every day. A properly functioning softener can extend copper pipe life by 40-60% in hard water FL counties. A failing softener, however, allows unmitigated hard water through, accelerating deterioration of everything downstream.',
+maint:['Check and refill salt every month — most FL homes use 40-80 pounds per month depending on household size','Test water hardness quarterly at kitchen tap to verify softener is operating correctly ($10 test kit)','Clean resin tank annually with dedicated resin cleaner product — maintains ion exchange capacity over time','Inspect brine tank for salt bridges (hard crusted arch of salt) every 3-6 months and break up if found','Replace sediment pre-filter cartridge every 3-6 months to protect resin bed and extend system life','Program regeneration cycles to match actual household water usage — improper timing wastes salt and water','Schedule professional service annually for UV lamp replacement, membrane inspection, and efficiency check']
+}
+];
+const HW={south_fl:true,central_fl:true,gulf_coast:true,north_fl:false};
+const REGION_N={south_fl:'South Florida',central_fl:'Central Florida',gulf_coast:'Gulf Coast',north_fl:'North Florida'};
+const HT_F={slab:1.08,crawl:.95,two_story:1.0,condo:.90};
+const PRI_ACTIONS={
+supply:['Call a CFC-licensed plumber for a free pressure test and full pipe inspection','Ask specifically about your pipe material type and FL hard water exposure and history','Get a written estimate for whole-house repipe comparing PEX-A vs. copper options and warranties','Install a smart whole-home water shutoff device while planning the full replacement'],
+drain:['Schedule professional camera inspection of main drain line, especially if cast iron is present','Get hydro-jetting quote if drains are slower than they were 3+ years ago — buildup accumulates','Identify all trees within 15 feet of underground drain lines — root intrusion is very common in FL','Ask about trenchless pipe lining as a less disruptive alternative to full excavation replacement'],
+water_heater:['Inspect age and anode rod condition — replace anode if 50%+ depleted or severely corroded','Consider tankless water heater upgrade for any heater 8+ years old for better safety and efficiency','Install drain pan with water sensor alarm if one is not already present under the heater','Get quote for expansion tank if you have a closed plumbing system or a PRV on the main line'],
+toilets:['Test all toilets for silent leaks using dye tablets ($2 at hardware store) — start this week','Replace rubber flappers in any toilet over 3 years old as standard preventive maintenance','Upgrade to WaterSense dual-flush models for 30-40% water savings and modern reliability','Replace fill valves if any tank takes more than 45 seconds to refill after flushing'],
+faucets:['Clean all aerator screens now — especially kitchen and bathroom faucets with hard water buildup','Replace any dripping faucets immediately — each drip wastes approximately 3,000 gallons per year','Note the brand and model of each faucet now for easier future cartridge replacement sourcing','Consider whole-home water filter or softener to dramatically extend cartridge life in FL hard water areas'],
+shutoffs:['Locate and exercise every shutoff valve in the home today — do not put this off','Replace any gate valves found with quarter-turn ball valves for much more reliable operation','Create a labeled shutoff map of all valve locations for emergency reference','Test main shutoff with shutoff tool — if it will not fully close, replace before any other work'],
+hose_bibs:['Check all outdoor faucets for drips around handle and wall plate escutcheon now','Disconnect all attached hoses and inspect each hose bib for drips or seeping','Verify backflow preventers are present on all irrigation connections as FL code requires','Confirm indoor isolation valve for each hose bib is operational and fully closing'],
+disposal:['Test operation and listen carefully for grinding sounds or reduced performance vs. before','Schedule replacement if unit is 8+ years old — motor seal failure is likely imminent','Check rubber splash guard for mold growth — replace for $10-15 DIY if deteriorated','Ensure proper drain slope at disposal connection to prevent standing water and backup'],
+softener:['Test water hardness at both pre-softener and post-softener taps to confirm efficiency','Check salt level and inspect brine tank for salt bridges that prevent proper regeneration','Schedule professional service if not serviced in 2+ years — resin beds deplete over time','Consider upgrading to a combination salt-free system plus UV purification for comprehensive protection']
+};
+const S={year:1985,mat:'copper',ht:'slab',reg:'south_fl'};
+let _deferYrs=1;
+function age(){return 2026-S.year;}
+function hw(){return HW[S.reg];}
+function adjLife(k){const m=MATS[k];let a=(m.min+m.max)/2;if(hw()&&m.hwCut>0)a*=(1-m.hwCut);return Math.round(a*(HT_F[S.ht]||1));}
+function getBadge(p){if(p<=.50)return{cls:'b-excellent',lbl:'Excellent ✅',col:'#22C55E'};if(p<=.70)return{cls:'b-good',lbl:'Good 👍',col:'#00B4FF'};if(p<=.85)return{cls:'b-fair',lbl:'Fair ⚠️',col:'#F4B942'};if(p<=.99)return{cls:'b-poor',lbl:'Poor 🔴',col:'#F97316'};return{cls:'b-critical',lbl:'Critical 🚨',col:'#EF4444'};}
+function barCls(p){if(p<.60)return'pb-g';if(p<.75)return'pb-y';if(p<.90)return'pb-o';return'pb-r';}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg||'🏆 We\'ll call you within 2 hours!';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4200);}
+function switchTab(n){[1,2,3,4].forEach(i=>{document.getElementById('p'+i).classList.toggle('active',i===n);document.getElementById('tb'+i).classList.toggle('active',i===n);});if(n===2)renderDash();if(n===3)renderPri();if(n===4)calcDeferral();}
+function onYr(v){S.year=parseInt(v);document.getElementById('yr-disp').textContent=v;onInp();}
+function onInp(){S.mat=document.getElementById('mat-sel').value;S.ht=document.getElementById('ht-sel').value;S.reg=document.getElementById('reg-sel').value;renderAssess();renderMatFacts();}
+function renderAssess(){const a=age(),al=adjLife(S.mat),rem=Math.max(0,al-a),pct=Math.min(1,a/al),b=getBadge(pct),m=MATS[S.mat];let h=buildGauge(rem,al,b.col);h+=`<div style="text-align:center;margin-bottom:14px;"><span class="badge ${esc(b.cls)}" style="font-size:13px;padding:6px 16px;">${b.lbl}</span></div>`;h+=buildInfoGrid(a,rem,al,pct,b);h+=buildAlerts(m,a,al,rem,pct);h+=buildHWNote();document.getElementById('assess-out').innerHTML=h;}
+function buildGauge(rem,al,color){const pct=al>0?Math.min(.9999,rem/al):0,cx=110,cy=100,r=82,endA=(1-pct)*Math.PI,ex=(cx+r*Math.cos(endA)).toFixed(1),ey=(cy-r*Math.sin(endA)).toFixed(1),sx=cx-r;const fp=pct>.002?`<path d="M ${sx} ${cy} A ${r} ${r} 0 0 1 ${ex} ${ey}" fill="none" stroke="${color}" stroke-width="13" stroke-linecap="round" style="filter:drop-shadow(0 0 6px ${color}66)"/>`:'';return`<div class="gauge-wrap"><svg class="gauge-svg" viewBox="0 0 220 115"><path d="M ${sx} ${cy} A ${r} ${r} 0 0 1 ${cx+r} ${cy}" fill="none" stroke="#1E2D4A" stroke-width="13" stroke-linecap="round"/>${fp}<text x="${cx}" y="${cy-4}" text-anchor="middle" fill="${color}" font-size="34" font-weight="900" font-family="-apple-system,sans-serif">${rem}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="-apple-system,sans-serif" letter-spacing="1">YRS REMAINING</text></svg></div>`;}
+function buildInfoGrid(a,rem,al,pct,b){const rc=rem<5?'#EF4444':rem<15?'#F97316':'#22C55E';return`<div class="ig"><div class="ic"><div class="ic-icon">🏚️</div><div class="ic-val">${a}</div><div class="ic-lbl">Home Age (years)</div></div><div class="ic"><div class="ic-icon">⏳</div><div class="ic-val" style="color:${rc}">${rem}</div><div class="ic-lbl">Est. Years Left</div></div><div class="ic"><div class="ic-icon">📐</div><div class="ic-val">${al}</div><div class="ic-lbl">Adjusted Lifespan</div></div><div class="ic"><div class="ic-icon">📊</div><div class="ic-val" style="color:${b.col}">${Math.round(pct*100)}%</div><div class="ic-lbl">Life Used</div></div></div>`;}
+function buildAlerts(m,a,al,rem,pct){let h='';if(m.health)h+=`<div class="alert a-red"><span class="a-icon">☠️</span><div><strong>HEALTH HAZARD — Lead Pipes Detected</strong><br>Lead leaches into drinking water continuously. No safe exposure level exists — especially dangerous for children and pregnant women. Do not drink unfiltered tap water. Call for emergency assessment immediately.</div></div>`;if(m.critical)h+=`<div class="alert a-red"><span class="a-icon">🚨</span><div><strong>CRITICAL — Polybutylene Pipe Alert</strong><br>Polybutylene (gray plastic stamped "PB" or "PB2110") fails catastrophically without warning. Documented widespread failure rate. Many FL insurers deny claims on homes with PB pipe. Immediate replacement is strongly advised regardless of age.</div></div>`;if(S.mat==='galvanized'||S.mat==='unknown')h+=`<div class="alert a-gold"><span class="a-icon">⚠️</span><div><strong>Corrosion Risk — Galvanized Steel</strong><br>Galvanized pipes rust from the inside out, reducing water flow and contaminating water with iron particles. Hard water in ${esc(REGION_N[S.reg])} significantly accelerates this process. Professional inspection is recommended promptly.</div></div>`;if(hw())h+=`<div class="alert a-blue"><span class="a-icon">💧</span><div><strong>Hard Water Region — Lifespan Adjusted −${Math.round((MATS[S.mat].hwCut||0)*100)}%</strong><br>${esc(REGION_N[S.reg])} has elevated dissolved mineral content. Your pipe lifespan estimate reflects local water chemistry conditions for your specific material.</div></div>`;if(rem===0)h+=`<div class="alert a-red"><span class="a-icon">🚨</span><div><strong>Past Expected Service Life</strong><br>Your pipes have exceeded their estimated lifespan. Failure risk is elevated and rising daily. Schedule a professional CFC plumber inspection immediately — do not wait for an active leak to find the problem.</div></div>`;else if(rem<=5)h+=`<div class="alert a-gold"><span class="a-icon">⚠️</span><div><strong>End of Life Approaching — Plan Now</strong><br>Only <strong>${rem} year${rem!==1?'s':''}</strong> of estimated service life remaining. Begin budgeting and scheduling replacement now. Emergency replacements cost 2-3× planned work and rarely allow material or contractor choice.</div></div>`;else if(rem>20&&!m.critical&&!m.health)h+=`<div class="alert a-green"><span class="a-icon">✅</span><div><strong>Good Condition Estimated</strong><br>Approximately <strong>${rem} years</strong> of estimated life remaining. Maintain your advantage with annual professional inspections and proactive water quality management. Florida's climate rewards proactive plumbing maintenance.</div></div>`;return h;}
+function buildHWNote(){const h=hw(),hwPct=Math.round((MATS[S.mat].hwCut||0)*100);return`<div class="card-alt"><div class="mat-fact-title">Florida Adjustment Factors Applied</div><div class="rt-row"><span class="rt-lbl">Hard water mineral impact</span><span class="rt-val ${h?'rv-d':'rv-g'}">${h?`−${hwPct}% lifespan`:'Minimal impact'}</span></div><div class="rt-row"><span class="rt-lbl">Humidity and UV exposure</span><span class="rt-val rv-w">Moderate impact on all materials</span></div><div class="rt-row"><span class="rt-lbl">Slab foundation pipe stress</span><span class="rt-val ${S.ht==='slab'?'rv-w':'rv-g'}">${S.ht==='slab'?'Elevated risk (+8%)':'Minimal for this home type'}</span></div><div class="rt-row"><span class="rt-lbl">Home type factor applied</span><span class="rt-val rv-b">${esc(String(Math.round((HT_F[S.ht]||1)*100)))}% of base lifespan</span></div><div class="rt-row"><span class="rt-lbl">FL Region assessed</span><span class="rt-val rv-b">${esc(REGION_N[S.reg])}</span></div></div>`;}
+function renderMatFacts(){const m=MATS[S.mat];let h=`<div style="font-size:13px;font-weight:700;color:#E2E8F0;margin-bottom:6px;">${m.icon} ${esc(m.name)}</div>`;h+=`<p class="fs12 tm lh15 mb8">${esc(m.desc)}</p>`;if(m.history)h+=`<div class="why-box fs12 lh16 mb8" style="border-left-color:#F4B94244;">${esc(m.history)}</div>`;if(m.urgency)h+=`<div class="alert a-blue mb8" style="margin-bottom:10px;"><span class="a-icon">⏱️</span><div><strong>When to Act:</strong> ${esc(m.urgency)}</div></div>`;h+=`<div class="mat-fact-title">Warning Signs to Watch For</div>`;m.warns.forEach(w=>{h+=`<div class="warn-sign">${esc(w)}</div>`;});document.getElementById('mat-out').innerHTML=h;}
+function renderDash(){const a=age(),al=adjLife(S.mat),pct=Math.min(1,a/al),b=getBadge(pct),m=MATS[S.mat];document.getElementById('d2-summ').textContent=`${S.year} · ${m.name} · ${REGION_N[S.reg]}`;document.getElementById('d2-badge').innerHTML=`<span class="badge ${esc(b.cls)}">${b.lbl}</span>`;let h='';SYSTS.forEach((sys,i)=>{const sa=Math.min(a,Math.round(sys.life*1.4)),sp=Math.min(1,sa/sys.life),sb=getBadge(sp),srem=Math.max(0,sys.life-a);h+=buildSysRow(sys,i,sa,sp,srem,sb);});document.getElementById('sys-list').innerHTML=h;}
+function buildSysRow(sys,i,sa,sp,srem,sb){const rc=srem<3?'#EF4444':srem<8?'#F97316':'#22C55E',bc=barCls(sp),mh=sys.maint.map(t=>`<div class="maint-item">${esc(t)}</div>`).join('');return`<div class="sys-row"><div class="sys-hdr" onclick="togSys(${i})"><span class="sys-icon">${sys.icon}</span><span class="sys-name">${esc(sys.name)}</span><span class="sys-pct" style="color:${sb.col}">${Math.round(sp*100)}%</span><span class="badge ${esc(sb.cls)}" style="font-size:9px;padding:2px 6px;">${sb.lbl.split(' ')[0]}</span><span class="sys-chev" id="chv${i}">▼</span></div><div class="sys-pb"><div class="pb-wrap" style="margin:0;"><div class="pb-track"><div class="pb-fill ${bc}" style="width:${Math.round(sp*100)}%"></div></div></div></div><div class="sys-detail" id="sd${i}"><div class="sys-stats"><div class="stat"><div class="stat-l">Typical Lifespan</div><div class="stat-v">${sys.life} years</div></div><div class="stat"><div class="stat-l">Estimated Age</div><div class="stat-v">${sa} years</div></div><div class="stat"><div class="stat-l">Years Remaining</div><div class="stat-v" style="color:${rc}">${srem} yrs</div></div><div class="stat"><div class="stat-l">Replacement Cost</div><div class="stat-v tg">$${sys.cMin.toLocaleString()}–$${sys.cMax.toLocaleString()}</div></div></div>${sys.why?`<div class="why-box lh16 fs12">${esc(sys.why)}</div>`:''}<div style="font-size:11px;color:#94A3B8;margin-bottom:8px;">${sys.wh?'⚠️ <strong style="color:#EF4444">Water damage risk</strong> on failure. ':''} ${sys.diy?'✓ <strong style="color:#22C55E">DIY replacement possible</strong> with basic tools and skills.':'✗ <strong style="color:#F97316">Professional CFC installation required</strong> under FL licensing law.'}</div><div class="maint-title">✓ Maintenance Tips to Extend Service Life</div>${mh}</div></div>`;}
+function togSys(i){const el=document.getElementById('sd'+i),ch=document.getElementById('chv'+i),op=el.classList.toggle('open');if(ch)ch.style.transform=op?'rotate(180deg)':'';}
+function renderPri(){const a=age(),m=MATS[S.mat],isHW=hw(),items=SYSTS.map(sys=>{const sa=Math.min(a,sys.life*1.5);let ratio=Math.min(2,sa/sys.life),score=ratio*sys.rm;if(isHW)score*=1.15;if(m.health&&sys.id==='supply')score=99.9;if(m.critical&&sys.id==='supply')score=99.8;let urg=ratio>=1?'urgent':ratio>=.80?'soon':ratio>=.55?'monitor':'good';if(m.first&&sys.id==='supply')urg='urgent';return{...sys,score,urg,ratio,sa};});items.sort((a,b)=>b.score-a.score);let h='';items.forEach((it,idx)=>{const nc=`pri-n-${it.urg}`,ub=it.urg==='urgent'?'b-urgent':it.urg==='soon'?'b-soon':it.urg==='monitor'?'b-monitor':'b-good2',ul=it.urg.charAt(0).toUpperCase()+it.urg.slice(1),acts=(PRI_ACTIONS[it.id]||[]).map((a,i)=>`<div class="action-step"><span class="action-num">${i+1}</span><span>${esc(a)}</span></div>`).join('');h+=`<div class="pri-item"><div class="pri-num ${esc(nc)}">${idx+1}</div><div class="pri-top"><div class="pri-name">${it.icon} ${esc(it.name)}</div><div class="pri-cost">$${it.cMin.toLocaleString()}–$${it.cMax.toLocaleString()}</div></div><span class="badge ${ub}">${esc(ul)}</span><div class="pb-wrap mt8"><div class="pb-track"><div class="pb-fill ${barCls(Math.min(1,it.ratio))}" style="width:${Math.min(100,Math.round(it.ratio*100))}%"></div></div></div><div class="pri-meta"><span class="mt ${it.diy?'mt-diy':'mt-nodiy'}">${it.diy?'✓ DIY OK':'✗ Pro Required'}</span>${it.wh?'<span class="mt mt-water">💦 Flood Risk</span>':''}${m.health&&it.id==='supply'?'<span class="mt mt-health">☠️ Health Hazard</span>':''}${m.critical&&it.id==='supply'?'<span class="mt mt-fail">🚨 Failure Risk</span>':''}</div>${acts?`<div class="action-steps"><div class="mat-fact-title" style="margin-top:0;">Recommended Next Steps</div>${acts}</div>`:''}<div class="pri-score">Priority score: <span class="tb2 fw7">${it.score.toFixed(2)}</span> · Life used: ${Math.round(it.ratio*100)}% · Est. age: ${Math.round(it.sa)} yrs</div></div>`;});document.getElementById('pri-list').innerHTML=h;}
+function setDefer(yrs,btn){_deferYrs=yrs;document.querySelectorAll('.dfr-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');calcDeferral();}
+function calcDeferral(){const sid=document.getElementById('dfr-sys').value,sys=SYSTS.find(s=>s.id===sid)||SYSTS[0],isHW=hw(),rate=isHW?.13:.08,base=(sys.cMin+sys.cMax)/2,proj=base*Math.pow(1+rate,_deferYrs),delta=proj-base,a=age(),ratio=Math.min(1,a/sys.life),bRisk=Math.min(88,Math.round(ratio*65)),dRisk=Math.min(97,bRisk+Math.round(_deferYrs*9));document.getElementById('dfr-out').innerHTML=buildDeferOut(sys,base,proj,delta,bRisk,dRisk,rate,isHW);}
+function buildDeferOut(sys,base,proj,delta,bRisk,dRisk,rate,isHW){const rCol=dRisk>70?'#EF4444':dRisk>40?'#F97316':'#F4B942',bRCol=bRisk>60?'#EF4444':bRisk>30?'#F97316':'#F4B942',yLabel=_deferYrs===.5?'6 months':`${_deferYrs} year${_deferYrs!==1?'s':''}`;return`<div class="cost-res"><div class="cost-hl">If you wait ${yLabel}</div><div class="cost-big">$${Math.round(proj).toLocaleString()}</div><div class="cost-delta">↑ $${Math.round(delta).toLocaleString()} more than acting today (${Math.round(rate*100)}%/yr FL rate)</div><div class="cost-grid"><div class="cost-cell"><div class="cost-cell-lbl">Act Today</div><div class="cost-cell-val cv-b">$${Math.round(base).toLocaleString()}</div></div><div class="cost-cell"><div class="cost-cell-lbl">After Waiting</div><div class="cost-cell-val cv-g">$${Math.round(proj).toLocaleString()}</div></div><div class="cost-cell"><div class="cost-cell-lbl">Extra Cost</div><div class="cost-cell-val cv-r">$${Math.round(delta).toLocaleString()}</div></div><div class="cost-cell"><div class="cost-cell-lbl">Annual Rate</div><div class="cost-cell-val cv-o">${Math.round(rate*100)}%/yr</div></div></div></div><div class="card-alt mt10"><div class="mat-fact-title">Water Damage Risk Probability</div><div class="rm"><div class="rm-hdr"><span>Current Risk Level</span><span style="color:${bRCol};font-weight:800;">${bRisk}%</span></div><div class="rm-track"><div class="rm-fill" style="width:${bRisk}%;background:linear-gradient(90deg,#F4B942,#F97316)"></div></div></div><div class="rm"><div class="rm-hdr"><span>Risk After ${yLabel}</span><span style="color:${rCol};font-weight:800;">${dRisk}%</span></div><div class="rm-track"><div class="rm-fill" style="width:${dRisk}%;background:linear-gradient(90deg,#F97316,#EF4444)"></div></div></div><div class="dvd"></div><div class="rt-row"><span class="rt-lbl">FL Hard Water Active</span><span class="rt-val ${isHW?'rv-d':'rv-g'}">${isHW?'Yes — 13%/yr rate':'No — 8%/yr rate'}</span></div><div class="rt-row"><span class="rt-lbl">System Selected</span><span class="rt-val rv-b">${esc(sys.name)}</span></div><div class="rt-row"><span class="rt-lbl">Avg FL water damage claim</span><span class="rt-val rv-d">$11,000–$25,000</span></div><div class="rt-row" style="border-bottom:none;padding-bottom:0;"><span class="rt-lbl">Emergency premium vs. planned</span><span class="rt-val rv-d">+150–200% labor cost</span></div></div><div class="alert a-gold mt10 mb4"><span class="a-icon">💡</span><div><strong>The real math:</strong> Emergency after-hours plumbing in FL costs $250–$400/hr minimum, vs. $95–$125/hr scheduled. A $${Math.round(base).toLocaleString()} planned repair can become a $${Math.round(base*2.5).toLocaleString()}+ emergency plus water damage restoration costs.</div></div>`;}
+function togFaq(chevId,contentId){const el=document.getElementById(contentId),ch=document.getElementById(chevId),op=el.classList.toggle('open');if(ch)ch.style.transform=op?'rotate(180deg)':'';}
+function submitLead(tab){const nEl=document.getElementById(tab+'n'),pEl=document.getElementById(tab+'p');if(!nEl||!pEl){showToast('🏆 We\'ll call you within 2 hours!');return;}if(!nEl.value.trim()){nEl.style.borderColor='#EF4444';nEl.focus();return;}if(!pEl.value.trim()){pEl.style.borderColor='#EF4444';pEl.focus();return;}nEl.style.borderColor='';pEl.style.borderColor='';showToast('🏆 We\'ll call you within 2 hours!');nEl.value='';pEl.value='';const eEl=document.getElementById(tab+'e');if(eEl)eEl.value='';const uEl=document.getElementById(tab+'u');if(uEl)uEl.selectedIndex=0;}
+function callNow(){window.location.href='tel:5615557473';}
+function callUrgent(){document.getElementById('t4u').value='emergency';document.getElementById('t4n').focus();}
+(function init(){S.year=1985;S.mat='copper';S.ht='slab';S.reg='south_fl';renderAssess();renderMatFacts();calcDeferral();})();
+</script>
+</body>
+</html>
