@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Plumbing Noise Diagnosis Tool | Licensed CFC Plumbers</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.container{max-width:480px;margin:0 auto;padding:16px}
+h1{font-size:1.3rem;font-weight:800;color:#00B4FF;text-align:center;padding:18px 0 4px}
+.subtitle{text-align:center;color:#94A3B8;font-size:.8rem;margin-bottom:18px;line-height:1.5}
+.tabs{display:flex;background:#0F1629;border-radius:12px;padding:4px;margin-bottom:18px;gap:3px}
+.tab-btn{flex:1;padding:9px 2px;border:none;background:transparent;color:#94A3B8;font-size:.7rem;border-radius:8px;cursor:pointer;font-weight:700;transition:all .2s;letter-spacing:.2px}
+.tab-btn.active{background:#00B4FF;color:#0A0E1A}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px}
+.card-alt{background:#141929;border-radius:12px;padding:16px;margin-bottom:12px}
+label{display:block;font-size:.77rem;color:#94A3B8;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+select,input[type=text],input[type=tel],input[type=email]{width:100%;padding:10px 12px;background:#0A0E1A;border:1px solid #1e2d4a;border-radius:8px;color:#E2E8F0;font-size:.87rem;margin-bottom:14px}
+select:focus,input:focus{outline:none;border-color:#00B4FF}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s}
+.btn-blue{background:#00B4FF;color:#0A0E1A}
+.btn-gold{background:#F4B942;color:#0A0E1A}
+.btn-outline{background:transparent;border:2px solid #00B4FF;color:#00B4FF}
+.btn-teal{background:#14B8A6;color:#0A0E1A}
+.step-header{font-size:.78rem;color:#94A3B8;margin-bottom:4px;font-weight:600}
+.step-title{font-size:.93rem;font-weight:700;color:#00B4FF;margin-bottom:14px}
+.step-dots{display:flex;justify-content:center;align-items:center;gap:5px;margin-bottom:18px}
+.sdot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.73rem;font-weight:700;border:2px solid #1e2d4a;color:#94A3B8;transition:all .25s}
+.sdot.active{border-color:#00B4FF;color:#00B4FF;background:rgba(0,180,255,.1)}
+.sdot.done{background:#22C55E;border-color:#22C55E;color:#0A0E1A}
+.sline{flex:1;height:2px;background:#1e2d4a;max-width:36px;border-radius:2px}
+.sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.sound-btn{background:#0A0E1A;border:2px solid #1e2d4a;border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .18s}
+.sound-btn.selected{border-color:#00B4FF;background:rgba(0,180,255,.08)}
+.sound-btn:hover{border-color:#1e2d4a;background:rgba(255,255,255,.03)}
+.sound-emoji{font-size:1.5rem;display:block;margin-bottom:4px}
+.sound-label{font-size:.78rem;font-weight:700;color:#E2E8F0;display:block}
+.sound-sub{font-size:.68rem;color:#94A3B8;display:block;margin-top:2px}
+.opt-row{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;background:#0A0E1A;border-radius:8px;margin-bottom:7px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.opt-row.selected{border-color:#00B4FF;background:rgba(0,180,255,.06)}
+.opt-row input[type=radio]{margin-top:3px;accent-color:#00B4FF;width:15px;height:15px;min-width:15px}
+.opt-title{font-size:.83rem;font-weight:700;color:#E2E8F0;line-height:1.3}
+.opt-desc{font-size:.73rem;color:#94A3B8;margin-top:2px;line-height:1.35}
+.nav-btns{display:flex;gap:10px;margin-top:14px}
+.nav-btns .btn{flex:1}
+.result-panel{background:#141929;border-radius:12px;padding:16px;margin-bottom:12px}
+.diag-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.73rem;font-weight:700;margin-bottom:8px;margin-right:6px}
+.badge-urgent{background:rgba(239,68,68,.15);color:#EF4444;border:1px solid rgba(239,68,68,.35)}
+.badge-moderate{background:rgba(249,115,22,.15);color:#F97316;border:1px solid rgba(249,115,22,.35)}
+.badge-monitor{background:rgba(244,185,66,.15);color:#F4B942;border:1px solid rgba(244,185,66,.35)}
+.badge-minor{background:rgba(34,197,94,.15);color:#22C55E;border:1px solid rgba(34,197,94,.35)}
+.badge-blue{background:rgba(0,180,255,.12);color:#00B4FF;border:1px solid rgba(0,180,255,.3)}
+.diag-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid #1e2d4a;font-size:.81rem;gap:6px}
+.diag-row:last-child{border-bottom:none}
+.diag-label{color:#94A3B8;flex-shrink:0}
+.diag-val{font-weight:700;text-align:right;color:#E2E8F0}
+.conf-bar-wrap{background:#1e2d4a;border-radius:20px;height:8px;margin:4px 0 8px}
+.conf-bar{height:8px;border-radius:20px;transition:width .6s ease}
+.noise-card{background:#0F1629;border-radius:12px;margin-bottom:10px;overflow:hidden;border:1px solid #1e2d4a}
+.noise-header{padding:13px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:8px}
+.noise-header:hover{background:rgba(255,255,255,.02)}
+.noise-title{font-weight:700;font-size:.87rem;color:#E2E8F0;display:flex;align-items:center;gap:8px}
+.noise-body{padding:0 14px 14px;display:none;font-size:.8rem;line-height:1.6;color:#94A3B8}
+.noise-body.open{display:block}
+.noise-body p{margin-bottom:7px}
+.noise-body ul{padding-left:16px;margin-bottom:8px}
+.noise-body li{margin-bottom:4px}
+.chevron{font-size:.82rem;color:#00B4FF;transition:transform .22s;flex-shrink:0}
+.chevron.open{transform:rotate(180deg)}
+.risk-badge{display:inline-block;padding:3px 9px;border-radius:12px;font-size:.68rem;font-weight:700;flex-shrink:0}
+.risk-critical{background:rgba(239,68,68,.15);color:#EF4444}
+.risk-moderate{background:rgba(249,115,22,.15);color:#F97316}
+.risk-low{background:rgba(34,197,94,.15);color:#22C55E}
+.risk-monitor{background:rgba(244,185,66,.15);color:#F4B942}
+.tip-box{background:rgba(244,185,66,.07);border:1px solid rgba(244,185,66,.2);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:.79rem;line-height:1.55;color:#F4B942}
+.warn-box{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:.79rem;line-height:1.55;color:#EF4444}
+.info-box{background:rgba(0,180,255,.07);border:1px solid rgba(0,180,255,.2);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:.79rem;line-height:1.55;color:#00B4FF}
+.calc-section{margin-bottom:14px}
+.slider-wrap{margin-bottom:12px}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:.8rem}
+.slider-name{color:#94A3B8;font-weight:600;font-size:.77rem}
+.slider-val{color:#00B4FF;font-weight:700;font-size:.88rem}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:#1e2d4a;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#00B4FF;cursor:pointer;box-shadow:0 0 0 3px rgba(0,180,255,.2)}
+.wh-result-card{background:#0A0E1A;border-radius:10px;padding:14px;margin-top:14px;border:1px solid #1e2d4a}
+.wh-metric{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1e2d4a;font-size:.82rem}
+.wh-metric:last-child{border-bottom:none}
+.wh-label{color:#94A3B8}
+.wh-val{font-weight:700;color:#E2E8F0}
+.chart-area{margin:16px 0}
+.chart-bars{display:flex;align-items:flex-end;justify-content:center;gap:20px;height:100px;margin-bottom:8px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;width:70px}
+.bar{width:100%;border-radius:4px 4px 0 0;transition:height .6s ease;position:relative}
+.bar-label{font-size:.68rem;color:#94A3B8;text-align:center}
+.bar-psi{font-size:.72rem;font-weight:700;text-align:center;margin-top:2px}
+.surge-risk-indicator{text-align:center;padding:10px;border-radius:8px;margin:10px 0;font-weight:700;font-size:.85rem}
+.surge-low{background:rgba(34,197,94,.1);color:#22C55E;border:1px solid rgba(34,197,94,.25)}
+.surge-mod{background:rgba(244,185,66,.1);color:#F4B942;border:1px solid rgba(244,185,66,.25)}
+.surge-high{background:rgba(249,115,22,.1);color:#F97316;border:1px solid rgba(249,115,22,.25)}
+.surge-crit{background:rgba(239,68,68,.1);color:#EF4444;border:1px solid rgba(239,68,68,.25)}
+.repair-row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid #1e2d4a;font-size:.82rem}
+.repair-row:last-child{border-bottom:none}
+.repair-total{background:#0A0E1A;border-radius:10px;padding:13px;display:flex;justify-content:space-between;align-items:center;margin:12px 0;border:1px solid #1e2d4a}
+.form-group{margin-bottom:12px}
+.form-group label{text-transform:none;font-size:.81rem;margin-bottom:4px}
+.form-group input,.form-group select,.form-group textarea{margin-bottom:0}
+textarea{width:100%;padding:10px 12px;background:#0A0E1A;border:1px solid #1e2d4a;border-radius:8px;color:#E2E8F0;font-size:.83rem;resize:vertical;min-height:80px;font-family:inherit}
+textarea:focus{outline:none;border-color:#00B4FF}
+.section-title{font-size:.93rem;font-weight:700;color:#E2E8F0;margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid #1e2d4a}
+.phone-link{color:#00B4FF;font-weight:700;text-decoration:none}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(120px);background:#F4B942;color:#0A0E1A;padding:14px 22px;border-radius:14px;font-weight:700;font-size:.88rem;transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:9999;text-align:center;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.pipe-sel-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.pipe-btn{background:#0A0E1A;border:2px solid #1e2d4a;border-radius:8px;padding:10px 8px;cursor:pointer;text-align:center;transition:all .15s}
+.pipe-btn.selected{border-color:#00B4FF;background:rgba(0,180,255,.08)}
+.pipe-btn-name{font-size:.8rem;font-weight:700;color:#E2E8F0;display:block}
+.pipe-btn-sub{font-size:.68rem;color:#94A3B8;display:block;margin-top:2px}
+.issue-sel{display:grid;grid-template-columns:1fr;gap:7px;margin-bottom:12px}
+.issue-opt{background:#0A0E1A;border:2px solid #1e2d4a;border-radius:8px;padding:10px 12px;cursor:pointer;transition:all .15s}
+.issue-opt.selected{border-color:#14B8A6;background:rgba(20,184,166,.06)}
+.issue-opt-name{font-size:.82rem;font-weight:700;color:#E2E8F0}
+.issue-opt-range{font-size:.72rem;color:#14B8A6;margin-top:2px}
+.region-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.region-btn{background:#0A0E1A;border:2px solid #1e2d4a;border-radius:8px;padding:8px 6px;cursor:pointer;text-align:center;transition:all .15s;font-size:.76rem;font-weight:700;color:#94A3B8}
+.region-btn.selected{border-color:#F97316;color:#F97316;background:rgba(249,115,22,.06)}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.home-btn{background:#0A0E1A;border:2px solid #1e2d4a;border-radius:8px;padding:8px 6px;cursor:pointer;text-align:center;transition:all .15s;font-size:.76rem;font-weight:700;color:#94A3B8}
+.home-btn.selected{border-color:#14B8A6;color:#14B8A6;background:rgba(20,184,166,.06)}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🔊 FL Plumbing Noise Diagnosis</h1>
+<p class="subtitle">Identify what's making that sound — water hammer, sediment, pressure issues &amp; more</p>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('sound')">Sound Wizard</button>
+  <button class="tab-btn" onclick="showTab('library')">Noise Library</button>
+  <button class="tab-btn" onclick="showTab('hammer')">Hammer Calc</button>
+  <button class="tab-btn" onclick="showTab('repair')">Repair Cost</button>
+</div>
+
+<!-- TAB 1: SOUND WIZARD -->
+<div id="tab-sound" class="tab-pane active">
+
+  <div class="step-dots" id="sw-dots">
+    <div class="sdot active" id="sw-d1">1</div>
+    <div class="sline"></div>
+    <div class="sdot" id="sw-d2">2</div>
+    <div class="sline"></div>
+    <div class="sdot" id="sw-d3">3</div>
+    <div class="sline"></div>
+    <div class="sdot" id="sw-d4">4</div>
+  </div>
+
+  <!-- Step 1: Sound Type -->
+  <div id="sw-step1" class="card">
+    <div class="step-header">Step 1 of 4</div>
+    <div class="step-title">What does the noise sound like?</div>
+    <div class="sound-grid">
+      <div class="sound-btn" id="snd-bang" onclick="selSound('bang',this)">
+        <span class="sound-emoji">💥</span>
+        <span class="sound-label">BANG / CLANK</span>
+        <span class="sound-sub">Loud thud or knock</span>
+      </div>
+      <div class="sound-btn" id="snd-squeal" onclick="selSound('squeal',this)">
+        <span class="sound-emoji">😬</span>
+        <span class="sound-label">SQUEAL / SCREECH</span>
+        <span class="sound-sub">High-pitched whine</span>
+      </div>
+      <div class="sound-btn" id="snd-gurgle" onclick="selSound('gurgle',this)">
+        <span class="sound-emoji">🌀</span>
+        <span class="sound-label">GURGLE / GLUG</span>
+        <span class="sound-sub">Bubbling or draining sound</span>
+      </div>
+      <div class="sound-btn" id="snd-drip" onclick="selSound('drip',this)">
+        <span class="sound-emoji">💧</span>
+        <span class="sound-label">DRIP / TICK</span>
+        <span class="sound-sub">Rhythmic tapping or drip</span>
+      </div>
+      <div class="sound-btn" id="snd-hiss" onclick="selSound('hiss',this)">
+        <span class="sound-emoji">💨</span>
+        <span class="sound-label">HISS / WHISTLE</span>
+        <span class="sound-sub">Sustained high frequency</span>
+      </div>
+      <div class="sound-btn" id="snd-rumble" onclick="selSound('rumble',this)">
+        <span class="sound-emoji">🔈</span>
+        <span class="sound-label">RUMBLE / VIBRATE</span>
+        <span class="sound-sub">Low-frequency vibration</span>
+      </div>
+    </div>
+    <button class="btn btn-blue" onclick="swStep(2)">Next: When Does It Happen? →</button>
+  </div>
+
+  <!-- Step 2: Timing -->
+  <div id="sw-step2" class="card" style="display:none">
+    <div class="step-header">Step 2 of 4</div>
+    <div class="step-title">When does the noise happen?</div>
+    <div class="opt-row" id="tw-flush" onclick="selTiming('flush',this)">
+      <input type="radio" name="timing" value="flush"><div><div class="opt-title">🚽 When flushing the toilet</div><div class="opt-desc">Noise occurs immediately when you flush — includes fill valve refill cycle</div></div>
+    </div>
+    <div class="opt-row" id="tw-washer" onclick="selTiming('washer',this)">
+      <input type="radio" name="timing" value="washer"><div><div class="opt-title">🫧 When running the washer</div><div class="opt-desc">Noise occurs during washing machine fill cycle or when washer solenoid valve opens/closes</div></div>
+    </div>
+    <div class="opt-row" id="tw-fauceton" onclick="selTiming('fauceton',this)">
+      <input type="radio" name="timing" value="fauceton"><div><div class="opt-title">🚰 When turning on a faucet</div><div class="opt-desc">Noise starts when you open a faucet — while water is flowing</div></div>
+    </div>
+    <div class="opt-row" id="tw-fauceoff" onclick="selTiming('fauceoff',this)">
+      <input type="radio" name="timing" value="fauceoff"><div><div class="opt-title">⏹️ When turning OFF a faucet</div><div class="opt-desc">Noise occurs the moment you close a faucet — brief or sustained knock</div></div>
+    </div>
+    <div class="opt-row" id="tw-wh" onclick="selTiming('wh',this)">
+      <input type="radio" name="timing" value="wh"><div><div class="opt-title">🔥 When water heater runs</div><div class="opt-desc">Sound comes from near the water heater — during heating cycle or standby</div></div>
+    </div>
+    <div class="opt-row" id="tw-random" onclick="selTiming('random',this)">
+      <input type="radio" name="timing" value="random"><div><div class="opt-title">❓ Randomly / Throughout the day</div><div class="opt-desc">No consistent trigger — happens at unpredictable times</div></div>
+    </div>
+    <div class="opt-row" id="tw-always" onclick="selTiming('always',this)">
+      <input type="radio" name="timing" value="always"><div><div class="opt-title">🔄 Constantly / All the time</div><div class="opt-desc">Continuous noise that never stops</div></div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-outline" onclick="swStep(1)">← Back</button>
+      <button class="btn btn-blue" onclick="swStep(3)">Next: Location →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Location -->
+  <div id="sw-step3" class="card" style="display:none">
+    <div class="step-header">Step 3 of 4</div>
+    <div class="step-title">Where in the home is the noise coming from?</div>
+    <div class="opt-row" id="loc-walls" onclick="selLoc('walls',this)">
+      <input type="radio" name="loc" value="walls"><div><div class="opt-title">🏠 Inside walls or ceiling</div><div class="opt-desc">Sound originates from pipes hidden in wall cavities or above ceilings</div></div>
+    </div>
+    <div class="opt-row" id="loc-sink" onclick="selLoc('sink',this)">
+      <input type="radio" name="loc" value="sink"><div><div class="opt-title">🚿 Under sinks / at fixtures</div><div class="opt-desc">Noise is localized to a specific faucet, sink cabinet, or fixture location</div></div>
+    </div>
+    <div class="opt-row" id="loc-slab" onclick="selLoc('slab',this)">
+      <input type="radio" name="loc" value="slab"><div><div class="opt-title">🏗️ Below floor / under slab</div><div class="opt-desc">Sound seems to come from below the concrete slab — common in FL slab-on-grade construction</div></div>
+    </div>
+    <div class="opt-row" id="loc-wh" onclick="selLoc('wh',this)">
+      <input type="radio" name="loc" value="wh"><div><div class="opt-title">🔥 Near water heater</div><div class="opt-desc">Noise is clearly coming from the water heater tank or its connections</div></div>
+    </div>
+    <div class="opt-row" id="loc-toilet" onclick="selLoc('toilet',this)">
+      <input type="radio" name="loc" value="toilet"><div><div class="opt-title">🚽 Near toilet</div><div class="opt-desc">Sound comes from toilet tank, bowl, or the supply line to the toilet</div></div>
+    </div>
+    <div class="opt-row" id="loc-everywhere" onclick="selLoc('everywhere',this)">
+      <input type="radio" name="loc" value="everywhere"><div><div class="opt-title">🏘️ Throughout the home</div><div class="opt-desc">Noise seems to propagate through the whole house — no single source</div></div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-outline" onclick="swStep(2)">← Back</button>
+      <button class="btn btn-blue" onclick="swStep(4)">Next: Duration →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Duration -->
+  <div id="sw-step4" class="card" style="display:none">
+    <div class="step-header">Step 4 of 4</div>
+    <div class="step-title">How long has this been happening?</div>
+    <div class="opt-row" id="dur-new" onclick="selDur('new',this)">
+      <input type="radio" name="dur" value="new"><div><div class="opt-title">🆕 Just started — recently</div><div class="opt-desc">Noise appeared suddenly, often following some change — new appliance, recent work, a storm</div></div>
+    </div>
+    <div class="opt-row" id="dur-days" onclick="selDur('days',this)">
+      <input type="radio" name="dur" value="days"><div><div class="opt-title">📅 A few days</div><div class="opt-desc">Started within the last week — problem is relatively new and may be progressing</div></div>
+    </div>
+    <div class="opt-row" id="dur-weeks" onclick="selDur('weeks',this)">
+      <input type="radio" name="dur" value="weeks"><div><div class="opt-title">🗓️ A few weeks</div><div class="opt-desc">Has been happening consistently for 2–6 weeks</div></div>
+    </div>
+    <div class="opt-row" id="dur-months" onclick="selDur('months',this)">
+      <input type="radio" name="dur" value="months"><div><div class="opt-title">⏳ Months or longer</div><div class="opt-desc">Ongoing issue that's been present for a long time — may have been gradual onset</div></div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-outline" onclick="swStep(3)">← Back</button>
+      <button class="btn btn-gold" onclick="runDiagnosis()">Diagnose My Noise →</button>
+    </div>
+  </div>
+
+  <!-- Result Panel -->
+  <div id="sw-result" style="display:none">
+    <div id="sw-result-content"></div>
+    <div class="tip-box">🌴 <strong>FL Slab Homes:</strong> Concrete slab construction (the most common foundation type in Florida) conducts pipe vibrations especially well. A minor water hammer that would be barely audible in a crawl-space home can sound like a gunshot through a slab floor. The sound alone doesn't indicate severity — our diagnosis looks at the source, not just the volume.</div>
+    <div class="card" style="background:linear-gradient(135deg,#0F1629,#141929);text-align:center;border:1px solid rgba(0,180,255,.12)">
+      <p style="font-size:.8rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">A licensed CFC plumber can diagnose your exact issue on-site and give you a firm quote. We do free noise diagnosis visits — no charge for the assessment.</p>
+      <a href="tel:5615557473" class="btn btn-gold" style="display:block;text-decoration:none;margin-bottom:10px">📞 (561) 555-PIPE — Free Diagnosis Visit</a>
+      <button class="btn btn-blue" onclick="document.getElementById('sw-lead').style.display='block'">Request Online Assessment Form</button>
+    </div>
+    <div id="sw-lead" style="display:none" class="card" style="background:#141929;border:1px solid rgba(244,185,66,.2);margin-top:10px">
+      <h3 style="color:#F4B942;font-size:.88rem;margin-bottom:12px">Free Noise Diagnosis Visit Request</h3>
+      <div class="form-group"><label>Your Name</label><input type="text" id="sl-name" placeholder="John Smith"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="sl-phone" placeholder="(561) 555-0100"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="sl-email" placeholder="you@email.com"></div>
+      <div class="form-group"><label>Describe the sound (details help our plumber prepare)</label><textarea id="sl-desc" placeholder="e.g. 'Loud bang in the kitchen wall every time I turn off the faucet — started 2 weeks ago, home is 1988 slab construction'"></textarea></div>
+      <button class="btn btn-gold" onclick="submitLead()">Send My Request →</button>
+    </div>
+    <button class="btn btn-outline" onclick="resetWizard()" style="margin-top:12px">← Start Over</button>
+  </div>
+
+</div>
+
+<!-- TAB 2: NOISE LIBRARY -->
+<div id="tab-library" class="tab-pane">
+  <h2 class="section-title">Florida Plumbing Noise Library</h2>
+  <p style="color:#94A3B8;font-size:.79rem;margin-bottom:14px;line-height:1.5">8 most common plumbing noises in Florida homes — with Florida-specific context on slab construction, hard water, high humidity, and summer thermal expansion. Tap any card to expand.</p>
+
+  <div class="noise-card">
+    <div class="noise-header" onclick="toggleNoise(this)">
+      <div class="noise-title">💥 Water Hammer</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="risk-badge risk-moderate">Moderate</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="noise-body">
+      <p><strong style="color:#00B4FF">What you hear:</strong> A sharp, single BANG — like someone hit the pipe with a hammer — immediately after shutting off a faucet, when the toilet fill valve closes, or when a washing machine solenoid valve slams shut. May also sound like a repetitive series of bangs that diminish quickly.</p>
+      <p><strong style="color:#F4B942">What's actually happening:</strong> Water hammer (hydraulic shock) occurs when flowing water is suddenly stopped, creating a pressure wave that travels back through the pipe system. When kinetic energy in the moving water column has nowhere to go, it creates a high-pressure shockwave — the Joukowski formula predicts surges of 60–300 psi in typical residential systems. The pipe vibrates against framing, through concrete, or against other pipes, creating the audible bang.</p>
+      <p><strong style="color:#14B8A6">Why it's worse in Florida:</strong> Florida slab-on-grade construction means pipes are often embedded in or running through concrete — the most efficient sound conductor possible. What would be a muffled thud in a wood-frame home sounds like a gunshot through concrete. Additionally, Florida's high water pressure (often 75–90 psi to reach upper floors in coastal developments) amplifies water hammer severity significantly.</p>
+      <p><strong style="color:#22C55E">DIY Fix (moderate confidence):</strong></p>
+      <ul>
+        <li>Install a water hammer arrestor (ASSE 1010 rated) at the affected fixture. For washing machines, install a dedicated hammer arrestor at the washing machine hose bibs — they're available at any hardware store for $10–20 and screw on without tools.</li>
+        <li>Check supply pressure at the hose bib with a gauge: if pressure exceeds 80 psi, install or adjust a Pressure Reducing Valve (PRV) on the main line.</li>
+        <li>Check for loose pipe straps or supports — pipes that aren't firmly anchored vibrate much more violently when the pressure wave hits.</li>
+      </ul>
+      <p><strong style="color:#EF4444">Call a plumber when:</strong> Hammer arrestors or PRV adjustment don't resolve the noise, the banging is very loud or structural, pipes have been moving enough to damage connections, or you have visible water damage near the affected area.</p>
+      <p><strong>Average FL repair cost:</strong> Hammer arrestor installation $95–$200 · PRV installation $250–$550 · Full water hammer system repair $300–$800</p>
+    </div>
+  </div>
+
+  <div class="noise-card">
+    <div class="noise-header" onclick="toggleNoise(this)">
+      <div class="noise-title">🔈 Sediment Rumble</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="risk-badge risk-moderate">Moderate</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="noise-body">
+      <p><strong style="color:#00B4FF">What you hear:</strong> A deep, low-frequency rumble, popping, or boiling sound coming from the water heater — most prominent during the heating cycle. Sometimes described as a percolating coffee maker sound, or a low rumble like thunder inside the tank.</p>
+      <p><strong style="color:#F4B942">What's actually happening:</strong> In Florida's hard water areas, dissolved calcium carbonate (limestone) precipitates out of the water when heated and settles on the bottom of the water heater tank. Over time, this sediment layer insulates the heating element (electric) or burner (gas) from the water above, causing the water trapped beneath the sediment to super-heat and boil — creating the popping, rumbling sound as steam bubbles escape through the sediment layer.</p>
+      <p><strong style="color:#14B8A6">Why it's worse in Florida:</strong> This is one of the most common water heater issues in Central and Southwest Florida. Collier County (Naples), Lee County (Fort Myers), Polk County (Lakeland), and Orange County (Orlando) have water hardness readings of 150–350 ppm CaCO3 — among the highest in the US. A tank water heater in these areas can accumulate a significant sediment layer within 2–3 years without annual flushing maintenance.</p>
+      <p><strong style="color:#22C55E">DIY Fix:</strong></p>
+      <ul>
+        <li>Flush the tank: Connect a garden hose to the drain valve at the bottom of the tank. Turn off the cold water supply and heating element/gas. Open the drain valve and flush until the water runs clear (typically 5–15 minutes). Do this annually in hard water areas.</li>
+        <li>If flushing doesn't clear the noise within 1–2 heating cycles, the sediment may be too calcified — professional tank cleaning or replacement is needed.</li>
+      </ul>
+      <p><strong style="color:#EF4444">Call a plumber when:</strong> Flushing doesn't resolve the noise, the tank is more than 8–10 years old, you notice discolored hot water, reduced hot water capacity, or if the drain valve is frozen/won't open (common on neglected tanks).</p>
+      <p><strong>Average FL repair cost:</strong> Professional tank flush/descaling $150–$300 · Drain valve replacement $75–$150 · Full water heater replacement $800–$2,200 installed</p>
+    </div>
+  </div>
+
+  <div class="noise-card">
+    <div class="noise-header" onclick="toggleNoise(this)">
+      <div class="noise-title">😬 Pipe Squeal / Screech</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="risk-badge risk-monitor">Monitor</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="noise-body">
+      <p><strong style="color:#00B4FF">What you hear:</strong> A high-pitched squeal, screech, or whine that occurs when using a specific faucet. May be a constant tone while the faucet is open, or may pulse or warble with changes in flow. Often localized to a single faucet — kitchen or bathroom sink most commonly.</p>
+      <p><strong style="color:#F4B942">What's actually happening:</strong> Two primary causes: (1) A worn or deteriorated rubber washer or O-ring in the faucet stem vibrates against the seat as water flows past — similar to air moving through a reed instrument. This creates the oscillating tone. (2) High water pressure forcing water through a partially obstructed orifice (mineral deposits, debris) creates a Venturi effect that produces a whistle or squeal.</p>
+      <p><strong style="color:#14B8A6">Why it's worse in Florida:</strong> Florida's high water pressure (standard city pressure is 60–80 psi in most municipalities, sometimes higher) increases flow velocity and amplifies any vibration in loose washer assemblies. Florida's hard water also causes mineral scaling inside faucet bodies and aerators that can restrict flow and cause squeal.</p>
+      <p><strong style="color:#22C55E">DIY Fix:</strong></p>
+      <ul>
+        <li>Remove and clean the faucet aerator — mineral buildup here is the most common cause in FL hard water areas.</li>
+        <li>Replace the faucet washer/seat assembly — available as a kit for $5–15 at hardware stores. Turn off the supply shutoff under the sink, disassemble the faucet handle, and replace the washer at the bottom of the stem.</li>
+        <li>If the squeal occurs building-wide, check system pressure with a gauge at the hose bib — if &gt;80 psi, have a PRV installed.</li>
+      </ul>
+      <p><strong>Average FL repair cost:</strong> Faucet rebuild/washer replacement $95–$200 · PRV installation $250–$550 · Faucet replacement $200–$450 installed</p>
+    </div>
+  </div>
+
+  <div class="noise-card">
+    <div class="noise-header" onclick="toggleNoise(this)">
+      <div class="noise-title">🌀 Vent Stack Gurgle</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="risk-badge risk-moderate">Moderate</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="noise-body">
+      <p><strong style="color:#00B4FF">What you hear:</strong> A gurgling, glug-glug, or bubble-popping sound coming from a drain or toilet — often immediately after a toilet is flushed, or when water drains from a sink or tub. The sound may come from a drain in a different room than the one currently in use.</p>
+      <p><strong style="color:#F4B942">What's actually happening:</strong> Plumbing drain systems require air to flow in behind draining water — without air, the draining water creates a partial vacuum (negative pressure) that siphons water out of nearby P-traps or creates a gurgling sound as air is pulled through the drain rather than through the vent system. The vent stack (the pipe that exits through your roof) provides the air pathway. When the vent is blocked, the system draws air through the water in P-traps or drain openings instead — creating the characteristic gurgle.</p>
+      <p><strong style="color:#14B8A6">Why it's worse in Florida:</strong> Florida's flat-roof and tile-roof construction can allow debris accumulation around vent stack roof penetrations. Florida's subtropical vegetation — palm fronds, live oak leaves, Spanish moss — frequently creates partial vent blockages. Additionally, Florida's summer rainstorms can deposit debris into open vent stacks rapidly.</p>
+      <p><strong style="color:#22C55E">DIY Check:</strong></p>
+      <ul>
+        <li>Check that all P-traps are holding water (pour water into unused drains periodically — traps can dry out in unused fixtures, especially common in FL where vacation homes sit empty).</li>
+        <li>Visually inspect the roof vent stack opening for debris — carefully clear any visible blockage. Do NOT attempt this if you are not comfortable with roof access.</li>
+        <li>Run water in all fixtures to check which drains gurgle when others are used — this helps localize the blocked vent branch.</li>
+      </ul>
+      <p><strong style="color:#EF4444">Call a plumber when:</strong> Multiple drains gurgle simultaneously, you smell sewer gas (hydrogen sulfide — rotten egg smell), or you suspect the main drain line may be partially blocked.</p>
+      <p><strong>Average FL repair cost:</strong> Vent stack clearing $150–$350 · AAV (Air Admittance Valve) installation $175–$400 · Main vent line repair $400–$1,200</p>
+    </div>
+  </div>
+
+  <div class="noise-card">
+    <div class="noise-header" onclick="toggleNoise(this)">
+      <div class="noise-title">💨 TPR Valve Hiss</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="risk-badge risk-critical">🔴 URGENT</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="noise-body">
+      <div class="warn-box">🔴 <strong>URGENT:</strong> A hissing or dripping sound coming from the Temperature &amp; Pressure Relief (TPR) valve or its discharge pipe may indicate dangerously high temperature or pressure in your water heater. Do not ignore this sound.</div>
+      <p><strong style="color:#00B4FF">What you hear:</strong> A hissing, dripping, or trickling sound coming from near the water heater — specifically from the brass valve on the side or top of the tank that has a pipe connected to it. You may see moisture or water near the discharge pipe termination.</p>
+      <p><strong style="color:#F4B942">What's actually happening:</strong> The TPR valve is designed to open and release pressure when either water temperature exceeds 210°F or system pressure exceeds the valve's rated pressure (typically 150 psi). If you hear it dripping or hissing, one of three things is occurring: (1) System pressure or temperature is genuinely too high and the valve is doing its job, (2) The valve itself has deteriorated and is seeping even at normal operating conditions, or (3) Thermal expansion in a closed system is repeatedly triggering the valve.</p>
+      <p><strong style="color:#EF4444">What to do immediately:</strong></p>
+      <ul>
+        <li>Check the thermostat setting — it must be set at 120°F maximum. If it's set higher, turn it down and monitor.</li>
+        <li>Check system pressure at a hose bib with a gauge — if pressure exceeds 80 psi, the expansion pressure from heating may be triggering the valve.</li>
+        <li>Do NOT cap, plug, or remove the TPR valve — this is a life-safety device. A capped TPR valve on a water heater is a potential explosion hazard.</li>
+        <li>Call a licensed plumber same day if the valve continues to drip, the water heater is making boiling sounds, or if you cannot identify and eliminate the cause.</li>
+      </ul>
+      <p><strong>Average FL repair cost:</strong> TPR valve replacement $125–$250 · Expansion tank installation $175–$350 · PRV adjustment/replacement $200–$550 · Full diagnostic visit $150–$250</p>
+    </div>
+  </div>
+
+  <div class="noise-card">
+    <div class="noise-header" onclick="toggleNoise(this)">
+      <div class="noise-title">💧 Thermal Expansion Tick</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="risk-badge risk-low">Low</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="noise-body">
+      <p><strong style="color:#00B4FF">What you hear:</strong> A rhythmic ticking, clicking, or occasional popping sound that occurs periodically — not tied to any specific water usage. Often happens in the early morning or late evening as temperatures change. May seem to come from walls, ceiling, or near the water heater.</p>
+      <p><strong style="color:#F4B942">What's actually happening:</strong> All pipe materials expand when heated and contract when cooled. CPVC and PEX expand significantly — CPVC expands at roughly 3.8 × 10⁻⁵ in/in/°F, meaning a 100-foot run changes by about 4 inches between 50°F and 120°F. When this expansion occurs in pipes constrained by tight pipe straps, stud notches, or concrete, the pipe can't expand smoothly and instead jumps — creating a series of clicks or ticks as it works its way along the support.</p>
+      <p><strong style="color:#14B8A6">Why it's more noticeable in Florida:</strong> Florida's ambient temperature swings — cool nights, very hot days, cold air conditioning — create more thermal cycling than in moderate climates. Homes with concrete slab construction also transmit the tick sound clearly. Florida's common use of CPVC (high expansion rate plastic) in homes built 1980–2010 makes this especially prevalent here.</p>
+      <p><strong style="color:#22C55E">DIY Fix:</strong></p>
+      <ul>
+        <li>Usually not a repair issue — thermal tick is normal behavior. However, if the sound is very loud or pipes are visibly moving, inspect pipe supports. Pipes should be able to move slightly in their hangers — a pipe strap that's overly tight will prevent movement and cause the snap.</li>
+        <li>Ensure pipe straps are the correct type for pipe material — roller-type straps designed for expansion allow movement without noise.</li>
+      </ul>
+      <p><strong>Average FL repair cost:</strong> Pipe strap adjustment/replacement $150–$350 · Pipe insulation to reduce thermal cycling $200–$500</p>
+    </div>
+  </div>
+
+  <div class="noise-card">
+    <div class="noise-header" onclick="toggleNoise(this)">
+      <div class="noise-title">🚽 Toilet Running / Fill Valve Noise</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="risk-badge risk-monitor">Monitor</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="noise-body">
+      <p><strong style="color:#00B4FF">What you hear:</strong> A hissing, running water sound, or occasional refill cycle coming from the toilet — even when nobody has used it. Sometimes a loud CLUNK when the fill valve closes after refill (often called "ghost flushing" when the toilet spontaneously refills). May also hear a foghorn-like sound when toilet flushes.</p>
+      <p><strong style="color:#F4B942">What's actually happening:</strong> Toilet running noise typically has three causes: (1) Flapper valve deterioration — water slowly leaks past the flapper from tank to bowl, causing the fill valve to run periodically to maintain water level. (2) Fill valve wear — the fill valve itself has a worn diaphragm or seal that creates a whistle or foghorn sound as it closes, especially in high-pressure systems. (3) Overflow tube height — if the water level is set too high and water is entering the overflow tube, you'll hear constant running.</p>
+      <p><strong style="color:#14B8A6">Why it's worse in Florida:</strong> Florida's hard water degrades flapper rubber valves more quickly than in low-mineral areas. UV exposure in warm Florida homes also degrades rubber components faster. A toilet with a deteriorated flapper can waste 50–200 gallons per day — at Florida's water rates ($3–8 per thousand gallons), this adds up quickly.</p>
+      <p><strong style="color:#22C55E">DIY Fix:</strong></p>
+      <ul>
+        <li>Flapper replacement: Turn off supply at the shutoff valve, flush to empty tank, unhook the old flapper from the overflow tube ears, disconnect the chain from the flush handle arm, and snap on a new flapper. $5–10 at any hardware store. This fixes 80% of running toilet issues.</li>
+        <li>Fill valve replacement: Turn off supply, flush and empty tank, disconnect supply line, unscrew locknut at bottom of tank, lift out old fill valve, install new Fluidmaster 400A or equivalent. $10–15 part, 20-minute job.</li>
+      </ul>
+      <p><strong>Average FL repair cost:</strong> Flapper replacement $75–$150 (service call + part) · Fill valve replacement $95–$175 · Toilet rebuild $175–$350</p>
+    </div>
+  </div>
+
+  <div class="noise-card">
+    <div class="noise-header" onclick="toggleNoise(this)">
+      <div class="noise-title">🔈 High Pressure Hiss / Whistle</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="risk-badge risk-moderate">Moderate</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="noise-body">
+      <p><strong style="color:#00B4FF">What you hear:</strong> A sustained hissing or whistling sound that occurs throughout the home whenever water is running — not localized to any single fixture. May also manifest as screeching at faucets or aerators. The sound stops when no water is in use.</p>
+      <p><strong style="color:#F4B942">What's actually happening:</strong> Water at high velocity creates turbulent flow that produces audible noise as it moves through pipes, fittings, and fixture orifices. This is typically a sign that system static pressure is too high — above 80 psi — causing water to move through the system faster than the piping can handle quietly. The energy of the high-pressure flow also accelerates wear on every valve seat, washer, and gasket in the system.</p>
+      <p><strong style="color:#14B8A6">Why it's more common in Florida:</strong> Many Florida municipal water systems operate at 80–100+ psi to serve high-rise condos, hills in Central Florida, and to ensure pressure reaches the end of long distribution lines. Homes at the beginning of a distribution line can have very high service pressure. Florida's building codes require a PRV when pressure exceeds 80 psi — but many homes built before rigorous enforcement or that have had the PRV removed during renovations operate at dangerous pressures.</p>
+      <p><strong style="color:#22C55E">DIY Check:</strong> Purchase a water pressure gauge ($15–30) and test at the hose bib — normal is 45–75 psi. If pressure exceeds 80 psi, a PRV (Pressure Reducing Valve) installation is the fix.</p>
+      <p><strong style="color:#EF4444">Call a plumber when:</strong> Any reading over 80 psi warrants a PRV installation — this protects appliances, water heater, and all plumbing connections from premature wear and potential failure.</p>
+      <p><strong>Average FL repair cost:</strong> PRV installation $250–$600 · PRV adjustment only $95–$175 · Full pressure assessment $150–$250</p>
+    </div>
+  </div>
+
+  <div class="tip-box" style="margin-top:14px">🌴 <strong>Florida Slab Construction Note:</strong> Over 90% of Florida single-family homes are built on concrete slab foundations. Supply pipes in slab homes run in one of three ways: (1) through the slab, (2) in the block walls, or (3) overhead through the attic. All three configurations conduct sound differently than wood-frame construction. A plumber familiar with FL slab homes will diagnose noise sources much more accurately than one primarily experienced with crawl-space or basement construction.</div>
+</div>
+
+<!-- TAB 3: WATER HAMMER CALCULATOR -->
+<div id="tab-hammer" class="tab-pane">
+  <div class="card">
+    <h2 style="color:#E2E8F0;font-size:.93rem;font-weight:700;margin-bottom:4px">Water Hammer Surge Pressure Calculator</h2>
+    <p style="color:#94A3B8;font-size:.77rem;margin-bottom:14px;line-height:1.5">Based on the Joukowski equation for hydraulic pressure surge. Enter your system parameters to calculate peak surge pressure and risk level.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="color:#F4B942;font-size:.82rem;font-weight:700;margin-bottom:12px">PIPE MATERIAL</h3>
+    <div class="pipe-sel-grid">
+      <div class="pipe-btn selected" id="pm-copper" onclick="selPipe('copper',this)"><span class="pipe-btn-name">Copper</span><span class="pipe-btn-sub">Wave speed 4,500 ft/s</span></div>
+      <div class="pipe-btn" id="pm-cpvc" onclick="selPipe('cpvc',this)"><span class="pipe-btn-name">CPVC</span><span class="pipe-btn-sub">Wave speed 4,000 ft/s</span></div>
+      <div class="pipe-btn" id="pm-pex" onclick="selPipe('pex',this)"><span class="pipe-btn-name">PEX</span><span class="pipe-btn-sub">Wave speed 1,500 ft/s</span></div>
+      <div class="pipe-btn" id="pm-galv" onclick="selPipe('galv',this)"><span class="pipe-btn-name">Galvanized</span><span class="pipe-btn-sub">Wave speed 4,200 ft/s</span></div>
+      <div class="pipe-btn" id="pm-iron" onclick="selPipe('iron',this)"><span class="pipe-btn-name">Cast Iron</span><span class="pipe-btn-sub">Wave speed 4,300 ft/s</span></div>
+      <div class="pipe-btn" id="pm-pvc" onclick="selPipe('pvc',this)"><span class="pipe-btn-name">PVC / ABS</span><span class="pipe-btn-sub">Wave speed 3,200 ft/s</span></div>
+    </div>
+
+    <h3 style="color:#F4B942;font-size:.82rem;font-weight:700;margin-bottom:12px">PIPE DIAMETER</h3>
+    <div class="pipe-sel-grid">
+      <div class="pipe-btn" id="pd-half" onclick="selDiam('0.5',this)"><span class="pipe-btn-name">½ inch</span><span class="pipe-btn-sub">Branch / fixture</span></div>
+      <div class="pipe-btn selected" id="pd-3q" onclick="selDiam('0.75',this)"><span class="pipe-btn-name">¾ inch</span><span class="pipe-btn-sub">Most common</span></div>
+      <div class="pipe-btn" id="pd-1" onclick="selDiam('1',this)"><span class="pipe-btn-name">1 inch</span><span class="pipe-btn-sub">Main supply</span></div>
+      <div class="pipe-btn" id="pd-1h" onclick="selDiam('1.5',this)"><span class="pipe-btn-name">1½ inch</span><span class="pipe-btn-sub">Large main</span></div>
+    </div>
+
+    <div class="slider-wrap">
+      <div class="slider-label"><span class="slider-name">Flow Velocity</span><span class="slider-val" id="vel-display">6 ft/s</span></div>
+      <input type="range" id="vel-slider" min="1" max="15" value="6" step="0.5" oninput="updateSlider('vel',this.value)" onchange="calcHammer()">
+      <div style="display:flex;justify-content:space-between;font-size:.67rem;color:#94A3B8"><span>1 ft/s (slow)</span><span>8 ft/s (typical)</span><span>15 ft/s (high)</span></div>
+    </div>
+
+    <div class="slider-wrap">
+      <div class="slider-label"><span class="slider-name">System Static Pressure</span><span class="slider-val" id="psi-display">65 psi</span></div>
+      <input type="range" id="psi-slider" min="30" max="120" value="65" step="5" oninput="updateSlider('psi',this.value)" onchange="calcHammer()">
+      <div style="display:flex;justify-content:space-between;font-size:.67rem;color:#94A3B8"><span>30 psi (low)</span><span>65 psi (normal)</span><span>120 psi (high)</span></div>
+    </div>
+
+    <div class="slider-wrap">
+      <div class="slider-label"><span class="slider-name">Pipe Run Length</span><span class="slider-val" id="len-display">75 ft</span></div>
+      <input type="range" id="len-slider" min="10" max="300" value="75" step="5" oninput="updateSlider('len',this.value)" onchange="calcHammer()">
+      <div style="display:flex;justify-content:space-between;font-size:.67rem;color:#94A3B8"><span>10 ft</span><span>75 ft (typical)</span><span>300 ft</span></div>
+    </div>
+  </div>
+
+  <div class="card-alt" id="hammer-result-card">
+    <h3 style="color:#F4B942;font-size:.82rem;font-weight:700;margin-bottom:12px">📊 Surge Pressure Analysis</h3>
+    <div id="hammer-chart" class="chart-area">
+      <div class="chart-bars" id="chart-bars">
+        <div class="bar-col">
+          <div class="bar" id="bar-static" style="background:#00B4FF;height:50px"></div>
+          <div class="bar-label">Static<br>Pressure</div>
+          <div class="bar-psi" id="bar-static-val" style="color:#00B4FF">65 psi</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar" id="bar-surge" style="background:#F97316;height:80px"></div>
+          <div class="bar-label">Surge<br>Pressure</div>
+          <div class="bar-psi" id="bar-surge-val" style="color:#F97316">— psi</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar" id="bar-peak" style="background:#EF4444;height:90px"></div>
+          <div class="bar-label">Peak<br>Pressure</div>
+          <div class="bar-psi" id="bar-peak-val" style="color:#EF4444">— psi</div>
+        </div>
+      </div>
+    </div>
+    <div id="surge-risk-box" class="surge-risk-indicator surge-low">Calculating...</div>
+    <div class="wh-result-card">
+      <div class="wh-metric"><span class="wh-label">Pipe Material</span><span class="wh-val" id="res-mat">Copper</span></div>
+      <div class="wh-metric"><span class="wh-label">Wave Speed (a)</span><span class="wh-val" id="res-wave">4,500 ft/s</span></div>
+      <div class="wh-metric"><span class="wh-label">Flow Velocity (ΔV)</span><span class="wh-val" id="res-vel">6 ft/s</span></div>
+      <div class="wh-metric"><span class="wh-label">Surge Pressure (ΔP)</span><span class="wh-val" id="res-surge" style="color:#F97316">— psi</span></div>
+      <div class="wh-metric"><span class="wh-label">Static Pressure</span><span class="wh-val" id="res-static">65 psi</span></div>
+      <div class="wh-metric"><span class="wh-label">Peak Pressure</span><span class="wh-val" id="res-peak" style="color:#EF4444">— psi</span></div>
+      <div class="wh-metric"><span class="wh-label">Wave Transit Time</span><span class="wh-val" id="res-time">— ms</span></div>
+    </div>
+    <div id="hammer-rec" class="info-box" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card" style="font-size:.78rem;color:#94A3B8;line-height:1.6">
+    <p style="color:#E2E8F0;font-weight:700;margin-bottom:6px;font-size:.82rem">About the Joukowski Formula</p>
+    <p>The Joukowski (or Joukowsky) equation for hydraulic surge pressure is: <strong style="color:#00B4FF">ΔP = ρ × a × ΔV</strong>, where ρ is the fluid density (water = 1.94 slugs/ft³), a is the acoustic wave speed in the pipe (varies by material and wall thickness), and ΔV is the change in flow velocity (assumes instantaneous valve closure). This calculator uses the simplified form with wave speed constants that approximate real residential pipe conditions. Actual surge pressure depends on pipe wall thickness, degree of pipe support, and valve closure time — a slow-closing valve significantly reduces water hammer magnitude.</p>
+    <p style="margin-top:8px"><strong style="color:#F4B942">FL Standard Pipe Pressure Ratings:</strong> Copper (Type L residential): rated to 500 psi burst · CPVC (SDR 11 at 73°F): rated 450 psi · PEX (SDR 9): rated 160 psi at 73°F · Galvanized (schedule 40): rated 300 psi · PVC (schedule 40): rated 450 psi at 73°F. Reduce ratings by 50% at 140°F operating temperature.</p>
+  </div>
+</div>
+
+<!-- TAB 4: REPAIR COST ESTIMATOR -->
+<div id="tab-repair" class="tab-pane">
+  <div class="card">
+    <h2 style="color:#E2E8F0;font-size:.93rem;font-weight:700;margin-bottom:4px">Plumbing Noise Repair Cost Estimator</h2>
+    <p style="color:#94A3B8;font-size:.77rem;margin-bottom:14px;line-height:1.5">Estimate repair costs by issue type, home type, and FL region. Ranges reflect typical CFC plumber pricing including service call, parts, and labor.</p>
+    <h3 style="color:#F4B942;font-size:.8rem;font-weight:700;margin-bottom:10px">SELECT YOUR ISSUE</h3>
+    <div class="issue-sel">
+      <div class="issue-opt selected" id="iss-hammer" onclick="selIssue('hammer',this)">
+        <div class="issue-opt-name">💥 Water Hammer Correction</div>
+        <div class="issue-opt-range" id="iss-hammer-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-sediment" onclick="selIssue('sediment',this)">
+        <div class="issue-opt-name">🔈 Water Heater Sediment Flush</div>
+        <div class="issue-opt-range" id="iss-sediment-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-prv" onclick="selIssue('prv',this)">
+        <div class="issue-opt-name">📊 Pressure Reduction (PRV Install)</div>
+        <div class="issue-opt-range" id="iss-prv-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-faucet" onclick="selIssue('faucet',this)">
+        <div class="issue-opt-name">🚰 Faucet Valve Rebuild</div>
+        <div class="issue-opt-range" id="iss-faucet-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-vent" onclick="selIssue('vent',this)">
+        <div class="issue-opt-name">🌀 Vent Stack Clearing / AAV</div>
+        <div class="issue-opt-range" id="iss-vent-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-ptrap" onclick="selIssue('ptrap',this)">
+        <div class="issue-opt-name">⚙️ P-Trap Replacement</div>
+        <div class="issue-opt-range" id="iss-ptrap-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-insulate" onclick="selIssue('insulate',this)">
+        <div class="issue-opt-name">🧊 Pipe Insulation (Thermal Noise)</div>
+        <div class="issue-opt-range" id="iss-insulate-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-expand" onclick="selIssue('expand',this)">
+        <div class="issue-opt-name">💧 Expansion Tank Installation</div>
+        <div class="issue-opt-range" id="iss-expand-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-fill" onclick="selIssue('fill',this)">
+        <div class="issue-opt-name">🚽 Toilet Fill Valve Replacement</div>
+        <div class="issue-opt-range" id="iss-fill-r">Calculating...</div>
+      </div>
+      <div class="issue-opt" id="iss-rebuild" onclick="selIssue('rebuild',this)">
+        <div class="issue-opt-name">🔧 Full Toilet Rebuild</div>
+        <div class="issue-opt-range" id="iss-rebuild-r">Calculating...</div>
+      </div>
+    </div>
+
+    <h3 style="color:#F4B942;font-size:.8rem;font-weight:700;margin-bottom:10px">HOME TYPE</h3>
+    <div class="home-grid">
+      <div class="home-btn selected" id="ht-slab" onclick="selHome('slab',this)">Slab Foundation</div>
+      <div class="home-btn" id="ht-crawl" onclick="selHome('crawl',this)">Crawl Space</div>
+      <div class="home-btn" id="ht-two" onclick="selHome('two',this)">Two-Story</div>
+      <div class="home-btn" id="ht-condo" onclick="selHome('condo',this)">Condo / Townhouse</div>
+    </div>
+
+    <h3 style="color:#F4B942;font-size:.8rem;font-weight:700;margin-bottom:10px;margin-top:4px">FLORIDA REGION</h3>
+    <div class="region-grid">
+      <div class="region-btn selected" id="rg-south" onclick="selRegion('south',this)">South FL<br><span style="font-size:.65rem;font-weight:400">Miami/Broward/PBC</span></div>
+      <div class="region-btn" id="rg-central" onclick="selRegion('central',this)">Central FL<br><span style="font-size:.65rem;font-weight:400">Orlando/Tampa</span></div>
+      <div class="region-btn" id="rg-north" onclick="selRegion('north',this)">North FL<br><span style="font-size:.65rem;font-weight:400">Jacksonville/Tallahassee</span></div>
+      <div class="region-btn" id="rg-gulf" onclick="selRegion('gulf',this)">Gulf Coast<br><span style="font-size:.65rem;font-weight:400">Sarasota/Naples</span></div>
+    </div>
+  </div>
+
+  <div class="card-alt" id="repair-result">
+    <h3 style="color:#F4B942;font-size:.85rem;font-weight:700;margin-bottom:12px">💰 Repair Cost Breakdown</h3>
+    <div id="repair-breakdown"></div>
+    <div class="repair-total" id="repair-total-row"></div>
+    <p id="repair-timeline" style="font-size:.77rem;color:#94A3B8;text-align:center;margin-top:4px"></p>
+    <div id="repair-permit-note" class="info-box" style="margin-top:10px;display:none"></div>
+  </div>
+
+  <div class="card-alt" style="border:1px solid rgba(244,185,66,.2)">
+    <h3 style="color:#F4B942;font-size:.88rem;font-weight:700;margin-bottom:4px">🔊 Free Noise Diagnosis Visit</h3>
+    <p style="color:#94A3B8;font-size:.78rem;margin-bottom:14px;line-height:1.5">Our licensed CFC plumbers offer a free on-site noise diagnosis — we come out, identify the source, and give you a firm written quote. No charge for the assessment visit.</p>
+    <div class="form-group"><label>Full Name</label><input type="text" id="rf-name" placeholder="Jane Smith"></div>
+    <div class="form-group"><label>Best Phone</label><input type="tel" id="rf-phone" placeholder="(561) 555-0100"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="rf-email" placeholder="jane@email.com"></div>
+    <div class="form-group"><label>Describe what you're hearing</label><textarea id="rf-desc" placeholder="e.g. 'Loud banging in wall behind bathroom sink when I turn off the faucet — 1993 slab home, copper pipes, started last month'"></textarea></div>
+    <button class="btn btn-gold" onclick="submitRepairLead()">Request Free Diagnosis Visit →</button>
+    <p style="text-align:center;font-size:.77rem;color:#94A3B8;margin-top:10px">Or call us: <a href="tel:5615557473" class="phone-link">(561) 555-PIPE</a> — Licensed CFC, no service call fee</p>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="toast" id="toast-el">
+  ✅ We'll call you within 2 hours!<br>
+  <span style="font-weight:400;font-size:.81rem">Licensed CFC plumbers — free noise diagnosis.</span>
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+/* ---------- TABS ---------- */
+function showTab(t) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
+  const map = {sound:0, library:1, hammer:2, repair:3};
+  document.querySelectorAll('.tab-btn')[map[t]].classList.add('active');
+}
+
+/* ---------- SOUND WIZARD ---------- */
+var sw = { sound:'', timing:'', loc:'', dur:'' };
+
+function swStep(n) {
+  if (n===2 && !sw.sound) { alert('Please select a sound type.'); return; }
+  if (n===3 && !sw.timing) { alert('Please select when the noise happens.'); return; }
+  if (n===4 && !sw.loc) { alert('Please select where the noise comes from.'); return; }
+  [1,2,3,4].forEach(i => {
+    const el = document.getElementById('sw-step'+i);
+    if (el) el.style.display = i===n ? 'block' : 'none';
+  });
+  document.getElementById('sw-result').style.display = 'none';
+  updSwDots(n);
+}
+
+function updSwDots(active) {
+  for (let i = 1; i <= 4; i++) {
+    const d = document.getElementById('sw-d'+i);
+    if (i < active) { d.className = 'sdot done'; d.textContent = '✓'; }
+    else if (i === active) { d.className = 'sdot active'; d.textContent = i; }
+    else { d.className = 'sdot'; d.textContent = i; }
+  }
+}
+
+function selSound(v, el) {
+  sw.sound = v;
+  document.querySelectorAll('.sound-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selTiming(v, el) {
+  sw.timing = v;
+  document.querySelectorAll('[id^="tw-"]').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked = true;
+}
+
+function selLoc(v, el) {
+  sw.loc = v;
+  document.querySelectorAll('[id^="loc-"]').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked = true;
+}
+
+function selDur(v, el) {
+  sw.dur = v;
+  document.querySelectorAll('[id^="dur-"]').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked = true;
+}
+
+/* Diagnosis matrix: maps sound+timing to causes */
+const DIAGNOSES = {
+  'bang+fauceoff': [{cause:'Water Hammer', conf:92, urgency:'moderate', diy:true, cost:'$95–$350', fix:'Install ASSE 1010 hammer arrestor at affected fixture or check valve; reduce system pressure if >75 psi'},
+                    {cause:'Loose Pipe Support', conf:65, urgency:'low', diy:true, cost:'$75–$200', fix:'Inspect and tighten pipe straps in walls — pipes banging against framing amplify hammer effect'}],
+  'bang+flush':    [{cause:'Fill Valve Water Hammer / Thermal Expansion', conf:78, urgency:'low', diy:true, cost:'$95–$250', fix:'Install braided supply hose with built-in hammer arrestor; check fill valve float adjustment'},
+                    {cause:'Expansion Tank Issue (Closed System)', conf:70, urgency:'moderate', diy:false, cost:'$175–$400', fix:'Have expansion tank pre-charge verified — a failed expansion tank bladder causes water hammer on thermal expansion'}],
+  'bang+washer':   [{cause:'Washing Machine Water Hammer', conf:93, urgency:'low', diy:true, cost:'$95–$175', fix:'Install ASSE 1010 arrestors at washing machine hot and cold hose bibs — this is the most common residential water hammer scenario'},
+                    {cause:'Solenoid Valve Shock', conf:72, urgency:'low', diy:false, cost:'$150–$350', fix:'Washer solenoid valves close instantly at high pressure — consider a pressure reducing valve if pressure exceeds 75 psi'}],
+  'squeal+fauceton':[{cause:'Worn Faucet Washer / Valve Seat', conf:85, urgency:'low', diy:true, cost:'$75–$200', fix:'Replace faucet washer and O-rings — most common cause of single-fixture squeal. Inspect valve seat for scoring.'},
+                     {cause:'High System Pressure', conf:68, urgency:'moderate', diy:false, cost:'$250–$600', fix:'Measure pressure at hose bib — if >80 psi, install PRV to reduce system pressure and stop velocity-induced noise throughout home'}],
+  'gurgle+flush':  [{cause:'Blocked or Undersized Vent Stack', conf:88, urgency:'moderate', diy:false, cost:'$150–$500', fix:'Main drain vent (through roof) may be blocked by debris — requires roof access to clear. If multiple drains gurgle, may need vent stack inspection with camera.'},
+                    {cause:'Partially Blocked Main Drain', conf:65, urgency:'moderate', diy:false, cost:'$200–$600', fix:'Water gurgling past a partial blockage in the main drain — consider professional drain inspection with camera'}],
+  'gurgle+random': [{cause:'Dry P-Trap / P-Trap Siphon', conf:83, urgency:'low', diy:true, cost:'$75–$200', fix:'Run water in all infrequently used fixtures to refill P-traps. Unused floor drains in Florida garages are very common dry trap locations — pour a gallon of water down them monthly.'},
+                    {cause:'Air Admittance Valve (AAV) Failure', conf:55, urgency:'moderate', diy:false, cost:'$125–$350', fix:'If home has AAVs (one-way air inlet valves) instead of roof vents at certain branches, a failed AAV can cause intermittent gurgling — typically in sinks or tubs'}],
+  'hiss+wh':       [{cause:'TPR Valve Seeping — URGENT', conf:93, urgency:'urgent', diy:false, cost:'$125–$500', fix:'Check temperature setting (must be ≤120°F) and system pressure. If TPR continues dripping after adjustments, replace TPR valve or install/recharge expansion tank to resolve excessive pressure'},
+                    {cause:'Dielectric Corrosion or Supply Line Leak', conf:60, urgency:'moderate', diy:false, cost:'$100–$350', fix:'Inspect all connections at water heater — especially galvanized-to-copper connections that can corrode and weep under pressure'}],
+  'hiss+fauceton': [{cause:'High Water Pressure (>80 psi)', conf:82, urgency:'moderate', diy:false, cost:'$250–$600', fix:'High-pressure water moving through pipe and fixture orifices creates turbulent hiss. Test pressure at hose bib — install PRV if >80 psi.'},
+                    {cause:'Aerator Mineral Buildup', conf:72, urgency:'low', diy:true, cost:'$0–$50', fix:'Unscrew faucet aerators and soak in white vinegar for 30 minutes to dissolve calcium buildup — very common in FL hard water areas'}],
+  'rumble+wh':     [{cause:'Sediment Buildup — Heating Element Boiling', conf:91, urgency:'moderate', diy:true, cost:'$150–$350', fix:'Flush sediment from tank bottom annually — especially critical in hard water counties (Collier, Lee, Polk, Orange). Connect garden hose to drain valve, flush until clear.'},
+                    {cause:'Impending Water Heater Failure', conf:65, urgency:'high', diy:false, cost:'$800–$2,200', fix:'Persistent rumble in an older tank (8+ years) that does not resolve after flushing suggests the tank may be failing — schedule professional assessment before a flood occurs'}],
+  'drip+random':   [{cause:'Thermal Expansion Tick in Pipes', conf:78, urgency:'low', diy:false, cost:'$150–$450', fix:'Pipes expanding during heating cycle and clicking against framing or supports — normal for CPVC in FL homes. Roller-type pipe supports reduce this.'},
+                    {cause:'Slow Drip Leak', conf:70, urgency:'moderate', diy:false, cost:'$100–$500', fix:'Rhythmic dripping not tied to thermal cycles may indicate a slow leak at a supply line, shutoff valve, or fixture. Check under all sinks and around toilets carefully.'}]
+};
+
+function getDiagKey() {
+  const s = sw.sound, t = sw.timing;
+  const key = s + '+' + t;
+  const bySound = {
+    bang: ['fauceoff','flush','washer','fauceton','wh','random'],
+    squeal: ['fauceton','fauceoff','always'],
+    gurgle: ['flush','random','always'],
+    hiss: ['wh','fauceton','always'],
+    rumble: ['wh','random'],
+    drip: ['random','always','fauceton']
+  };
+  const matches = bySound[s] || [];
+  if (DIAGNOSES[key]) return key;
+  for (const alt of matches) {
+    if (DIAGNOSES[s+'+'+alt]) return s+'+'+alt;
+  }
+  return null;
+}
+
+const URGENCY_COLOR = { urgent:'#EF4444', high:'#F97316', moderate:'#F4B942', low:'#22C55E' };
+const URGENCY_LABEL = { urgent:'🔴 Urgent — Act Now', high:'🟠 High — Call Soon', moderate:'🟡 Monitor — Schedule Repair', low:'🟢 Minor — DIY Possible' };
+const CONF_COLOR = c => c > 85 ? '#22C55E' : c > 70 ? '#00B4FF' : '#F4B942';
+
+function runDiagnosis() {
+  if (!sw.dur) { alert('Please select how long this has been happening.'); return; }
+  const key = getDiagKey();
+  const diags = key ? DIAGNOSES[key] : null;
+  const sndLabel = {bang:'BANG/CLANK',squeal:'SQUEAL/SCREECH',gurgle:'GURGLE/GLUG',drip:'DRIP/TICK',hiss:'HISS/WHISTLE',rumble:'RUMBLE/VIBRATE'};
+  const timLabel = {flush:'When flushing toilet',washer:'When running washer',fauceton:'When turning on faucet',fauceoff:'When turning OFF faucet',wh:'When water heater runs',random:'Randomly',always:'Constantly'};
+  const locLabel = {walls:'Inside walls/ceiling',sink:'Under sinks/at fixtures',slab:'Below floor/under slab',wh:'Near water heater',toilet:'Near toilet',everywhere:'Throughout home'};
+  const durLabel = {new:'Just started',days:'A few days',weeks:'A few weeks',months:'Months or longer'};
+
+  let html = `<div class="result-panel">
+    <p style="font-size:.75rem;color:#94A3B8;margin-bottom:10px">Based on: <strong style="color:#E2E8F0">${esc(sndLabel[sw.sound]||sw.sound)}</strong> · ${esc(timLabel[sw.timing]||sw.timing)} · ${esc(locLabel[sw.loc]||sw.loc)} · ${esc(durLabel[sw.dur]||sw.dur)}</p>`;
+
+  if (!diags) {
+    html += `<p style="color:#94A3B8;font-size:.83rem">Your combination is unusual — it's best to have a licensed plumber do an on-site diagnosis. Click "Request Online Assessment" below or call (561) 555-PIPE.</p>`;
+  } else {
+    diags.forEach((d, idx) => {
+      const barColor = CONF_COLOR(d.conf);
+      const urg = d.urgency;
+      html += `<div style="margin-bottom:${idx < diags.length-1 ? '16px':'0'};padding-bottom:${idx < diags.length-1 ? '16px':'0'};border-bottom:${idx < diags.length-1 ? '1px solid #1e2d4a':'none'}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-weight:700;color:#E2E8F0;font-size:.88rem">${idx===0?'#1 Most Likely:':'#2 Also Possible:'} ${esc(d.cause)}</span>
+          <span style="font-size:.75rem;font-weight:700;color:${CONF_COLOR(d.conf)}">${d.conf}%</span>
+        </div>
+        <div class="conf-bar-wrap"><div class="conf-bar" style="width:${d.conf}%;background:${barColor}"></div></div>
+        <span class="diag-badge" style="background:${URGENCY_COLOR[urg]}18;color:${URGENCY_COLOR[urg]};border:1px solid ${URGENCY_COLOR[urg]}40">${URGENCY_LABEL[urg]}</span>
+        <div class="diag-row"><span class="diag-label">DIY Fix Possible</span><span class="diag-val">${d.diy ? '✅ Yes — see details' : '❌ Licensed plumber needed'}</span></div>
+        <div class="diag-row"><span class="diag-label">Estimated Cost</span><span class="diag-val" style="color:#22C55E">${esc(d.cost)}</span></div>
+        <div style="margin-top:8px;padding:9px;background:#0A0E1A;border-radius:7px;font-size:.78rem;color:#94A3B8;line-height:1.5"><strong style="color:#00B4FF">Recommended action:</strong> ${esc(d.fix)}</div>
+      </div>`;
+    });
+  }
+  html += '</div>';
+
+  [1,2,3,4].forEach(i => { const el = document.getElementById('sw-step'+i); if (el) el.style.display = 'none'; });
+  document.getElementById('sw-result').style.display = 'block';
+  document.getElementById('sw-result-content').innerHTML = html;
+  updSwDots(5);
+}
+
+function resetWizard() {
+  sw = {sound:'',timing:'',loc:'',dur:''};
+  document.querySelectorAll('.sound-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.opt-row').forEach(r => r.classList.remove('selected'));
+  document.getElementById('sw-result').style.display = 'none';
+  document.getElementById('sw-lead').style.display = 'none';
+  swStep(1);
+}
+
+/* ---------- NOISE LIBRARY ---------- */
+function toggleNoise(header) {
+  const body = header.nextElementSibling;
+  const chev = header.querySelector('.chevron');
+  const open = body.classList.contains('open');
+  document.querySelectorAll('.noise-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+  if (!open) { body.classList.add('open'); chev.classList.add('open'); }
+}
+
+/* ---------- WATER HAMMER CALC ---------- */
+var hState = { pipe:'copper', diam:'0.75', vel:6, psi:65, len:75 };
+const WAVE_SPEED = { copper:4500, cpvc:4000, pex:1500, galv:4200, iron:4300, pvc:3200 };
+const PIPE_RATING = { copper:500, cpvc:450, pex:160, galv:300, iron:400, pvc:450 };
+const PIPE_NAMES = { copper:'Copper (Type L)', cpvc:'CPVC (SDR 11)', pex:'PEX (SDR 9)', galv:'Galvanized Steel', iron:'Cast Iron', pvc:'PVC (Sch 40)' };
+
+function selPipe(v, el) {
+  hState.pipe = v;
+  document.querySelectorAll('.pipe-btn[id^="pm-"]').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  calcHammer();
+}
+
+function selDiam(v, el) {
+  hState.diam = v;
+  document.querySelectorAll('.pipe-btn[id^="pd-"]').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  calcHammer();
+}
+
+function updateSlider(type, val) {
+  if (type === 'vel') { hState.vel = parseFloat(val); document.getElementById('vel-display').textContent = val + ' ft/s'; }
+  else if (type === 'psi') { hState.psi = parseFloat(val); document.getElementById('psi-display').textContent = val + ' psi'; }
+  else if (type === 'len') { hState.len = parseFloat(val); document.getElementById('len-display').textContent = val + ' ft'; }
+  calcHammer();
+}
+
+function calcHammer() {
+  const a = WAVE_SPEED[hState.pipe];
+  const rho = 1.94; // slugs/ft³
+  const dV = hState.vel;
+  const pStatic = hState.psi;
+  const L = hState.len;
+  // Joukowski: ΔP (psf) = rho * a * dV, convert to psi: / 144
+  const surgePSF = rho * a * dV;
+  const surgePSI = Math.round(surgePSF / 144);
+  const peakPSI = pStatic + surgePSI;
+  const transitMs = Math.round((L / a) * 1000);
+  const rating = PIPE_RATING[hState.pipe];
+
+  // Chart bars (max height 100px)
+  const maxVal = Math.max(peakPSI, rating, pStatic) * 1.15;
+  const staticH = Math.round((pStatic / maxVal) * 100);
+  const surgeH = Math.round((surgePSI / maxVal) * 100);
+  const peakH = Math.round((peakPSI / maxVal) * 100);
+  document.getElementById('bar-static').style.height = staticH + 'px';
+  document.getElementById('bar-surge').style.height = Math.min(surgeH, 100) + 'px';
+  document.getElementById('bar-peak').style.height = Math.min(peakH, 100) + 'px';
+  document.getElementById('bar-static-val').textContent = pStatic + ' psi';
+  document.getElementById('bar-surge-val').textContent = surgePSI + ' psi';
+  document.getElementById('bar-peak-val').textContent = peakPSI + ' psi';
+
+  // Risk level
+  let riskClass = 'surge-low', riskText = '';
+  if (peakPSI < 150) { riskClass = 'surge-low'; riskText = '✅ Low Risk — Peak ' + peakPSI + ' psi is within safe operating range for ' + PIPE_NAMES[hState.pipe]; }
+  else if (peakPSI < 200) { riskClass = 'surge-mod'; riskText = '⚠ Moderate — Peak ' + peakPSI + ' psi. Install hammer arrestors at affected fixtures to reduce surge.'; }
+  else if (peakPSI < 250) { riskClass = 'surge-high'; riskText = '🟠 High — Peak ' + peakPSI + ' psi. PRV adjustment + hammer arrestors recommended. Risk of fitting fatigue.'; }
+  else { riskClass = 'surge-crit'; riskText = '🔴 Critical — Peak ' + peakPSI + ' psi exceeds recommended limits. Professional assessment required immediately.'; }
+
+  const riskEl = document.getElementById('surge-risk-box');
+  riskEl.className = 'surge-risk-indicator ' + riskClass;
+  riskEl.textContent = riskText;
+
+  document.getElementById('res-mat').textContent = PIPE_NAMES[hState.pipe];
+  document.getElementById('res-wave').textContent = a.toLocaleString() + ' ft/s';
+  document.getElementById('res-vel').textContent = hState.vel + ' ft/s';
+  document.getElementById('res-surge').textContent = surgePSI + ' psi';
+  document.getElementById('res-static').textContent = pStatic + ' psi';
+  document.getElementById('res-peak').textContent = peakPSI + ' psi';
+  document.getElementById('res-time').textContent = transitMs + ' ms';
+
+  const recEl = document.getElementById('hammer-rec');
+  if (peakPSI < 150) {
+    recEl.textContent = '✅ Your calculated surge pressure is within safe limits. If you\'re still experiencing water hammer noise, the likely cause is loose pipe supports or a partially-closed valve amplifying normal system noise.';
+  } else if (peakPSI < 200) {
+    recEl.textContent = '💡 Recommendation: Install ASSE 1010 water hammer arrestors at washing machine connections and any fixtures where you hear the bang. For ' + PIPE_NAMES[hState.pipe] + ', size the arrestor to ASSE SIZINGCHART category based on fixture flow rate.';
+  } else if (peakPSI < 300) {
+    recEl.textContent = '⚠ Recommendation: PRV adjustment (target 60–70 psi static) + ASSE 1010 hammer arrestors at all solenoid valves (washer, dishwasher, ice maker). Reduce flow velocity at fixtures where possible (flow restrictors).';
+  } else {
+    recEl.textContent = '🔴 High-surge system: Requires professional assessment. Consider a combination of PRV installation, hammer arrestors, and expansion tank. ' + (hState.pipe === 'pex' ? 'Note: PEX has excellent pressure surge dampening characteristics but your system pressure is extremely high.' : '');
+  }
+}
+
+/* ---------- REPAIR COST ESTIMATOR ---------- */
+var repState = { issue:'hammer', home:'slab', region:'south' };
+
+const ISSUE_BASE = {
+  hammer:   { low:95,  high:350, trip:0,  parts:[50,120],  labor:[45,120], descr:'Hammer Arrestor(s) + Service Call' },
+  sediment: { low:150, high:350, trip:0,  parts:[20,60],   labor:[130,200], descr:'Tank Flush + Drain Valve Check' },
+  prv:      { low:250, high:600, trip:0,  parts:[85,200],  labor:[165,300], descr:'PRV Supply + Installation + Test' },
+  faucet:   { low:95,  high:225, trip:0,  parts:[20,75],   labor:[75,150],  descr:'Faucet Rebuild Kit + Labor' },
+  vent:     { low:150, high:500, trip:0,  parts:[30,150],  labor:[120,250], descr:'Vent Stack Clear / AAV Install' },
+  ptrap:    { low:85,  high:225, trip:0,  parts:[15,60],   labor:[70,165],  descr:'P-Trap Assembly + Labor' },
+  insulate: { low:175, high:500, trip:0,  parts:[50,150],  labor:[125,250], descr:'Pipe Insulation + Roller Straps' },
+  expand:   { low:175, high:400, trip:0,  parts:[75,175],  labor:[100,200], descr:'Expansion Tank + Pre-charge + Labor' },
+  fill:     { low:95,  high:200, trip:0,  parts:[15,50],   labor:[80,150],  descr:'Fill Valve Kit (Fluidmaster 400A+) + Labor' },
+  rebuild:  { low:175, high:400, trip:0,  parts:[45,130],  labor:[130,270], descr:'Full Tank Rebuild Kit + Labor' }
+};
+
+const REGION_MULT  = { south:1.3, central:1.1, north:1.0, gulf:1.2 };
+const HOME_MULT    = { slab:1.1, crawl:1.0, two:1.2, condo:1.3 };
+const PERMIT_ISSUES = ['prv','expand'];
+const ISSUE_TIMES  = {
+  hammer:'45 min – 2 hrs', sediment:'1 – 2 hrs', prv:'1.5 – 3 hrs', faucet:'30 min – 1.5 hrs',
+  vent:'1 – 3 hrs', ptrap:'30 min – 1 hr', insulate:'2 – 4 hrs', expand:'1 – 2 hrs',
+  fill:'20 – 45 min', rebuild:'1 – 2 hrs'
+};
+
+function selIssue(v, el) {
+  repState.issue = v;
+  document.querySelectorAll('.issue-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  calcRepair();
+}
+
+function selHome(v, el) {
+  repState.home = v;
+  document.querySelectorAll('.home-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  calcRepair();
+}
+
+function selRegion(v, el) {
+  repState.region = v;
+  document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  calcRepair();
+}
+
+function calcRepair() {
+  const base = ISSUE_BASE[repState.issue];
+  const rm = REGION_MULT[repState.region];
+  const hm = HOME_MULT[repState.home];
+  const sc = Math.round(75 * rm); // service call
+  const pL = Math.round(base.parts[0] * rm);
+  const pH = Math.round(base.parts[1] * rm);
+  const lL = Math.round(base.labor[0] * rm * hm);
+  const lH = Math.round(base.labor[1] * rm * hm);
+  const totL = sc + pL + lL;
+  const totH = sc + pH + lH;
+
+  const rows = [
+    ['Service Call / Trip Fee', '$'+sc],
+    ['Parts &amp; Materials', '$'+pL+'–$'+pH],
+    ['Labor', '$'+lL+'–$'+lH]
+  ];
+
+  document.getElementById('repair-breakdown').innerHTML = rows.map(r =>
+    '<div class="repair-row"><span style="color:#94A3B8">'+r[0]+'</span><span style="font-weight:700">'+r[1]+'</span></div>'
+  ).join('') + '<div class="repair-row"><span style="color:#94A3B8">Scope</span><span style="font-weight:700;font-size:.75rem;text-align:right;max-width:60%">'+esc(base.descr)+'</span></div>';
+
+  document.getElementById('repair-total-row').innerHTML = '<span style="font-weight:700;font-size:.88rem">Estimated Total</span><span style="font-size:1.2rem;font-weight:800;color:#22C55E">$'+totL+'–$'+totH+'</span>';
+  document.getElementById('repair-timeline').textContent = '⏱ Typical time on-site: ' + ISSUE_TIMES[repState.issue];
+
+  const permitEl = document.getElementById('repair-permit-note');
+  if (PERMIT_ISSUES.includes(repState.issue)) {
+    permitEl.textContent = '📋 A building permit may be required for this work in some Florida counties. Your licensed CFC plumber will advise and can pull the permit if needed. Permit fee ($75–$175 typical) not included in estimate above.';
+    permitEl.style.display = 'block';
+  } else {
+    permitEl.style.display = 'none';
+  }
+
+  // Update issue range displays
+  Object.keys(ISSUE_BASE).forEach(iss => {
+    const b = ISSUE_BASE[iss];
+    const tL = Math.round((75 + b.parts[0] + b.labor[0]) * rm * (iss === repState.issue ? hm : 1));
+    const tH = Math.round((75 + b.parts[1] + b.labor[1]) * rm * (iss === repState.issue ? hm : 1));
+    const el = document.getElementById('iss-'+iss+'-r');
+    if (el) el.textContent = '$'+tL+'–$'+tH+' est. total';
+  });
+}
+
+/* ---------- LEAD FORMS ---------- */
+function submitLead() { showToast(); document.getElementById('sw-lead').style.display = 'none'; }
+function submitRepairLead() { showToast(); }
+
+function showToast() {
+  const t = document.getElementById('toast-el');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4200);
+}
+
+/* ---------- INIT ---------- */
+calcHammer();
+calcRepair();
+</script>
+</body>
+</html>

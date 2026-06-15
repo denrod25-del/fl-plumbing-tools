@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**91 interactive cost calculators** for Florida homeowners.
+**94 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -35,6 +35,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Gas Propane Electric Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-propane-electric/fl_gas_propane_electric.html)
 - [FL Generator Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/generator-gas-line/fl_generator_gas_line.html)
 - [FL Grease Trap Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/grease-trap/fl_grease_trap.html)
+- [FL Greywater Conservation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/greywater-conservation/fl_greywater_conservation.html)
 - [FL Home Buyer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/home-buyer/fl_home_buyer_plumbing.html)
 - [FL Hot Tub Spa Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hot-tub-spa/fl_hot_tub_spa.html)
 - [FL Hot Water Recirculation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hot-water-recirculation/fl_hot_water_recirculation.html)
@@ -60,6 +61,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pipe Lining Vs Bursting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-lining-vs-bursting/fl_pipe_repair_comparison.html)
 - [FL Plumbing Emergency Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-emergency/fl_plumbing_emergency.html)
 - [FL Plumbing Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-inspection/fl_plumbing_inspection.html)
+- [FL Plumbing Noise Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-noise/fl_plumbing_noise.html)
 - [FL Pool Equipment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-equipment/fl_pool_equipment.html)
 - [FL Pool Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-leak/fl_pool_leak.html)
 - [FL Prv Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/prv-replacement/fl_prv_replacement.html)
@@ -90,6 +92,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Filtration Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-filtration/fl_water_filtration.html)
 - [FL Water Heater Efficiency Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-efficiency/fl_water_heater_efficiency.html)
 - [FL Water Heater Maintenance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-maintenance/fl_water_heater_maintenance.html)
+- [FL Water Heater Permit Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-permit/fl_water_heater_permit.html)
 - [FL Water Heater Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater/fl_water_heater.html)
 - [FL Water Meter Shutoff Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-meter-shutoff/fl_water_meter_shutoff.html)
 - [FL Water Pressure Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-pressure/fl_water_pressure.html)
