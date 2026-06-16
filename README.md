@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**110 interactive cost calculators** for Florida homeowners.
+**113 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -16,6 +16,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Bathroom Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-remodel/fl_bathroom_remodel.html)
 - [FL Bathtub Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathtub-replacement/fl_bathtub_replacement.html)
 - [FL Booster Pump Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/booster-pump/fl_booster_pump.html)
+- [FL Cast Iron Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/cast-iron-drain/fl_cast_iron_drain.html)
 - [FL Code Violations Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/code-violations/fl_code_violations.html)
 - [FL Commercial Kitchen Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-kitchen/fl_commercial_kitchen.html)
 - [FL Commercial Plumbing Code Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-plumbing-code/fl_commercial_plumbing_code.html)
@@ -112,8 +113,10 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Meter Shutoff Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-meter-shutoff/fl_water_meter_shutoff.html)
 - [FL Water Pressure Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-pressure/fl_water_pressure.html)
 - [FL Water Safety Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-safety/fl_water_safety.html)
+- [FL Water Softener Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-softener-sizing/fl_water_softener_sizing.html)
 - [FL Water Softener Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-softener/fl_water_softener.html)
 - [FL Water Treatment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-treatment/fl_water_treatment.html)
+- [FL Well Pump Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-pump/fl_well_pump.html)
 - [FL Well Water Treatment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-water-treatment/fl_well_water_treatment.html)
 - [FL Well Water Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-water/fl_well_water.html)
 - [FL Whole Home Repipe Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/whole-home-repipe/fl_whole_home_repipe.html)
