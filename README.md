@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**115 interactive cost calculators** for Florida homeowners.
+**118 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -68,6 +68,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pipe Identification Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-identification/fl_pipe_identification.html)
 - [FL Pipe Life Expectancy Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-life-expectancy/fl_pipe_life_expectancy.html)
 - [FL Pipe Lining Vs Bursting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-lining-vs-bursting/fl_pipe_repair_comparison.html)
+- [FL Pipe Material Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-material-guide/fl_pipe_material_guide.html)
 - [FL Plumbing Emergency Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-emergency/fl_plumbing_emergency.html)
 - [FL Plumbing Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-inspection/fl_plumbing_inspection.html)
 - [FL Plumbing Noise Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-noise/fl_plumbing_noise.html)
@@ -96,11 +97,13 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Slab Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-repair/fl_slab_repair.html)
 - [FL Solar Hpwh Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/solar-hpwh/fl_solar_hpwh.html)
 - [FL Stormwater Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/stormwater-drain/fl_stormwater_drain.html)
+- [FL Tankless Error Codes Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-error-codes/fl_tankless_error_codes.html)
 - [FL Tankless Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-sizing/fl_tankless_water_heater.html)
 - [FL Tankless Water Heater Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-water-heater/fl_tankless_water_heater.html)
 - [FL Toilet Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/toilet-repair/fl_toilet_repair.html)
 - [FL Toilet Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/toilet-replacement/fl_toilet_replacement.html)
 - [FL Trenchless Lining Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/trenchless-lining/fl_trenchless_lining.html)
+- [FL Tub To Shower Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tub-to-shower/fl_tub_to_shower.html)
 - [FL Utility Locating Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/utility-locating/fl_utility_locating.html)
 - [FL Vacation Rental Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/vacation-rental-plumbing/fl_vacation_rental_plumbing.html)
 - [FL Water Bill Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-bill/fl_water_bill.html)
