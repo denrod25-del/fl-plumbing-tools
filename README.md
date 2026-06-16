@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**103 interactive cost calculators** for Florida homeowners.
+**105 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -9,6 +9,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 
 - [FL Ada Aging In Place Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/ada-aging-in-place/fl_ada_aging.html)
 - [FL Adu Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/adu-plumbing/fl_adu_plumbing.html)
+- [FL Backflow Prevention Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow-prevention/fl_backflow_prevention.html)
 - [FL Backflow Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow/fl_backflow.html)
 - [FL Bathroom Addition Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-addition/fl_bathroom_addition.html)
 - [FL Bathroom Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-cost/fl_bathroom_cost.html)
@@ -77,6 +78,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Repipe Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repipe-cost/fl_repipe_cost.html)
 - [FL Repiping Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping/fl_repiping.html)
 - [FL Rough In Calculator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rough-in-calculator/fl_rough_in_calculator.html)
+- [FL Septic Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-guide/fl_septic_guide.html)
 - [FL Septic To Sewer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-to-sewer/fl_septic_to_sewer.html)
 - [FL Septic Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic/fl_septic.html)
 - [FL Sewage Ejector Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewage-ejector/fl_sewage_ejector.html)
