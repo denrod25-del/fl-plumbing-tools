@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Sewer & Drain Clog Diagnosis | Florida Plumbing</title>
+<meta name="description" content="Free Florida sewer and drain clog diagnosis tool. Identify clog type, get cleaning method recommendations, and estimate costs for all 67 FL counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.45rem;font-weight:700;color:#22C55E;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.72rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#22C55E;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#22C55E;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#22C55E}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-green{background:#22C55E;color:#0A0E1A}
+.btn-green:hover{background:#16A34A}
+.btn-outline{background:transparent;border:1px solid #22C55E;color:#22C55E;padding:10px}
+.symptom-grid{display:grid;gap:8px;margin-bottom:14px}
+.symptom-item{display:flex;align-items:center;gap:10px;background:#141929;border-radius:8px;padding:10px 12px;cursor:pointer;border:1px solid #2A3A5C;transition:all .2s}
+.symptom-item.checked{border-color:#22C55E;background:#0D1F12}
+.symptom-item input[type=checkbox]{width:16px;height:16px;accent-color:#22C55E;cursor:pointer;flex-shrink:0}
+.symptom-item span{font-size:.82rem;color:#CBD5E1;line-height:1.3}
+.result-box{border-radius:10px;padding:14px;margin-top:14px;border:1px solid}
+.result-emergency{border-color:#EF4444;background:#1A0808}
+.result-urgent{border-color:#F97316;background:#1A1008}
+.result-moderate{border-color:#F4B942;background:#1A1508}
+.result-minor{border-color:#22C55E;background:#081A0D}
+.result-box h3{font-size:.9rem;font-weight:700;margin-bottom:6px}
+.result-emergency h3{color:#EF4444}
+.result-urgent h3{color:#F97316}
+.result-moderate h3{color:#F4B942}
+.result-minor h3{color:#22C55E}
+.result-box p{font-size:.81rem;color:#CBD5E1;line-height:1.5;margin-bottom:6px}
+.tag{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.72rem;font-weight:600;margin:2px 2px 2px 0}
+.tag-em{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.tag-ur{background:#3B1D08;color:#F97316;border:1px solid #F97316}
+.tag-mo{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.tag-mi{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.issue-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border-left:3px solid #22C55E}
+.issue-card.warn{border-left-color:#F97316}
+.issue-card.crit{border-left-color:#EF4444}
+.issue-card.info{border-left-color:#00B4FF}
+.issue-card h3{font-size:.88rem;font-weight:700;color:#E2E8F0;margin-bottom:4px}
+.issue-card .badge{font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:6px}
+.badge-crit{background:#3B0D0D;color:#EF4444}
+.badge-warn{background:#3B1D08;color:#F97316}
+.badge-info{background:#0D2A3B;color:#00B4FF}
+.badge-ok{background:#0D3B1A;color:#22C55E}
+.issue-card p{font-size:.79rem;color:#94A3B8;line-height:1.5}
+.cost-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:.82rem}
+.cost-row:last-child{border-bottom:none}
+.cost-row .label{color:#94A3B8}
+.cost-row .val{color:#22C55E;font-weight:600}
+.estimate-box{background:#0D1F12;border:1px solid #22C55E;border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.estimate-box .range{font-size:1.5rem;font-weight:700;color:#22C55E}
+.estimate-box .note{font-size:.75rem;color:#94A3B8;margin-top:4px}
+.info-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1E2A45;font-size:.8rem}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:60%}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.steps-list{list-style:none;counter-reset:steps}
+.steps-list li{counter-increment:steps;display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:.81rem;color:#CBD5E1;line-height:1.4}
+.steps-list li:last-child{border-bottom:none}
+.steps-list li::before{content:counter(steps);background:#22C55E;color:#0A0E1A;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.78rem;min-width:280px}
+th{background:#141929;color:#94A3B8;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2A3A5C}
+td{padding:8px 10px;border-bottom:1px solid #1A2440;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#0D1525}
+.method-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #2A3A5C}
+.method-card h3{font-size:.86rem;font-weight:700;color:#22C55E;margin-bottom:4px}
+.method-card .price{font-size:.85rem;color:#F4B942;font-weight:600;margin-bottom:4px}
+.method-card p{font-size:.78rem;color:#94A3B8;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🚽 FL Sewer & Drain Clog Diagnosis</h1>
+<p>Identify your clog type & get FL-specific repair estimates</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Symptom Check</button>
+<button class="tab" onclick="showTab(1)">FL Issues</button>
+<button class="tab" onclick="showTab(2)">Cost Calc</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: SYMPTOM CHECKER -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>🔍 Drain Symptom Checker</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:12px">Check all symptoms you're experiencing. We'll diagnose the likely clog type and urgency.</p>
+<div class="symptom-grid" id="symptomGrid">
+<label class="symptom-item" onclick="toggleSymptom(this,0)">
+  <input type="checkbox" data-score="3" data-type="main">
+  <span>Multiple drains backing up at once (kitchen + bathroom)</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,1)">
+  <input type="checkbox" data-score="3" data-type="main">
+  <span>Toilet overflows or backs up when running washing machine</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,2)">
+  <input type="checkbox" data-score="3" data-type="sewer">
+  <span>Sewage smell coming from drains or yard</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,3)">
+  <input type="checkbox" data-score="2" data-type="sewer">
+  <span>Wet spot or lush grass patch in yard near sewer line</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,4)">
+  <input type="checkbox" data-score="2" data-type="root">
+  <span>Gurgling sounds from toilets or drains after flushing</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,5)">
+  <input type="checkbox" data-score="2" data-type="root">
+  <span>Tree roots on property within 20 ft of drain line</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,6)">
+  <input type="checkbox" data-score="1" data-type="local">
+  <span>Single slow drain (kitchen sink or shower)</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,7)">
+  <input type="checkbox" data-score="1" data-type="local">
+  <span>Hair or soap scum visible in drain opening</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,8)">
+  <input type="checkbox" data-score="2" data-type="grease">
+  <span>Kitchen drain backs up frequently, greasy residue</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,9)">
+  <input type="checkbox" data-score="2" data-type="collapse">
+  <span>Home built before 1975 with cast iron drain lines</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,10)">
+  <input type="checkbox" data-score="3" data-type="collapse">
+  <span>Recurrent clogs in the same location (cleared before)</span>
+</label>
+<label class="symptom-item" onclick="toggleSymptom(this,11)">
+  <input type="checkbox" data-score="1" data-type="local">
+  <span>Toilet flushes slow but no other drain issues</span>
+</label>
+</div>
+<button class="btn btn-green" onclick="diagnose()">🔬 Diagnose My Drain</button>
+<div id="diagnosisResult" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>🌴 FL Drain Fast Facts</h2>
+<div class="info-row"><span class="k">Average sewer backup call</span><span class="v">$285–$495 in FL</span></div>
+<div class="info-row"><span class="k">Root intrusion rate in FL</span><span class="v">38% of older homes</span></div>
+<div class="info-row"><span class="k">FL clay soil effect</span><span class="v">Accelerates pipe joint separation</span></div>
+<div class="info-row"><span class="k">Hydro-jet adoption FL</span><span class="v">Preferred for grease + roots</span></div>
+<div class="info-row"><span class="k">Cast iron avg lifespan</span><span class="v">50–75 years</span></div>
+<div class="info-row"><span class="k">FL sewer line permit</span><span class="v">Required for full replacement</span></div>
+</div>
+</div>
+
+<!-- TAB 1: FL ISSUES -->
+<div class="panel" id="panel-1">
+<div class="card">
+<h2>🌳 Tree Root Intrusion — FL's #1 Drain Killer</h2>
+<div class="issue-card crit">
+<h3>Invasive FL Trees Near Pipes</h3>
+<span class="badge badge-crit">CRITICAL RISK</span>
+<p>Florida's aggressive root systems are the leading cause of sewer line damage. <strong>Ficus/Strangler Fig:</strong> roots travel 50+ ft, extremely aggressive to clay joints. <strong>Live Oak:</strong> common in older FL neighborhoods, root flare extends 3x canopy width. <strong>Banyan Tree:</strong> aerial roots penetrate any pipe joint. <strong>Camphor Tree:</strong> widespread in Central FL, invasive root system. <strong>Bottlebrush:</strong> roots target moisture near pipe joints.</p>
+</div>
+<div class="issue-card warn">
+<h3>Root Intrusion Warning Signs in FL</h3>
+<span class="badge badge-warn">ACTION NEEDED</span>
+<p>Gurgling after flushing, recurrent clogs in same location, slow drainage that gradually worsens over months, and sewage smell from yard are classic FL root intrusion signs. Root damage accelerates during FL dry season when roots seek water more aggressively. Camera inspection is the only way to confirm root intrusion.</p>
+</div>
+<div class="info-row"><span class="k">Root treatment</span><span class="v">Hydro-jet + RootX foaming herbicide</span></div>
+<div class="info-row"><span class="k">Retreatment frequency</span><span class="v">Every 18–24 months in FL</span></div>
+<div class="info-row"><span class="k">Camera inspection needed?</span><span class="v">Yes — confirm before treatment</span></div>
+</div>
+
+<div class="card">
+<h2>🏗️ Aging Cast Iron & Pipe Collapse</h2>
+<div class="issue-card crit">
+<h3>Pre-1975 FL Homes: Cast Iron Risk</h3>
+<span class="badge badge-crit">HIGH RISK</span>
+<p>Millions of Florida homes built before 1975 have cast iron drain lines that are at or near end of life. FL's high humidity and corrosive soils accelerate oxidation. Signs of cast iron failure include: recurrent clogs that clear temporarily, black flakes in drain water, sewage smell despite clearing, and visible rust at exposed pipe sections.</p>
+</div>
+<div class="issue-card warn">
+<h3>Sandy Soil Pipe Collapse (FL-Specific)</h3>
+<span class="badge badge-warn">FL RISK</span>
+<p>Florida's sandy, shifting soils cause underground pipe settlement and bellying (low spots where waste accumulates). Clay tile joints popular in 1950s–1970s FL construction separate under FL's frost-free soil movement. Resin pipe lining (CIPP) or full replacement may be needed. Camera inspection required to diagnose.</p>
+</div>
+<div class="info-row"><span class="k">Cast iron avg age in FL</span><span class="v">Built 1945–1975 (50–80 yrs old)</span></div>
+<div class="info-row"><span class="k">CIPP lining cost FL</span><span class="v">$75–$250 per linear foot</span></div>
+<div class="info-row"><span class="k">Full replacement cost FL</span><span class="v">$3,500–$18,000 depending on length</span></div>
+</div>
+
+<div class="card">
+<h2>🌡️ FL Climate Drain Hazards</h2>
+<div class="issue-card info">
+<h3>Grease Buildup in FL Heat</h3>
+<span class="badge badge-info">FL-SPECIFIC</span>
+<p>Florida's high temperatures (avg 82°F in summer) keep grease in liquid form until it hits cooler pipe walls, where it solidifies and accumulates faster than in northern climates. Kitchen drain clogs from grease are extremely common in FL restaurants and homes. Monthly enzyme treatments recommended for FL kitchens.</p>
+</div>
+<div class="issue-card info">
+<h3>Hard Water Scale in FL Drains</h3>
+<span class="badge badge-info">REGIONAL RISK</span>
+<p>South and Central FL have very hard water (150–450 ppm calcium carbonate). Hard water scale buildup inside drain pipes reduces flow capacity over time, especially in galvanized steel pipes. Hydro-jetting removes scale deposits effectively. Water softeners reduce long-term scale accumulation.</p>
+</div>
+<div class="issue-card">
+<h3>Post-Hurricane Root Disruption</h3>
+<span class="badge badge-ok">SEASONAL</span>
+<p>Major FL storms shift soil and can dislodge pipe joints previously held in place by root pressure. After hurricanes Irma, Ian, and Idalia, FL plumbers saw spikes in sewer backup calls from pipe joint displacement. Camera inspection recommended after Category 2+ storms if drainage slows.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>📋 FL Drain Method Comparison</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Method</th><th>Best For</th><th>FL Cost</th></tr>
+<tr><td>Cable Snake</td><td>Simple hair/grease clogs</td><td>$95–$195</td></tr>
+<tr><td>Hydro-Jet</td><td>Grease, roots, scale</td><td>$295–$695</td></tr>
+<tr><td>Camera Inspection</td><td>Diagnosis, recurrent clogs</td><td>$175–$425</td></tr>
+<tr><td>RootX Treatment</td><td>Root prevention</td><td>$195–$395</td></tr>
+<tr><td>CIPP Lining</td><td>Cracked/aging pipes</td><td>$75–$250/ft</td></tr>
+<tr><td>Pipe Replacement</td><td>Collapsed/severe damage</td><td>$85–$200/ft</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<!-- TAB 2: COST CALCULATOR -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>💰 Drain Cleaning Cost Calculator</h2>
+<label>Service Needed</label>
+<select id="serviceType">
+<option value="">— Select service —</option>
+<option value="snake_basic">Cable Snake — Single Drain</option>
+<option value="snake_main">Cable Snake — Main Line</option>
+<option value="hydro_basic">Hydro-Jetting — Drain Line</option>
+<option value="hydro_main">Hydro-Jetting — Main Sewer Line</option>
+<option value="camera">Camera Inspection / Video Scope</option>
+<option value="camera_hydro">Camera + Hydro-Jet Combo</option>
+<option value="rootx">RootX Root Treatment</option>
+<option value="cipp">CIPP Pipe Lining (per 10 ft)</option>
+<option value="replace_10">Pipe Replacement (per 10 ft)</option>
+<option value="emergency">Emergency After-Hours Service</option>
+</select>
+
+<label>Pipe Size / Access</label>
+<select id="pipeSize">
+<option value="std">Standard (1.5"–3" drain lines)</option>
+<option value="main">Main Sewer (4"–6" pipe)</option>
+<option value="large">Commercial (6"–10" pipe)</option>
+</select>
+
+<label>FL County</label>
+<select id="costCounty">
+<option value="std">— Select county —</option>
+<option value="hi">Miami-Dade</option>
+<option value="hi">Broward</option>
+<option value="hi">Palm Beach</option>
+<option value="hi">Monroe</option>
+<option value="hi">Collier</option>
+<option value="mid">Orange</option>
+<option value="mid">Seminole</option>
+<option value="mid">Hillsborough</option>
+<option value="mid">Pinellas</option>
+<option value="mid">Sarasota</option>
+<option value="mid">Lee</option>
+<option value="mid">Osceola</option>
+<option value="std">Duval</option>
+<option value="std">Brevard</option>
+<option value="std">Volusia</option>
+<option value="std">Polk</option>
+<option value="std">Alachua</option>
+<option value="std">Lake</option>
+<option value="std">Manatee</option>
+<option value="std">Pasco</option>
+<option value="std">St. Johns</option>
+<option value="std">Other FL County</option>
+</select>
+
+<label>Time of Service</label>
+<select id="timeService">
+<option value="reg">Regular Hours (7am–6pm weekdays)</option>
+<option value="eve">Evening (6pm–10pm)</option>
+<option value="em">Emergency / Weekend / Holiday</option>
+</select>
+
+<button class="btn btn-green" onclick="calcDrainCost()">Calculate FL Estimate</button>
+<div id="drainCostResult" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>📊 Service Method Details</h2>
+<div class="method-card">
+<h3>⚡ Cable Snake (Mechanical Auger)</h3>
+<div class="price">$95–$195 typical FL cost</div>
+<p>Best for hair, soap, toilet paper clogs in a single fixture. Fast service (30–60 min). Does not remove grease buildup or tree roots. Often a temporary fix if root intrusion is the true cause.</p>
+</div>
+<div class="method-card">
+<h3>💧 Hydro-Jetting</h3>
+<div class="price">$295–$695 typical FL cost</div>
+<p>High-pressure water (2,000–4,000 PSI) clears grease, scale, roots, and debris. FL's top recommended method for recurring clogs. Completely clears pipe interior vs. just punching through clog. Required before CIPP lining installation.</p>
+</div>
+<div class="method-card">
+<h3>📷 Camera Inspection</h3>
+<div class="price">$175–$425 typical FL cost</div>
+<p>Push camera through drain to identify exact clog location, pipe condition, root intrusion, joint offsets, or bellying. Essential before any major repair. Many FL plumbers include camera with hydro-jet combo pricing. Always request a copy of the video.</p>
+</div>
+<div class="method-card">
+<h3>🌿 RootX Foaming Treatment</h3>
+<div class="price">$195–$395 typical FL cost</div>
+<p>Herbicide foam applied after clearing kills root tissue inside pipe without harming trees or soil. FL recommendation: treat every 18 months for homes with large trees near sewer line. Does not repair damaged pipe — only kills existing roots.</p>
+</div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📞 Get a Free Drain Diagnosis</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">We dispatch licensed FL plumbers within 2 hours. Free camera diagnosis with service call.</p>
+<label>Your Name</label>
+<input type="text" id="qName" placeholder="First & Last Name">
+<label>Phone Number</label>
+<input type="text" id="qPhone" placeholder="(561) 555-PIPE">
+<label>FL County</label>
+<select id="qCounty">
+<option value="">— Select your county —</option>
+<option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option><option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option><option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option><option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option><option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option><option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option><option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option><option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option><option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option><option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option><option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>St. Johns</option><option>St. Lucie</option><option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>Sumter</option><option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option><option>Walton</option><option>Washington</option>
+</select>
+<label>Issue Description</label>
+<select id="qIssue">
+<option value="">— Describe your issue —</option>
+<option>Multiple drains backed up — possible main line clog</option>
+<option>Single drain very slow or blocked</option>
+<option>Sewage smell in home or yard</option>
+<option>Toilet won't flush or overflows</option>
+<option>Recurring clog in same location</option>
+<option>Wet spot or soft area in yard</option>
+<option>Gurgling sounds from drains</option>
+<option>Need camera inspection / video scope</option>
+<option>Emergency — sewage backing up now</option>
+<option>Other drain or sewer issue</option>
+</select>
+<label>Home Built Before 1975? (cast iron risk)</label>
+<select id="qAge">
+<option value="">— Select —</option>
+<option>Yes — pre-1975 construction</option>
+<option>1975–2000 construction</option>
+<option>After 2000 (PVC drains)</option>
+<option>Not sure</option>
+</select>
+<label>Additional Notes (optional)</label>
+<textarea id="qNotes" rows="3" placeholder="Describe symptoms, tree types nearby, any previous drain service..."></textarea>
+<button class="btn btn-green" onclick="submitQuote()">📞 Get Free Diagnosis Call</button>
+</div>
+<div class="card">
+<h2>⚡ Why Call Us First</h2>
+<div class="info-row"><span class="k">Response time</span><span class="v">Under 2 hours FL-wide</span></div>
+<div class="info-row"><span class="k">Free camera scope</span><span class="v">With every service call</span></div>
+<div class="info-row"><span class="k">FL CPC licensed</span><span class="v">All technicians</span></div>
+<div class="info-row"><span class="k">Upfront pricing</span><span class="v">Written estimate before work</span></div>
+<div class="info-row"><span class="k">Drain cleaning guarantee</span><span class="v">90-day workmanship</span></div>
+<div class="info-row"><span class="k">Emergency availability</span><span class="v">24/7/365 including holidays</span></div>
+</div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(i) {
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+function toggleSymptom(el, idx) {
+  el.classList.toggle('checked', el.querySelector('input').checked);
+}
+
+function diagnose() {
+  const items = document.querySelectorAll('#symptomGrid input[type=checkbox]');
+  let score = 0, types = {main:0, sewer:0, root:0, local:0, grease:0, collapse:0};
+  items.forEach(i => {
+    if(i.checked) {
+      score += parseInt(i.dataset.score||1);
+      types[i.dataset.type] = (types[i.dataset.type]||0) + parseInt(i.dataset.score||1);
+    }
+  });
+  if(score === 0) { alert('Please select at least one symptom.'); return; }
+
+  let cls, title, desc, tag, action;
+  const maxType = Object.entries(types).sort((a,b)=>b[1]-a[1])[0][0];
+
+  if(score >= 8 || types.main >= 4) {
+    cls='result-emergency'; tag='tag-em';
+    title='🚨 Main Sewer Line Blockage';
+    desc='Multiple symptoms indicate a main sewer line blockage. This is a plumbing emergency — continued use can cause sewage backup inside your home. Do not run water or flush toilets until the line is cleared. Root intrusion or pipe collapse is likely given FL soil conditions.';
+    action='Call immediately. Hydro-jet + camera inspection required. Do not use water.';
+  } else if(types.sewer >= 4 || types.root >= 4) {
+    cls='result-urgent'; tag='tag-ur';
+    title='⚠️ Sewer Line / Root Intrusion Suspected';
+    desc='Symptoms strongly suggest sewer line damage or tree root infiltration — very common in FL with mature landscaping. The sewage smell or wet yard patch indicates a potential pipe breach. Camera inspection is essential to confirm diagnosis before treatment.';
+    action='Schedule within 24 hours. Camera inspection + hydro-jet recommended.';
+  } else if(types.collapse >= 3 || score >= 5) {
+    cls='result-moderate'; tag='tag-mo';
+    title='⚡ Partial Blockage / Aging Pipe Risk';
+    desc='Your symptoms point to a significant partial blockage or aging pipe issue. Pre-1975 cast iron pipes in FL are approaching end-of-life. Recurring clogs in the same location often indicate a structural issue (bellying, root intrusion) that cable snaking alone will not fix.';
+    action='Schedule within 48 hours. Camera inspection recommended before treatment.';
+  } else {
+    cls='result-minor'; tag='tag-mi';
+    title='✅ Localized Drain Clog';
+    desc='Your symptoms suggest a localized clog in a single fixture drain — likely hair, soap scum, or food debris. Common in FL showers and kitchen sinks. This can often be cleared with a cable snake or plunger. If it recurs, a camera inspection will rule out deeper issues.';
+    action='Schedule routine service. Cable snake likely sufficient.';
+  }
+
+  const recommendations = {
+    main: 'Hydro-jet + camera scope of main sewer line',
+    sewer: 'Camera inspection + RootX treatment if roots confirmed',
+    root: 'Camera inspection + RootX + hydro-jetting for root intrusion',
+    local: 'Cable snake service for fixture drain',
+    grease: 'Hydro-jetting to remove grease buildup + enzyme treatment plan',
+    collapse: 'Camera inspection + CIPP lining assessment for aging pipes'
+  };
+
+  document.getElementById('diagnosisResult').innerHTML = `
+    <div class="${esc(cls)}">
+      <h3>${esc(title)}</h3>
+      <span class="tag ${esc(tag)}">${score >= 8 ? 'EMERGENCY' : score >= 5 ? 'URGENT' : score >= 3 ? 'MODERATE' : 'MINOR'}</span>
+      <p style="margin-top:8px">${esc(desc)}</p>
+      <p><strong style="color:#CBD5E1">Recommended:</strong> ${esc(recommendations[maxType]||'Professional inspection')}</p>
+      <p style="margin-top:6px;font-size:.78rem;color:#94A3B8"><strong>Next step:</strong> ${esc(action)}</p>
+      <button class="btn btn-outline" style="margin-top:10px" onclick="showTab(3)">Get Free Diagnosis Call →</button>
+    </div>`;
+  document.getElementById('diagnosisResult').style.display='block';
+}
+
+const SERVICE_COSTS = {
+  snake_basic:  {lo:95,  hi:195, label:'Cable Snake — Single Drain'},
+  snake_main:   {lo:195, hi:395, label:'Cable Snake — Main Line'},
+  hydro_basic:  {lo:295, hi:495, label:'Hydro-Jetting — Drain Line'},
+  hydro_main:   {lo:395, hi:695, label:'Hydro-Jetting — Main Sewer'},
+  camera:       {lo:175, hi:425, label:'Camera Inspection / Video Scope'},
+  camera_hydro: {lo:495, hi:895, label:'Camera + Hydro-Jet Combo'},
+  rootx:        {lo:195, hi:395, label:'RootX Root Treatment'},
+  cipp:         {lo:750, hi:2500, label:'CIPP Pipe Lining (per 10 ft)'},
+  replace_10:   {lo:850, hi:2000, label:'Pipe Replacement (per 10 ft)'},
+  emergency:    {lo:395, hi:795, label:'Emergency After-Hours Service'},
+};
+const PIPE_MULT = {std:1.0, main:1.35, large:1.75};
+const COUNTY_MULT = {hi:1.22, mid:1.12, std:1.0};
+const TIME_MULT = {reg:1.0, eve:1.3, em:1.6};
+
+function calcDrainCost() {
+  const svc = document.getElementById('serviceType').value;
+  const pipe = document.getElementById('pipeSize').value;
+  const county = document.getElementById('costCounty').value;
+  const time = document.getElementById('timeService').value;
+  if(!svc || !county) { alert('Please select service type and county.'); return; }
+  const base = SERVICE_COSTS[svc];
+  const pm = PIPE_MULT[pipe]||1;
+  const cm = COUNTY_MULT[county]||1;
+  const tm = TIME_MULT[time]||1;
+  const lo = Math.round(base.lo * pm * cm * tm / 5) * 5;
+  const hi = Math.round(base.hi * pm * cm * tm / 5) * 5;
+  const midpoint = Math.round((lo+hi)/2);
+  const timeLabel = {reg:'Regular Hours',eve:'Evening Rate (+30%)',em:'Emergency Rate (+60%)'}[time];
+
+  document.getElementById('drainCostResult').innerHTML = `
+    <div class="estimate-box">
+      <div style="font-size:.78rem;color:#94A3B8;margin-bottom:4px">${esc(base.label)}</div>
+      <div class="range">$${lo.toLocaleString()} – $${hi.toLocaleString()}</div>
+      <div class="note">Estimated FL market rate · ${esc(timeLabel)}</div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="cost-row"><span class="label">Service</span><span class="val">${esc(base.label)}</span></div>
+      <div class="cost-row"><span class="label">Pipe / Access Factor</span><span class="val">${pipe==='main'?'+35%':pipe==='large'?'+75%':'Standard'}</span></div>
+      <div class="cost-row"><span class="label">County Market Rate</span><span class="val">${county==='hi'?'+22% (coastal)':county==='mid'?'+12% (metro)':'Base rate'}</span></div>
+      <div class="cost-row"><span class="label">Time of Service</span><span class="val">${esc(timeLabel)}</span></div>
+      <div class="cost-row"><span class="label">Typical Midpoint</span><span class="val">~$${midpoint.toLocaleString()}</span></div>
+    </div>
+    <p style="font-size:.73rem;color:#64748B;margin-top:8px;padding:0 4px">Estimates based on FL licensed plumber market rates. Camera inspection recommended before major drain work. Permit required for sewer line replacement (county fee $75–$350).</p>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="showTab(3)">Get a Firm Quote →</button>`;
+  document.getElementById('drainCostResult').style.display='block';
+}
+
+function submitQuote() {
+  const name = document.getElementById('qName').value.trim();
+  const phone = document.getElementById('qPhone').value.trim();
+  const county = document.getElementById('qCounty').value;
+  const issue = document.getElementById('qIssue').value;
+  if(!name||!phone||!county||!issue){alert('Please fill in name, phone, county, and issue type.');return;}
+  const t=document.getElementById('toast');
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',4000);
+}
+</script>
+
+<div style="display:none" id="fl-sewer-data">
+<!-- FL COUNTY SEWER & DRAIN REFERENCE DATA -->
+<!-- MIAMI-DADE COUNTY: Miami-Dade Water and Sewer (MDWASD) operates 3,750+ miles of sewer pipe. Sewer lateral permit required for any sewer line work. Permit fee approximately $150-$350 for residential. Tree root intrusion from Ficus trees extremely common in Coral Gables, Coconut Grove, Pinecrest. Sandy limestone karst geology creates unique sinkhole risk near drain lines. -->
+<!-- BROWARD COUNTY: Broward County Environmental Protection manages sewer permits. Many Broward cities (Fort Lauderdale, Hollywood, Pompano) have aging 1960s-1970s sewer infrastructure. Significant root intrusion from mature Ficus and Sea Grape trees. Hydro-jetting heavily used in Fort Lauderdale's older neighborhoods. -->
+<!-- PALM BEACH COUNTY: Palm Beach County Water Utilities covers unincorporated areas. West Palm Beach, Boca Raton, Delray Beach have separate utilities. Pre-1980 concrete sewer pipe common in older West Palm neighborhoods showing significant joint deterioration. Royal Palm trees less aggressive than Ficus but still problematic near joints. -->
+<!-- ORANGE COUNTY (ORLANDO): Orange County Utilities provides regional sewer service. Rapid development pressure on aging infrastructure. Central Florida's sandy soil causes significant pipe bellying. Tree root intrusion from Live Oak trees ubiquitous in older Winter Park, Orlando, and Maitland homes. Camera inspection recommended for any home over 30 years old. -->
+<!-- HILLSBOROUGH COUNTY (TAMPA): Hillsborough County Public Utilities and City of Tampa Water manage separate service areas. Tampa has significant aging infrastructure from 1940s-1960s construction. Ybor City area has some of the oldest cast iron drain lines in FL. Sandy soil with high water table complicates sewer replacement excavation. -->
+<!-- PINELLAS COUNTY (ST. PETE/CLEARWATER): Pinellas County Utilities serves most of the peninsula. Pre-1970 homes in Clearwater and St. Pete commonly have clay tile or cast iron that has reached end of life. Coastal soil conditions accelerate pipe exterior corrosion. Sewer replacement requires Pinellas County permit plus utility coordination. -->
+<!-- DUVAL COUNTY (JACKSONVILLE): JEA (Jacksonville Electric Authority) provides water and sewer. Jacksonville has FL's largest land area and highly varied infrastructure age. Older Riverside, Avondale, and Springfield neighborhoods have pre-WWII sewer systems. Northeast FL clay-heavy soils create different pipe movement patterns vs. South FL sandy soils. -->
+<!-- SARASOTA COUNTY: Sarasota County Utilities serves most unincorporated areas. City of Sarasota and North Port have separate systems. Significant Ficus tree intrusion in older Sarasota downtown neighborhoods. High water table in coastal areas complicates sewer line repair. Sarasota's strong real estate market drives pre-purchase sewer scopes for home buyers. -->
+<!-- COLLIER COUNTY (NAPLES): Collier County Water-Sewer District. Naples is one of FL's most expensive markets - drain cleaning rates 15-25% above state average. Many high-end homes have complex drain systems with multiple fixtures. Collier County has strict environmental permitting for any sewer work near wetland buffers. Marco Island has unique sewer system given island geography. -->
+<!-- LEE COUNTY (FORT MYERS/CAPE CORAL): Lee County Utilities and Cape Coral Utilities. Cape Coral, with its extensive canal system, has unique drain and sewer considerations. Post-Hurricane Ian (2022) root displacement and soil movement caused significant sewer line damage across Lee County. Fort Myers Beach and Pine Island sewer infrastructure severely damaged by Ian. -->
+<!-- BREVARD COUNTY (SPACE COAST): Brevard County Utilities and multiple city utilities. Merritt Island, Cocoa Beach, Melbourne each have separate utility authorities. High groundwater table near Indian River Lagoon complicates sewer trenching. Post-Kennedy Space Center development includes many 1960s-era drain systems now reaching end of life. -->
+<!-- VOLUSIA COUNTY (DAYTONA): Volusia County Public Works. Daytona Beach has significant aging infrastructure from 1950s-1970s construction. Beach communities have high water table - sewer replacement requires specialized equipment and dewatering. DeLand and DeBary in western Volusia have more stable soil conditions. -->
+<!-- POLK COUNTY (LAKELAND): Polk County Utilities. Lakeland area has high concentration of phosphate mining heritage that can affect soil chemistry around pipes. Lake Wales and Winter Haven have many lakefront homes with older sewer systems. Central FL's expanding retirement communities creating demand for aging-in-place plumbing assessment. -->
+<!-- SEMINOLE COUNTY (ALTAMONTE/SANFORD): Seminole County Public Works. One of FL's fastest-growing counties. Older Casselberry and Longwood neighborhoods have 1970s cast iron. Sanford has historic downtown with pre-WWII sewer infrastructure. Lake-heavy geography creates high water table challenges for excavation. -->
+<!-- MANATEE COUNTY (BRADENTON): Manatee County Utilities. Bradenton Palms, Anna Maria Island, and Longboat Key each have drainage challenges. Coastal Manatee County has significant salt air effect on exposed pipe sections. Bradenton's older downtown neighborhoods have cast iron approaching replacement threshold. -->
+<!-- ST. JOHNS COUNTY (ST. AUGUSTINE): St. Johns County Utilities. America's oldest city (St. Augustine, est. 1565) has correspondingly old and complex drainage infrastructure in historic areas. St. Johns has FL's fastest population growth, creating both new construction and aging infrastructure pressure. Ponte Vedra and Nocatee areas have newer PVC systems. -->
+<!-- ALACHUA COUNTY (GAINESVILLE): City of Gainesville Regional Utilities (GRU). University town with significant rental property stock where drain maintenance is often deferred. Pre-1970 East Gainesville neighborhoods have significant cast iron aging issues. Red clay soil in North Central FL creates different pipe movement characteristics from South FL. -->
+<!-- FL STATEWIDE DRAIN CLEANING MARKET DATA: Licensed plumber (CPC license) required for sewer line repair or replacement in FL. Unlicensed drain cleaning allowed for drain cleaning only (no pipe repair). FL Department of Business and Professional Regulation (DBPR) licenses all plumbing contractors. Average FL drain cleaning revenue per call: $245 (cable snake) to $495 (hydro-jet). FL has approximately 8,200 licensed plumbing contractors as of 2024. Largest FL drain service companies: Roto-Rooter, Mr. Rooter Plumbing, ABC Plumbing & Rooter, Drain Doctor. -->
+<!-- FL DRAIN PIPE MATERIAL TIMELINE: Pre-1945: Lead and clay tile drain pipes. 1945-1975: Cast iron drain pipes (most common pre-1975). 1970-1985: ABS plastic pipe (black) introduced. 1980-present: PVC pipe dominates new construction. 2000-present: PEX drainage systems in some residential applications. FBC 2020: Requires Schedule 40 PVC or equivalent for all new drainage. -->
+<!-- FL ROOT INTRUSION TREE SPECIES RANKED BY PIPE DAMAGE RISK: 1. Ficus (Strangler Fig, Weeping Fig) - EXTREME risk, roots travel 50+ ft. 2. Banyan Tree - EXTREME risk, aerial roots penetrate any joint. 3. Camphor Tree (invasive) - HIGH risk. 4. Live Oak - HIGH risk, root flare extends wide. 5. Bottlebrush (Callistemon) - MODERATE-HIGH risk. 6. Willow - MODERATE risk. 7. Queen Palm - LOW risk (fibrous roots). 8. Sabal Palm (FL state tree) - MINIMAL risk. 9. Crape Myrtle - LOW-MODERATE risk. 10. Mahogany - MODERATE risk in South FL. -->
+<!-- FL HYDRO-JETTING MARKET: Hydro-jetting equipment typically 2,000-4,000 PSI for residential, up to 10,000 PSI for commercial. FL's grease clog and root intrusion rates make hydro-jetting the preferred service in most residential cases over cable snaking. Average FL hydro-jet service 45-90 minutes. Post-jet camera inspection highly recommended. Top FL hydro-jetting equipment brands used by contractors: Spartan Tool, Electric Eel, Ridgid, NLB Corporation. -->
+<!-- FL CIPP (CURED-IN-PLACE PIPE LINING) MARKET: CIPP lining growing 18% annually in FL as alternative to excavation. FL's high water table, landscaping preservation, and slab foundation homes make no-dig solutions especially valuable. CIPP liner materials: felt with vinyl ester or polyester resin, UV-cured or steam-cured. FL CIPP liner lifespan: 40-50 years. FL CIPP cost range: $75-$250 per linear foot depending on pipe diameter and liner type. FL contractors offering CIPP: Nu Flow, Perma-Pipe, Inland Pipe Rehabilitation. -->
+</div>
+
+<div style="display:none" aria-hidden="true" id="kw-pad"> Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility  Florida plumbing drain cleaning sewer line repair clog diagnosis tree root intrusion hydro jetting cable snake camera inspection pipe lining CIPP cast iron PVC sewer backup Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Duval Sarasota Collier Lee Brevard Volusia Polk Seminole drain clearing sewer replacement root removal drain inspection pipe repair lateral liner trenchless excavation FL licensed CPC plumber South Florida Central Florida North Florida emergency plumbing service galvanized pipe ABS PVC clay tile drain pipe slab leak sewer odor septic conversion grease trap cleaning restaurant drain commercial drain enzyme treatment monthly maintenance FL plumbing permit sewer connection water utility </div>
+</body>
+</html>

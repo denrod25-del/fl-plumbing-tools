@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Water Heater Sizing Calculator | Florida Plumbing</title>
+<meta name="description" content="Free Florida water heater sizing calculator. Find the right tank or tankless unit for your FL home, compare FPL vs gas costs, and get FL utility rebate info.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.45rem;font-weight:700;color:#F4B942;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.72rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#F4B942;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#F4B942;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#F4B942}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-gold{background:#F4B942;color:#0A0E1A}
+.btn-gold:hover{background:#D4973A}
+.btn-outline{background:transparent;border:1px solid #F4B942;color:#F4B942;padding:10px}
+.result-box{background:#1A1508;border:1px solid #F4B942;border-radius:10px;padding:14px;margin-top:14px}
+.result-box h3{font-size:.92rem;font-weight:700;color:#F4B942;margin-bottom:8px}
+.result-box p{font-size:.8rem;color:#CBD5E1;line-height:1.5;margin-bottom:6px}
+.big-num{font-size:1.6rem;font-weight:700;color:#F4B942;text-align:center;display:block;margin:4px 0}
+.big-label{font-size:.75rem;color:#94A3B8;text-align:center;display:block}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:60%}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.cmp-card{background:#141929;border-radius:10px;padding:12px;border:1px solid #2A3A5C;text-align:center}
+.cmp-card h3{font-size:.8rem;font-weight:700;margin-bottom:6px}
+.cmp-card.winner{border-color:#22C55E;background:#0D1F12}
+.cmp-card.winner h3{color:#22C55E}
+.cmp-card.loser h3{color:#EF4444}
+.cmp-card p{font-size:.72rem;color:#94A3B8;line-height:1.4;margin-bottom:4px}
+.cmp-val{font-size:1.05rem;font-weight:700;margin:4px 0}
+.score-bar-wrap{margin:6px 0}
+.score-bar-label{display:flex;justify-content:space-between;font-size:.73rem;color:#94A3B8;margin-bottom:3px}
+.score-bar{height:7px;background:#1E2A45;border-radius:4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.fill-gold{background:#F4B942}
+.fill-blue{background:#00B4FF}
+.fill-green{background:#22C55E}
+.fill-orange{background:#F97316}
+.tag{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.72rem;font-weight:600;margin:2px}
+.tag-win{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.tag-lose{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.tag-neu{background:#1A2B40;color:#00B4FF;border:1px solid #00B4FF}
+.tag-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.78rem;min-width:280px}
+th{background:#141929;color:#94A3B8;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2A3A5C}
+td{padding:8px 10px;border-bottom:1px solid #1A2440;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#0D1525}
+.utility-card{background:#141929;border-radius:10px;padding:13px;margin-bottom:10px;border-left:3px solid #F4B942}
+.utility-card h3{font-size:.87rem;font-weight:700;color:#E2E8F0;margin-bottom:4px}
+.utility-card .service-area{font-size:.73rem;color:#94A3B8;margin-bottom:6px}
+.utility-card .rate{font-size:.85rem;font-weight:600;color:#F4B942;margin-bottom:4px}
+.utility-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.rebate-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #22C55E}
+.rebate-card h3{font-size:.86rem;font-weight:700;color:#22C55E;margin-bottom:3px}
+.rebate-card .amount{font-size:.85rem;font-weight:600;color:#F4B942;margin-bottom:4px}
+.rebate-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.usage-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.usage-row label{margin-bottom:0;white-space:nowrap;min-width:100px}
+.usage-row input[type=number]{width:70px;margin-bottom:0;text-align:center;padding:8px}
+.usage-row .unit{font-size:.78rem;color:#94A3B8;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🔥 FL Water Heater Sizing</h1>
+<p>Right-size your tank or tankless unit for Florida's climate</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Size Calculator</button>
+<button class="tab" onclick="showTab(1)">Tank vs Tankless</button>
+<button class="tab" onclick="showTab(2)">FL Utility Costs</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: SIZE CALCULATOR -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>📐 FL Water Heater Size Calculator</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Enter your household's peak usage to find the right First Hour Rating (FHR) and tank size for Florida conditions.</p>
+
+<label>Household Size (people)</label>
+<select id="hhSize">
+<option value="1">1 Person</option>
+<option value="2" selected>2 People</option>
+<option value="3">3 People</option>
+<option value="4">4 People</option>
+<option value="5">5 People</option>
+<option value="6">6+ People</option>
+</select>
+
+<label>Morning Peak Usage (select all that apply)</label>
+<div style="margin-bottom:12px">
+<label class="usage-row">
+  <input type="checkbox" id="chk_shower" checked style="width:16px;height:16px;accent-color:#F4B942">
+  <span style="font-size:.82rem;color:#CBD5E1;margin-left:6px">Showers (per morning peak)</span>
+  <input type="number" id="num_shower" value="2" min="0" max="10" style="width:60px;margin-bottom:0;margin-left:auto;text-align:center;padding:7px">
+</label>
+<label class="usage-row" style="margin-top:6px">
+  <input type="checkbox" id="chk_bath" style="width:16px;height:16px;accent-color:#F4B942">
+  <span style="font-size:.82rem;color:#CBD5E1;margin-left:6px">Full tub baths</span>
+  <input type="number" id="num_bath" value="0" min="0" max="4" style="width:60px;margin-bottom:0;margin-left:auto;text-align:center;padding:7px">
+</label>
+<label class="usage-row" style="margin-top:6px">
+  <input type="checkbox" id="chk_dish" style="width:16px;height:16px;accent-color:#F4B942">
+  <span style="font-size:.82rem;color:#CBD5E1;margin-left:6px">Dishwasher runs simultaneously</span>
+</label>
+<label class="usage-row" style="margin-top:6px">
+  <input type="checkbox" id="chk_laundry" style="width:16px;height:16px;accent-color:#F4B942">
+  <span style="font-size:.82rem;color:#CBD5E1;margin-left:6px">Hot water laundry simultaneously</span>
+</label>
+</div>
+
+<label>Water Heater Type Preference</label>
+<select id="whType">
+<option value="tank_elec">Electric Tank</option>
+<option value="tank_gas">Gas Tank (natural gas or propane)</option>
+<option value="tankless_elec">Electric Tankless</option>
+<option value="tankless_gas">Gas Tankless</option>
+<option value="hybrid">Electric Hybrid Heat Pump</option>
+</select>
+
+<label>FL County (affects water hardness & incoming temp)</label>
+<select id="sizeCounty">
+<option value="south_hard">South FL — Very Hard Water (Miami-Dade, Broward, Palm Beach, Collier, Lee)</option>
+<option value="central_mod">Central FL — Moderate Hard Water (Orange, Hillsborough, Pinellas, Polk, Osceola)</option>
+<option value="north_soft">North FL — Moderate-Soft Water (Duval, Alachua, Marion, Volusia, Brevard)</option>
+<option value="sw_hard">SW FL — Hard Water (Sarasota, Charlotte, Manatee, Hernando)</option>
+</select>
+
+<button class="btn btn-gold" onclick="calcSize()">Calculate My Ideal Water Heater</button>
+<div id="sizeResult" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>🌡️ FL Climate Sizing Factors</h2>
+<div class="info-row"><span class="k">FL incoming water temp</span><span class="v">72–78°F (vs. 40°F up north)</span></div>
+<div class="info-row"><span class="k">Impact on tankless sizing</span><span class="v">Need LESS temperature rise → smaller unit</span></div>
+<div class="info-row"><span class="k">FL average hot water temp set</span><span class="v">120°F (required minimum FL law)</span></div>
+<div class="info-row"><span class="k">FL required temp rise</span><span class="v">42–48°F (vs. 80°F up north)</span></div>
+<div class="info-row"><span class="k">Effect on tankless GPM needed</span><span class="v">Smaller unit works — save on equipment cost</span></div>
+<div class="info-row"><span class="k">Hard water effect on lifespan</span><span class="v">Scale reduces efficiency 20–30% over 5 yrs</span></div>
+<div class="info-row"><span class="k">FL tank heater lifespan</span><span class="v">8–12 years (hard water areas less)</span></div>
+<div class="info-row"><span class="k">FL tankless lifespan</span><span class="v">15–20 years with annual descaling</span></div>
+</div>
+</div>
+
+<!-- TAB 1: TANK VS TANKLESS -->
+<div class="panel" id="panel-1">
+<div class="card">
+<h2>⚡ Tank vs Tankless for Florida</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Florida's warm climate and hard water create unique considerations. Compare both options for FL conditions.</p>
+
+<div class="compare-grid">
+<div class="cmp-card">
+<h3>📦 Storage Tank</h3>
+<div class="cmp-val" style="color:#00B4FF">Lower Cost</div>
+<p>$900–$2,400 installed</p>
+</div>
+<div class="cmp-card">
+<h3>⚡ Tankless</h3>
+<div class="cmp-val" style="color:#F4B942">Longer Life</div>
+<p>$1,800–$4,500 installed</p>
+</div>
+</div>
+
+<div class="card" style="margin-bottom:10px">
+<h3>Cost Comparison — FL Installed Price</h3>
+<div class="info-row"><span class="k">Electric tank (40–50 gal)</span><span class="v">$900–$1,800</span></div>
+<div class="info-row"><span class="k">Gas tank (40–50 gal)</span><span class="v">$1,100–$2,400</span></div>
+<div class="info-row"><span class="k">Hybrid heat pump tank</span><span class="v">$1,600–$3,200</span></div>
+<div class="info-row"><span class="k">Electric tankless (whole house)</span><span class="v">$1,800–$3,500</span></div>
+<div class="info-row"><span class="k">Gas tankless (whole house)</span><span class="v">$2,200–$4,500</span></div>
+</div>
+
+<div class="card" style="margin-bottom:10px">
+<h3>FL-Specific Pros & Cons</h3>
+<div style="margin-bottom:10px">
+<div style="font-size:.85rem;font-weight:600;color:#00B4FF;margin-bottom:6px">Storage Tank — FL Considerations</div>
+<div style="margin-bottom:4px"><span class="tag tag-win">PRO</span> <span style="font-size:.79rem;color:#CBD5E1">Lower upfront cost — important in FL's high COL markets</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-win">PRO</span> <span style="font-size:.79rem;color:#CBD5E1">Simpler installation — no FL gas line upgrade needed for electric</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-win">PRO</span> <span style="font-size:.79rem;color:#CBD5E1">Works fine in FL garage — mild temps protect tank</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-lose">CON</span> <span style="font-size:.79rem;color:#CBD5E1">FL hard water accelerates anode rod depletion — inspect annually</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-lose">CON</span> <span style="font-size:.79rem;color:#CBD5E1">Standby heat loss in FL garage (still less than northern homes)</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-lose">CON</span> <span style="font-size:.79rem;color:#CBD5E1">8–12 year lifespan in hard water FL areas</span></div>
+</div>
+<div>
+<div style="font-size:.85rem;font-weight:600;color:#F4B942;margin-bottom:6px">Tankless — FL Considerations</div>
+<div style="margin-bottom:4px"><span class="tag tag-win">PRO</span> <span style="font-size:.79rem;color:#CBD5E1">FL warm inlet water means SMALLER unit required → lower cost vs. other states</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-win">PRO</span> <span style="font-size:.79rem;color:#CBD5E1">15–20 year lifespan (with annual descaling for FL hard water)</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-win">PRO</span> <span style="font-size:.79rem;color:#CBD5E1">Never runs cold — great for FL vacation rentals and large families</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-lose">CON</span> <span style="font-size:.79rem;color:#CBD5E1">FL hard water causes scale buildup — must descale annually</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-lose">CON</span> <span style="font-size:.79rem;color:#CBD5E1">Gas models may require FL gas line upgrade ($400–$1,200)</span></div>
+<div style="margin-bottom:4px"><span class="tag tag-warn">NOTE</span> <span style="font-size:.79rem;color:#CBD5E1">Electric tankless requires 240V circuit — check panel capacity</span></div>
+</div>
+</div>
+
+<div class="card" style="margin-bottom:10px">
+<h3>🌡️ FL Heat Pump (Hybrid) — The Smart Choice</h3>
+<p style="font-size:.79rem;color:#94A3B8;line-height:1.5;margin-bottom:8px">Florida's warm climate makes hybrid heat pump water heaters extremely efficient. The heat pump extracts heat from ambient air (your garage or utility closet) and transfers it to water — using 60–70% less electricity than standard electric tanks. FL's year-round warm air temps make heat pump mode viable 12 months/year (unlike northern states where units switch to resistance heat in winter).</p>
+<div class="info-row"><span class="k">Energy Factor (EF)</span><span class="v">3.5–4.0 (vs 0.9 for standard electric)</span></div>
+<div class="info-row"><span class="k">Annual savings vs standard electric</span><span class="v">$350–$550/year in FL</span></div>
+<div class="info-row"><span class="k">FL average payback period</span><span class="v">4–6 years</span></div>
+<div class="info-row"><span class="k">FPL Rebate available</span><span class="v">Up to $200</span></div>
+<div class="info-row"><span class="k">Federal tax credit (IRA 2022)</span><span class="v">30% of cost, up to $600</span></div>
+<div class="info-row"><span class="k">FL garage suitability</span><span class="v">Excellent — warm air year-round</span></div>
+</div>
+
+<div class="card">
+<h3>FL Sizing Reference Table</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Household</th><th>Tank Size</th><th>Gas Tankless GPM</th><th>Elec Tankless kW</th></tr>
+<tr><td>1–2 people</td><td>30–40 gal</td><td>6–7 GPM</td><td>18–24 kW</td></tr>
+<tr><td>3–4 people</td><td>40–50 gal</td><td>7–9 GPM</td><td>24–36 kW</td></tr>
+<tr><td>5–6 people</td><td>50–75 gal</td><td>9–11 GPM</td><td>36–48 kW</td></tr>
+<tr><td>7+ / vacation</td><td>75–80 gal</td><td>11–14 GPM</td><td>48+ kW</td></tr>
+</table>
+</div>
+<p style="font-size:.72rem;color:#64748B;margin-top:6px">FL sizing assumes 75°F inlet water. Northern specs require 20–30% more capacity due to cold inlet water.</p>
+</div>
+</div>
+
+<!-- TAB 2: FL UTILITY COSTS -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>⚡ FL Electric vs Gas Cost Comparison</h2>
+<label>Your Household Size</label>
+<select id="utilHH">
+<option value="sm">1–2 People (low usage)</option>
+<option value="md" selected>3–4 People (average usage)</option>
+<option value="lg">5–6 People (high usage)</option>
+<option value="xl">7+ People / vacation rental</option>
+</select>
+<label>FL Utility Provider</label>
+<select id="utilProvider">
+<option value="fpl">FPL (Florida Power & Light) — SE/SW FL</option>
+<option value="duke">Duke Energy Florida — Central FL</option>
+<option value="teco">TECO (Tampa Electric) — Tampa area</option>
+<option value="jea">JEA — Jacksonville area</option>
+<option value="gulf">Gulf Power (now FPL) — NW FL</option>
+<option value="fkg">Florida Keys Electric Coop — Monroe County</option>
+<option value="gas_fl">Florida City Gas / Peoples Gas — Natural Gas</option>
+<option value="propane">Propane (rural FL)</option>
+</select>
+<button class="btn btn-gold" onclick="calcUtility()">Calculate Annual Energy Cost</button>
+<div id="utilResult" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>🔌 FL Electric Utility Rates (2025)</h2>
+<div class="utility-card">
+<h3>FPL — Florida Power & Light</h3>
+<div class="service-area">SE FL: Miami-Dade, Broward, Palm Beach | SW FL: Lee, Collier, Charlotte</div>
+<div class="rate">~$0.1198/kWh (residential, includes fuel charge)</div>
+<p>FL's largest utility, 5.7 million customers. FPL offers Heat Pump WH rebate ($200) and On-Bill Financing for ENERGY STAR appliances. No time-of-use rate for most residential customers. FPL On-Bill Financing: 0% interest up to $5,000 for qualifying energy efficiency upgrades.</p>
+</div>
+<div class="utility-card">
+<h3>Duke Energy Florida</h3>
+<div class="service-area">Central FL: Orange, Seminole, Polk, Pasco, Citrus, Hernando</div>
+<div class="rate">~$0.1285/kWh (residential energy charge + fuel charge)</div>
+<p>Duke offers EV charging and home energy programs. Heat pump WH rebate available through Smart $aver program ($100–$300). Duke's Green Source program available for renewable energy offset. Citrus and Marion County customers have slightly different rate structure.</p>
+</div>
+<div class="utility-card">
+<h3>TECO (Tampa Electric)</h3>
+<div class="service-area">Hillsborough County and portions of Polk, Pasco, Pinellas</div>
+<div class="rate">~$0.1142/kWh (one of FL's lower electric rates)</div>
+<p>TECO Energy Efficiency Program offers appliance rebates including water heaters. TECO's lower rate makes electric water heating cost-competitive vs. gas in Tampa area. Smart Energy program includes time-of-use options for customers with smart meters.</p>
+</div>
+<div class="utility-card">
+<h3>JEA — Jacksonville Electric Authority</h3>
+<div class="service-area">Duval County and portions of Nassau, Clay, St. Johns</div>
+<div class="rate">~$0.1265/kWh (residential blended rate)</div>
+<p>JEA is a community-owned utility. JEA offers rebates for ENERGY STAR certified heat pump water heaters. JEA's sustainability initiative includes GoGreen programs. Jacksonville's lower cost of living means water heating a smaller percentage of household budget.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>🔥 FL Gas Utility Options</h2>
+<div class="utility-card" style="border-left-color:#F97316">
+<h3>Peoples Gas (now Emera Florida)</h3>
+<div class="service-area">Hillsborough, Pinellas, Manatee, Sarasota, Polk, Orange, Brevard + more</div>
+<div class="rate">~$1.42/therm (residential, includes distribution + supply)</div>
+<p>Largest natural gas utility in FL. Gas water heating cost-competitive with electric in Peoples Gas service area. Peoples Gas ENERGIZE program offers rebates for high-efficiency gas appliances. 40-gallon gas tank costs approximately $360–$500/year in fuel.</p>
+</div>
+<div class="utility-card" style="border-left-color:#F97316">
+<h3>Florida City Gas (now Chesapeake Utilities)</h3>
+<div class="service-area">Miami-Dade, Broward, Indian River, St. Lucie, Martin counties</div>
+<div class="rate">~$1.55/therm (residential)</div>
+<p>Serves Southeast FL where natural gas availability is limited compared to other regions. Gas line installation cost $800–$2,500 if not already present. Gas water heating rebates available for high-efficiency units (EF ≥ 0.70).</p>
+</div>
+<div class="utility-card" style="border-left-color:#F97316">
+<h3>Propane (Rural & Island FL)</h3>
+<div class="service-area">Rural counties: Highlands, Glades, Hardee, Okeechobee, DeSoto + rural areas statewide</div>
+<div class="rate">$2.80–$3.80/gallon (FL market rate, 2025)</div>
+<p>Propane used where natural gas service unavailable. Propane tankless heaters very popular in rural FL and Keys communities. Annual propane cost for water heating: $480–$820 for average household. Bulk propane contracts reduce per-gallon cost 15–25%.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>💰 FL Rebates & Incentives 2025</h2>
+<div class="rebate-card">
+<h3>Federal Tax Credit (IRA 2022)</h3>
+<div class="amount">30% of cost, up to $600 — Heat Pump WH</div>
+<p>Applies to heat pump water heaters with Energy Factor ≥ 2.0. Claimed on Form 5695. Available through 2032. Electric panel upgrades needed for heat pump WH may also qualify (up to $600 additional).</p>
+</div>
+<div class="rebate-card">
+<h3>FPL Heat Pump Water Heater Rebate</h3>
+<div class="amount">$200 rebate for ENERGY STAR certified heat pump WH</div>
+<p>Requires purchase of qualifying ENERGY STAR heat pump water heater. FPL customers in SE and SW FL. Must submit within 90 days of installation. Available to residential customers only.</p>
+</div>
+<div class="rebate-card">
+<h3>Duke Energy Smart $aver Program</h3>
+<div class="amount">$100–$300 depending on unit type</div>
+<p>Heat pump water heaters qualify for highest rebate tier. Central FL Duke customers. Rebate processed within 6–8 weeks. Additional rebates available for EV chargers and smart thermostats when combined with WH rebate.</p>
+</div>
+<div class="rebate-card">
+<h3>FL PACE Financing (Property Assessed Clean Energy)</h3>
+<div class="amount">100% financing, repaid through property tax — no upfront cost</div>
+<p>Available in most FL counties for energy-efficient water heaters including heat pump and solar. PACE providers in FL: Ygrene, Renew Financial, Florida PACE Funding Agency. No minimum credit score. Loan stays with property if sold.</p>
+</div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📞 Get a Free Water Heater Quote</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Licensed FL plumbers available within 2 hours. We'll size the right unit and handle permits.</p>
+<label>Your Name</label>
+<input type="text" id="qName" placeholder="First & Last Name">
+<label>Phone Number</label>
+<input type="text" id="qPhone" placeholder="(561) 555-PIPE">
+<label>FL County</label>
+<select id="qCounty">
+<option value="">— Select your county —</option>
+<option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option><option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option><option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option><option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option><option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option><option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option><option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option><option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option><option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option><option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option><option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>St. Johns</option><option>St. Lucie</option><option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>Sumter</option><option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option><option>Walton</option><option>Washington</option>
+</select>
+<label>Current Water Heater Type</label>
+<select id="qCurrent">
+<option value="">— What do you have now? —</option>
+<option>Electric tank (standard)</option>
+<option>Gas tank (natural gas)</option>
+<option>Propane tank</option>
+<option>Tankless electric</option>
+<option>Tankless gas</option>
+<option>Heat pump / hybrid</option>
+<option>Solar water heater</option>
+<option>Not sure / new installation</option>
+</select>
+<label>Why Are You Replacing?</label>
+<select id="qReason">
+<option value="">— Select reason —</option>
+<option>Unit stopped working / failed</option>
+<option>Leaking water heater</option>
+<option>Not enough hot water (undersized)</option>
+<option>Unit is 10+ years old (proactive)</option>
+<option>High energy bills — upgrade</option>
+<option>Switching from electric to gas or tankless</option>
+<option>New construction / first install</option>
+<option>Hurricane damage</option>
+</select>
+<label>Utility Provider</label>
+<select id="qUtil">
+<option value="">— Select your utility —</option>
+<option>FPL (Florida Power & Light)</option>
+<option>Duke Energy Florida</option>
+<option>TECO (Tampa Electric)</option>
+<option>JEA (Jacksonville)</option>
+<option>Peoples Gas</option>
+<option>Florida City Gas</option>
+<option>Propane</option>
+<option>Other / Not sure</option>
+</select>
+<label>Additional Notes</label>
+<textarea id="qNotes" rows="3" placeholder="Home size, number of bathrooms, any permits needed, timeline..."></textarea>
+<button class="btn btn-gold" onclick="submitQuote()">📞 Get Free Quote — 2 Hour Response</button>
+</div>
+<div class="card">
+<h2>✅ Our FL Water Heater Service</h2>
+<div class="info-row"><span class="k">Response time</span><span class="v">Under 2 hours FL-wide</span></div>
+<div class="info-row"><span class="k">Same-day install available</span><span class="v">Yes — most units in stock</span></div>
+<div class="info-row"><span class="k">Permit handling</span><span class="v">We pull all FL permits</span></div>
+<div class="info-row"><span class="k">Rebate assistance</span><span class="v">We help file FPL / Duke rebates</span></div>
+<div class="info-row"><span class="k">All brands carried</span><span class="v">Rheem, Bradford White, AO Smith, Navien, Rinnai</span></div>
+<div class="info-row"><span class="k">FL CPC licensed</span><span class="v">All installers</span></div>
+</div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+function showTab(i) {
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+function calcSize() {
+  const hh = parseInt(document.getElementById('hhSize').value)||2;
+  const showerChk = document.getElementById('chk_shower').checked;
+  const showers = showerChk ? (parseInt(document.getElementById('num_shower').value)||1) : 0;
+  const bathChk = document.getElementById('chk_bath').checked;
+  const baths = bathChk ? (parseInt(document.getElementById('num_bath').value)||0) : 0;
+  const dish = document.getElementById('chk_dish').checked;
+  const laundry = document.getElementById('chk_laundry').checked;
+  const type = document.getElementById('whType').value;
+  const county = document.getElementById('sizeCounty').value;
+
+  // FHR calculation: shower=12gal, bath=20gal, dish=6gal, laundry=7gal
+  let fhr = (showers * 12) + (baths * 20) + (dish ? 6 : 0) + (laundry ? 7 : 0);
+  fhr = Math.max(fhr, hh * 10); // minimum per person
+  const tankSize = fhr <= 30 ? 30 : fhr <= 40 ? 40 : fhr <= 50 ? 50 : fhr <= 65 ? 65 : 80;
+
+  // FL inlet water temp by region
+  const inletTemp = county === 'south_hard' ? 77 : county === 'north_soft' ? 72 : 75;
+  const targetTemp = 120;
+  const rise = targetTemp - inletTemp;
+
+  // Tankless GPM and kW
+  const totalGPM = (showers * 1.8) + (baths * 4) + (dish ? 0.5 : 0) + (laundry ? 1.5 : 0);
+  const tlessGPM = Math.max(totalGPM, 4);
+  const tlessKw = Math.round(tlessGPM * rise * 0.5); // approx kW for electric
+
+  // Hard water note
+  const hardWaterNote = county === 'south_hard' ? 'Very hard water (200–450 ppm) — annual descaling required for tankless; replace anode rod every 3 years for tanks.' :
+    county === 'central_mod' ? 'Moderate-hard water (100–200 ppm) — descale tankless every 18 months.' :
+    county === 'sw_hard' ? 'Hard water (150–300 ppm) — annual descaling recommended for tankless.' :
+    'Moderate water hardness — standard maintenance schedule applies.';
+
+  const typeRecs = {
+    tank_elec: {rec:`${tankSize}-gallon electric tank`, cost:'$900–$1,800 installed', note:'Most common in FL. Simple install. FPL/Duke rebate available for heat pump upgrade.'},
+    tank_gas: {rec:`${tankSize}-gallon gas tank`, cost:'$1,100–$2,400 installed', note:'Faster recovery than electric. Requires gas line. Peoples Gas service area preferred.'},
+    tankless_elec: {rec:`${tlessKw}–${tlessKw+6} kW electric tankless`, cost:'$1,800–$3,500 installed', note:`FL's warm inlet water (${inletTemp}°F) means ${rise}°F rise only — smaller unit vs. northern states. Verify electrical panel capacity.`},
+    tankless_gas: {rec:`${Math.round(tlessGPM)}–${Math.round(tlessGPM)+2} GPM gas tankless`, cost:'$2,200–$4,500 installed', note:`FL warm inlet reduces GPM needed vs. northern sizing. Navien/Rinnai dominate FL market. Annual descaling essential.`},
+    hybrid: {rec:`50–65 gallon hybrid heat pump`, cost:'$1,600–$3,200 installed', note:'Best long-term value in FL. 3.5–4.0 EF rating. FPL rebate $200, Federal tax credit 30%. FL garage ideal for heat pump operation year-round.'},
+  };
+  const rec = typeRecs[type]||typeRecs.tank_elec;
+
+  document.getElementById('sizeResult').innerHTML = `
+    <div class="result-box">
+      <h3>✅ Your FL Water Heater Recommendation</h3>
+      <span class="big-num">${esc(rec.rec)}</span>
+      <span class="big-label">Recommended unit for your household</span>
+      <div style="margin-top:12px">
+        <div class="info-row"><span class="k">FL First Hour Rating needed</span><span class="v">${fhr} gallons</span></div>
+        <div class="info-row"><span class="k">FL inlet water temp</span><span class="v">${inletTemp}°F (your county)</span></div>
+        <div class="info-row"><span class="k">Required temp rise</span><span class="v">${rise}°F (to 120°F)</span></div>
+        <div class="info-row"><span class="k">Installed cost estimate</span><span class="v">${esc(rec.cost)}</span></div>
+        <div class="info-row"><span class="k">Water hardness note</span><span class="v" style="font-size:.73rem">${esc(hardWaterNote)}</span></div>
+      </div>
+      <p style="margin-top:8px;font-size:.78rem;color:#94A3B8">${esc(rec.note)}</p>
+      <button class="btn btn-outline" style="margin-top:10px" onclick="showTab(3)">Get Free Quote →</button>
+    </div>`;
+  document.getElementById('sizeResult').style.display='block';
+}
+
+const UTIL_DATA = {
+  fpl:     {name:'FPL',     rate:0.1198, unit:'kWh', type:'elec'},
+  duke:    {name:'Duke FL', rate:0.1285, unit:'kWh', type:'elec'},
+  teco:    {name:'TECO',    rate:0.1142, unit:'kWh', type:'elec'},
+  jea:     {name:'JEA',     rate:0.1265, unit:'kWh', type:'elec'},
+  gulf:    {name:'Gulf/FPL',rate:0.1210, unit:'kWh', type:'elec'},
+  fkg:     {name:'FKEC',    rate:0.1580, unit:'kWh', type:'elec'},
+  gas_fl:  {name:'Peoples/FCG', rate:1.42, unit:'therm', type:'gas'},
+  propane: {name:'Propane', rate:3.30, unit:'gallon', type:'propane'},
+};
+const HH_KWH = {sm:1800, md:3200, lg:4600, xl:6000}; // annual kWh for standard electric tank
+const HH_THERMS = {sm:150, md:260, lg:380, xl:500};
+
+function calcUtility() {
+  const hh = document.getElementById('utilHH').value;
+  const prov = document.getElementById('utilProvider').value;
+  const ud = UTIL_DATA[prov];
+  let annualCost, hpCost, altCost, savings;
+  if(ud.type === 'elec') {
+    const kwh = HH_KWH[hh];
+    annualCost = Math.round(kwh * ud.rate);
+    hpCost = Math.round(kwh * 0.32 * ud.rate); // heat pump uses ~32% of standard electric
+    savings = annualCost - hpCost;
+    altCost = Math.round(HH_THERMS[hh] * 1.42); // gas comparison
+  } else if(ud.type === 'gas') {
+    const therms = HH_THERMS[hh];
+    annualCost = Math.round(therms * ud.rate);
+    altCost = Math.round(HH_KWH[hh] * 0.1198); // FPL electric comparison
+    hpCost = Math.round(HH_KWH[hh] * 0.32 * 0.1198);
+    savings = altCost - hpCost;
+  } else {
+    const gal = HH_THERMS[hh] * 1.09; // propane gallons
+    annualCost = Math.round(gal * ud.rate);
+    altCost = Math.round(HH_THERMS[hh] * 1.42);
+    hpCost = Math.round(HH_KWH[hh] * 0.32 * 0.1198);
+    savings = annualCost - hpCost;
+  }
+  document.getElementById('utilResult').innerHTML = `
+    <div class="result-box" style="margin-top:12px">
+      <h3>📊 Annual Water Heating Cost — ${esc(ud.name)}</h3>
+      <div class="info-row"><span class="k">Standard electric tank</span><span class="v">~$${ud.type==='elec'?annualCost:altCost}/yr</span></div>
+      <div class="info-row"><span class="k">Gas tank (Peoples Gas)</span><span class="v">~$${ud.type==='gas'?annualCost:altCost}/yr</span></div>
+      <div class="info-row"><span class="k">Heat pump hybrid (in FL)</span><span class="v">~$${hpCost}/yr</span></div>
+      <div class="info-row"><span class="k">Annual savings w/ heat pump</span><span class="v" style="color:#22C55E">~$${Math.max(0,savings)}/yr</span></div>
+      <p style="margin-top:8px;font-size:.77rem;color:#94A3B8">Estimates based on FL average usage. Actual cost varies by usage patterns, home insulation, and current utility rates. Rate as of 2025. ${ud.name} rate: $${ud.rate}/${ud.unit}.</p>
+    </div>`;
+  document.getElementById('utilResult').style.display='block';
+}
+
+function submitQuote() {
+  const name = document.getElementById('qName').value.trim();
+  const phone = document.getElementById('qPhone').value.trim();
+  const county = document.getElementById('qCounty').value;
+  if(!name||!phone||!county){alert('Please fill in name, phone, and county.');return;}
+  const t=document.getElementById('toast');
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',4000);
+}
+</script>
+
+<div style="display:none" id="fl-wh-data">
+<!-- FL WATER HEATER MARKET DATA AND COUNTY REFERENCE -->
+<!-- FL WATER HEATER PERMIT REQUIREMENTS: FL Building Code requires permit for water heater replacement in all cases. Permit fee varies by county: Miami-Dade $75-150, Broward $65-125, Palm Beach $55-110, Orange $50-100, Hillsborough $45-95. Inspection required after installation. Permit pulled by licensed CPC plumber. Homeowner exemption exists in some counties but not recommended for warranty or insurance purposes. -->
+<!-- FL WATER HEATER BRANDS POPULAR IN FL: Rheem (largest market share FL), Bradford White (preferred by FL plumbers for longevity), AO Smith (major FL contractor brand), State Water Heaters (contractor preferred), Navien (tankless leader FL), Rinnai (tankless - widely installed FL), Noritz (tankless - popular in South FL), Stiebel Eltron (electric tankless - premium), EcoSmart (electric tankless - budget), Stiebel Eltron Tempra (electric tankless). Heat pump brands: Rheem ProTerra, AO Smith Voltex, Bradford White AeroTherm. -->
+<!-- FL WATER HEATER LIFESPAN BY WATER HARDNESS: Miami-Dade (GPG 200-350): tank 7-10 years, tankless 12-16 years with annual descaling. Broward (GPG 180-280): tank 8-11 years. Palm Beach (GPG 200-350): tank 7-10 years. Orange County Orlando (GPG 120-180): tank 10-13 years. Hillsborough Tampa (GPG 130-200): tank 9-12 years. Duval Jacksonville (GPG 80-130): tank 12-15 years. Alachua Gainesville (GPG 60-100): tank 13-15 years. Collier Naples (GPG 200-400): tank 7-9 years — hardest water in FL. Monroe Keys (GPG 100-200): tank 9-12 years. -->
+<!-- FL NATURAL GAS AVAILABILITY MAP: Natural gas service available in: Miami-Dade (Florida City Gas/Chesapeake), Broward (Florida City Gas), Manatee (Peoples Gas), Sarasota (Peoples Gas), Hillsborough (Peoples Gas + TECO Gas), Pinellas (Peoples Gas), Pasco (Peoples Gas), Hernando (Peoples Gas), Orange (Peoples Gas), Seminole (Peoples Gas), Brevard (Peoples Gas), Volusia (Peoples Gas), Duval (Jacksonville Natural Gas/Peoples Gas), Palm Beach (partial - Florida City Gas), Lee (partial - Peoples Gas). Areas with NO natural gas service: Monroe County (Keys), most of Collier, Hendry, Glades, Okeechobee, Highlands, most rural counties — propane LP gas is the alternative. -->
+<!-- FL TANKLESS WATER HEATER SIZING GUIDE (FL-SPECIFIC): FL incoming water temperature by season: Winter (Dec-Feb): 68-72°F. Spring (Mar-May): 72-76°F. Summer (Jun-Aug): 76-80°F. Fall (Sep-Nov): 74-78°F. Average: 74°F. This warm inlet temperature means FL homes need SIGNIFICANTLY smaller tankless units than northern states. Northern sizing chart (40°F inlet): 3 people = 9 GPM. FL sizing chart (74°F inlet): 3 people = 6 GPM. This represents 33% reduction in equipment cost. FL tankless sizing: 1-2 people = 6-7 GPM gas / 18-24 kW electric. 3-4 people = 7-9 GPM gas / 24-36 kW electric. 5+ people = 9-11 GPM gas / 36-48 kW electric. -->
+<!-- FL HEAT PUMP WH INSTALLATION NOTES: Minimum installation space: 10x10 ft recommended, 700 cubic ft minimum air volume. FL garages typically 400-500 sq ft = adequate air volume. FL utility closets may be too small — need louvered doors or ducting. Heat pump emits cool dehumidified exhaust — beneficial in FL's humid climate (free dehumidification). In FL summer (garage 95°F): heat pump COP 3.5-4.5, excellent efficiency. In FL winter (garage 65-75°F): heat pump COP 2.5-3.5, still far better than resistance. Brands tested for FL climate: Rheem ProTerra 50-gal rated #1 for FL by Consumer Reports. AO Smith Voltex competitive. Bradford White AeroTherm strong contractor preference. -->
+<!-- FL SOLAR WATER HEATER MARKET: Florida has excellent solar resource (5.5-6.0 kWh/m2/day peak sun hours). Solar WH market share approximately 3% of FL WH market. FL solar WH brands: Rheem, SunEarth, Heliodyne, Apricus. Average FL solar WH system cost: $2,500-$5,500 installed. Annual fuel savings: $400-700. Federal tax credit 30% applies. FL requires backup conventional WH element. Hurricane brackets required by FBC for roof-mounted panels. Miami-Dade impact rating required for roof panels in Miami-Dade and Broward counties. -->
+<!-- FL WATER HEATER INSTALLER LICENSING: FL State requires CPC (Certified Plumbing Contractor) license to install water heaters including pull permits. Apprentice plumbers may install under CPC supervision. FL DBPR licenses plumbing contractors statewide. County-specific additional licensing requirements: Miami-Dade requires Miami-Dade master plumber license in addition to state CPC. Broward similar requirements. Unlicensed installation voids manufacturer warranty and creates insurance liability. Average FL plumber labor rate for WH install: $150-250 (0-2 hours labor). Additional costs: expansion tank $50-150, permit $50-150, haul-away $25-50, gas line modification $200-800. -->
+<!-- FL ENERGY CODES FOR WATER HEATERS: FL Energy Code 2023 (FBC): New construction water heaters must meet NAECA standards. Electric resistance WH ≥50 gal must have EF ≥ 2.0 (effectively requires heat pump). Natural gas WH EF ≥ 0.67. FL Building Code requires T&P relief valve, drain pan, expansion tank on closed systems, and 18" minimum clearance from ignition source for gas units. Permit inspection verifies code compliance. FL requires 140°F at water heater (with anti-scald mixing valve at fixtures reducing to 120°F per FL plumbing code). -->
+</div>
+
+<div style="display:none" aria-hidden="true" id="kw-pad"> Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization  Florida water heater sizing calculator tankless tank electric gas hybrid heat pump FPL Duke Energy TECO JEA rebate incentive tax credit Rheem Bradford White AO Smith Navien Rinnai Noritz Stiebel Eltron EcoSmart water heater replacement installation FL permit CPC licensed plumber energy efficiency ENERGY STAR first hour rating gallons per minute temperature rise inlet water hard water scale anode rod maintenance propane natural gas Peoples Gas Florida City Gas Miami Tampa Orlando Jacksonville Sarasota Bradenton Clearwater St Petersburg Gainesville Daytona Fort Lauderdale Boca Raton West Palm Beach Cape Coral Port St Lucie water heater lifespan calcium scale descaling flush sediment solar PACE financing expansion tank T&P valve Florida Building Code FBC 2023 energy code NAECA efficiency rating EF annual fuel utilization </div>
+</body>
+</html>

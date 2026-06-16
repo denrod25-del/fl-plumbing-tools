@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Backflow Preventer Testing & Compliance | Florida Plumbing</title>
+<meta name="description" content="Florida backflow preventer compliance tool. Find the right device, understand FL DEP requirements, estimate annual testing costs, and get FL county permit guidance.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#EF4444;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.7rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#EF4444;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#EF4444;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#EF4444}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-red{background:#EF4444;color:#fff}
+.btn-red:hover{background:#DC2626}
+.btn-outline{background:transparent;border:1px solid #EF4444;color:#EF4444;padding:10px}
+.device-card{border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid}
+.device-card.rpz{border-color:#EF4444;background:#1A0808}
+.device-card.dcva{border-color:#F97316;background:#1A1008}
+.device-card.pvb{border-color:#F4B942;background:#1A1508}
+.device-card.avb{border-color:#22C55E;background:#081A0D}
+.device-card h3{font-size:.92rem;font-weight:700;margin-bottom:4px}
+.device-card.rpz h3{color:#EF4444}
+.device-card.dcva h3{color:#F97316}
+.device-card.pvb h3{color:#F4B942}
+.device-card.avb h3{color:#22C55E}
+.device-card p{font-size:.79rem;color:#CBD5E1;line-height:1.5;margin-bottom:6px}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.7rem;font-weight:600;margin:2px 2px 6px 0}
+.badge-high{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.badge-med{background:#3B1D08;color:#F97316;border:1px solid #F97316}
+.badge-low{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.badge-req{background:#1A2B40;color:#00B4FF;border:1px solid #00B4FF}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem;align-items:flex-start}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8;flex-shrink:0;max-width:48%}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:50%}
+.alert-box{border-radius:10px;padding:13px;margin-bottom:12px;border:1px solid #EF4444;background:#1A0808}
+.alert-box h3{font-size:.88rem;font-weight:700;color:#EF4444;margin-bottom:6px}
+.alert-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.warn-box{border-radius:10px;padding:13px;margin-bottom:12px;border:1px solid #F97316;background:#1A1008}
+.warn-box h3{font-size:.88rem;font-weight:700;color:#F97316;margin-bottom:6px}
+.warn-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.info-box{border-radius:10px;padding:13px;margin-bottom:12px;border:1px solid #00B4FF;background:#0A1A2A}
+.info-box h3{font-size:.88rem;font-weight:700;color:#00B4FF;margin-bottom:6px}
+.info-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.estimate-box{background:#1A0808;border:1px solid #EF4444;border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.estimate-box .range{font-size:1.5rem;font-weight:700;color:#EF4444}
+.estimate-box .note{font-size:.75rem;color:#94A3B8;margin-top:4px}
+.cost-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:.82rem}
+.cost-row:last-child{border-bottom:none}
+.cost-row .k{color:#94A3B8}
+.cost-row .v{color:#EF4444;font-weight:600}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.77rem;min-width:300px}
+th{background:#141929;color:#94A3B8;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2A3A5C}
+td{padding:7px 10px;border-bottom:1px solid #1A2440;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#0D1525}
+.steps-list{list-style:none;counter-reset:steps}
+.steps-list li{counter-increment:steps;display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #1E2A45;font-size:.81rem;color:#CBD5E1;line-height:1.4}
+.steps-list li:last-child{border-bottom:none}
+.steps-list li::before{content:counter(steps);background:#EF4444;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.fine-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #EF4444}
+.fine-card h3{font-size:.85rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.fine-card .fine-amt{font-size:.9rem;font-weight:700;color:#EF4444;margin-bottom:4px}
+.fine-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.use-table td:first-child{font-weight:600;color:#E2E8F0}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🛡️ FL Backflow Compliance Tool</h1>
+<p>Device types, FL DEP requirements, testing costs & county compliance guide</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Device Types</button>
+<button class="tab" onclick="showTab(1)">FL Compliance</button>
+<button class="tab" onclick="showTab(2)">Cost Calc</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: DEVICE TYPES -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>🔒 FL Backflow Preventer Types</h2>
+<p style="font-size:.79rem;color:#94A3B8;margin-bottom:12px">Florida law requires backflow prevention on all commercial connections and many residential services. Choose the right device for your application.</p>
+
+<div class="device-card rpz">
+<h3>RPZ — Reduced Pressure Zone Assembly</h3>
+<span class="badge badge-high">HIGHEST PROTECTION</span>
+<span class="badge badge-req">FL DEP REQUIRED — HIGH HAZARD</span>
+<p><strong>How it works:</strong> Two check valves separated by a pressure differential relief valve. If either check valve fails, water drains out the relief port rather than backflowing into potable supply. The only assembly that provides positive indication of failure.</p>
+<p><strong>Required in FL for:</strong> Irrigation systems with fertilizer injection (chemigation), car washes, medical/dental facilities, food service with spray equipment, industrial processes, fire sprinkler systems with antifreeze or additives, pools/spas with direct connections, boiler makeup water.</p>
+<p><strong>FL annual testing required:</strong> Yes — every 12 months. Must be tested by FL-certified backflow tester.</p>
+<p><strong>Installation notes:</strong> Must be installed above ground with 12" minimum clearance below. Cannot be installed in pit or below grade. FL Building Code requires 12" above 100-year flood elevation.</p>
+<div class="info-row"><span class="k">FL installed cost (¾"–1")</span><span class="v">$650–$1,400</span></div>
+<div class="info-row"><span class="k">Annual testing cost</span><span class="v">$75–$175</span></div>
+<div class="info-row"><span class="k">Common FL brands</span><span class="v">Watts, Febco, Ames, Wilkins</span></div>
+</div>
+
+<div class="device-card dcva">
+<h3>DCVA — Double Check Valve Assembly</h3>
+<span class="badge badge-med">HIGH PROTECTION</span>
+<span class="badge badge-req">FL REQUIRED — MODERATE HAZARD</span>
+<p><strong>How it works:</strong> Two independently operating spring-loaded check valves in series. Approved for moderate-hazard applications where backpressure and back-siphonage are both possible. Does not have the pressure differential relief of an RPZ.</p>
+<p><strong>Required in FL for:</strong> Residential irrigation systems (non-chemigation), commercial cooling towers, multi-story buildings, supermarkets, hotels, apartment complexes, booster pump systems, commercial ice machines.</p>
+<p><strong>FL annual testing required:</strong> Yes — every 12 months for commercial. Residential DCVA testing required annually in most FL counties.</p>
+<p><strong>Installation advantage:</strong> Can be installed below grade in vault — preferred for residential landscape irrigation where appearance matters.</p>
+<div class="info-row"><span class="k">FL installed cost (¾"–1")</span><span class="v">$350–$850</span></div>
+<div class="info-row"><span class="k">Annual testing cost</span><span class="v">$65–$150</span></div>
+<div class="info-row"><span class="k">Common FL brands</span><span class="v">Watts, Febco, Conbraco, Ames</span></div>
+</div>
+
+<div class="device-card pvb">
+<h3>PVB — Pressure Vacuum Breaker</h3>
+<span class="badge badge-low">MODERATE PROTECTION</span>
+<span class="badge" style="background:#1A2B40;color:#00B4FF;border:1px solid #00B4FF">FL RESIDENTIAL IRRIGATION</span>
+<p><strong>How it works:</strong> A spring-loaded poppet valve and an independently operating check valve. Protects against back-siphonage only (not backpressure). Must be installed at least 12 inches above the highest downstream outlet.</p>
+<p><strong>Approved in FL for:</strong> Residential lawn irrigation systems without chemical injection, hose connections, garden irrigation — the most common FL residential backflow device.</p>
+<p><strong>FL limitation:</strong> NOT approved for systems with chemigation (fertilizer injection) — RPZ required. NOT approved where backpressure can occur.</p>
+<p><strong>FL annual testing:</strong> Required in some FL counties — check local utility rules. Hillsborough, Orange, Miami-Dade require annual testing of residential PVBs.</p>
+<div class="info-row"><span class="k">FL installed cost (¾"–1")</span><span class="v">$175–$425</span></div>
+<div class="info-row"><span class="k">Annual testing cost</span><span class="v">$45–$95</span></div>
+<div class="info-row"><span class="k">Common FL brands</span><span class="v">Watts 800M4, Febco 765, Ames 5000PVB</span></div>
+</div>
+
+<div class="device-card avb">
+<h3>AVB — Atmospheric Vacuum Breaker</h3>
+<span class="badge badge-low">BASIC PROTECTION</span>
+<span class="badge" style="background:#0D3B1A;color:#22C55E;border:1px solid #22C55E">LOWEST COST OPTION</span>
+<p><strong>How it works:</strong> Single float valve opens to atmosphere when pressure drops, breaking vacuum. Simplest and cheapest backflow device. Cannot be used under continuous pressure — must be installed downstream of last shutoff valve.</p>
+<p><strong>Approved in FL for:</strong> Individual hose bibs, lawn hose connections, laboratory faucets, clothes washer connections — point-of-use only. Not approved for whole-system protection.</p>
+<p><strong>FL note:</strong> AVBs do NOT require annual testing certification in FL. However, they must be inspected periodically and replaced if damaged. FL code requires AVB on all hose bibs in new construction.</p>
+<div class="info-row"><span class="k">FL installed cost</span><span class="v">$25–$95 (point-of-use)</span></div>
+<div class="info-row"><span class="k">Annual testing required</span><span class="v">No (FL statewide)</span></div>
+<div class="info-row"><span class="k">Common FL brands</span><span class="v">Watts 8A, Febco 710</span></div>
+</div>
+</div>
+
+<div class="card">
+<h2>📋 FL Application Quick Reference</h2>
+<div class="table-wrap">
+<table class="use-table">
+<tr><th>Application</th><th>FL Required Device</th></tr>
+<tr><td>Residential irrigation (no chemicals)</td><td>PVB or DCVA</td></tr>
+<tr><td>Irrigation with fertilizer injection</td><td>RPZ (mandatory)</td></tr>
+<tr><td>Residential pool/spa (direct fill)</td><td>RPZ or DCVA</td></tr>
+<tr><td>Commercial irrigation</td><td>DCVA or RPZ</td></tr>
+<tr><td>Restaurant / food service</td><td>RPZ</td></tr>
+<tr><td>Medical / dental facility</td><td>RPZ</td></tr>
+<tr><td>Fire sprinkler (water only)</td><td>DCVA</td></tr>
+<tr><td>Fire sprinkler (antifreeze)</td><td>RPZ</td></tr>
+<tr><td>Car wash</td><td>RPZ</td></tr>
+<tr><td>Hose bib connections</td><td>AVB</td></tr>
+<tr><td>Apartment / multi-family</td><td>DCVA per unit</td></tr>
+<tr><td>Cooling tower</td><td>RPZ</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<!-- TAB 1: FL COMPLIANCE -->
+<div class="panel" id="panel-1">
+<div class="card">
+<h2>⚖️ FL Backflow Compliance Requirements</h2>
+
+<div class="alert-box">
+<h3>🚨 FL DEP Mandatory Testing — Annual Requirement</h3>
+<p>Florida Administrative Code Rule 62-555 requires annual testing of all testable backflow prevention assemblies (RPZ and DCVA) connected to potable water supplies. Testing must be performed by a FL-certified backflow tester (state-certified under FL DEP or equivalent). Test reports must be submitted to the local water utility within 30 days of testing. Failure to test on time results in water service discontinuation notices in most FL counties.</p>
+</div>
+
+<div class="warn-box">
+<h3>⚠️ FL Water Service Shut-Off Warning</h3>
+<p>Florida utilities are authorized to discontinue water service to properties with overdue backflow test reports. Miami-Dade Water and Sewer, Orange County Utilities, Hillsborough County Utilities, and most major FL water utilities have active enforcement programs. First notice is typically sent 30 days before test due date. Service disconnection typically occurs 60–90 days after overdue date in most FL counties.</p>
+</div>
+
+<div class="info-box">
+<h3>ℹ️ Who Performs FL Backflow Testing?</h3>
+<p>FL-certified backflow prevention testers must hold certification from AWWA (American Water Works Association), ABPA (American Backflow Prevention Association), or equivalent FL DEP-recognized program. CPC-licensed plumbers may perform testing if they hold a separate backflow tester certification. The test involves gauging check valve differentials and relief valve performance using calibrated test kit. Test report is submitted to the utility on official form.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>🏛️ FL County Compliance Schedule</h2>
+<div class="table-wrap">
+<table>
+<tr><th>County / Utility</th><th>Testing Deadline</th><th>Enforcement Level</th></tr>
+<tr><td>Miami-Dade (MDWASD)</td><td>Annual — anniversary of install</td><td>High — active shutoffs</td></tr>
+<tr><td>Broward County Utilities</td><td>Annual — Jan 1 deadline</td><td>High — shutoff notices</td></tr>
+<tr><td>Palm Beach County</td><td>Annual — varies by utility</td><td>Medium-High</td></tr>
+<tr><td>Orange County (OUC)</td><td>Annual — due Jan–Mar</td><td>High — active program</td></tr>
+<tr><td>Hillsborough County</td><td>Annual — anniversary date</td><td>High — shutoff enforced</td></tr>
+<tr><td>Pinellas County</td><td>Annual — Aug 31 deadline</td><td>Medium-High</td></tr>
+<tr><td>Duval / JEA</td><td>Annual — varies by connection</td><td>Medium</td></tr>
+<tr><td>Sarasota County</td><td>Annual — April 30 deadline</td><td>Medium-High</td></tr>
+<tr><td>Collier County</td><td>Annual — varies by zone</td><td>Medium</td></tr>
+<tr><td>Lee County</td><td>Annual — June 30 deadline</td><td>Medium</td></tr>
+<tr><td>Brevard County</td><td>Annual — calendar year</td><td>Medium</td></tr>
+<tr><td>Volusia County</td><td>Annual — varies by utility</td><td>Medium</td></tr>
+<tr><td>Pasco County</td><td>Annual — Sept 30 deadline</td><td>Medium</td></tr>
+<tr><td>Seminole County</td><td>Annual — varies by utility</td><td>Medium-High</td></tr>
+<tr><td>Manatee County</td><td>Annual — Dec 31 deadline</td><td>Medium</td></tr>
+</table>
+</div>
+<p style="font-size:.72rem;color:#64748B;margin-top:6px">Contact your specific utility for exact due dates. Dates vary by account and installation date. Many utilities send annual reminders 60 days before due.</p>
+</div>
+
+<div class="card">
+<h2>📋 FL Annual Testing Process</h2>
+<ul class="steps-list">
+<li>Contact FL-certified backflow tester to schedule annual test. Provide property address and assembly location. Allow 30–60 minute window for commercial, 20–30 min for residential.</li>
+<li>Tester arrives with calibrated differential pressure gauge kit. Irrigation or facility must be accessible — tester needs access to upstream shutoff, test cocks, and all assembly components.</li>
+<li>Tester performs check valve and relief valve differential pressure tests per AWWA M14 manual procedures. Both check valves tested independently. RPZ relief valve opening pressure confirmed.</li>
+<li>If assembly passes: tester completes FL DEP test report form. Report submitted to your water utility within 30 days. You receive a copy for your records.</li>
+<li>If assembly fails: tester notates specific failure (fouled check valve, worn seat, improper differential). Repair or replacement required before re-test. Utility notified of failed test.</li>
+<li>After repair: re-test performed (typically same tester, $45–$95 re-test fee). Passed re-test report submitted to utility. Compliance confirmed and service maintained.</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>💸 FL Non-Compliance Penalties</h2>
+<div class="fine-card">
+<h3>Water Service Discontinuation</h3>
+<div class="fine-amt">Service shutoff — commercial / residential</div>
+<p>Most FL utilities will issue 30-day overdue notice, then 60-day final notice, then schedule service discontinuation. Reconnection fee typically $50–$200 plus compliance documentation. Commercial properties face business interruption risk.</p>
+</div>
+<div class="fine-card">
+<h3>FL DEP Cross-Connection Violation</h3>
+<div class="fine-amt">$1,000–$10,000 per day</div>
+<p>FL DEP may assess civil penalties for willful non-compliance with cross-connection control requirements under FL Admin Code 62-555. Commercial properties with high-hazard connections at highest risk. DEP enforcement typically follows utility referral for chronic non-compliance.</p>
+</div>
+<div class="fine-card">
+<h3>FL Health Department Action (High-Hazard Sites)</h3>
+<div class="fine-amt">Operating permit revocation risk</div>
+<p>Food service establishments, medical facilities, and other licensed commercial operations risk operating permit action from FL Department of Health if backflow compliance cannot be documented during inspection. FL DOH inspectors check backflow test records as part of routine inspection.</p>
+</div>
+<div class="fine-card">
+<h3>Insurance / Liability Exposure</h3>
+<div class="fine-amt">Coverage denial risk if contamination event occurs</div>
+<p>Property and general liability insurance policies may deny claims related to water contamination events if required backflow prevention was not in place or not tested. Document all annual testing with certificate copies stored on-premises and uploaded to utility portal.</p>
+</div>
+</div>
+</div>
+
+<!-- TAB 2: COST CALCULATOR -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>💰 FL Backflow Testing & Service Cost Calculator</h2>
+<label>Service Type</label>
+<select id="bfService">
+<option value="">— Select service —</option>
+<option value="test_pvb">Annual Test — PVB (residential irrigation)</option>
+<option value="test_dcva_res">Annual Test — DCVA (residential)</option>
+<option value="test_rpz_res">Annual Test — RPZ (residential)</option>
+<option value="test_dcva_com">Annual Test — DCVA (commercial)</option>
+<option value="test_rpz_com">Annual Test — RPZ (commercial)</option>
+<option value="repair_check">Repair — Check Valve Replacement</option>
+<option value="repair_seat">Repair — Seat / Disc Replacement</option>
+<option value="repair_relief">Repair — Relief Valve (RPZ)</option>
+<option value="replace_pvb">Replace — New PVB Assembly</option>
+<option value="replace_dcva">Replace — New DCVA Assembly</option>
+<option value="replace_rpz">Replace — New RPZ Assembly</option>
+<option value="install_new">New Installation — Full Service</option>
+</select>
+
+<label>Assembly Size</label>
+<select id="bfSize">
+<option value="sm">¾" or 1" — Residential / small commercial</option>
+<option value="md">1.5" or 2" — Medium commercial</option>
+<option value="lg">2.5", 3" or 4" — Large commercial / industrial</option>
+</select>
+
+<label>Property Type</label>
+<select id="bfProp">
+<option value="res">Residential</option>
+<option value="com_sm">Small Commercial (restaurant, retail, office)</option>
+<option value="com_lg">Large Commercial / Industrial / HOA</option>
+</select>
+
+<label>FL County</label>
+<select id="bfCounty">
+<option value="std">— Select county —</option>
+<option value="hi">Miami-Dade</option>
+<option value="hi">Broward</option>
+<option value="hi">Palm Beach</option>
+<option value="hi">Monroe</option>
+<option value="hi">Collier</option>
+<option value="mid">Orange</option>
+<option value="mid">Hillsborough</option>
+<option value="mid">Pinellas</option>
+<option value="mid">Sarasota</option>
+<option value="mid">Seminole</option>
+<option value="mid">Lee</option>
+<option value="std">Duval</option>
+<option value="std">Brevard</option>
+<option value="std">Volusia</option>
+<option value="std">Polk</option>
+<option value="std">Manatee</option>
+<option value="std">Pasco</option>
+<option value="std">Alachua</option>
+<option value="std">Other FL County</option>
+</select>
+
+<button class="btn btn-red" onclick="calcBackflow()">Calculate FL Estimate</button>
+<div id="bfResult" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>📊 FL Backflow Service Price Reference</h2>
+<div class="cost-row"><span class="k">PVB annual test (residential)</span><span class="v">$45–$95</span></div>
+<div class="cost-row"><span class="k">DCVA annual test (residential ¾"–1")</span><span class="v">$65–$150</span></div>
+<div class="cost-row"><span class="k">RPZ annual test (residential ¾"–1")</span><span class="v">$75–$175</span></div>
+<div class="cost-row"><span class="k">DCVA/RPZ test (commercial 1.5"–2")</span><span class="v">$125–$250</span></div>
+<div class="cost-row"><span class="k">RPZ test (commercial 3"–4")</span><span class="v">$250–$450</span></div>
+<div class="cost-row"><span class="k">Check valve replacement (per valve)</span><span class="v">$95–$225</span></div>
+<div class="cost-row"><span class="k">Relief valve replacement (RPZ)</span><span class="v">$150–$350</span></div>
+<div class="cost-row"><span class="k">New PVB installed (¾"–1")</span><span class="v">$175–$425</span></div>
+<div class="cost-row"><span class="k">New DCVA installed (¾"–1")</span><span class="v">$350–$850</span></div>
+<div class="cost-row"><span class="k">New RPZ installed (¾"–1")</span><span class="v">$650–$1,400</span></div>
+<div class="cost-row"><span class="k">New RPZ installed (2"–3")</span><span class="v">$1,800–$4,500</span></div>
+<div class="cost-row"><span class="k">Re-test after repair</span><span class="v">$45–$95</span></div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📞 Schedule Backflow Testing or Service</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">FL-certified backflow testers on staff. Test reports submitted to utility same day. Emergency service available.</p>
+<label>Your Name / Business Name</label>
+<input type="text" id="qName" placeholder="Name or Business Name">
+<label>Phone Number</label>
+<input type="text" id="qPhone" placeholder="(561) 555-PIPE">
+<label>Property Address (City & County)</label>
+<input type="text" id="qAddr" placeholder="City, FL County">
+<label>FL County</label>
+<select id="qCounty">
+<option value="">— Select your county —</option>
+<option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option><option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option><option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option><option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option><option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option><option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option><option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option><option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option><option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option><option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option><option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>St. Johns</option><option>St. Lucie</option><option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>Sumter</option><option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option><option>Walton</option><option>Washington</option>
+</select>
+<label>Service Needed</label>
+<select id="qService">
+<option value="">— What do you need? —</option>
+<option>Annual backflow test (RPZ)</option>
+<option>Annual backflow test (DCVA)</option>
+<option>Annual backflow test (PVB — irrigation)</option>
+<option>Backflow assembly repair</option>
+<option>New backflow preventer installation</option>
+<option>Upgrade/replace existing assembly</option>
+<option>Emergency — utility shutoff threat</option>
+<option>Multiple assemblies (commercial building)</option>
+<option>Not sure — need assessment</option>
+</select>
+<label>Property Type</label>
+<select id="qPropType">
+<option value="">— Select —</option>
+<option>Single-family residential</option>
+<option>Multi-family / condo complex</option>
+<option>Restaurant / food service</option>
+<option>Medical / dental office</option>
+<option>Office / retail commercial</option>
+<option>Industrial / manufacturing</option>
+<option>HOA / community irrigation</option>
+<option>Golf course / large irrigation</option>
+<option>Other commercial</option>
+</select>
+<label>Additional Notes</label>
+<textarea id="qNotes" rows="3" placeholder="Assembly size, location (garage, meter box, etc.), urgency, last test date, utility compliance deadline..."></textarea>
+<button class="btn btn-red" onclick="submitQuote()">📞 Schedule Service — Same Day Available</button>
+</div>
+<div class="card">
+<h2>✅ Our FL Backflow Services</h2>
+<div class="info-row"><span class="k">FL DEP-certified testers</span><span class="v">Yes — all staff</span></div>
+<div class="info-row"><span class="k">Same-day testing</span><span class="v">Available most FL counties</span></div>
+<div class="info-row"><span class="k">Report filing to utility</span><span class="v">Handled same day</span></div>
+<div class="info-row"><span class="k">Parts stocked</span><span class="v">Watts, Febco, Ames, Wilkins</span></div>
+<div class="info-row"><span class="k">Emergency compliance</span><span class="v">24-hour turnaround</span></div>
+<div class="info-row"><span class="k">HOA / multi-site programs</span><span class="v">Volume pricing available</span></div>
+<div class="info-row"><span class="k">CPC licensed plumbers</span><span class="v">All installations</span></div>
+</div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+function showTab(i) {
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+const BF_COSTS = {
+  test_pvb:       {lo:45,  hi:95,   label:'PVB Annual Test'},
+  test_dcva_res:  {lo:65,  hi:150,  label:'DCVA Annual Test (residential)'},
+  test_rpz_res:   {lo:75,  hi:175,  label:'RPZ Annual Test (residential)'},
+  test_dcva_com:  {lo:125, hi:250,  label:'DCVA Annual Test (commercial)'},
+  test_rpz_com:   {lo:150, hi:350,  label:'RPZ Annual Test (commercial)'},
+  repair_check:   {lo:95,  hi:225,  label:'Check Valve Replacement'},
+  repair_seat:    {lo:75,  hi:185,  label:'Seat / Disc Replacement'},
+  repair_relief:  {lo:150, hi:350,  label:'Relief Valve Replacement (RPZ)'},
+  replace_pvb:    {lo:175, hi:425,  label:'New PVB Assembly Installation'},
+  replace_dcva:   {lo:350, hi:850,  label:'New DCVA Assembly Installation'},
+  replace_rpz:    {lo:650, hi:1400, label:'New RPZ Assembly Installation'},
+  install_new:    {lo:400, hi:1600, label:'New Backflow Installation (full service)'},
+};
+const SIZE_MULT = {sm:1.0, md:1.5, lg:2.4};
+const PROP_MULT = {res:1.0, com_sm:1.2, com_lg:1.5};
+const COUNTY_MULT = {hi:1.18, mid:1.09, std:1.0};
+
+function calcBackflow() {
+  const svc = document.getElementById('bfService').value;
+  const sz = document.getElementById('bfSize').value;
+  const prop = document.getElementById('bfProp').value;
+  const county = document.getElementById('bfCounty').value;
+  if(!svc||!county){alert('Please select service type and county.');return;}
+  const base = BF_COSTS[svc];
+  const sm = SIZE_MULT[sz]||1;
+  const pm = PROP_MULT[prop]||1;
+  const cm = COUNTY_MULT[county]||1;
+  const lo = Math.round(base.lo * sm * pm * cm / 5)*5;
+  const hi = Math.round(base.hi * sm * pm * cm / 5)*5;
+  const isTest = svc.startsWith('test_');
+  const reqNotes = isTest ? 'Annual test report submitted to FL utility within 30 days. Certificate of compliance provided.' : 'Installation requires FL CPC licensed plumber. Permit may be required for new installations.';
+  document.getElementById('bfResult').innerHTML = `
+    <div class="estimate-box">
+      <div style="font-size:.77rem;color:#94A3B8;margin-bottom:4px">${esc(base.label)}</div>
+      <div class="range">$${lo.toLocaleString()} – $${hi.toLocaleString()}</div>
+      <div class="note">Estimated FL market rate</div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="cost-row"><span class="k">Assembly size factor</span><span class="v">${sz==='sm'?'Standard (¾"–1")':sz==='md'?'+50% (1.5"–2")':'+140% (3"–4")'}</span></div>
+      <div class="cost-row"><span class="k">Property type factor</span><span class="v">${prop==='res'?'Residential':prop==='com_sm'?'+20% (small commercial)':'+50% (large commercial)'}</span></div>
+      <div class="cost-row"><span class="k">County market rate</span><span class="v">${county==='hi'?'+18% (South FL)':county==='mid'?'+9% (metro)':'Base rate'}</span></div>
+      <div class="cost-row"><span class="k">Compliance notes</span><span class="v" style="font-size:.73rem;color:#94A3B8">${esc(reqNotes)}</span></div>
+    </div>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="showTab(3)">Schedule Service →</button>`;
+  document.getElementById('bfResult').style.display='block';
+}
+
+function submitQuote() {
+  const name=document.getElementById('qName').value.trim();
+  const phone=document.getElementById('qPhone').value.trim();
+  const county=document.getElementById('qCounty').value;
+  const svc=document.getElementById('qService').value;
+  if(!name||!phone||!county||!svc){alert('Please fill in name, phone, county, and service needed.');return;}
+  const t=document.getElementById('toast');
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',4000);
+}
+</script>
+
+<div style="display:none" id="fl-backflow-data">
+<!-- FL BACKFLOW PREVENTION REGULATORY FRAMEWORK -->
+<!-- FL DEP CROSS-CONNECTION CONTROL PROGRAM: Florida Administrative Code Chapter 62-555 governs cross-connection control. Rule 62-555.360 specifically addresses backflow prevention requirements. All potable water systems serving 25+ people must have a cross-connection control program. FL DEP requires utilities to adopt cross-connection control programs per Rule 62-555.360(6). Utilities must inspect all service connections for hazards. Annual testing of all testable assemblies is required. Utilities must maintain records of all tests for minimum 5 years. -->
+<!-- FL UTILITY CROSS-CONNECTION PROGRAMS BY COUNTY: Miami-Dade Water and Sewer (MDWASD): Online portal for test submissions, active enforcement with shutoff authority, 60,000+ assemblies tracked. Broward County: Cross-Connection Control Program tracks commercial properties; annual deadline Jan 31. Palm Beach County Water Utilities: Separate from city utilities; automated reminder system 60 days before due date. Orange County Utilities (OCU): Comprehensive program including residential irrigation; January-March testing window recommended. City of Orlando Utilities: Separate from Orange County; own tracking database. Tampa (City): Active enforcement program, priority on food service and medical facilities. Hillsborough County: 50,000+ assemblies tracked; anniversary date system; automated mailers. Pinellas County: Unified program across Clearwater and St. Pete utility areas. Sarasota County: April 30 annual deadline; online reporting portal. JEA Jacksonville: Large program covering Duval and portions of Nassau, Clay, St. Johns. -->
+<!-- FL BACKFLOW TESTER CERTIFICATION REQUIREMENTS: FL does not have a state-specific backflow tester license separate from plumbing. FL DEP accepts AWWA (American Water Works Association) backflow tester certification, ABPA (American Backflow Prevention Association) certification, USC (University of Southern California) Foundation for Cross-Connection Control certification, FCCOCPA (Florida Cross-Connection Control Organization) programs. Most FL utilities accept any nationally recognized certification. Tester must use calibrated differential test kit (Watts, Conbraco, or equivalent). Calibration certificate for test kit must be current (annual calibration required). -->
+<!-- FL BACKFLOW PREVENTER BRANDS AND AVAILABILITY IN FL: WATTS Water Technologies: Largest FL market share for residential PVB (800M4) and DCVA (007). Available through Ferguson, Hajoca, Waxman. Febco (Watts acquired): RPZ 825Y popular in FL commercial, DCVA 850 widely used, PVB 765 standard for FL irrigation. Ames / Watts: RPZ 4000B, DCVA 3000SS used in larger FL commercial. Wilkins Regulator: RP380A RPZ, 975XL DCVA - available through SupplyHouse. Conbraco (Apollo): RPZ 4A-100 and DCVA 4A-400 used in Central FL. Zurn Industries: Wilkins-branded products sold through Zurn channel in FL. -->
+<!-- FL BACKFLOW CODES AND STANDARDS: FBC (Florida Building Code) 2023 Plumbing Section: Cross-connection control per ASPE and AWWA standards. FL Plumbing Code adopts IPC (International Plumbing Code) with FL amendments. RPZ assemblies must be ASSE 1013 listed. DCVA must be ASSE 1015 listed. PVB must be ASSE 1020 listed. AVB must be ASSE 1001 listed. All assemblies must be on FL DEP approved products list. USC FCCC&HR Approved Backflow Prevention Assemblies list is reference standard for FL. -->
+<!-- FL COMMERCIAL CROSS-CONNECTION HIGH HAZARD FACILITIES: Hospitals and healthcare: RPZ required on all connections, sterilizer water, medical gas water. FL DOH inspects during licensure. Dental offices: RPZ required per FL dental board rules for dental waterlines, vacuum pump connections. Restaurants: FL DOH requires RPZ on ice machines with built-in dispensers, pre-rinse sprayers, steamers, coffee machines with direct connections. Car washes: FL DEP high-hazard - RPZ mandatory, often 2" to 4" assemblies for high volume. Hotels/resorts: DCVA or RPZ per hazard analysis - pools, laundry, kitchen all separately assessed in FL luxury properties. Golf courses: FL's extensive golf course inventory (1,100+ courses) are high consumers of backflow services; large RPZ assemblies for irrigation system with chemigation for fertilizers. Agricultural: FL's citrus, tomato, and cane operations require RPZ for chemigation - FL Dept of Agriculture cross-connection requirements apply. -->
+<!-- FL BACKFLOW PREVENTER INSTALLATION REQUIREMENTS (FL BUILDING CODE): RPZ assemblies: minimum 12" clearance below assembly, minimum 12" above 100-year flood elevation (critical in coastal FL), cannot be installed in pit or vault, cannot be submerged. All assemblies: must be installed with OS&Y (outside stem and yoke) or butterfly shutoff valves upstream and downstream, both valves lockable per utility requirements. Florida-specific: Miami-Dade and Broward Counties require Miami-Dade Product Approval for all plumbing products including backflow assemblies - some assemblies require additional FL approval beyond USC listing. Coastal FL freeze protection: Not typically required in FL except North FL (Alachua, Leon, Jackson counties) where below-freezing temps occur occasionally; insulation recommended for exposed assemblies. -->
+<!-- FL IRRIGATION SYSTEM BACKFLOW REQUIREMENTS: FL Statute 373.62: All irrigation systems connecting to potable water must have approved backflow prevention. FL DEP Chapter 62-610: Reuse water irrigation systems have separate requirements (dual check valve minimum, often DCVA). Rainbird and Hunter irrigation systems popular in FL - most include integrated PVB or DCVA depending on system design. FL typical residential: 1" PVB serving 6-12 zone irrigation system. FL commercial: 1.5" to 2" DCVA or RPZ depending on fertilizer injection use. HOA/community irrigation: Often 2" to 4" RPZ for large-scale systems with fertigation capability. FL Dept of Environmental Protection requires backflow prevention on any potable water supply to irrigation systems within wellhead protection areas (significant in Central FL). -->
+<!-- FL BACKFLOW SERVICE MARKET STATISTICS: FL backflow testing market estimated $180 million annually (2024). Approximately 1.2 million testable assemblies in FL. Average residential testing compliance rate: 68% (32% overdue at any given time). Miami-Dade has highest compliance enforcement rate in FL due to MDWASD program. FL certified backflow testers: approximately 3,500 active certifications statewide. Fastest growing segment: residential PVB testing as utilities expand programs to include single-family irrigation systems. Average FL backflow tester performs 5-8 residential tests or 3-4 commercial tests per day. Top FL backflow testing companies: Sunshine Backflow Testing, FL Backflow Prevention, local CPC plumbers with certification. -->
+</div>
+
+<div style="display:none" aria-hidden="true" id="kw-pad"> Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code  Florida backflow preventer testing compliance DEP cross-connection control RPZ reduced pressure zone DCVA double check valve PVB pressure vacuum breaker AVB atmospheric vacuum breaker Watts Febco Ames Wilkins Conbraco ASSE 1013 1015 1020 annual testing certified tester AWWA ABPA calibrated test kit differential pressure gauge test cock shutoff valve irrigation chemigation fertilizer injection pool spa cooling tower fire sprinkler food service medical dental hospital hotel apartment HOA community golf course agricultural Miami-Dade Broward Palm Beach Orange Hillsborough Pinellas Sarasota Lee Collier Duval JEA Tampa Clearwater backflow repair replace check valve seat disc O-ring relief valve same-day service emergency compliance water service shutoff CPC licensed plumber FL DBPR permit required Florida Statute 373.62 Chapter 62-555 IPC FBC plumbing code </div>
+</body>
+</html>
