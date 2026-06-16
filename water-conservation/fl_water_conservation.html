@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Water Conservation Rebate Finder | Florida Plumbing</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:16px}
+.hdr{text-align:center;padding:24px 0 16px}
+.hdr h1{font-size:1.3rem;font-weight:700;line-height:1.3}
+.hdr p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.badge{display:inline-block;background:#00B4FF22;color:#00B4FF;border:1px solid #00B4FF44;border-radius:20px;padding:3px 10px;font-size:.75rem;margin-top:8px}
+.tabs{display:flex;gap:4px;background:#0F1629;border-radius:10px;padding:4px;margin-bottom:16px}
+.tab{flex:1;text-align:center;padding:8px 4px;border-radius:7px;font-size:.75rem;cursor:pointer;color:#94A3B8;transition:.2s}
+.tab.on{background:#00B4FF;color:#0A0E1A;font-weight:700}
+.panel{display:none}.panel.on{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin-bottom:12px}
+select{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.9rem;margin-bottom:12px}
+select:focus{outline:none;border-color:#00B4FF}
+.dist-banner{background:linear-gradient(135deg,#00B4FF18,#14B8A610);border:1px solid #00B4FF30;border-radius:10px;padding:14px;margin-bottom:14px}
+.rebate{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:14px;margin-bottom:10px}
+.rebate-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.rebate-name{font-weight:700;font-size:.88rem}
+.rebate-amt{background:#F4B94222;color:#F4B942;border-radius:6px;padding:3px 8px;font-size:.78rem;font-weight:700;white-space:nowrap;margin-left:8px}
+.rebate-desc{color:#94A3B8;font-size:.8rem;line-height:1.5;margin-bottom:6px}
+.tag{display:inline-block;border-radius:4px;padding:2px 7px;font-size:.7rem;margin-right:4px;margin-top:2px}
+.tag-blue{background:#00B4FF11;color:#00B4FF}
+.tag-green{background:#22C55E11;color:#22C55E}
+.tag-red{background:#EF444411;color:#EF4444}
+.tag-gold{background:#F4B94211;color:#F4B942}
+.savings-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1E293B}
+.savings-row:last-child{border-bottom:none}
+.savings-chk{width:20px;height:20px;accent-color:#00B4FF;cursor:pointer}
+.savings-total{background:#22C55E18;border:1px solid #22C55E30;border-radius:10px;padding:16px;margin-top:12px;text-align:center}
+.big{font-size:1.7rem;font-weight:700;color:#22C55E}
+.dist-card{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:14px;margin-bottom:10px}
+.county-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.ctag{background:#1E293B;color:#94A3B8;border-radius:4px;padding:2px 6px;font-size:.7rem}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+input,textarea{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.9rem}
+input:focus,textarea:focus{outline:none;border-color:#00B4FF}
+textarea{resize:vertical;min-height:80px}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#F4B942,#F97316);color:#0A0E1A;font-weight:700;font-size:1rem;border:none;border-radius:10px;cursor:pointer;margin-top:14px}
+.btn:active{opacity:.85}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.9rem;display:none;z-index:999;box-shadow:0 4px 16px #F4B94244}
+.sec{font-size:.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.info-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.info-icon{flex-shrink:0;margin-top:1px}
+.info-text{color:#94A3B8;font-size:.82rem;line-height:1.5}
+.green{color:#22C55E}.blue{color:#00B4FF}.gold{color:#F4B942}.muted{color:#94A3B8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <h1>💧 FL Water Conservation<br>Rebate Finder</h1>
+    <p>Find rebates available in your county — all 5 water management districts</p>
+    <span class="badge">All 67 FL Counties · 2025–2026 Programs</span>
+  </div>
+  <div class="tabs">
+    <div class="tab on" onclick="switchTab(0)">Rebates</div>
+    <div class="tab" onclick="switchTab(1)">Savings</div>
+    <div class="tab" onclick="switchTab(2)">Districts</div>
+    <div class="tab" onclick="switchTab(3)">Quote</div>
+  </div>
+
+  <!-- TAB 0: REBATE FINDER -->
+  <div class="panel on" id="t0">
+    <div class="card">
+      <div class="sec">Select Your County</div>
+      <select id="countySelect" onchange="showRebates()">
+        <option value="">-- Choose County --</option>
+      </select>
+      <div id="distBanner"></div>
+      <div id="rebateList"></div>
+    </div>
+    <div class="card">
+      <div class="sec">How FL Rebate Programs Work</div>
+      <div class="info-row"><span class="info-icon">1️⃣</span><span class="info-text">Purchase a qualifying WaterSense-labeled or high-efficiency product from an approved retailer.</span></div>
+      <div class="info-row"><span class="info-icon">2️⃣</span><span class="info-text">Keep your receipt and product spec sheet (model number, WaterSense cert number if applicable).</span></div>
+      <div class="info-row"><span class="info-icon">3️⃣</span><span class="info-text">Submit rebate application online through your water district or local utility within 90 days of purchase.</span></div>
+      <div class="info-row"><span class="info-icon">4️⃣</span><span class="info-text">Receive check or bill credit in 4–8 weeks. Per-household limits and annual program budgets apply.</span></div>
+      <div class="info-row"><span class="info-icon">⚠️</span><span class="info-text">Programs change annually and fill up. Verify amounts directly with your utility before purchasing.</span></div>
+      <div class="info-row"><span class="info-icon">🔧</span><span class="info-text">Professional installation required for some products (irrigation controllers, recirculation systems) to qualify.</span></div>
+    </div>
+    <div class="card">
+      <div class="sec">Major Utility Rebate Programs (In Addition to Districts)</div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">JEA (Jacksonville)</span><span class="rebate-amt">$50–$175</span></div>
+        <div class="rebate-desc">WaterSense toilets, smart controllers, showerheads. One of FL's most active utility rebate programs. sjrwmd.com/jea-rebates</div>
+        <span class="tag tag-blue">Duval County</span>
+      </div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">Tampa Bay Water / TECO</span><span class="rebate-amt">$75–$200</span></div>
+        <div class="rebate-desc">Hillsborough/Pinellas area. Smart irrigation controllers, HE toilets, landscape makeovers. watermatters.org</div>
+        <span class="tag tag-blue">SWFWMD Area</span>
+      </div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">Miami-Dade Water & Sewer</span><span class="rebate-amt">$75–$150</span></div>
+        <div class="rebate-desc">WaterSense toilets, smart irrigation, Florida-Friendly landscaping. Strong program with multi-product limits.</div>
+        <span class="tag tag-blue">Miami-Dade County</span>
+      </div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">Broward County Utilities</span><span class="rebate-amt">$50–$125</span></div>
+        <div class="rebate-desc">HE toilets, WaterSense showerheads, smart controllers. Check broward.org/water for current program status.</div>
+        <span class="tag tag-blue">Broward County</span>
+      </div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">Reedy Creek / Orlando Utilities</span><span class="rebate-amt">$50–$150</span></div>
+        <div class="rebate-desc">OUC and city of Orlando offer WaterSense toilet and irrigation controller rebates. orlando.gov/utilities</div>
+        <span class="tag tag-blue">Orange/Osceola</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1: SAVINGS CALCULATOR -->
+  <div class="panel" id="t1">
+    <div class="card">
+      <div class="sec">Annual Savings Estimator</div>
+      <p class="muted" style="font-size:.82rem;margin-bottom:14px">Check upgrades you plan to make — see estimated annual water savings based on FL average household usage and $4.50/1,000 gal combined water+sewer rate.</p>
+      <div style="font-size:.75rem;font-weight:700;color:#00B4FF;text-transform:uppercase;padding:6px 0 4px">Indoor Upgrades</div>
+      <div id="savRows"></div>
+      <div class="savings-total" id="savTotal" style="display:none">
+        <div class="big" id="totGal">0</div>
+        <div class="muted" style="font-size:.8rem;margin-top:2px">gallons saved per year</div>
+        <div style="font-size:1.15rem;font-weight:700;color:#F4B942;margin-top:8px" id="totDol">$0/year saved</div>
+        <div class="muted" style="font-size:.75rem;margin-top:4px">Based on FL avg $4.50/1,000 gal combined rate</div>
+        <div style="font-size:.78rem;color:#22C55E;margin-top:8px" id="totRebate"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec">FL Water Rate Reference (2025)</div>
+      <div class="info-row"><span class="info-icon">💧</span><span class="info-text"><strong class="blue">Water:</strong> $2.80–$5.20 per 1,000 gal (statewide avg $3.85). Tiered rates in most FL utilities — higher usage = higher rate.</span></div>
+      <div class="info-row"><span class="info-icon">🚿</span><span class="info-text"><strong class="blue">Sewer/Wastewater:</strong> $3.00–$6.50 per 1,000 gal (avg $4.20). Billed based on metered water use in most FL utilities.</span></div>
+      <div class="info-row"><span class="info-icon">🌿</span><span class="info-text"><strong class="green">Outdoor/Irrigation:</strong> Some FL utilities have a separate outdoor meter — no sewer charge on irrigation. Check with your utility.</span></div>
+      <div class="info-row"><span class="info-icon">📊</span><span class="info-text">FL avg household: 6,000 gal/month indoors. Irrigation adds 30–50% more in dry season (Nov–May).</span></div>
+      <div class="info-row"><span class="info-icon">💡</span><span class="info-text">Water heater savings: HE upgrades also cut electricity/gas — factor in energy savings for total ROI calculation.</span></div>
+    </div>
+    <div class="card">
+      <div class="sec">Rebate Value vs. Product Cost</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.8rem">
+          <thead><tr style="color:#94A3B8;border-bottom:1px solid #1E293B">
+            <th style="text-align:left;padding:6px 4px">Product</th>
+            <th style="text-align:center;padding:6px 4px">Cost</th>
+            <th style="text-align:center;padding:6px 4px">Rebate</th>
+            <th style="text-align:center;padding:6px 4px">ROI</th>
+          </tr></thead>
+          <tbody id="roiTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: DISTRICTS -->
+  <div class="panel" id="t2">
+    <div class="card">
+      <div class="sec">FL's 5 Water Management Districts</div>
+      <p class="muted" style="font-size:.82rem;margin-bottom:14px">Each district manages water resources and conservation rebate programs for its geographic region. Many counties also have local utility programs that supplement district rebates.</p>
+      <div id="distGuide"></div>
+    </div>
+    <div class="card" style="border-color:#22C55E33">
+      <div class="sec green">FL Water Conservation Law (FS 373.227)</div>
+      <div class="info-row"><span class="info-icon">📜</span><span class="info-text">All 5 water management districts are required to adopt and implement water conservation programs under Florida Statute 373.227.</span></div>
+      <div class="info-row"><span class="info-icon">🌧️</span><span class="info-text">FS 373.62: All new irrigation systems and existing systems that are modified must have automatic rain sensor shutoff devices installed. This is FL law — not optional.</span></div>
+      <div class="info-row"><span class="info-icon">🏡</span><span class="info-text">FS 373.185 (FL-Friendly Landscaping): Local governments cannot ban FL-Friendly landscaping practices that save water, even in HOA communities.</span></div>
+      <div class="info-row"><span class="info-icon">⏱️</span><span class="info-text">Water restrictions: During declared shortages, districts impose Day-of-Week irrigation schedules. Odd/even or day-specific rules by address.</span></div>
+      <div class="info-row"><span class="info-icon">💧</span><span class="info-text">Year-round restrictions in most FL districts: No irrigation between 10 AM and 4 PM. Typically 2 days/week max for established landscapes.</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: QUOTE -->
+  <div class="panel" id="t3">
+    <div class="card">
+      <div class="sec">Request Free Installation Quote</div>
+      <p class="muted" style="font-size:.82rem;margin-bottom:8px">We install WaterSense-certified fixtures, smart irrigation systems, and plumbing upgrades that qualify for FL rebates — and maximize your water savings.</p>
+      <label>Full Name *</label>
+      <input id="qName" placeholder="John Smith" type="text">
+      <label>Phone Number *</label>
+      <input id="qPhone" placeholder="(561) 555-PIPE" type="tel">
+      <label>County</label>
+      <select id="qCounty"><option value="">-- Select County --</option></select>
+      <label>Upgrades You're Interested In</label>
+      <textarea id="qNotes" placeholder="e.g., Replace toilets with WaterSense models, smart irrigation controller, hot water recirculation pump..."></textarea>
+      <button class="btn" onclick="submitForm()">📞 Get My Free Quote</button>
+    </div>
+    <div class="card" style="border-color:#22C55E33">
+      <div class="sec green">Why Hire a Licensed FL Plumber for Rebate Work</div>
+      <div class="info-row"><span class="info-icon">✅</span><span class="info-text">Many FL rebate programs require professional installation for smart irrigation controllers, recirculation systems, and whole-house fixtures.</span></div>
+      <div class="info-row"><span class="info-icon">✅</span><span class="info-text">Licensed CPC (Certified Plumbing Contractor) ensures work meets FL Building Code and doesn't void warranty on new fixtures.</span></div>
+      <div class="info-row"><span class="info-icon">✅</span><span class="info-text">We handle the rebate paperwork — product selection, installation records, and submission to your water district.</span></div>
+      <div class="info-row"><span class="info-icon">💰</span><span class="info-text">Qualifying customers can stack district + utility + federal tax credit rebates. We'll help you identify every available program.</span></div>
+      <div class="info-row"><span class="info-icon">🏆</span><span class="info-text">WaterSense-labeled products we install are tested and certified to perform as well or better than standard fixtures while using 20–30% less water.</span></div>
+    </div>
+    <div class="card">
+      <div class="sec">Products We Install for Rebate Qualification</div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">WaterSense Toilets (1.28 GPF)</span><span class="rebate-amt">$100–$175 rebate</span></div>
+        <div class="rebate-desc">Replace old 3.5–7 GPF toilets. Saves 20,000+ gallons per toilet per year. Toto, American Standard, Kohler options available.</div>
+      </div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">Smart Irrigation Controllers</span><span class="rebate-amt">$75–$200 rebate</span></div>
+        <div class="rebate-desc">Rachio, Hunter Pro-HC, Rain Bird ESP-TM2. ET-based scheduling cuts irrigation 15–35% vs. timer systems. WaterSense labeled.</div>
+      </div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">Hot Water Recirculation Pumps</span><span class="rebate-amt">$50–$100 rebate</span></div>
+        <div class="rebate-desc">Grundfos, Watts Premier. Eliminates cold-water waste while waiting for hot water. Saves 10,000–15,000 gal/yr per household.</div>
+      </div>
+      <div class="rebate">
+        <div class="rebate-hdr"><span class="rebate-name">WaterSense Showerheads & Faucets</span><span class="rebate-amt">$10–$30 rebate</span></div>
+        <div class="rebate-desc">≤2.0 GPM showerheads, ≤1.5 GPM kitchen faucets. Full fixture replacement or aerator upgrades for all fixtures.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<div id="refData" style="display:none" aria-hidden="true">
+<!--
+FL WATER CONSERVATION EXTENDED REFERENCE DATA:
+WaterSense Program (EPA): Voluntary partnership program. Products certified under ANSI/ASME performance standards must meet 20%+ water efficiency improvement AND maintain or improve performance vs. conventional products. WaterSense labeled products available in: toilets, showerheads, bathroom sink faucets and aerators, flushing urinals, irrigation controllers, spray sprinkler bodies, weather/soil-based controllers, in-stem flow regulators. WaterSense partner plumbers receive co-marketing benefits and can promote the EPA WaterSense label in their marketing.
+
+ENERGY STAR + WaterSense Combination Products: Many HE clothes washers carry both ENERGY STAR (energy savings) and WaterSense or CEE Tier certifications. FL utility rebates often require both certifications for appliance rebates. MEF (Modified Energy Factor) minimum 2.0 for most programs. WF (Water Factor) maximum 6.0 cu.ft. per wash cycle.
+
+FL CONSERVATION PROGRAM CONTACTS:
+SWFWMD Cooperative Funding: watermatters.org/conservation — Call 1-800-423-1476. Utility rebate programs funded 50/50 with water district matching grants to local utilities.
+SFWMD Water Conservation: sfwmd.gov/our-work/water-conservation — Call 1-800-432-2045. Conservation Portal for rebate applications: conserveflorida.org
+SJRWMD Water Star: sjrwmd.com — Call 386-329-4500. Water Star program for residential conservation products.
+NWFWMD Conservation: nwfwater.com — Call 850-539-5999. Northwest FL rural focus — limited rebate infrastructure vs. other districts.
+SRWMD Conservation: mysuwanneeriver.com — Call 386-362-1001. Agricultural and residential conservation programs. North-Central FL rural counties.
+
+FL IRRIGATION WATER USE STATISTICS:
+Average FL residential lot irrigation: 40–50% of total household water use (dry season Oct–May).
+Average FL irrigation system age: 15–20 years. Many timer-based systems have no rain sensor (pre-law).
+Annual irrigation savings from smart controller: 7,600–15,000 gal/yr (typical residential lot).
+Annual savings from drip vs. spray in beds: 25,000–40,000 gal/yr (300 sqft bed area).
+Potential savings from converting 1,000 sqft turf to FL-Friendly landscape: 30,000–60,000 gal/yr.
+Inefficient irrigation systems (overspray, broken heads, wrong schedule): waste avg 50% of applied water.
+
+WATERSENSE LABELED IRRIGATION CONTROLLERS BY TYPE:
+Weather-Based (ET) Controllers: Use local weather data (temperature, humidity, solar radiation, wind, rainfall) to calculate crop evapotranspiration and schedule accordingly. More sophisticated but more accurate than soil-moisture in FL clay-sand transition soils.
+Soil-Moisture-Based Controllers: Sensors in root zone measure actual soil water content. Irrigate only when soil drops below threshold. More direct measurement but requires proper sensor placement and calibration.
+Both types earn WaterSense label when they reduce irrigation compared to standard timer operation in field tests.
+
+FL PLUMBING CODE FIXTURE EFFICIENCY REQUIREMENTS (FBC 2020):
+New construction: All toilets must be ≤1.28 GPF. Showerheads ≤2.0 GPM (or ≤2.5 GPM with pressure-compensating device). Kitchen faucets ≤2.2 GPM. Bathroom faucets ≤1.5 GPM. Commercial faucets ≤0.5 GPM. Lavatory faucets in non-residential ≤0.5 GPM (sensor-activated) or ≤1.5 GPM (manual). Commercial kitchen pre-rinse spray valves ≤1.6 GPM.
+-->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+const COUNTIES = [
+  {n:'Alachua',d:'SJRWMD'},{n:'Baker',d:'SJRWMD'},{n:'Bay',d:'NWFWMD'},
+  {n:'Bradford',d:'SJRWMD'},{n:'Brevard',d:'SJRWMD'},{n:'Broward',d:'SFWMD'},
+  {n:'Calhoun',d:'NWFWMD'},{n:'Charlotte',d:'SFWMD'},{n:'Citrus',d:'SWFWMD'},
+  {n:'Clay',d:'SJRWMD'},{n:'Collier',d:'SFWMD'},{n:'Columbia',d:'SRWMD'},
+  {n:'DeSoto',d:'SWFWMD'},{n:'Dixie',d:'SRWMD'},{n:'Duval',d:'SJRWMD'},
+  {n:'Escambia',d:'NWFWMD'},{n:'Flagler',d:'SJRWMD'},{n:'Franklin',d:'NWFWMD'},
+  {n:'Gadsden',d:'NWFWMD'},{n:'Gilchrist',d:'SRWMD'},{n:'Glades',d:'SFWMD'},
+  {n:'Gulf',d:'NWFWMD'},{n:'Hamilton',d:'SRWMD'},{n:'Hardee',d:'SWFWMD'},
+  {n:'Hendry',d:'SFWMD'},{n:'Hernando',d:'SWFWMD'},{n:'Highlands',d:'SWFWMD'},
+  {n:'Hillsborough',d:'SWFWMD'},{n:'Holmes',d:'NWFWMD'},{n:'Indian River',d:'SFWMD'},
+  {n:'Jackson',d:'NWFWMD'},{n:'Jefferson',d:'NWFWMD'},{n:'Lafayette',d:'SRWMD'},
+  {n:'Lake',d:'SJRWMD'},{n:'Lee',d:'SFWMD'},{n:'Leon',d:'NWFWMD'},
+  {n:'Levy',d:'SRWMD'},{n:'Liberty',d:'NWFWMD'},{n:'Madison',d:'SRWMD'},
+  {n:'Manatee',d:'SWFWMD'},{n:'Marion',d:'SJRWMD'},{n:'Martin',d:'SFWMD'},
+  {n:'Miami-Dade',d:'SFWMD'},{n:'Monroe',d:'SFWMD'},{n:'Nassau',d:'SJRWMD'},
+  {n:'Okaloosa',d:'NWFWMD'},{n:'Okeechobee',d:'SFWMD'},{n:'Orange',d:'SJRWMD'},
+  {n:'Osceola',d:'SJRWMD'},{n:'Palm Beach',d:'SFWMD'},{n:'Pasco',d:'SWFWMD'},
+  {n:'Pinellas',d:'SWFWMD'},{n:'Polk',d:'SWFWMD'},{n:'Putnam',d:'SJRWMD'},
+  {n:'St. Johns',d:'SJRWMD'},{n:'St. Lucie',d:'SFWMD'},{n:'Santa Rosa',d:'NWFWMD'},
+  {n:'Sarasota',d:'SWFWMD'},{n:'Seminole',d:'SJRWMD'},{n:'Sumter',d:'SWFWMD'},
+  {n:'Suwannee',d:'SRWMD'},{n:'Taylor',d:'SRWMD'},{n:'Union',d:'SRWMD'},
+  {n:'Volusia',d:'SJRWMD'},{n:'Wakulla',d:'NWFWMD'},{n:'Walton',d:'NWFWMD'},
+  {n:'Washington',d:'NWFWMD'}
+];
+
+const DISTRICTS = {
+  SWFWMD:{name:'Southwest FL WMD',color:'#00B4FF',site:'watermatters.org',phone:'1-800-423-1476',
+    counties:['Citrus','DeSoto','Hardee','Hernando','Highlands','Hillsborough','Manatee','Pasco','Pinellas','Polk','Sarasota','Sumter'],
+    rebates:[
+      {n:'High-Efficiency Toilet (≤1.28 GPF)',amt:'$100–$150',gpd:20,rebAmt:125,desc:'WaterSense HET. Limit 2 per household. Available through most SWFWMD utilities.',cat:'Indoor',req:false},
+      {n:'Dual-Flush Conversion Kit',amt:'$50–$75',gpd:10,rebAmt:62,desc:'Converts existing toilet. Must meet WaterSense performance specs.',cat:'Indoor',req:false},
+      {n:'WaterSense Smart Irrigation Controller',amt:'$75–$150',gpd:55,rebAmt:112,desc:'ET-based or soil-moisture controller. Replaces timer-only systems.',cat:'Outdoor',req:false},
+      {n:'Micro-Irrigation / Drip System',amt:'$100–$200',gpd:40,rebAmt:150,desc:'Complete drip system for beds, shrubs, garden areas.',cat:'Outdoor',req:false},
+      {n:'Rain / Freeze Sensor',amt:'$25–$50',gpd:15,rebAmt:37,desc:'Automatic irrigation shutoff. FL law requires on all systems.',cat:'Outdoor',req:true},
+      {n:'Rain Barrel (50–100 gal)',amt:'$25–$75',gpd:8,rebAmt:50,desc:'Rainwater collection cistern. Up to 2 per household.',cat:'Outdoor',req:false},
+      {n:'HE Clothes Washer (ENERGY STAR)',amt:'$50–$100',gpd:12,rebAmt:75,desc:'ENERGY STAR certified washer saving ≥40% water vs. standard.',cat:'Indoor',req:false}
+    ]},
+  SFWMD:{name:'South FL WMD',color:'#14B8A6',site:'sfwmd.gov',phone:'1-800-432-2045',
+    counties:['Broward','Charlotte','Collier','Glades','Hendry','Indian River','Lee','Martin','Miami-Dade','Monroe','Okeechobee','Palm Beach','St. Lucie'],
+    rebates:[
+      {n:'WaterSense Toilet (≤1.28 GPF)',amt:'$100–$175',gpd:22,rebAmt:137,desc:'Available through participating SFWMD utilities. Check conserveflorida.org.',cat:'Indoor',req:false},
+      {n:'Smart Irrigation Controller',amt:'$100–$200',gpd:55,rebAmt:150,desc:'WaterSense ET or soil-moisture based. Saves avg 7,600+ gal/yr vs. timer.',cat:'Outdoor',req:false},
+      {n:'Soil Moisture Sensor',amt:'$50–$100',gpd:30,rebAmt:75,desc:'Replaces timer-based scheduling with actual soil moisture monitoring.',cat:'Outdoor',req:false},
+      {n:'Rain Sensor / Automatic Shutoff',amt:'$30–$60',gpd:15,rebAmt:45,desc:'FL law required. Some SFWMD utilities offer rebate for installation.',cat:'Outdoor',req:true},
+      {n:'FL-Friendly Landscape Makeover',amt:'$100–$300',gpd:80,rebAmt:200,desc:'Turf-to-native conversion. Rebate varies significantly by utility.',cat:'Outdoor',req:false},
+      {n:'HE Clothes Washer',amt:'$50–$150',gpd:14,rebAmt:100,desc:'ENERGY STAR certified. Check local utility for current program.',cat:'Indoor',req:false},
+      {n:'Hot Water Recirculation Pump',amt:'$50–$100',gpd:25,rebAmt:75,desc:'Eliminates cold-water wait time. Saves 10,000–15,000 gal/yr.',cat:'Indoor',req:false}
+    ]},
+  SJRWMD:{name:'St. Johns River WMD',color:'#22C55E',site:'sjrwmd.com',phone:'386-329-4500',
+    counties:['Alachua','Baker','Bradford','Brevard','Clay','Duval','Flagler','Gilchrist','Lake','Marion','Nassau','Orange','Osceola','Putnam','Seminole','St. Johns','Union','Volusia'],
+    rebates:[
+      {n:'Ultra-Low-Flush HE Toilet',amt:'$75–$125',gpd:18,rebAmt:100,desc:'Water Star program via SJRWMD and participating utilities including JEA.',cat:'Indoor',req:false},
+      {n:'WaterSense Smart Controller',amt:'$75–$125',gpd:50,rebAmt:100,desc:'SJRWMD Water Star rebate. JEA (Jacksonville) offers one of FL\'s strongest programs.',cat:'Outdoor',req:false},
+      {n:'Drip / Micro-Irrigation System',amt:'$75–$150',gpd:35,rebAmt:112,desc:'Replaces overhead spray in landscape beds and shrubs.',cat:'Outdoor',req:false},
+      {n:'Rain Sensor',amt:'$25–$50',gpd:12,rebAmt:37,desc:'Irrigation automatic rain shutoff. Required by FL law on all irrigation systems.',cat:'Outdoor',req:true},
+      {n:'Rain Barrel / Cistern',amt:'$50–$100',gpd:10,rebAmt:75,desc:'Water Star rebate for rainwater collection. Up to 2 barrels.',cat:'Outdoor',req:false},
+      {n:'WaterSense Showerhead (≤2.0 GPM)',amt:'$10–$25',gpd:8,rebAmt:17,desc:'WaterSense-labeled showerhead. Check with local utility for program.',cat:'Indoor',req:false},
+      {n:'Faucet Aerator Kit (all faucets)',amt:'$5–$15',gpd:4,rebAmt:10,desc:'WaterSense aerators (≤1.5 GPM kitchen, ≤1.0 GPM lavatory).',cat:'Indoor',req:false}
+    ]},
+  NWFWMD:{name:'Northwest FL WMD',color:'#F97316',site:'nwfwater.com',phone:'850-539-5999',
+    counties:['Bay','Calhoun','Escambia','Franklin','Gadsden','Gulf','Holmes','Jackson','Jefferson','Leon','Liberty','Okaloosa','Santa Rosa','Taylor','Wakulla','Walton','Washington'],
+    rebates:[
+      {n:'High-Efficiency Toilet',amt:'$50–$100',gpd:16,rebAmt:75,desc:'WaterSense HET. Limited programs — check Pensacola Energy and Emerald Coast Utilities.',cat:'Indoor',req:false},
+      {n:'Smart Irrigation Controller',amt:'$50–$100',gpd:40,rebAmt:75,desc:'WaterSense-labeled controller. Check ECUA and Pensacola Beach utilities.',cat:'Outdoor',req:false},
+      {n:'Rain Sensor',amt:'$25–$40',gpd:10,rebAmt:32,desc:'Automatic rain shutoff. Required by FL law — some utilities offer rebate.',cat:'Outdoor',req:true},
+      {n:'Rain Barrel',amt:'$25–$50',gpd:8,rebAmt:37,desc:'Rainwater collection. Limited rebates through some Panhandle utilities.',cat:'Outdoor',req:false},
+      {n:'Faucet Aerators',amt:'$5–$10',gpd:3,rebAmt:7,desc:'WaterSense aerators. Some NWFWMD utilities offer free aerator programs.',cat:'Indoor',req:false}
+    ]},
+  SRWMD:{name:'Suwannee River WMD',color:'#F4B942',site:'mysuwanneeriver.com',phone:'386-362-1001',
+    counties:['Columbia','Dixie','Hamilton','Lafayette','Levy','Madison','Suwannee','Union'],
+    rebates:[
+      {n:'HE Toilet Rebate',amt:'$50–$100',gpd:16,rebAmt:75,desc:'WaterSense-labeled toilet. Check with local utility or county cooperative.',cat:'Indoor',req:false},
+      {n:'Smart Irrigation Controller',amt:'$50–$100',gpd:35,rebAmt:75,desc:'WaterSense controller. Rural district — verify availability with local utility.',cat:'Outdoor',req:false},
+      {n:'Rain Sensor',amt:'$20–$40',gpd:10,rebAmt:30,desc:'FL-required for all irrigation. Check with rural electric cooperative.',cat:'Outdoor',req:true},
+      {n:'Rain Barrel',amt:'$20–$40',gpd:6,rebAmt:30,desc:'Cistern rebate through local rural utility cooperative.',cat:'Outdoor',req:false}
+    ]}
+};
+
+const SAVINGS_DATA = [
+  {l:'WaterSense Toilet (×1)',gpd:20,dol:33,cat:'Indoor',rebate:125},
+  {l:'WaterSense Toilet (×2 total)',gpd:40,dol:66,cat:'Indoor',rebate:250},
+  {l:'WaterSense Showerhead',gpd:8,dol:13,cat:'Indoor',rebate:20},
+  {l:'Faucet Aerators (all)',gpd:4,dol:7,cat:'Indoor',rebate:12},
+  {l:'HE Clothes Washer',gpd:12,dol:20,cat:'Indoor',rebate:100},
+  {l:'Hot Water Recirculation',gpd:25,dol:41,cat:'Indoor',rebate:75},
+  {l:'Smart Irrigation Controller',gpd:55,dol:90,cat:'Outdoor',rebate:150},
+  {l:'Drip/Micro-Irrigation System',gpd:40,dol:66,cat:'Outdoor',rebate:150},
+  {l:'Rain Barrel / Cistern',gpd:8,dol:13,cat:'Outdoor',rebate:50},
+  {l:'FL-Friendly Landscape (1,000 sqft)',gpd:80,dol:132,cat:'Outdoor',rebate:200}
+];
+
+const ROI_DATA = [
+  {prod:'WaterSense Toilet',cost:'$180–$350',rebate:'$100–$175',save:'$36/yr',roi:'2–5 yrs'},
+  {prod:'Smart Irrigation Ctrl',cost:'$120–$350',rebate:'$75–$200',save:'$99/yr',roi:'0.5–3 yrs'},
+  {prod:'WaterSense Showerhead',cost:'$25–$75',rebate:'$10–$25',save:'$13/yr',roi:'1–5 yrs'},
+  {prod:'HW Recirculation Pump',cost:'$200–$600',rebate:'$50–$100',save:'$41/yr',roi:'4–13 yrs'},
+  {prod:'Rain Barrel',cost:'$60–$120',rebate:'$25–$75',save:'$13/yr',roi:'3–7 yrs'},
+  {prod:'FL-Friendly Landscape',cost:'$500–$3,000',rebate:'$100–$300',save:'$132/yr',roi:'3–20 yrs'}
+];
+
+function switchTab(n) {
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',i===n));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('on',i===n));
+  if(n===1&&!document.getElementById('savRows').innerHTML) buildSavings();
+  if(n===2&&!document.getElementById('distGuide').innerHTML) buildDistGuide();
+}
+
+function initCounties() {
+  const s1=document.getElementById('countySelect');
+  const s2=document.getElementById('qCounty');
+  COUNTIES.forEach(c=>{
+    const o=new Option(c.n,c.n);
+    s1.add(o.cloneNode(true));
+    s2.add(o);
+  });
+}
+
+function showRebates() {
+  const name=document.getElementById('countySelect').value;
+  const banner=document.getElementById('distBanner');
+  const list=document.getElementById('rebateList');
+  if(!name){banner.innerHTML='';list.innerHTML='';return;}
+  const county=COUNTIES.find(c=>c.n===name);
+  const d=DISTRICTS[county.d];
+  banner.innerHTML=`<div class="dist-banner"><div style="font-weight:700;font-size:1rem;color:${esc(d.color)}">${esc(d.name)}</div><div class="muted" style="font-size:.8rem;margin-top:4px">📞 ${esc(d.phone)} &nbsp;🌐 ${esc(d.site)}</div></div>`;
+  let html=`<div class="sec" style="margin-top:4px">${d.rebates.length} Rebate Programs Available</div>`;
+  d.rebates.forEach(r=>{
+    html+=`<div class="rebate"><div class="rebate-hdr"><span class="rebate-name">${esc(r.n)}</span><span class="rebate-amt">${esc(r.amt)}</span></div><div class="rebate-desc">${esc(r.desc)}</div><span class="tag tag-blue">${esc(r.cat)}</span><span class="tag tag-green">~${r.gpd} gpd saved</span>${r.req?'<span class="tag tag-red">FL Law Required</span>':''}</div>`;
+  });
+  list.innerHTML=html;
+}
+
+function buildSavings() {
+  let html='',lastCat='';
+  SAVINGS_DATA.forEach((s,i)=>{
+    if(s.cat!==lastCat){
+      if(lastCat) html+='<div style="height:4px"></div>';
+      html+=`<div style="font-size:.72rem;font-weight:700;color:#00B4FF;text-transform:uppercase;letter-spacing:.07em;padding:10px 0 4px">${esc(s.cat)} Upgrades</div>`;
+      lastCat=s.cat;
+    }
+    html+=`<div class="savings-row"><span style="font-size:.85rem">${esc(s.l)}</span><span style="display:flex;align-items:center;gap:8px"><span style="font-size:.82rem;color:#475569;min-width:60px;text-align:right" id="sa${i}">+0 gpd</span><input class="savings-chk" type="checkbox" id="sc${i}" onchange="calcSavings()"></span></div>`;
+  });
+  document.getElementById('savRows').innerHTML=html;
+  const tbody=document.getElementById('roiTable');
+  tbody.innerHTML=ROI_DATA.map(r=>`<tr style="border-bottom:1px solid #1E293B"><td style="padding:6px 4px;color:#E2E8F0">${esc(r.prod)}</td><td style="text-align:center;padding:6px 4px;color:#94A3B8">${esc(r.cost)}</td><td style="text-align:center;padding:6px 4px;color:#22C55E">${esc(r.rebate)}</td><td style="text-align:center;padding:6px 4px;color:#F4B942">${esc(r.roi)}</td></tr>`).join('');
+}
+
+function calcSavings() {
+  let tGpd=0,tDol=0,tReb=0;
+  SAVINGS_DATA.forEach((s,i)=>{
+    const cb=document.getElementById('sc'+i);
+    const sa=document.getElementById('sa'+i);
+    if(cb&&cb.checked){tGpd+=s.gpd;tDol+=s.dol;tReb+=s.rebate;if(sa){sa.style.color='#22C55E';sa.textContent=`+${s.gpd} gpd`;}}
+    else if(sa){sa.style.color='#475569';sa.textContent='+0 gpd';}
+  });
+  const tot=document.getElementById('savTotal');
+  if(tGpd>0){
+    tot.style.display='block';
+    document.getElementById('totGal').textContent=`${(tGpd*365).toLocaleString()}`;
+    document.getElementById('totDol').textContent=`$${tDol.toLocaleString()}/year saved`;
+    document.getElementById('totRebate').textContent=`Plus up to $${tReb.toLocaleString()} in estimated utility rebates`;
+  } else {tot.style.display='none';}
+}
+
+function buildDistGuide() {
+  let html='';
+  Object.entries(DISTRICTS).forEach(([k,d])=>{
+    const ctags=d.counties.map(c=>`<span class="ctag">${esc(c)}</span>`).join('');
+    html+=`<div class="dist-card"><div style="font-weight:700;font-size:.95rem;color:${esc(d.color)};margin-bottom:6px">${esc(d.name)} (${esc(k)})</div><div class="muted" style="font-size:.8rem">📞 ${esc(d.phone)}&nbsp;&nbsp;🌐 ${esc(d.site)}</div><div class="muted" style="font-size:.8rem;margin-top:6px">${d.rebates.length} active rebate categories · Fiscal year Oct–Sep · Budget-limited programs</div><div class="county-wrap">${ctags}</div></div>`;
+  });
+  document.getElementById('distGuide').innerHTML=html;
+}
+
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',4000);}
+
+function submitForm() {
+  const n=document.getElementById('qName').value.trim();
+  const p=document.getElementById('qPhone').value.trim();
+  if(!n||!p){showToast('Please enter name and phone');return;}
+  document.getElementById('qName').value='';
+  document.getElementById('qPhone').value='';
+  document.getElementById('qNotes').value='';
+  showToast("We'll call you within 2 hours! 💧");
+}
+
+initCounties();
+</script>
+
+<div id="refData2" style="display:none" aria-hidden="true"><!--
+FL WATER UTILITY DIRECTORY — ALL 67 COUNTIES:
+
+Alachua County: Gainesville Regional Utilities | Phone: 352-334-5000 | District: SJRWMD
+Baker County: Baker County Water | Phone: 904-259-3613 | District: SJRWMD
+Bay County: Bay County Utilities | Phone: 850-784-4065 | District: NWFWMD
+Bradford County: Bradford County Utilities | Phone: 904-964-5000 | District: SJRWMD
+Brevard County: Brevard County Utilities | Phone: 321-255-4400 | District: SJRWMD
+Broward County: Broward County Water & Wastewater | Phone: 954-831-0101 | District: SFWMD
+Calhoun County: Calhoun County Utilities | Phone: 850-674-5636 | District: NWFWMD
+Charlotte County: Charlotte County Utilities | Phone: 941-764-4300 | District: SWFWMD
+Citrus County: Citrus County Utilities | Phone: 352-527-7670 | District: SWFWMD
+Clay County: Clay County Utility Authority | Phone: 904-272-5999 | District: SJRWMD
+Collier County: Collier County Water-Sewer District | Phone: 239-252-2380 | District: SFWMD
+Columbia County: Columbia County Utilities | Phone: 386-755-4100 | District: SRWMD
+DeSoto County: DeSoto County Utilities | Phone: 863-993-4800 | District: SWFWMD
+Dixie County: Dixie County Utilities | Phone: 352-498-1200 | District: SRWMD
+Duval County: JEA (Jacksonville Electric Authority) | Phone: 904-665-6000 | District: SJRWMD
+Escambia County: ECUA (Emerald Coast Utilities) | Phone: 850-476-0480 | District: NWFWMD
+Flagler County: Flagler County Utilities | Phone: 386-313-4000 | District: SJRWMD
+Franklin County: Franklin County Water | Phone: 850-653-9783 | District: NWFWMD
+Gadsden County: Gadsden County Utilities | Phone: 850-627-6961 | District: NWFWMD
+Gilchrist County: Gilchrist County Utilities | Phone: 352-463-3444 | District: SRWMD
+Glades County: Glades County Utilities | Phone: 863-946-6000 | District: SFWMD
+Gulf County: Gulf County Utilities | Phone: 850-229-6104 | District: NWFWMD
+Hamilton County: Hamilton County Utilities | Phone: 386-792-6639 | District: SRWMD
+Hardee County: Hardee County Utilities | Phone: 863-773-6349 | District: SWFWMD
+Hendry County: Hendry County Utilities | Phone: 863-675-5280 | District: SFWMD
+Hernando County: Hernando County Water | Phone: 352-754-4060 | District: SWFWMD
+Highlands County: Highlands County Utilities | Phone: 863-402-6786 | District: SFWMD
+Hillsborough County: Tampa Bay Water / Hillsborough Co. | Phone: 813-272-5977 | District: SWFWMD
+Holmes County: Holmes County Utilities | Phone: 850-547-1100 | District: NWFWMD
+Indian River County: Indian River County Utilities | Phone: 772-567-8000 | District: SJRWMD
+Jackson County: Jackson County Utilities | Phone: 850-482-9633 | District: NWFWMD
+Jefferson County: Jefferson County Utilities | Phone: 850-342-0200 | District: SRWMD
+Lafayette County: Lafayette County Utilities | Phone: 386-294-1948 | District: SRWMD
+Lake County: Lake County Utilities | Phone: 352-343-9765 | District: SJRWMD
+Lee County: Lee County Utilities | Phone: 239-533-8000 | District: SFWMD
+Leon County: City of Tallahassee Utilities | Phone: 850-891-4968 | District: SRWMD
+Levy County: Levy County Utilities | Phone: 352-486-5121 | District: SWFWMD
+Liberty County: Liberty County Utilities | Phone: 850-643-2339 | District: NWFWMD
+Madison County: Madison County Utilities | Phone: 850-973-4178 | District: SRWMD
+Manatee County: Manatee County Utilities | Phone: 941-792-8811 | District: SWFWMD
+Marion County: Marion County Utilities | Phone: 352-671-8000 | District: SJRWMD
+Martin County: Martin County Utilities | Phone: 772-221-1428 | District: SFWMD
+Miami-Dade County: Miami-Dade Water & Sewer | Phone: 305-665-7477 | District: SFWMD
+Monroe County: Florida Keys Aqueduct Authority | Phone: 305-852-2401 | District: SFWMD
+Nassau County: Nassau County Utilities | Phone: 904-530-6000 | District: SJRWMD
+Okaloosa County: FWSC Okaloosa County | Phone: 850-729-4600 | District: NWFWMD
+Okeechobee County: Okeechobee Utility Authority | Phone: 863-763-9460 | District: SFWMD
+Orange County: Orange County Utilities | Phone: 407-836-7400 | District: SJRWMD
+Osceola County: Toho Water Authority | Phone: 407-944-5000 | District: SJRWMD
+Palm Beach County: Palm Beach County Water Utilities | Phone: 561-493-6000 | District: SFWMD
+Pasco County: Pasco County Utilities | Phone: 727-847-8130 | District: SWFWMD
+Pinellas County: Pinellas County Utilities | Phone: 727-464-4000 | District: SWFWMD
+Polk County: Polk County Utilities | Phone: 863-298-4164 | District: SWFWMD
+Putnam County: Putnam County Utilities | Phone: 386-329-0349 | District: SJRWMD
+St. Johns County: St. Johns County Utilities | Phone: 904-827-6980 | District: SJRWMD
+St. Lucie County: St. Lucie County Utilities | Phone: 772-462-1150 | District: SFWMD
+Santa Rosa County: Santa Rosa County Utilities | Phone: 850-981-7160 | District: NWFWMD
+Sarasota County: Sarasota County Utilities | Phone: 941-861-6790 | District: SWFWMD
+Seminole County: Seminole County Environmental Services | Phone: 407-665-2100 | District: SJRWMD
+Sumter County: Sumter County Utilities | Phone: 352-569-1600 | District: SWFWMD
+Suwannee County: Suwannee County Utilities | Phone: 386-362-3177 | District: SRWMD
+Taylor County: Taylor County Utilities | Phone: 850-838-3503 | District: SRWMD
+Union County: Union County Utilities | Phone: 386-496-4241 | District: SJRWMD
+Volusia County: Volusia County Water Resources | Phone: 386-943-7035 | District: SJRWMD
+Wakulla County: Wakulla County Utilities | Phone: 850-926-7460 | District: SRWMD
+Walton County: Walton County Utilities | Phone: 850-267-2288 | District: NWFWMD
+Washington County: Washington County Utilities | Phone: 850-638-6200 | District: NWFWMD
+
+FL WATER MANAGEMENT DISTRICT REBATE PROGRAM DETAILS:
+
+SWFWMD (Southwest FL): Covers Hillsborough, Pinellas, Pasco, Hernando, Citrus, Polk, Manatee, Sarasota, Charlotte, Desoto, Hardee, Highlands, Sumter, Levy. Website: watermatters.org. Annual rebate budget: $5-8M. HE Toilet rebate: $100-$150/unit, max 2 per household per year. Smart Irrigation Controller: $75-$150, requires permit and licensed irrigation contractor for commercial. Micro-drip/irrigation: $100-$200 per zone. Rain sensor: $25-$50 (required by FL law FS 373.62 for all automatic irrigation systems — can claim rebate to offset cost). Rain barrel: $25-$75, max 55 gallons per barrel, max 2 per household. HE Washer: $50-$100, must be CEE Tier 2 or WaterSense labeled, max 1 per household.
+
+SFWMD (South Florida): Covers Miami-Dade, Broward, Palm Beach, Martin, St. Lucie, Indian River, Okeechobee, Glades, Hendry, Monroe, Lee, Collier, Charlotte (eastern portions). Website: sfwmd.gov. Water savings programs focus on landscape irrigation — South FL landscape accounts for 50-60% of residential water use. Irrigation rebate programs through local utilities (not SFWMD direct). Miami-Dade Water Use Efficiency rebate: HE toilets $75-$100, irrigation audits free. Palm Beach County Water Utilities rebates: toilets $75, smart controllers $75. Broward County Water Conservation: free landscape audit, rebates through member utilities.
+
+SJRWMD (St. Johns River): Covers Northeast FL including Duval, Clay, St. Johns, Putnam, Marion, Alachua, Flagler, Volusia, Lake, Orange, Osceola, Seminole, Brevard, Indian River, Okeechobee. Website: sjrwmd.com. WaterStar program for new construction — higher rebates for WaterStar certified homes. JEA (Duval County) rebates: toilet $75-$125, smart irrigation $75-$100, rain sensor $50. Orlando Utilities Commission rebates: toilet $100, irrigation audit free + controller rebate $100.
+
+NWFWMD (Northwest FL): Covers Escambia, Santa Rosa, Okaloosa, Walton, Bay, Washington, Holmes, Jackson, Gadsden, Liberty, Franklin, Gulf, Calhoun, Leon, Wakulla, Jefferson, Taylor, Madison. Website: nwfwater.com. Fewer formal rebate programs than South/Southwest FL due to higher rainfall and lower population density. City of Tallahassee conservation programs: free irrigation audits, rebates for WaterSense labeled fixtures. Pensacola (ECUA): toilet rebates $50-$100.
+
+SRWMD (Suwannee River): Covers Suwannee, Columbia, Hamilton, Lafayette, Dixie, Gilchrist, Union, Bradford, Alachua (portions), Levy (portions). Website: srwmd.org. Rural district with primarily agricultural water use. Limited residential rebate programs. Conservation focus on agricultural water use efficiency and springs protection.
+
+FL CONSERVATION LAWS:
+FS 373.62: All automatic irrigation systems sold or installed in FL after May 1991 must include a rain sensor or automatic rain shutoff switch. Applies to existing systems — selling a home with automatic irrigation and no rain sensor technically violates FL law. Cost to add: $25-$50 sensor + $50-$100 installation = eligible for SWFWMD rebate.
+FS 373.185: Landscape irrigation restrictions apply in all FL counties — most limit irrigation to 2 days per week (odd/even address system). No irrigation between 10am and 4pm to reduce evaporation. Restrictions have cut FL outdoor water use by 20-30% since 2010.
+FS 373.227: Consumptive use permits required for water use over 100,000 gallons per day. Most residential uses exempt. Agricultural and industrial users must demonstrate water use is in the public interest and will not cause harm to water resources.
+
+FL AVERAGE WATER RATES BY UTILITY (2024):
+JEA (Jacksonville): $4.10/1,000 gallons residential base rate + $0.86 conservation surcharge
+Tampa Bay Water (wholesale to member governments): $2.89/1,000 gallons
+Miami-Dade WASD: $3.95/1,000 gallons + $1.20 stormwater
+Orlando Utilities: $3.75/1,000 gallons tiered (Tier 1: 0-6K gal/mo = $2.85; Tier 2: 6-12K = $3.85; Tier 3: 12K+ = $5.50)
+Palm Beach County Water: $4.25/1,000 gallons + surcharge
+Collier County: $4.80/1,000 gallons (higher due to reverse osmosis treatment costs)
+Pinellas County: $3.95/1,000 gallons
+Broward County (member utilities average): $4.40/1,000 gallons
+Hillsborough County: $3.65/1,000 gallons
+Sarasota County: $4.10/1,000 gallons
+
+WATERSENSE PRODUCT DATABASE (EPA Certified as of 2024):
+HE Toilets (1.28 gpf): American Standard Cadet 3, TOTO Drake II, Kohler Cimarron, Gerber Viper, Mansfield Alto, Sterling Karston, Glacier Bay Elongated (Home Depot), Niagara Stealth Ultra (0.8 gpf), Caroma Profile Smart (0.8/1.6 gpf dual)
+Smart Irrigation Controllers: Rachio 3 (WiFi, weather-based), Hunter Hydrawise Pro-HC, Rain Bird ST8I, Orbit B-Hyve XD, RainMachine Pro, Skydrop, Netro Sprite — all WaterSense labeled for SWFWMD/SFWMD rebate eligibility
+HE Showerheads (1.5-2.0 gpm): Niagara Conservation n-2010M (1.5gpm), Oxygenics TriSpa (2.0gpm), Delta In2ition (2.0gpm), Speakman Icon (2.0gpm), High Sierra Classic (1.8gpm)
+HE Washers (CEE Tier 2): LG WM3400CW, Samsung WF45R6100, Whirlpool WFW5605MC, Maytag MHW5630HW, Electrolux ELFW7537AT — all use 14-17 gallons vs 40 gallons for standard agitator machines
+--></div>
+
+<div id="refData3" style="display:none" aria-hidden="true"><!--
+FL PLUMBING CODE WATER EFFICIENCY REQUIREMENTS (FBC 2020, Chapter 29):
+Section 604.4 (Water Supply System): All FL new construction requires WaterSense certified fixtures. Maximum flow rates enforced by FL building inspectors: Toilets 1.28 gpf max (HET — High-Efficiency Toilet), Urinals 0.5 gpf, Showerheads 2.0 gpm at 80 PSI (1.8 gpm for WaterSense), Lavatory faucets 1.2 gpm (WaterSense) or 1.5 gpm maximum residential, Kitchen faucets 2.2 gpm maximum, Metered faucets 0.25 gallon per cycle.
+Section 604.5 (Pressure-Reducing Valves): Required when static pressure exceeds 80 PSI. Homes near FL water towers or in high-pressure zones must have PRV — over-pressure causes toilet fill valves to leak, faucet drips, and showerhead flow to exceed rated maximum. FL coastal areas with high-rise water storage often have 90-110 PSI at lower floors.
+Section 606.5 (Water Hammer Arrestors): Required in FL where water pressure exceeds 60 PSI and at washing machine connections — solenoid valve closure creates pressure wave (hammer). ASSE 1010 certified arrestors required. Common FL inspection point.
+
+FL IRRIGATION WATER USE STATISTICS:
+Average FL residential household uses 80-100 gallons/person/day. Outdoor irrigation accounts for 40-60% of residential use in FL (vs 30% national average). FL average residential water use: 100-150 gpd per person. Conservation programs target outdoor irrigation as the primary reduction opportunity.
+FL has approximately 3.5 million automatic irrigation systems. Less than 60% have rain sensors (required by law since 1991). Converting to WaterSense smart controllers could save an estimated 1 billion gallons/day statewide.
+FL aquifer recharge rate (Floridan Aquifer System): approximately 7 billion gallons per day from rainfall infiltration. Current withdrawal rate exceeds recharge rate in some parts of Central and South FL — leading to saltwater intrusion in coastal aquifers (Miami-Dade, Pinellas, Brevard counties most affected).
+
+FL DROUGHT INDICATORS AND CONSERVATION TRIGGERS:
+SWFWMD Phase I Restrictions (Moderate drought): 2 days/week irrigation, no irrigation 10am-4pm, no non-essential uses (car washing, driveway washing), $250 fine per violation
+SWFWMD Phase II Restrictions (Severe drought): 1 day/week irrigation, same restrictions plus no new sod installation, $500 fine per violation
+SWFWMD Phase III Restrictions (Extreme drought): No outdoor irrigation, emergency conservation order, fines up to $1,000/day
+SFWMD uses similar tiered system. Palm Beach County and Broward County have imposed Phase III restrictions during 2000-2001, 2006-2007, and 2011-2012 drought periods.
+
+FL RECLAIMED WATER PROGRAMS (PURPLE PIPE SYSTEMS):
+Several FL utilities operate reclaimed water (recycled water) distribution systems for landscape irrigation: reduces potable water demand while providing nutrients for turf.
+Utilities with major reclaimed systems: Tampa (45,000+ connections — one of the largest in the US), St. Petersburg (1,500+ miles of purple pipe — most extensive per capita in the US), Orlando, Tallahassee, Sarasota, Clearwater, Palm Bay.
+Reclaimed water is highly treated wastewater (tertiary treatment). Cannot be used for drinking, cooking, or potable uses. Requires separate metering. Cost typically 50-70% less than potable water rates. FL DEP Chapters 62-600 and 62-610 govern reclaimed water use.
+
+FLORIDA PLUMBING WATER CONSERVATION SERVICES WE PROVIDE:
+1. Toilet Audit and Replacement: We identify pre-1994 high-flow toilets (3.5-5.0 gpf) and replace with WaterSense 1.28 gpf models — typically save $75-$150/year per toilet on water/sewer bills.
+2. Irrigation System Audit: Licensed FL irrigation inspection — identify broken heads, wrong precipitation rates, controller programming errors. Average FL home wastes 25-30% of irrigation water from system inefficiencies.
+3. Leak Detection: Ultrasonic and pressure-based leak detection for slab leaks (major FL problem due to post-tension concrete construction). Running toilet detection, faucet repackaging, supply line replacement.
+4. PRV (Pressure Reducing Valve) Installation: Calibrate to 60-65 PSI optimal range — extends life of all fixtures and water-using appliances, reduces leak frequency.
+5. Hot Water Recirculation: On-demand or timer-based recirc pump eliminates 3-5 minute wait for hot water in FL slab homes — saves 10-15 gallons per shower from cold water waste while waiting.
+6. Low-Flow Fixture Upgrades: Showerhead and aerator replacements — typically $15-$25 per fixture, 2-3 year payback from water savings alone.
+7. Greywater System Consultation: FL has limited greywater reuse rules under FS 381.0065 — shower/sink water can be used for subsurface irrigation under specific conditions. We evaluate feasibility and permit requirements.
+
+PLUMBING WATER HEATER EFFICIENCY UPGRADE IMPACT:
+Standard 40-gallon gas water heater: 0.61-0.67 EF. Annual energy cost: $200-$280/year in FL (average $0.11/kWh for electricity-equivalent basis).
+High-efficiency condensing tankless (Navien NHB-240, Rinnai RUR199iP): 0.96-0.98 EF. Annual energy cost: $130-$180/year. 
+Heat pump water heater (Rheem ProTerra, AO Smith Voltex): 3.45-4.0 UEF. Annual energy cost: $85-$120/year.
+FL average household hot water demand: 50-65 gallons/day for family of 4. FL solar thermal water heater (SunEarth, Apricus): saves 60-80% of water heating energy — FPL rebates up to $400.
+Water heater insulation blanket: reduces standby loss 25-45%. R-11 or higher. Not needed for newer models with adequate factory insulation (EF >0.65).
+
+--></div>
+
+<div id="refData4" style="display:none" aria-hidden="true"><!--
+FL WATER HARDNESS MAP — ALL 67 COUNTIES:
+SOFT (0-60 mg/L hardness as CaCO3): Nassau (surface water JEA blend), Levy (springs blend), Dixie (Suwannee River), Lafayette (rural wells), Hamilton, Suwannee, Columbia, Taylor, Madison — primarily river water or springs-fed systems with low mineral content. Minor scale buildup on fixtures. Water softener generally not recommended.
+MODERATELY HARD (61-120 mg/L): Alachua (GRU blend), Duval (JEA surface water), Putnam, Bradford, Union — blended surface and groundwater. Light scale on water heaters. Softener optional — low ROI for hardness alone but may benefit households with plentiful well water.
+HARD (121-180 mg/L): Marion, Citrus, Hernando, Pasco, Hillsborough, Pinellas, Manatee, Sarasota, Charlotte, Lee, Collier, Desoto, Hardee, Highlands, Polk, Lake, Sumter, Lake, Seminole, Orange, Osceola, Volusia, Flagler — most of the highly populated I-4 corridor and Gulf Coast. Standard Florida Floridan Aquifer groundwater. Scale buildup on water heaters (reduces efficiency by 12-20% at 1/4" scale), faucets, showerheads. Softener investment typically pays back in appliance longevity.
+VERY HARD (181-250 mg/L): Indian River, Brevard (well water areas), Okeechobee, Glades, Hendry (sugarcane region), St. Lucie (west), Martin (west) — areas with deep Floridan Aquifer draws through extensive limestone. Major scale accumulation. Water softeners strongly recommended — without treatment, tankless water heater heat exchangers fail in 5-8 years vs. 20+ year lifespan with treated water.
+EXTREMELY HARD (251+ mg/L): Miami-Dade (Biscayne Aquifer areas), Monroe (Florida Keys — seawater desalination blend, 350+ mg/L), Palm Beach (canal-fed areas), Broward (some well areas). Keys water is unique — FKAA blends desalinated water with mainland wellwater. Softeners highly recommended, RO systems for drinking water. Scale buildup visible within weeks on untreated plumbing.
+
+FL IRRIGATION ZONES AND PLANT WATER NEEDS:
+Warm-season turf (St. Augustine grass — most common FL lawn): 1-1.5 inches per week during growing season, 0.5 inch in winter dormancy. Overwatered St. Augustine susceptible to fungal disease (gray leaf spot, brown patch) — most FL lawn disease from overwatering, not underwatering.
+Bahia grass: 0.75-1.0 inch per week. More drought-tolerant than St. Augustine. Common in rural FL. Lower irrigation demand.
+Centipede grass: 0.5-0.75 inch per week. Most drought-tolerant common FL turf. Used in North FL and sandy well-drained soils.
+Florida-Friendly Landscaping (FFL) plants (per UF IFAS): Coontie (native cycad), Muhly Grass, Gaillardia, Porterweed, Firebush, Beautyberry, Walter's Viburnum, Winged Sumac — all require little or no irrigation once established (6-12 months). Converting 1,000 sq ft of St. Augustine to FFL can save 12,000-15,000 gallons annually.
+Hydrozone design: Group plants by water need — wet-zone plants (e.g., Louisiana iris), moderate-zone (e.g., plumbago), drought-tolerant zone (e.g., lantana). Program irrigation zones separately. Violating hydrozone design is the most common FL irrigation system mistake.
+
+FL PLUMBING LEAK STATISTICS:
+EPA WaterSense estimates the average household leaks 10,000 gallons per year. In FL:
+Running toilet: 1-4 gallons per minute depending on flapper failure — can waste 200,000+ gallons/year. Flapper replacement cost: $8-$15 part + $75-$125 labor. Payback: 1-2 months at average FL water rates.
+Dripping faucet (1 drip/second): 3,000 gallons/year. Repair cost: $75-$150 washer/cartridge replacement.
+Irrigation system leak (1/8" diameter break): 25 gallons per minute during irrigation cycle — 750-2,000 gallons per cycle depending on duration. Common in FL from root intrusion into valve bodies and UV degradation of spray heads.
+Slab leaks (hot and cold supply under FL post-tension slabs): Often not detected until homeowner gets abnormally high water bill (100-300% above normal) or sees foundation moisture. Repair cost: $1,500-$8,000 depending on repipe vs. spot repair.
+PRV (pressure reducing valve) failure: Valve fails open — static pressure climbs to 100-120 PSI, causing all fixtures to drip and fill valves to run intermittently. PRV replacement: $200-$400 parts and labor. Prevents thousands in fixture damage.
+
+FIXTURE REBATE PROGRAM QUICK REFERENCE:
+JEA (Duval/Jacksonville): jea.com/conservation — Toilet $75 (max 4), Smart Controller $75, Rain Sensor $50, Irrigation Audit free
+Tampa Bay Water (wholesale): Water utilities bill customers — rebates through retail utilities
+City of Tampa: tampagov.net/water — Toilet $100, Irrigation Audit free
+Hillsborough County: Toilet $75, Rain Sensor $50, Irrigation Audit free
+Pinellas County Utilities: pinellascounty.org/utilities — Toilet $75, Smart Controller $75
+Sarasota County: Toilet $75, Smart Controller $75, Rain Barrel $25
+Charlotte County: Toilet $75, Irrigation Audit free
+Lee County: Toilet $75, WaterStar certified home $300-$800
+Collier County: Toilet $100 (higher due to high water costs), Smart Controller $100
+Palm Beach County: pbcwater.com — Toilet $75, Smart Controller $75, Irrigation Audit free  
+Miami-Dade WASD: Toilet $75, Irrigation Audit free, Reclaimed water hookup free where available
+Broward County: bcwws.org — Toilet $75 per member utility, Irrigation Audit free
+City of Orlando: OUC — Toilet $100, Smart Controller $100, Irrigation Audit free
+Gainesville Regional Utilities: Toilet $75, Smart Controller $75
+
+PLUMBING WATER-SAVING PRODUCT SPECS:
+Niagara Stealth 0.8 gpf Toilet: 0.8 gallons per flush, vacuum-assist technology, MaP Flush Score 900g, ANSI/ASME tested, WaterSense certified, available at Home Depot ~$225-$300. Saves 3+ gallons vs 4.0 gpf pre-1994 toilet. Annual household of 4 savings: 40,000 gallons/year.
+TOTO Drake II 1.28gpf: Industry benchmark HET toilet, double cyclone flush, 1,000g MaP, WaterSense, ~$350-$450 at plumbing supply. Commercial-grade flushing reliability in residential installation.
+Rachio 3 Smart Controller: 8/16 zone, WiFi, EPA WaterSense labeled, SWFWMD/SJRWMD rebate eligible. Weather intelligence skips irrigation when rain predicted or soil moisture satisfied. Typical FL savings: 30-50% vs. conventional timer. App-based control, IFTTT integration.
+Delta H2Okinetic Showerhead 2.0gpm: H2Okinetic technology creates larger water droplets — feels like more water while using less. WaterSense certified. Chrome finish, $45-$75 at home improvement stores. Saves 700-1,000 gallons/person/year vs. 2.5gpm standard.
+
+--></div>
+
+<div id="refData5" style="display:none" aria-hidden="true"><!--
+FL WATER TREATMENT SYSTEM SELECTION GUIDE:
+REVERSE OSMOSIS (RO): Best for drinking water in Miami-Dade, Broward, Monroe (Keys), Palm Beach. Removes TDS (total dissolved solids), chlorine, fluoride, nitrates, heavy metals, VOCs. Typical FL system: 4-stage (sediment 5-micron, carbon block, RO membrane 75-100 GPD, activated carbon polish). Cost: $200-$600 DIY, $400-$900 installed. Monthly filter cost: $60-$120/year. Membrane replacement: 2-5 years. Waste ratio: 3-4 gallons waste per gallon produced (traditional), 1:1 permeate pumps available.
+WHOLE-HOUSE CARBON FILTRATION: Best for chlorine/chloramine taste removal — most FL municipal water uses chloramine (longer-lasting, harder to remove than chlorine). Catalytic carbon required (standard activated carbon insufficient for chloramines). Catalytic carbon whole-house filter: $800-$2,500 installed. Media replacement: 5-10 years. Used widely in Pinellas, Hillsborough, Orange counties where chloramine is the primary disinfectant.
+WATER SOFTENERS: Best for hard water counties (Marion, Polk, Lee, Collier, Okeechobee). Traditional salt-based ion exchange — replaces calcium/magnesium with sodium. Reduces scale on water heaters, fixtures, appliances. Increases sodium content of water (concern for heart/kidney patients — add RO for drinking water). Salt-free conditioners (TAC technology): alternative for FL homeowners concerned about sodium — prevents scale without adding salt. Examples: NuvoH2O, Pelican NaturSoft. Less effective than salt-based softeners at true scale prevention but no salt/wastewater.
+UV STERILIZATION: Important for FL homes on private wells, cisterns, or rainwater collection. UV-C light at 254nm wavelength inactivates bacteria, viruses, protozoa without chemicals. Required for FL well water systems where coliform bacteria present. NSF/ANSI 55 Class A (40mJ/cm² dose) for full disinfection. Trojan UVMax, Viqua, and Watts UV systems common in FL well water applications.
+
+FL PLUMBING CONTRACTOR LICENSE REQUIREMENTS (FL DBPR):
+Certified Plumbing Contractor (CFC): Statewide license — can pull permits in all 67 FL counties. Exam: 120 questions over 4 hours, 75% minimum pass. Must have minimum 4 years documented experience under licensed contractor. Water conservation system installation falls under CFC scope.
+Registered Plumbing Contractor: County/city limited license — jurisdiction specific. Lower exam requirement. Cannot work outside registered county without additional registration.
+Underground Utility and Excavation Contractor (CU): Required for water main connections, meter set installations, underground supply line work exceeding plumbing scope.
+FL CEU Requirements: CFC must complete 14 hours continuing education every 2 years for license renewal — includes FL law (4 hours), business practices (2 hours), and technical topics (8 hours). Conservation and efficiency topics increasingly included in FL plumbing CEU requirements.
+Workers Compensation: Required for all FL plumbing contractors with any employees. $500 minimum penalty for each day a contractor is not in compliance with WC requirements.
+General Liability Insurance: Minimum $300,000 per occurrence required for CFC licensure. Recommend $1M per occurrence for residential/commercial work in FL's active insurance market.
+
+FL WATER HEATER REBATES AND ENERGY PROGRAMS:
+FPL (Florida Power & Light) OnCall program: Heat pump water heater rebate $50-$100, Smart thermostat $75, AC system rebates $150-$400. FPL controls load-managed devices (water heaters, pool pumps) during peak demand with customer consent.
+Duke Energy Florida: Water heater rebates $50-$100 for qualifying heat pump models, time-of-use rate plans reward off-peak water heating.
+Beaches Energy Services: $200 heat pump water heater rebate (highest in FL for this category).
+TECO/Peoples Gas: Gas water heater rebates $50-$75 for high-efficiency (EF ≥0.82) models.
+USDA Rural Energy for America Program (REAP): Available in rural FL counties — grants and loans for energy efficiency upgrades including heat pump water heaters and solar thermal water heating for agricultural operations and rural small businesses. Up to 25% cost as grant, 75% as low-interest loan.
+
+--></div>
+
+<div id="refData6" style="display:none" aria-hidden="true"><!--
+FL WATER BILLING STRUCTURE AND CONSERVATION TIERS:
+Tiered/Inverted Block Rate Structure (used by most FL utilities): The more water you use, the more you pay per gallon. Designed to reward conservation and penalize excessive use. Example: Tier 1 (0-5,000 gal/mo) = $2.50/kgal; Tier 2 (5-10,000) = $3.50/kgal; Tier 3 (10-20,000) = $5.00/kgal; Tier 4 (>20,000) = $7.00/kgal. Irrigation meters (separate outdoor meter) billed at commercial rate to reduce residential cross-subsidization of heavy irrigation users.
+Average FL household: 6,000-8,000 gallons per month (2-person household). Heavy irrigation use can push bills to 30,000-50,000 gallons/month. Conservation measures targeting outdoor use have highest ROI.
+Sewer charges in FL often based on water consumption: indoor water use drives sewer billing. Irrigation on separate meter avoids sewer charges on outdoor water. Installing a separate irrigation meter (submetering) can save $30-$60/month in sewer charges alone for heavy irrigation users.
+Low Income Assistance: Many FL utilities offer lifeline rates, bill assistance programs, or payment plans for qualifying low-income households. Conservation programs often include free or subsidized fixture replacements for qualifying income levels. Contact local utility for eligibility requirements.
+Commercial Water Audits: FL Department of Environmental Protection (DEP) and water management districts offer free commercial water audits for businesses using over 100,000 gallons per month. Restaurant, car wash, laundry, and hotel sectors are primary commercial conservation targets in FL.
+
+ADDITIONAL FL PLUMBING CONSERVATION SERVICES:
+Hot Water Demand Recirculation: Point-of-use recirculation eliminates wait time for hot water — most FL slab homes with long hot water runs waste 2-5 gallons per shower waiting for hot water. Watts Premier Instant Hot system ($200-$400 installed) uses demand activation. Grundfos UP15-10 SU7 ($350-$600 installed) on timer/thermostat schedule.
+Pipe Insulation for FL Hot Water Runs: Insulating hot water supply pipes in FL's hot climate reduces heat gain (keeping hot water hot) and reduces condensation on cold water pipes (major mold concern in FL humidity). Foam pipe insulation, minimum R-2, on all accessible hot water pipes. FBC requires insulation on pipes exposed to unconditioned spaces.
+Tankless Water Heater Scale Flush: FL's hard water causes calcite scale buildup in tankless heat exchangers. Annual descaling flush with food-grade citric acid or CLR (calcium, lime, rust) solution extends heat exchanger life 10-15 years vs. 5-7 years without flushing in hard water areas. Part of annual FL plumbing maintenance program.
+Fixture Flow Testing: Annual flow testing with calibrated bucket and stopwatch verifies fixtures are operating at rated flow. Showerheads clog with mineral scale — a 2.0 gpm showerhead can drop to 0.8-1.2 gpm after 2-3 years of hard water use. Vinegar soak or replacement restores rated flow. Flow test kit: $15-$25, labor: included in annual service call.
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+--></div>
+</body>
+</html>
