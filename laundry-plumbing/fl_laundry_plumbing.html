@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FL Laundry Room &amp; Utility Sink Plumbing Calculator | Tool #129</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0E1A;--card:#0F1629;--card2:#141929;
+  --blue:#00B4FF;--gold:#F4B942;--orange:#F97316;
+  --red:#EF4444;--green:#22C55E;--teal:#14B8A6;
+  --text:#E2E8F0;--muted:#94A3B8;
+  --border:rgba(255,255,255,0.08);--r:12px;--rs:8px;
+}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+.app{max-width:480px;margin:0 auto;padding-bottom:72px}
+/* STICKY WRAPPER */
+.sticky-top{position:sticky;top:0;z-index:200}
+/* HEADER */
+.header{background:linear-gradient(160deg,#0F1629 0%,#141929 100%);border-bottom:1px solid var(--border);padding:12px 16px 10px;text-align:center}
+.hbadge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.3);color:var(--blue);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:6px}
+.header h1{font-size:17px;font-weight:800;color:var(--text);margin-bottom:2px}
+.header h1 span{color:var(--blue)}
+.hsub{font-size:11px;color:var(--muted);margin-bottom:8px}
+.hphone{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#0A0E1A;font-weight:800;font-size:13px;padding:7px 18px;border-radius:20px;text-decoration:none;transition:opacity .2s}
+.hphone:hover{opacity:.88}
+/* TABS */
+.tabs-nav{display:flex;background:var(--card);border-bottom:2px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tabs-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex:0 0 auto;padding:10px 15px;background:none;border:none;color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;font-family:inherit}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-btn:hover:not(.active){color:var(--text)}
+/* TAB PANELS */
+.tab-panel{display:none;padding:14px}
+.tab-panel.active{display:block}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:11px}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:11px}
+.ct{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.ct-blue{color:var(--blue)} .ct-gold{color:var(--gold)} .ct-green{color:var(--green)}
+.ct-teal{color:var(--teal)} .ct-red{color:var(--red)} .ct-orange{color:var(--orange)}
+/* FORMS */
+.fg{margin-bottom:13px}
+.fl{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+select,input[type=text],input[type=tel],input[type=email],textarea{width:100%;background:#0A0E1A;border:1px solid rgba(255,255,255,.12);border-radius:var(--rs);color:var(--text);font-size:14px;padding:9px 12px;outline:none;transition:border-color .2s;font-family:inherit;-webkit-appearance:none;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2394A3B8' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:34px}
+select:focus,input:focus,textarea:focus{border-color:var(--blue)}
+textarea{resize:vertical;min-height:78px}
+/* CHECKBOXES */
+.cbgrid{display:flex;flex-direction:column;gap:7px}
+.cbi{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;background:#0A0E1A;border:1px solid rgba(255,255,255,.07);border-radius:var(--rs);cursor:pointer;transition:border-color .2s;user-select:none}
+.cbi:hover{border-color:rgba(0,180,255,.3)}
+.cbi.checked{border-color:var(--blue);background:rgba(0,180,255,.05)}
+.cbi input[type=checkbox]{width:15px;height:15px;min-width:15px;accent-color:var(--blue);margin-top:2px;cursor:pointer}
+.cbl{font-size:13px;color:var(--text);line-height:1.4}
+.cbs{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3}
+/* BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;border-radius:var(--rs);border:none;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;font-family:inherit;letter-spacing:.2px}
+.btn-gold{background:var(--gold);color:#0A0E1A}.btn-gold:hover{background:#e6a932}
+.btn-blue{background:var(--blue);color:#0A0E1A}.btn-blue:hover{background:#00a0e6}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800}
+.bb{background:rgba(0,180,255,.15);color:var(--blue)}
+.bg{background:rgba(244,185,66,.15);color:var(--gold)}
+.bgr{background:rgba(34,197,94,.15);color:var(--green)}
+.br{background:rgba(239,68,68,.15);color:var(--red)}
+.bo{background:rgba(249,115,22,.15);color:var(--orange)}
+.bt{background:rgba(20,184,166,.15);color:var(--teal)}
+/* COST ROWS */
+.crow{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border);gap:8px}
+.crow:last-child{border-bottom:none}
+.cn{font-size:13px;color:var(--text);flex:1;line-height:1.4}
+.cr{font-size:13px;font-weight:800;color:var(--gold);white-space:nowrap}
+.ctot{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;background:rgba(244,185,66,.1);border:1px solid rgba(244,185,66,.3);border-radius:var(--rs);margin-top:11px}
+.ctl{font-size:14px;font-weight:800;color:var(--gold)}
+.ctv{font-size:20px;font-weight:900;color:var(--gold)}
+/* EXPANDABLE */
+.ec{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:7px;overflow:hidden}
+.eh{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;cursor:pointer;transition:background .2s}
+.eh:hover{background:rgba(255,255,255,.03)}
+.et{font-size:13px;font-weight:600;color:var(--text);flex:1;line-height:1.4}
+.ei{color:var(--blue);font-size:20px;transition:transform .25s;flex-shrink:0;margin-left:8px;font-weight:300}
+.ec.open .ei{transform:rotate(45deg)}
+.eb{display:none;padding:0 15px 14px;border-top:1px solid var(--border)}
+.ec.open .eb{display:block}
+.eb p{font-size:13px;color:var(--text);margin:10px 0 6px;line-height:1.6}
+.eb ul{padding-left:16px;margin:6px 0 10px}
+.eb li{font-size:13px;color:var(--text);margin-bottom:5px;line-height:1.5}
+.eb strong{color:var(--gold)}
+.eb .hl{color:var(--blue);font-weight:700}
+/* FAQ */
+.fq{font-size:13px;font-weight:700;color:var(--blue);margin:13px 0 5px;line-height:1.4}
+.fa{font-size:13px;color:var(--text);line-height:1.6;padding-left:11px;border-left:2px solid rgba(0,180,255,.3)}
+/* SCOPE SUMMARY */
+.ssum{background:rgba(0,180,255,.06);border:1px solid rgba(0,180,255,.2);border-radius:var(--r);padding:13px;margin-top:11px}
+.si{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);padding:3px 0;line-height:1.4}
+.sd{color:var(--green);font-size:14px;flex-shrink:0;margin-top:1px}
+/* TOAST */
+#toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:#0A0E1A;padding:13px 22px;border-radius:22px;font-weight:800;font-size:14px;z-index:9999;transition:transform .3s ease,opacity .3s ease;opacity:0;text-align:center;max-width:88vw;box-shadow:0 4px 24px rgba(244,185,66,.4);pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+/* ALERTS */
+.al{display:flex;gap:9px;padding:11px;border-radius:var(--rs);margin-bottom:11px;font-size:13px;line-height:1.5}
+.ai{font-size:15px;flex-shrink:0;margin-top:1px}
+.al-red{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.28);color:var(--text)}
+.al-gold{background:rgba(244,185,66,.09);border:1px solid rgba(244,185,66,.28);color:var(--text)}
+.al-blue{background:rgba(0,180,255,.09);border:1px solid rgba(0,180,255,.28);color:var(--text)}
+.al-green{background:rgba(34,197,94,.09);border:1px solid rgba(34,197,94,.28);color:var(--text)}
+.al-orange{background:rgba(249,115,22,.09);border:1px solid rgba(249,115,22,.28);color:var(--text)}
+.al-teal{background:rgba(20,184,166,.09);border:1px solid rgba(20,184,166,.28);color:var(--text)}
+/* STAT GRID */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.sc{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:11px;text-align:center}
+.sv{font-size:19px;font-weight:900;margin-bottom:3px}
+.sl{font-size:11px;color:var(--muted);line-height:1.3}
+/* TIMELINE */
+.tl{margin:11px 0}
+.tli{display:flex;flex-direction:column;gap:2px;padding:9px 0 9px 18px;border-left:2px solid rgba(0,180,255,.2);position:relative;margin-left:8px}
+.tldot{position:absolute;left:-5px;top:13px;width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.tlt{font-size:13px;font-weight:700;color:var(--blue)}
+.tld{font-size:12px;color:var(--muted);line-height:1.4}
+/* TRUST */
+.trgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.tri{display:flex;align-items:center;gap:8px;padding:9px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:var(--rs)}
+.tric{font-size:17px}.trit{font-size:12px;color:var(--text);font-weight:700;line-height:1.3}
+/* COMPARE TABLE */
+.ctbl{width:100%;border-collapse:collapse;margin:9px 0;font-size:12px}
+.ctbl th{background:rgba(255,255,255,.06);color:var(--gold);padding:7px 9px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.ctbl td{padding:7px 9px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.ctbl tr:last-child td{border-bottom:none}
+.winner{color:var(--green);font-weight:700}
+.loser{color:var(--red)}
+/* DAMAGE STATS */
+.dstat{display:flex;align-items:center;gap:11px;padding:11px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--rs);margin-bottom:7px}
+.dnum{font-size:21px;font-weight:900;color:var(--red);white-space:nowrap;min-width:60px;text-align:center}
+.dtxt{font-size:12px;color:var(--text);line-height:1.4}
+/* MISTAKE ITEMS */
+.mi{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.mi:last-child{border-bottom:none}
+.mnum{width:24px;height:24px;min-width:24px;background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--red)}
+.mtit{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.mdesc{font-size:12px;color:var(--muted);line-height:1.4}
+/* EFFICIENCY TABLE */
+.efrow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.efrow:last-child{border-bottom:none}
+.efl{color:var(--muted)} .efv{font-weight:800;color:var(--teal)}
+/* COUNTY TABLE */
+.ctytbl{width:100%;border-collapse:collapse;font-size:12px}
+.ctytbl th{background:rgba(255,255,255,.06);color:var(--muted);padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px}
+.ctytbl td{padding:7px 9px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.ctytbl tr:last-child td{border-bottom:none}
+.yes{color:var(--green);font-weight:700}
+.no{color:var(--red);font-weight:700}
+.chk{color:var(--gold);font-weight:700}
+/* HOSE CARDS */
+.hc{border-radius:var(--rs);padding:11px;margin-bottom:8px}
+.hc-ok{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.25)}
+.hc-no{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25)}
+.hc-warn{background:rgba(244,185,66,.07);border:1px solid rgba(244,185,66,.25)}
+.ht{font-size:13px;font-weight:800;margin-bottom:4px}
+.hd{font-size:12px;color:var(--text);line-height:1.5}
+/* PERMIT FEE TABLE */
+.ptbl{width:100%;border-collapse:collapse;font-size:12px}
+.ptbl th{background:rgba(255,255,255,.06);color:var(--orange);padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:7px 9px;border-bottom:1px solid var(--border);color:var(--text)}
+.ptbl tr:last-child td{border-bottom:none}
+/* MAINT SCHEDULE */
+.msrow{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.msrow:last-child{border-bottom:none}
+.msper{min-width:68px;font-size:11px;font-weight:800;color:var(--gold);padding:3px 7px;background:rgba(244,185,66,.1);border-radius:10px;text-align:center}
+.mstxt{font-size:12px;color:var(--text);line-height:1.4}
+/* BOTTOM CTA */
+.bottomcta{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:10px 14px;background:var(--card);border-top:1px solid var(--border);z-index:199;display:flex;gap:9px}
+.bottomcta a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;border-radius:var(--rs);font-size:13px;font-weight:800;text-decoration:none;transition:opacity .2s;font-family:inherit}
+.bottomcta a:hover{opacity:.88}
+.cta-call{background:var(--gold);color:#0A0E1A}
+.cta-quote{background:var(--blue);color:#0A0E1A}
+/* UTILS */
+.tc-blue{color:var(--blue)}.tc-gold{color:var(--gold)}.tc-green{color:var(--green)}
+.tc-red{color:var(--red)}.tc-orange{color:var(--orange)}.tc-muted{color:var(--muted)}.tc-teal{color:var(--teal)}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}
+.fw8{font-weight:800}.fs12{font-size:12px}.fs13{font-size:13px}
+.divider{height:1px;background:var(--border);margin:12px 0}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- STICKY HEADER + TABS -->
+<div class="sticky-top">
+  <div class="header">
+    <div class="hbadge">🔧 Tool #129 &nbsp;·&nbsp; Licensed CFC &nbsp;·&nbsp; FL Code Compliant</div>
+    <h1>FL <span>Laundry Room</span> Plumbing</h1>
+    <div class="hsub">Utility Sink &amp; Washer Hookup Calculator · South Florida</div>
+    <a href="tel:5615557473" class="hphone">📞 (561) 555-PIPE</a>
+  </div>
+  <nav class="tabs-nav" id="tabsNav">
+    <button class="tab-btn active" data-tab="scope">⚙️ Scope</button>
+    <button class="tab-btn" data-tab="cost">💰 Costs</button>
+    <button class="tab-btn" data-tab="code">📋 FL Code</button>
+    <button class="tab-btn" data-tab="quote">📞 Quote</button>
+  </nav>
+</div>
+
+<!-- ==================== TAB 1: SCOPE BUILDER ==================== -->
+<div class="tab-panel active" id="tab-scope">
+
+  <div class="card">
+    <div class="ct ct-blue">📐 Project Scope Builder</div>
+
+    <div class="fg">
+      <label class="fl">Project Type</label>
+      <select id="projectType" onchange="updateScope()">
+        <option value="">Select project type...</option>
+        <option value="new">New laundry room (no existing plumbing)</option>
+        <option value="convert">Convert existing space to laundry room</option>
+        <option value="add">Add to existing laundry room</option>
+        <option value="replace">Replace connections only</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Location in Home</label>
+      <select id="location" onchange="updateScope()">
+        <option value="">Select location...</option>
+        <option value="first">First floor / Slab on grade</option>
+        <option value="second">Second floor or above</option>
+        <option value="garage">Garage</option>
+        <option value="lanai">Covered lanai (FL outdoor laundry)</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Washer Type</label>
+      <select id="washerType" onchange="updateScope()">
+        <option value="">Select washer type...</option>
+        <option value="topload">Top-load (standard hookup)</option>
+        <option value="frontload">Front-load (same plumbing requirements)</option>
+        <option value="combo">Washer-dryer combo unit</option>
+        <option value="stackable">Stackable unit</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-gold">☑️ Items to Include</div>
+    <div class="cbgrid" id="checkboxGrid">
+
+      <label class="cbi" id="chk-supply">
+        <input type="checkbox" id="supply" onchange="toggleCheck('chk-supply');updateScope()">
+        <div>
+          <div class="cbl">Washer hot/cold supply hookup (standard)</div>
+          <div class="cbs">1/2&quot; shut-off valves, supply hose connections</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-standpipe">
+        <input type="checkbox" id="standpipe" onchange="toggleCheck('chk-standpipe');updateScope()">
+        <div>
+          <div class="cbl">Washer drain standpipe (min 18&quot; height)</div>
+          <div class="cbs">2&quot; drain line required per FL Plumbing Code</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-sink">
+        <input type="checkbox" id="sink" onchange="toggleCheck('chk-sink');updateScope()">
+        <div>
+          <div class="cbl">Utility / laundry sink</div>
+          <div class="cbs">Supply lines, P-trap, drain connection, faucet</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-floorDrain">
+        <input type="checkbox" id="floorDrain" onchange="toggleCheck('chk-floorDrain');updateScope()">
+        <div>
+          <div class="cbl">Floor drain</div>
+          <div class="cbs">Trap primer required in FL; involves slab saw-cut</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-mopSink">
+        <input type="checkbox" id="mopSink" onchange="toggleCheck('chk-mopSink');updateScope()">
+        <div>
+          <div class="cbl">Mop sink</div>
+          <div class="cbs">Low-profile floor-level utility sink with supply</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-secondWasher">
+        <input type="checkbox" id="secondWasher" onchange="toggleCheck('chk-secondWasher');updateScope()">
+        <div>
+          <div class="cbl">Second washer hookup</div>
+          <div class="cbs">Duplicate supply + standpipe rough-in</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-washPan">
+        <input type="checkbox" id="washPan" onchange="toggleCheck('chk-washPan');updateScope()">
+        <div>
+          <div class="cbl">Washing machine pan + drain</div>
+          <div class="cbs">⚠️ Required in FL for 2nd floor installations</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-recirc">
+        <input type="checkbox" id="recirc" onchange="toggleCheck('chk-recirc');updateScope()">
+        <div>
+          <div class="cbl">Recirculating hot water connection</div>
+          <div class="cbs">Eliminates 2-5 minute wait; saves 3-8 gal per use</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-lint">
+        <input type="checkbox" id="lint" onchange="toggleCheck('chk-lint');updateScope()">
+        <div>
+          <div class="cbl">Lint interceptor (commercial / multi-unit)</div>
+          <div class="cbs">Required for commercial laundry; must be cleaned regularly</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-outdoor">
+        <input type="checkbox" id="outdoor" onchange="toggleCheck('chk-outdoor');updateScope()">
+        <div>
+          <div class="cbl">Outdoor wash station</div>
+          <div class="cbs">Hose bib upgrade, covered lanai / utility hookup</div>
+        </div>
+      </label>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-teal">🌴 FL-Specific Options</div>
+    <div class="cbgrid">
+
+      <label class="cbi" id="chk-hurricane">
+        <input type="checkbox" id="hurricane" onchange="toggleCheck('chk-hurricane');updateScope()">
+        <div>
+          <div class="cbl">Hurricane shutoff valve</div>
+          <div class="cbs">Auto-shutoff for washer supply during storm events</div>
+        </div>
+      </label>
+
+      <label class="cbi" id="chk-booster">
+        <input type="checkbox" id="booster" onchange="toggleCheck('chk-booster');updateScope()">
+        <div>
+          <div class="cbl">Pressure booster pump (upper floors)</div>
+          <div class="cbs">FL multi-story homes often have inadequate upper-floor pressure</div>
+        </div>
+      </label>
+
+    </div>
+  </div>
+
+  <!-- SCOPE SUMMARY -->
+  <div id="scopeSummary" class="ssum" style="display:none">
+    <div class="ct ct-green mb8">✅ Your Project Scope</div>
+    <div id="scopeItems"></div>
+    <button class="btn btn-blue mt12" onclick="switchTab('cost')">📊 Calculate My Costs →</button>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="al al-gold">
+    <span class="ai">🌴</span>
+    <div><strong>FL Unique:</strong> Covered lanai laundry rooms are extremely common in South Florida. They require outdoor-rated valves, UV-resistant pipe insulation, and specific venting solutions. We install lanai laundry rooms throughout Palm Beach, Broward, and Miami-Dade.</div>
+  </div>
+
+  <div class="al al-red">
+    <span class="ai">⚖️</span>
+    <div><strong>Florida Law:</strong> FL Statute 489.105 requires a licensed plumber (CFC) for all new supply, drain, or vent connections. Unpermitted work voids homeowner's insurance on water damage claims and creates disclosure requirements at resale. Fines up to $5,000.</div>
+  </div>
+
+  <!-- WATER DAMAGE STATS -->
+  <div class="card">
+    <div class="ct ct-red">💧 Why Proper Installation Saves Thousands</div>
+
+    <div class="dstat">
+      <div class="dnum">$5,363</div>
+      <div class="dtxt">Average insurance claim from washing machine supply line failure — Insurance Information Institute (III)</div>
+    </div>
+    <div class="dstat">
+      <div class="dnum">#1</div>
+      <div class="dtxt">Washing machines are the #1 appliance source of water damage in U.S. homes, ahead of dishwashers and refrigerators</div>
+    </div>
+    <div class="dstat">
+      <div class="dnum">$20K+</div>
+      <div class="dtxt">Potential damage from burst rubber supply hose in a 2nd-floor laundry room with no overflow pan</div>
+    </div>
+    <div class="dstat">
+      <div class="dnum">3–5 yrs</div>
+      <div class="dtxt">Lifespan of rubber washing machine hoses in FL heat vs. 5-8 years in cooler climates</div>
+    </div>
+
+    <div class="al al-orange mt8">
+      <span class="ai">☀️</span>
+      <div><strong>FL Heat Factor:</strong> Florida's heat, humidity, and UV exposure dramatically accelerates rubber hose degradation. Garages and lanai laundry areas can reach 140°F in summer. Always install stainless braided hoses with burst protection, especially in unconditioned spaces.</div>
+    </div>
+  </div>
+
+  <!-- ADDITIONAL FL CONTEXT -->
+  <div class="card">
+    <div class="ct ct-orange">📊 FL Washer Claim Statistics</div>
+    <div class="efrow"><span class="efl">FL homeowner claims from washer leaks (annual)</span><span class="efv" style="color:var(--orange)">~25,000+</span></div>
+    <div class="efrow"><span class="efl">Average FL claim payout (water damage)</span><span class="efv" style="color:var(--orange)">$6,100</span></div>
+    <div class="efrow"><span class="efl">Claims from rubber hose failure (% of total)</span><span class="efv" style="color:var(--orange)">~55%</span></div>
+    <div class="efrow"><span class="efl">Claims from supply valve failure</span><span class="efv" style="color:var(--orange)">~20%</span></div>
+    <div class="efrow"><span class="efl">Claims from standpipe overflow</span><span class="efv" style="color:var(--orange)">~15%</span></div>
+    <div class="efrow"><span class="efl">Claims from drain connection failures</span><span class="efv" style="color:var(--orange)">~10%</span></div>
+    <p class="fs12 tc-muted mt8">Sources: Insurance Information Institute, FL OIR annual reports. FL has significantly higher claim rates than the national average due to heat-related component degradation.</p>
+  </div>
+
+</div><!-- /tab-scope -->
+
+<!-- ==================== TAB 2: COST CALCULATOR ==================== -->
+<div class="tab-panel" id="tab-cost">
+
+  <div class="card">
+    <div class="ct ct-blue">💰 Your Cost Estimate</div>
+    <div id="costEmpty" class="tc-muted fs13" style="text-align:center;padding:16px 8px">
+      ← Complete the Scope Builder tab first to see your personalized estimate
+    </div>
+    <div id="costBreakdown" style="display:none"></div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="card">
+    <div class="ct ct-teal">⏱️ Typical Project Timelines</div>
+    <div class="tl">
+      <div class="tli">
+        <div class="tldot"></div>
+        <div class="tlt">Replace Connections Only</div>
+        <div class="tld">Half-day to 1 day · Supply valve replacement, hose swap, standpipe adjustment only</div>
+      </div>
+      <div class="tli">
+        <div class="tldot"></div>
+        <div class="tlt">Basic New Hookup</div>
+        <div class="tld">1–2 days · Supply lines, standpipe, drain connection, basic vent tie-in</div>
+      </div>
+      <div class="tli">
+        <div class="tldot"></div>
+        <div class="tlt">Full New Laundry Room</div>
+        <div class="tld">3–5 days · Full rough-in, utility sink, vent stack, permit application + inspection</div>
+      </div>
+      <div class="tli">
+        <div class="tldot"></div>
+        <div class="tlt">With Floor / Slab Work</div>
+        <div class="tld">5–10 days · Floor drain core drill, slab penetration, concrete patch, curing time</div>
+      </div>
+      <div class="tli">
+        <div class="tldot"></div>
+        <div class="tlt">Final Permit Inspection</div>
+        <div class="tld">+1–3 days after completion · County inspector visits; required for permit closeout</div>
+      </div>
+    </div>
+    <div class="al al-blue" style="margin-top:4px;margin-bottom:0">
+      <span class="ai">💡</span>
+      <div>We handle all permit applications and scheduling. You don't need to deal with the building department — we manage the entire permit process from submission to final inspection sign-off.</div>
+    </div>
+  </div>
+
+  <!-- PRICE REFERENCE TABLE -->
+  <div class="card">
+    <div class="ct ct-gold">📊 FL Price Reference Table</div>
+    <div class="crow"><span class="cn">Basic washer hookup (supply + drain only)</span><span class="cr">$800–$1,800</span></div>
+    <div class="crow"><span class="cn">Full new laundry room (supply, drain, vent, permit)</span><span class="cr">$1,500–$3,500</span></div>
+    <div class="crow"><span class="cn">2nd floor premium (longer runs, pan required)</span><span class="cr">+$400–$800</span></div>
+    <div class="crow"><span class="cn">Lanai / exterior installation premium</span><span class="cr">+$300–$900</span></div>
+    <div class="crow"><span class="cn">Garage installation premium</span><span class="cr">+$150–$500</span></div>
+    <div class="crow"><span class="cn">Utility / laundry sink add-on</span><span class="cr">$350–$900</span></div>
+    <div class="crow"><span class="cn">Floor drain (saw-cut slab, drain, concrete patch)</span><span class="cr">$450–$1,200</span></div>
+    <div class="crow"><span class="cn">Mop sink installation</span><span class="cr">$400–$900</span></div>
+    <div class="crow"><span class="cn">Second washer hookup rough-in</span><span class="cr">$400–$900</span></div>
+    <div class="crow"><span class="cn">Washing machine overflow pan + drain line</span><span class="cr">$150–$400</span></div>
+    <div class="crow"><span class="cn">Lint interceptor (commercial-grade)</span><span class="cr">$600–$1,500</span></div>
+    <div class="crow"><span class="cn">Recirculating hot water pump system</span><span class="cr">$600–$2,000</span></div>
+    <div class="crow"><span class="cn">Hurricane auto-shutoff valve</span><span class="cr">$200–$500</span></div>
+    <div class="crow"><span class="cn">Pressure booster pump (upper floors)</span><span class="cr">$800–$1,800</span></div>
+    <div class="crow"><span class="cn">FL permit fee (typical residential)</span><span class="cr">$150–$400</span></div>
+    <p class="fs12 tc-muted mt8">Prices reflect South Florida labor + materials. Final cost depends on site conditions, access, existing plumbing configuration, material selections, and jurisdiction. All quotes include permit and inspection coordination.</p>
+  </div>
+
+  <!-- COUNTY PERMIT FEES -->
+  <div class="card">
+    <div class="ct ct-orange">📍 County Permit Fee Comparison</div>
+    <table class="ptbl">
+      <tr><th>County</th><th>Residential Plumbing Permit</th><th>Processing Time</th></tr>
+      <tr><td>Palm Beach</td><td class="tc-gold">$150–$300</td><td class="tc-muted">5–10 business days</td></tr>
+      <tr><td>Broward</td><td class="tc-gold">$175–$350</td><td class="tc-muted">7–14 business days</td></tr>
+      <tr><td>Miami-Dade</td><td class="tc-gold">$200–$400</td><td class="tc-muted">10–21 business days</td></tr>
+      <tr><td>Martin</td><td class="tc-gold">$125–$250</td><td class="tc-muted">3–7 business days</td></tr>
+      <tr><td>St. Lucie</td><td class="tc-gold">$125–$250</td><td class="tc-muted">3–7 business days</td></tr>
+      <tr><td>Indian River</td><td class="tc-gold">$100–$225</td><td class="tc-muted">3–5 business days</td></tr>
+    </table>
+    <p class="fs12 tc-muted mt8">Permit fees are estimates and may change. Some jurisdictions charge by fixture unit or project valuation. We include permit fees in our quotes.</p>
+  </div>
+
+  <!-- PEX vs COPPER -->
+  <div class="card">
+    <div class="ct ct-teal">🔩 PEX vs. Copper Supply Lines in FL</div>
+    <table class="ctbl">
+      <tr><th>Factor</th><th>PEX</th><th>Copper</th></tr>
+      <tr><td>FL Heat Resistance</td><td class="winner">✓ Excellent</td><td>Good</td></tr>
+      <tr><td>Flexibility</td><td class="winner">✓ Very flexible</td><td class="loser">Rigid, hard to retrofit</td></tr>
+      <tr><td>FL Hard Water Corrosion</td><td class="winner">✓ Immune</td><td class="loser">Susceptible to pitting</td></tr>
+      <tr><td>Freeze Resistance</td><td class="winner">✓ Expands/contracts</td><td class="loser">Can crack</td></tr>
+      <tr><td>Cost vs. Copper</td><td class="winner">✓ 25–40% cheaper</td><td class="loser">More expensive</td></tr>
+      <tr><td>Attic/Garage Use</td><td class="winner">✓ PEX-A rated to 200°F</td><td class="loser">CPVC fails in FL attics</td></tr>
+      <tr><td>Lifespan (FL climate)</td><td>40–50 years</td><td>50+ years</td></tr>
+      <tr><td>FL Code Approved</td><td class="winner">✓ Yes (FPC)</td><td class="winner">✓ Yes (FPC)</td></tr>
+      <tr><td><strong>Our Recommendation</strong></td><td><span class="badge bgr">PREFERRED IN FL</span></td><td><span class="badge bg">ALSO GOOD</span></td></tr>
+    </table>
+    <div class="al al-blue mt8" style="margin-bottom:0">
+      <span class="ai">💡</span>
+      <div>PEX-A (expansion-type) is our first choice for FL laundry room supply lines. It handles heat, hard water, and tight retrofit situations better than any other material. Avoid CPVC in hot attic spaces — it softens above 200°F, a temperature regularly reached in FL attics.</div>
+    </div>
+  </div>
+
+  <!-- SUPPLY HOSE GUIDE -->
+  <div class="card">
+    <div class="ct ct-orange">🚿 Washer Supply Hose Guide — FL Edition</div>
+
+    <div class="hc hc-ok">
+      <div class="ht" style="color:var(--green)">✅ RECOMMENDED: Stainless Steel Braided Hoses</div>
+      <div class="hd">The gold standard for FL homes. Stainless braided hoses resist UV degradation, handle temperature swings from AC to garage heat, and withstand burst pressures of 1,500+ PSI. Available with integrated flood-stop technology. Replace every 5–7 years. Look for hoses rated to at least 125 PSI working pressure.</div>
+    </div>
+
+    <div class="hc hc-no">
+      <div class="ht" style="color:var(--red)">🚫 AVOID: Standard Black Rubber Hoses</div>
+      <div class="hd">Rubber hoses degrade in 3–5 years in FL's heat — roughly half the national average lifespan. UV exposure from garage and lanai environments accelerates cracking. The outer braid on cheap rubber hoses can hide internal deterioration until the hose bursts without warning. A burst 2nd-floor rubber hose can cause $20,000+ in water damage.</div>
+    </div>
+
+    <div class="hc hc-warn">
+      <div class="ht" style="color:var(--gold)">⚡ HIGHLY RECOMMENDED: Flood Stop Auto-Shutoff Devices</div>
+      <div class="hd">Connect between the wall valve and the hose. Sensors detect abnormal flow (hose burst, slow leak) and automatically close the supply valve within seconds. Available as standalone ($30–80) or built into smart hose kits. Strongly recommended for 2nd-floor laundry rooms, garages, vacation homes, and condos. The $50 investment can prevent a $20,000 claim.</div>
+    </div>
+  </div>
+
+  <!-- DIY WARNING -->
+  <div class="al al-red">
+    <span class="ai">⚠️</span>
+    <div><strong>FL Law — No DIY Plumbing:</strong> FL Statute 489.105 requires a licensed plumber (CFC license) for all new supply, drain, and vent connections. DIY connections can result in fines up to $5,000, failed home inspections at sale, and voided insurance claims. Even experienced DIYers should pull a permit and have work inspected to protect home value and insurance coverage.</div>
+  </div>
+
+  <!-- WATER EFFICIENCY -->
+  <div class="card">
+    <div class="ct ct-green">💧 Water Efficiency — FL Savings Guide</div>
+
+    <div class="efrow"><span class="efl">Standard top-load washer water use</span><span class="efv">40–45 gal/load</span></div>
+    <div class="efrow"><span class="efl">HE top-load washer</span><span class="efv">25–35 gal/load</span></div>
+    <div class="efrow"><span class="efl">HE front-load washer</span><span class="efv">15–25 gal/load</span></div>
+    <div class="efrow"><span class="efl">Combo washer-dryer unit</span><span class="efv">15–20 gal/load</span></div>
+    <div class="efrow"><span class="efl">Average FL household loads/week</span><span class="efv">7–10 loads</span></div>
+    <div class="efrow"><span class="efl">Annual water savings (HE vs. standard)</span><span class="efv">3,000–8,000 gal</span></div>
+    <div class="efrow"><span class="efl">FL average water cost per 1,000 gal</span><span class="efv">$3–$6</span></div>
+    <div class="efrow"><span class="efl">FL WaterSense HE washer rebate</span><span class="efv">$50–$200</span></div>
+    <div class="efrow"><span class="efl">Hot water recirculation saves per use</span><span class="efv">3–8 gal</span></div>
+
+    <div class="al al-teal mt8" style="margin-bottom:0">
+      <span class="ai">🌊</span>
+      <div>The South Florida Water Management District offers rebates for WaterSense-labeled HE washing machines in select utilities. Contact your local water utility for current rebate programs. Palm Beach County Water Utilities and Broward County Water Services have both offered rebates historically.</div>
+    </div>
+  </div>
+
+  <button class="btn btn-gold" onclick="switchTab('quote')">📞 Get Your Free Estimate</button>
+
+</div><!-- /tab-cost -->
+
+<!-- ==================== TAB 3: FL CODE & PERMIT ==================== -->
+<div class="tab-panel" id="tab-code">
+
+  <div class="al al-red">
+    <span class="ai">📋</span>
+    <div><strong>Permit Required in Florida:</strong> Any new plumbing — supply line, drain connection, or vent — requires a permit in FL regardless of scope. This includes adding a utility sink, relocating a washer, or installing an overflow pan drain. Permit = legal protection + insurance coverage + home value protection.</div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-blue">📐 FL Plumbing Code — Expandable Reference</div>
+
+    <div class="ec" id="ec1">
+      <div class="eh" onclick="toggleExpand('ec1')">
+        <span class="et">1. Washer Drain &amp; Standpipe Requirements</span>
+        <span class="ei">+</span>
+      </div>
+      <div class="eb">
+        <p><strong>Standpipe Height:</strong> Florida Plumbing Code (FPC) Section 802.4 requires standpipes to be a minimum of <span class="hl">18 inches</span> and maximum of <span class="hl">42 inches</span> measured from the top of the trap weir. The 18" minimum prevents the washer pump from siphoning the trap; the 42" maximum ensures water gravity-flows into the drain without backing up. We find out-of-spec standpipes in roughly 30% of South FL laundry rooms we inspect.</p>
+        <p><strong>Drain Sizing:</strong> Minimum <span class="hl">2-inch diameter</span> drain required for all automatic washing machines per FPC Section 709. Many older FL homes have 1.5" standpipes — these are code violations that cause chronic slow drainage, gurgling, and eventual backups.</p>
+        <p><strong>Trap Requirements:</strong> A P-trap is required at the standpipe. The trap must remain accessible; concealing it behind drywall without a cleanout is a code violation. Trap arm from trap to vent: maximum 5 feet for 2" pipe.</p>
+        <ul>
+          <li>Standpipe inside diameter: <strong>2" minimum</strong> (never 1.5")</li>
+          <li>Standpipe height: <strong>18"–42"</strong> above trap weir</li>
+          <li>P-trap: required, must be accessible</li>
+          <li>Vent: required within 5 ft of trap (or AAV where jurisdiction allows)</li>
+          <li>Drain slope: <strong>1/4" per foot</strong> minimum horizontal runs</li>
+          <li>Cleanout: required at each change of direction over 45°</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ec" id="ec2">
+      <div class="eh" onclick="toggleExpand('ec2')">
+        <span class="et">2. Washing Machine Overflow Pan (FL Critical)</span>
+        <span class="ei">+</span>
+      </div>
+      <div class="eb">
+        <p><strong>When Required:</strong> FL code requires an overflow pan with connected drain when a washing machine is installed <span class="hl">above a living space</span>. In Florida — where two-story homes, condos, and townhomes are ubiquitous — this is an extremely common requirement. The pan must be connected to an approved drain; sitting the pan under the washer without connecting it to a drain does not meet code.</p>
+        <p><strong>Pan Specifications (FPC Section 504.7):</strong></p>
+        <ul>
+          <li>Minimum depth: <strong>2 inches</strong> (measured at the sides)</li>
+          <li>Must extend <strong>at least 3 inches</strong> beyond the washer footprint on all sides</li>
+          <li>Pan drain: <strong>1" minimum</strong> — typically connected to a P-trap and draining to an approved location</li>
+          <li>Installation sequence: pan must be installed <em>before</em> the washer is placed — it cannot be retrofitted easily under an existing washer</li>
+          <li>Material: plastic, fiberglass, or stainless steel</li>
+        </ul>
+        <p><strong>FL Insurance Note:</strong> Many FL homeowner insurers now specifically ask about overflow pan installation during underwriting and after claims. A condo board claim involving an upper-floor washer without a pan often results in the owner being personally liable for damage to units below.</p>
+        <p><strong>Drain Routing Options:</strong> Pan drain can route to a utility sink drain, a floor drain, a standpipe (some inspectors require a separate standpipe), or to the exterior (in some jurisdictions). Confirm with your county building department what discharge locations are approved.</p>
+      </div>
+    </div>
+
+    <div class="ec" id="ec3">
+      <div class="eh" onclick="toggleExpand('ec3')">
+        <span class="et">3. Utility Sink Plumbing Requirements</span>
+        <span class="ei">+</span>
+      </div>
+      <div class="eb">
+        <p><strong>Supply Lines:</strong> Minimum 1/2" supply with individual hot and cold shut-off valves. If adding a utility sink to a laundry room that also has a washer, the shared branch should be <span class="hl">3/4" for adequate pressure</span> to both fixtures simultaneously.</p>
+        <p><strong>Drain Requirements:</strong></p>
+        <ul>
+          <li>1.5" minimum drain for utility sinks (2" if shared with washer drain)</li>
+          <li>P-trap required at every sink — S-traps are prohibited in FL code</li>
+          <li>Trap arm (P-trap outlet to vent): max 3.5 ft for 1.5" pipe; 5 ft for 2" pipe</li>
+          <li>Vent required within the code-allowed trap arm distance</li>
+          <li>Air admittance valve (AAV): allowed in some FL jurisdictions as alternative to open vent — verify with local building department</li>
+        </ul>
+        <p><strong>Common Sink Types in FL Laundry Rooms:</strong></p>
+        <ul>
+          <li><strong>Freestanding laundry tub:</strong> Most common in FL; self-supported, easy to plumb, durable</li>
+          <li><strong>Wall-mounted utility sink:</strong> Requires blocking in wall; less common in laundry rooms but cleaner look</li>
+          <li><strong>Undermount sink with laundry countertop:</strong> Higher-end look; requires folding table or custom cabinet base</li>
+          <li><strong>Mop sink (floor-level):</strong> For janitorial/commercial use; separate permit classification</li>
+        </ul>
+        <p><strong>Faucet Requirements:</strong> Utility sinks require faucets with integral vacuum breakers or must be at least 1" above the flood rim to prevent backflow. Hose-bibb-style faucets are popular for utility sinks and must have a non-removable hose bibb vacuum breaker in FL.</p>
+      </div>
+    </div>
+
+    <div class="ec" id="ec4">
+      <div class="eh" onclick="toggleExpand('ec4')">
+        <span class="et">4. Floor Drain Requirements</span>
+        <span class="ei">+</span>
+      </div>
+      <div class="eb">
+        <p><strong>When Required:</strong> Floor drains are not universally required in residential FL laundry rooms but are required in commercial laundry facilities, garages with floor drains (by some jurisdictions), and per HOA or condo rules. They are highly recommended in all laundry rooms.</p>
+        <p><strong>Trap Primer (Critical in FL):</strong> Every floor drain requires an automatic trap primer — a device that periodically adds a small amount of water to the floor drain trap. In FL's dry winters and air-conditioned homes, floor drain traps can evaporate in 3–4 weeks, allowing sewer gas (including hydrogen sulfide, which smells like rotten eggs) to enter the home. This is one of the most common mystery odor complaints we receive.</p>
+        <ul>
+          <li>Floor drain size: typically 3" or 4" with removable strainer</li>
+          <li>Trap primer: required — electronic (timer-based) or supply-line type</li>
+          <li>Floor slope: minimum <strong>1/8" per foot</strong> toward drain</li>
+          <li>Requires slab penetration if adding after construction</li>
+          <li>Saw-cut core drill: required for after-construction floor drain installation</li>
+        </ul>
+        <p><strong>Slab-on-Grade Considerations:</strong> Approximately 90% of FL homes are slab-on-grade. Adding a floor drain after construction requires: saw-cutting concrete (typically 18"–24" wide), digging out enough earth to install drain and pipe, installing drain at proper depth, pitching drain line to tie into existing drain system, and patching concrete. This is significant work — always get a permit and use a licensed plumber.</p>
+      </div>
+    </div>
+
+    <div class="ec" id="ec5">
+      <div class="eh" onclick="toggleExpand('ec5')">
+        <span class="et">5. Venting Requirements</span>
+        <span class="ei">+</span>
+      </div>
+      <div class="eb">
+        <p><strong>Why Venting Is Critical:</strong> Without proper venting, draining water creates negative pressure in the drain pipe. This negative pressure sucks water out of nearby P-traps — the water seal that prevents sewer gas from entering the home. A gurgling sound after the washer drains is the telltale sign of an inadequate vent, not necessarily a clog.</p>
+        <p><strong>FL-Approved Venting Methods:</strong></p>
+        <ul>
+          <li><strong>Individual Vent (Preferred):</strong> Each fixture gets its own vent running up through the wall and out through the roof. Most code-safe; recommended for new construction and major renovations.</li>
+          <li><strong>Wet Vent:</strong> The drain line doubles as a vent for another fixture within code-allowed distances. Very common in FL where laundry rooms share a drain wall with a bathroom.</li>
+          <li><strong>Stack Vent:</strong> Fixtures within the code-allowed trap arm distance connect to an existing vent stack. Used when the laundry room is adjacent to the main plumbing wall.</li>
+          <li><strong>Air Admittance Valve (AAV):</strong> A one-way valve that opens to admit air (preventing siphoning) but stays closed to keep sewer gas out. FL allows AAVs in many situations, but <em>individual jurisdictions have restrictions</em> — Broward County has specific AAV rules, and some FL municipalities ban them entirely. Always verify locally before specifying an AAV.</li>
+          <li><strong>Loop Vent:</strong> Allowed in some FL jurisdictions for island sinks and fixtures far from the main stack. Requires careful sizing.</li>
+        </ul>
+        <p><strong>Garage &amp; Lanai Venting Challenges:</strong> Laundry rooms in FL garages and lanais often have complex venting requirements because they're far from the main stack. Options include running a new vent through the roof, a studor vent (AAV), or connecting to an adjacent bathroom vent within code limits. We evaluate the best venting solution for each specific situation.</p>
+      </div>
+    </div>
+
+    <div class="ec" id="ec6">
+      <div class="eh" onclick="toggleExpand('ec6')">
+        <span class="et">6. Water Supply Sizing</span>
+        <span class="ei">+</span>
+      </div>
+      <div class="eb">
+        <p><strong>Minimum Code Requirements:</strong></p>
+        <ul>
+          <li>Washer supply minimum: <strong>1/2" hot and cold</strong></li>
+          <li>If washer + utility sink share a branch: <strong>3/4" branch</strong> recommended</li>
+          <li>Flow rate minimum: <strong>4 GPM</strong> for washer performance</li>
+          <li>Operating pressure: <strong>20–80 PSI</strong> (FL municipal: typically 45–80 PSI)</li>
+          <li>Maximum: 80 PSI (pressure reducing valve required if higher)</li>
+        </ul>
+        <p><strong>Hot Water Distance:</strong> FL homes, especially larger CBS homes and estate properties, often have long pipe runs from the water heater to the laundry room. Every 30 feet of 1/2" pipe holds approximately 1/2 gallon of cold water that must be purged before hot water arrives. A 60-foot run wastes 1+ gallon and 2–3 minutes every time the washer calls for hot water.</p>
+        <p><strong>Recirculating Pump Benefits:</strong> A hot water recirculating pump (with timer or demand button) eliminates the cold water purge, saving 3–8 gallons per washer load. At 8 loads per week in a typical FL family, that's 1,200–3,300 gallons per year. The pump also benefits all other hot water fixtures in the home simultaneously.</p>
+        <p><strong>FL Pressure Issues:</strong></p>
+        <ul>
+          <li><strong>High pressure (80+ PSI):</strong> FL municipal systems sometimes run high. Excess pressure stresses supply hoses and dramatically increases burst risk. A pressure reducing valve (PRV) protects the home; cost $200–500 installed.</li>
+          <li><strong>Low pressure (under 40 PSI):</strong> Common in upper-floor condos and multi-story homes. Fill cycles take longer, hot-cold pressure imbalance causes scalding in showers. A booster pump ($800–1,800 installed) resolves this.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ec" id="ec7">
+      <div class="eh" onclick="toggleExpand('ec7')">
+        <span class="et">7. Garage &amp; Exterior Laundry — FL Specific</span>
+        <span class="ei">+</span>
+      </div>
+      <div class="eb">
+        <p><strong>Why This Is FL-Unique:</strong> Garage laundry rooms and covered lanai (patio) laundry setups are extremely common in South Florida — you'll see them in 30–40% of single-family CBS homes built between 1970 and 2005. These setups present unique plumbing requirements not found in most other states.</p>
+        <p><strong>Garage Laundry Requirements:</strong></p>
+        <ul>
+          <li>All plumbing must meet the same code standards as interior work</li>
+          <li>Exposed supply lines in garages: protect from impact (vehicle damage) with sleeves or routing through walls</li>
+          <li>FL garages can reach 140–150°F+ in summer — use PEX (not CPVC) for any exposed supply lines</li>
+          <li>Floor drain in garage laundry: check local jurisdiction — some require it, some recommend it</li>
+          <li>Electrical: washer receptacle must meet GFCI requirements in garage (NEC Article 210.8)</li>
+          <li>Hot water source: if water heater is far from garage, consider tankless point-of-use water heater for hot water supply</li>
+        </ul>
+        <p><strong>Lanai (Covered Patio) Laundry Requirements:</strong></p>
+        <ul>
+          <li>All components must be exterior/humid environment rated</li>
+          <li>Supply valves: use corrosion-resistant ball valves (brass, never gate valves)</li>
+          <li>Supply line insulation: UV-resistant foam insulation for any exposed pipe</li>
+          <li>Drain: must connect to building sewer — cannot discharge to ground or yard</li>
+          <li>Venting: often more complex than interior; may require separate vent stack to roof</li>
+          <li>Floor: must slope away from structure, use non-slip surface material</li>
+          <li>Permit: always required; inspectors scrutinize exterior installations carefully</li>
+          <li>Enclosure: some jurisdictions require the laundry to be in a fully enclosed space — verify locally</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ec" id="ec8">
+      <div class="eh" onclick="toggleExpand('ec8')">
+        <span class="et">8. Commercial &amp; Multi-Unit Laundry Rooms</span>
+        <span class="ei">+</span>
+      </div>
+      <div class="eb">
+        <p><strong>When Commercial Code Applies:</strong> Condo buildings, apartment complexes, HOA common-area laundry facilities, coin-operated laundromats, and hotel laundry operations fall under Florida commercial plumbing code — significantly more stringent than residential.</p>
+        <p><strong>Key Commercial Requirements:</strong></p>
+        <ul>
+          <li><strong>Lint Interceptor (Required):</strong> Commercial laundry must have a lint interceptor to capture lint fibers before they enter the sewer system, where they can create blockages and municipal treatment issues. Must be cleaned per manufacturer schedule (typically monthly).</li>
+          <li><strong>Larger Drain Sizing:</strong> Commercial washers (8+ kg / 20+ lb capacity) require 3" or larger drain lines. Multiple commercial machines may require 4" main drain.</li>
+          <li><strong>Supply Sizing:</strong> Multiple washers require 1" or larger supply mains with a pressure-balancing manifold to ensure each machine fills at consistent pressure.</li>
+          <li><strong>Backflow Prevention:</strong> A reduced pressure zone (RPZ) backflow preventer is typically required for commercial laundry connections to protect the public water supply.</li>
+          <li><strong>Grease/Lint Interceptor:</strong> Hotel linens, food-service uniforms, and healthcare laundry may require a combination grease/lint interceptor, classified as a grease interceptor by some FL jurisdictions.</li>
+          <li><strong>Permit Classification:</strong> Commercial permits have higher fees, plan review requirements, and multiple inspections (rough-in, top-out, final).</li>
+        </ul>
+        <p><strong>HOA &amp; Condo Board Approval:</strong> Most FL condo communities require HOA/board approval before any plumbing work on individual units that could affect common systems. Get written HOA approval before pulling a permit. Some HOAs specify approved materials (e.g., no PVC in finished areas) or require HOA-approved plumbers. We work with HOA approval processes regularly.</p>
+      </div>
+    </div>
+
+  </div><!-- /code cards -->
+
+  <!-- COUNTY QUICK REFERENCE -->
+  <div class="card">
+    <div class="ct ct-orange">📍 South FL County Quick Reference</div>
+    <table class="ctytbl">
+      <tr><th>County</th><th>AAV OK?</th><th>Pan Req?</th><th>Key Notes</th></tr>
+      <tr><td><strong>Palm Beach</strong></td><td class="chk">Verify</td><td class="yes">2nd Fl.</td><td class="tc-muted" style="font-size:11px">Strong permit enforcement; online permits</td></tr>
+      <tr><td><strong>Broward</strong></td><td class="no">Limited</td><td class="yes">2nd Fl.</td><td class="tc-muted" style="font-size:11px">Local amendments; own mech. code</td></tr>
+      <tr><td><strong>Miami-Dade</strong></td><td class="chk">Verify</td><td class="yes">2nd Fl.</td><td class="tc-muted" style="font-size:11px">HVHZ wind-zone rules also apply</td></tr>
+      <tr><td><strong>Martin</strong></td><td class="yes">Yes</td><td class="yes">2nd Fl.</td><td class="tc-muted" style="font-size:11px">Follows FPC closely; faster permits</td></tr>
+      <tr><td><strong>St. Lucie</strong></td><td class="yes">Yes</td><td class="yes">2nd Fl.</td><td class="tc-muted" style="font-size:11px">Follows FPC; growth area</td></tr>
+      <tr><td><strong>Indian River</strong></td><td class="yes">Yes</td><td class="yes">2nd Fl.</td><td class="tc-muted" style="font-size:11px">Fast processing; follows FPC</td></tr>
+    </table>
+    <p class="fs12 tc-muted mt8">Always verify with your local building department before specifying materials or methods. Local amendments can differ significantly from state code. We are familiar with all South FL county requirements.</p>
+  </div>
+
+  <!-- EXTENDED FAQ -->
+  <div class="card">
+    <div class="ct ct-gold">❓ FL Laundry Plumbing FAQ — 15 Questions</div>
+
+    <div class="fq">Q: Do I need a permit to add a utility sink to my existing laundry room?</div>
+    <div class="fa">Yes. Any new drain or supply connection requires a permit in Florida, including adding a utility sink to an existing laundry room. The permit process involves submitting plans, paying a fee ($125–400 depending on county), and scheduling an inspection. We handle the entire permit process.</div>
+
+    <div class="fq">Q: My washer drains slowly. Is that a vent problem or a clog?</div>
+    <div class="fa">Both are common in FL. If the standpipe is under 18" or the drain is 1.5" (undersized), those are the first things to check. A gurgling sound after draining indicates a venting problem. Gradual slowness over time often indicates partial clog or root intrusion. Sudden slow drainage usually indicates a clog.</div>
+
+    <div class="fq">Q: I live in a condo on the 5th floor. Does my washer need a pan?</div>
+    <div class="fa">Absolutely yes — this is one of the most critical requirements in FL condos. The pan must be connected to a properly plumbed drain. Many condo associations require proof of pan installation. Without a properly drained pan, you could be personally liable for water damage to units below.</div>
+
+    <div class="fq">Q: Can I use PVC for supply lines to my washer?</div>
+    <div class="fa">PVC is not approved for hot water supply in FL. Use PEX (preferred) or CPVC for hot water supply. For drain lines, schedule 40 PVC is the standard FL material. Important caveat: CPVC should never be used in FL attic or garage supply lines where temperatures exceed 180–200°F.</div>
+
+    <div class="fq">Q: How often should I replace washing machine hoses in FL?</div>
+    <div class="fa">Rubber hoses: every 3–5 years in FL (heat accelerates degradation). Stainless braided hoses: every 5–7 years. Visually inspect annually — look for bulging, cracking, or moisture around fittings. The back-of-washer area is often neglected. Include it in your annual home maintenance walkthrough.</div>
+
+    <div class="fq">Q: Can I install a washer in my FL garage?</div>
+    <div class="fa">Yes, garage laundry is very common in older FL CBS homes. You'll need supply lines (often run from water heater), a standpipe connected to the sewer system, proper venting, and a permit. The garage environment is tough on rubber hoses — always use stainless braided. Consider a point-of-use water heater if the main heater is far away.</div>
+
+    <div class="fq">Q: What is the minimum drain pipe size for a FL washing machine?</div>
+    <div class="fa">Florida Plumbing Code requires a minimum 2-inch drain for automatic washing machines. Many older FL homes have 1.5" standpipes — these are code violations causing chronic slow drainage. If your laundry room has a 1.5" standpipe, we recommend upgrading to 2" during any related plumbing work.</div>
+
+    <div class="fq">Q: Can I install a laundry room on my covered lanai?</div>
+    <div class="fa">Yes, and it's popular in South Florida! A covered lanai laundry requires outdoor-rated components, proper venting, a sloped floor to drain, and a permit. The washer/dryer should be in a weatherproof, covered, protected area. We specialize in lanai laundry installations throughout South FL.</div>
+
+    <div class="fq">Q: Will homeowner's insurance cover a burst washing machine hose?</div>
+    <div class="fa">Usually yes for sudden/accidental damage, but adjusters investigate. If the hose was old rubber in FL heat, the damage may be deemed foreseeable (gradual deterioration) and coverage can be denied. Using deteriorated rubber hoses beyond their FL lifespan can be considered negligence. Document maintenance and use quality hoses.</div>
+
+    <div class="fq">Q: How much does a recirculating pump save in South FL?</div>
+    <div class="fa">In larger FL homes with long pipe runs, a recirculating pump saves 3–8 gallons per washer use and eliminates 2–5 minute wait times. At 8 loads/week, that's 1,200–3,300 gallons annually. The pump also benefits all hot water fixtures simultaneously. Payback period in water savings: 5–10 years; comfort payback: immediate.</div>
+
+    <div class="fq">Q: What is a lint interceptor and do I need one?</div>
+    <div class="fa">A lint interceptor is a trap-like device that captures laundry lint before it enters the municipal sewer system. Required for commercial laundry operations in FL. Not required for residential single-family homes. Condo buildings with common laundry facilities often fall into commercial classification and may require one.</div>
+
+    <div class="fq">Q: How do I know if my water pressure is too high?</div>
+    <div class="fa">Buy a $15 pressure gauge at a hardware store and test at the hose bib near your washer. Anything over 80 PSI is too high for washer supply hoses and accelerates failure. FL municipal systems frequently run 70–100 PSI. A pressure reducing valve (PRV) brings pressure to a safe 50–70 PSI range. We can test and install one.</div>
+
+    <div class="fq">Q: My laundry room smells like sewage occasionally. What causes this?</div>
+    <div class="fa">In FL, the #1 cause of intermittent laundry room sewer odor is an evaporated floor drain trap. If you have a floor drain that isn't used regularly, the water seal evaporates and allows sewer gas in. Pour a cup of water with a few drops of cooking oil into the drain — the oil layer slows evaporation. A proper trap primer permanently solves this.</div>
+
+    <div class="fq">Q: Is a hot water shutoff valve required separately from the supply valve?</div>
+    <div class="fa">FL code requires individual shut-off valves for each supply connection (hot and cold) at the washer location. These are typically 1/4-turn ball valves. Gate valves (the older oval-handle type) are not recommended — they fail to seat properly after years of disuse. When we install a new laundry hookup, we always install quality ball valves.</div>
+
+    <div class="fq">Q: What's the difference between a washing machine drain and a utility sink drain — can they share?</div>
+    <div class="fa">They can share a drain with proper sizing. If both fixtures tie into the same drain, you need at least a 2" shared drain line. Each fixture still needs its own trap. The washer standpipe and sink P-trap are separate; they just connect to the same drain main downstream. A licensed plumber will size this correctly to prevent one fixture from backing up into the other.</div>
+
+  </div>
+
+  <!-- VALUE STATS -->
+  <div class="card">
+    <div class="ct ct-green">📈 The Real Value of Done Right</div>
+    <div class="sgrid">
+      <div class="sc"><div class="sv tc-green">$3K–$8K</div><div class="sl">Added home value with proper laundry room plumbing</div></div>
+      <div class="sc"><div class="sv tc-red">$5K–$20K</div><div class="sl">Water damage cost from improper installation or hose failure</div></div>
+      <div class="sc"><div class="sv tc-blue">100%</div><div class="sl">FL inspectors verify permit documentation at real estate closings</div></div>
+      <div class="sc"><div class="sv tc-gold">2×</div><div class="sl">Increase in washer lifespan with correct water pressure (40–80 PSI)</div></div>
+    </div>
+  </div>
+
+  <button class="btn btn-gold" onclick="switchTab('quote')">📞 Get a Free Code-Compliant Quote</button>
+
+</div><!-- /tab-code -->
+
+<!-- ==================== TAB 4: GET A QUOTE ==================== -->
+<div class="tab-panel" id="tab-quote">
+
+  <!-- TRUST BLOCK -->
+  <div class="card">
+    <div class="ct ct-green">🛡️ Why South Florida Trusts Us</div>
+    <div class="trgrid">
+      <div class="tri"><span class="tric">🏆</span><div class="trit">Licensed CFC — State of Florida</div></div>
+      <div class="tri"><span class="tric">📋</span><div class="trit">All Work Permitted &amp; Inspected</div></div>
+      <div class="tri"><span class="tric">📖</span><div class="trit">FL Code Compliant — Always</div></div>
+      <div class="tri"><span class="tric">✅</span><div class="trit">Workmanship Warranty Included</div></div>
+      <div class="tri"><span class="tric">⏰</span><div class="trit">We Call Within 2 Hours</div></div>
+      <div class="tri"><span class="tric">🌴</span><div class="trit">South FL Specialists Since Day One</div></div>
+    </div>
+  </div>
+
+  <!-- LEAD FORM -->
+  <div class="card">
+    <div class="ct ct-gold">📞 Get Your Free Estimate</div>
+    <form id="leadForm" onsubmit="submitForm(event)" novalidate>
+
+      <div class="fg">
+        <label class="fl" for="f-name">Full Name *</label>
+        <input type="text" id="f-name" placeholder="Your full name" autocomplete="name">
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="f-phone">Phone Number *</label>
+        <input type="tel" id="f-phone" placeholder="(561) 000-0000" autocomplete="tel">
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="f-email">Email Address</label>
+        <input type="email" id="f-email" placeholder="you@email.com" autocomplete="email">
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="f-city">City / County *</label>
+        <select id="f-city">
+          <option value="">Select your area...</option>
+          <optgroup label="Palm Beach County">
+            <option>Boca Raton, FL</option>
+            <option>Boynton Beach, FL</option>
+            <option>Delray Beach, FL</option>
+            <option>Lake Worth Beach, FL</option>
+            <option>Palm Beach Gardens, FL</option>
+            <option>West Palm Beach, FL</option>
+            <option>Wellington, FL</option>
+            <option>Jupiter, FL</option>
+            <option>Royal Palm Beach, FL</option>
+            <option>Other Palm Beach County</option>
+          </optgroup>
+          <optgroup label="Broward County">
+            <option>Fort Lauderdale, FL</option>
+            <option>Hollywood, FL</option>
+            <option>Pompano Beach, FL</option>
+            <option>Coral Springs, FL</option>
+            <option>Deerfield Beach, FL</option>
+            <option>Pembroke Pines, FL</option>
+            <option>Weston, FL</option>
+            <option>Miramar, FL</option>
+            <option>Davie, FL</option>
+            <option>Other Broward County</option>
+          </optgroup>
+          <optgroup label="Miami-Dade County">
+            <option>Miami, FL</option>
+            <option>Miami Beach, FL</option>
+            <option>Hialeah, FL</option>
+            <option>Coral Gables, FL</option>
+            <option>Aventura, FL</option>
+            <option>Homestead, FL</option>
+            <option>Doral, FL</option>
+            <option>Other Miami-Dade</option>
+          </optgroup>
+          <optgroup label="Treasure Coast">
+            <option>Stuart, FL</option>
+            <option>Port St. Lucie, FL</option>
+            <option>Fort Pierce, FL</option>
+            <option>Vero Beach, FL</option>
+            <option>Other Treasure Coast</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="f-project">Project Type *</label>
+        <select id="f-project">
+          <option value="">Select project type...</option>
+          <option>New laundry room — no existing plumbing</option>
+          <option>Convert existing space to laundry room</option>
+          <option>Add to existing laundry room (sink, drain, etc.)</option>
+          <option>Replace connections / update existing hookup</option>
+          <option>Utility / mop sink installation only</option>
+          <option>Repair / leak / emergency</option>
+          <option>Commercial / multi-unit laundry</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="f-home">Home / Property Type *</label>
+        <select id="f-home">
+          <option value="">Select property type...</option>
+          <option>Single-family home</option>
+          <option>Condo / apartment unit</option>
+          <option>Townhome</option>
+          <option>Multi-family (duplex / triplex)</option>
+          <option>Commercial property</option>
+          <option>Vacation / rental property</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="f-floor">Floor / Location</label>
+        <select id="f-floor">
+          <option value="">Select location...</option>
+          <option>First floor — slab on grade</option>
+          <option>Second floor or above</option>
+          <option>Garage</option>
+          <option>Covered lanai / patio</option>
+          <option>Exterior / uncovered area</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="f-urgency">Project Urgency</label>
+        <select id="f-urgency">
+          <option value="">Select urgency...</option>
+          <option>Emergency — active leak / no water service</option>
+          <option>Urgent — need service within 48 hours</option>
+          <option>Soon — within the next week</option>
+          <option>Planning — within the next month</option>
+          <option>Exploring — just getting estimates for now</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="f-notes">Additional Notes / Description</label>
+        <textarea id="f-notes" placeholder="Describe your project, current plumbing situation, specific concerns, or questions. The more detail you share, the more accurate your estimate will be..."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-gold">🚀 Send Request — We Call Within 2 Hours</button>
+
+      <p class="fs12 tc-muted mt8" style="text-align:center;line-height:1.5">By submitting, you agree to be contacted by phone and/or email. We never share your information. Licensed CFC · Insured · South Florida.</p>
+
+    </form>
+  </div>
+
+  <!-- COMMON MISTAKES -->
+  <div class="card">
+    <div class="ct ct-red">⚠️ 5 FL Laundry Room Mistakes We Fix Every Week</div>
+
+    <div class="mi">
+      <div class="mnum">1</div>
+      <div>
+        <div class="mtit">No Overflow Pan (2nd Floor / Condo)</div>
+        <div class="mdesc">We see this constantly in FL condos and 2-story homes. A washer above a living space without a properly connected pan is one of the highest risk water damage situations in residential plumbing. FL code requires it — and for very good reason.</div>
+      </div>
+    </div>
+
+    <div class="mi">
+      <div class="mnum">2</div>
+      <div>
+        <div class="mtit">Wrong Standpipe Height (Out of Spec)</div>
+        <div class="mdesc">Too short (under 18"): washer pump siphons the trap, causing gurgling and sewer gas. Too tall (over 42"): water backs up at the standpipe opening. We find out-of-spec standpipes in roughly 30% of FL laundry rooms we inspect — often installed by well-meaning DIYers.</div>
+      </div>
+    </div>
+
+    <div class="mi">
+      <div class="mnum">3</div>
+      <div>
+        <div class="mtit">Unvented or Poorly Vented Drain</div>
+        <div class="mdesc">Slow drainage, gurgling, and occasional sewer gas odors are classic signs. Many FL DIY plumbing jobs skip the vent entirely — sometimes because venting a garage or lanai laundry is genuinely difficult. The fix is proper venting or an approved AAV (where the jurisdiction allows it).</div>
+      </div>
+    </div>
+
+    <div class="mi">
+      <div class="mnum">4</div>
+      <div>
+        <div class="mtit">No Permit Pulled for New Connections</div>
+        <div class="mdesc">Unpermitted plumbing in FL creates mandatory disclosure requirements at real estate sale, potential insurance claim denial for water damage, and risk of $5,000 fines. Worse — unpermitted work may need to be demolished and redone correctly before a sale. We pull all permits and manage every inspection.</div>
+      </div>
+    </div>
+
+    <div class="mi">
+      <div class="mnum">5</div>
+      <div>
+        <div class="mtit">CPVC in a Hot FL Attic or Garage</div>
+        <div class="mdesc">CPVC softens at temperatures above 200°F. FL attics regularly reach 150–170°F in summer; black roof attics can exceed 200°F. We've found CPVC supply lines that have drooped, developed stress cracks, and begun seeping. Always use PEX in unconditioned FL spaces — it handles the heat without issue.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEFORE/AFTER VALUE CARD -->
+  <div class="card">
+    <div class="ct ct-green">📈 Real Value of Proper Laundry Plumbing</div>
+    <div class="sgrid">
+      <div class="sc"><div class="sv tc-green">+$3,000</div><div class="sl">Minimum home value added by proper laundry room</div></div>
+      <div class="sc"><div class="sv tc-green">+$8,000</div><div class="sl">Maximum home value added (full new laundry room)</div></div>
+      <div class="sc"><div class="sv tc-red">$5,363</div><div class="sl">Avg. insurance claim from washer supply failure (III data)</div></div>
+      <div class="sc"><div class="sv tc-red">$20K+</div><div class="sl">Damage potential from 2nd-floor washer without overflow pan</div></div>
+    </div>
+    <div class="al al-green" style="margin-bottom:0;margin-top:4px">
+      <span class="ai">🏠</span>
+      <div>Properly permitted, code-compliant laundry rooms are a selling point in FL real estate. Buyers and their inspectors look for permits, proper drain sizing, overflow pans, and licensed workmanship. Our permitted work passes inspection every time and protects your home's value at resale.</div>
+    </div>
+  </div>
+
+  <!-- APPLIANCE HOOKUP GUIDE -->
+  <div class="card">
+    <div class="ct ct-teal">🔧 New Washer Hookup Checklist — What We Install</div>
+    <p class="fs13 mb8" style="color:var(--text);line-height:1.5">Before your new washer is delivered, here's what your licensed plumber should verify and install:</p>
+
+    <div class="crow"><span class="cn">Hot water shut-off valve (1/4-turn ball valve)</span><span class="cr tc-green">Required</span></div>
+    <div class="crow"><span class="cn">Cold water shut-off valve (1/4-turn ball valve)</span><span class="cr tc-green">Required</span></div>
+    <div class="crow"><span class="cn">Stainless steel braided supply hoses (5 ft)</span><span class="cr tc-green">Recommended</span></div>
+    <div class="crow"><span class="cn">Flood stop auto-shutoff at wall valves</span><span class="cr tc-gold">Strongly Rec.</span></div>
+    <div class="crow"><span class="cn">2" standpipe at 18–42" height (code spec)</span><span class="cr tc-green">FL Code</span></div>
+    <div class="crow"><span class="cn">P-trap with accessible cleanout</span><span class="cr tc-green">Required</span></div>
+    <div class="crow"><span class="cn">Vent to roof or approved AAV</span><span class="cr tc-green">Required</span></div>
+    <div class="crow"><span class="cn">Overflow pan + drain line (2nd floor)</span><span class="cr tc-green">FL Required</span></div>
+    <div class="crow"><span class="cn">Pressure check (40–80 PSI verified)</span><span class="cr tc-blue">Best Practice</span></div>
+    <div class="crow"><span class="cn">Permit pulled &amp; final inspection scheduled</span><span class="cr tc-green">FL Law</span></div>
+  </div>
+
+  <!-- SEASONAL MAINTENANCE -->
+  <div class="card">
+    <div class="ct ct-orange">📅 FL Laundry Room Maintenance Calendar</div>
+    <div class="msrow">
+      <div class="msper">MONTHLY</div>
+      <div class="mstxt">Pour 1 cup water into floor drain to refresh trap seal. Wipe down supply hose connections for moisture. Clean lint trap on dryer (every load, really).</div>
+    </div>
+    <div class="msrow">
+      <div class="msper">QUARTERLY</div>
+      <div class="mstxt">Run cleaning cycle on washer with washer cleaner or 2 cups white vinegar (FL humidity causes mold faster). Check supply hoses for bulging or cracking at ends.</div>
+    </div>
+    <div class="msrow">
+      <div class="msper">ANNUALLY</div>
+      <div class="mstxt">Test water pressure at washer valve (should be 40–80 PSI). Inspect all hose connections for weeping or mineral deposits. Check standpipe for slow drainage. Have licensed plumber inspect supply shut-off valves for proper operation.</div>
+    </div>
+    <div class="msrow">
+      <div class="msper">HURRICANE PREP</div>
+      <div class="mstxt">Before a storm: turn off washer supply valves completely. Move portable washer to interior if applicable. Check that hurricane shutoff valves operate freely. After storm: inspect all supply hoses and connections before resuming use.</div>
+    </div>
+    <div class="msrow">
+      <div class="msper">5–7 YEARS</div>
+      <div class="mstxt">Replace all supply hoses even if they look OK — internal deterioration is invisible in rubber hoses. Replace supply shut-off valves if they're the original gate-valve type. Consider upgrade to stainless braided hoses with integrated flood stops.</div>
+    </div>
+  </div>
+
+  <!-- CALL CTA -->
+  <div class="card2" style="text-align:center;padding:20px 16px">
+    <div style="font-size:36px;margin-bottom:8px">📞</div>
+    <div style="font-size:22px;font-weight:900;color:var(--gold);margin-bottom:4px">(561) 555-PIPE</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Licensed CFC · Insured · South Florida<br>Available 7 Days · Emergency Service</div>
+    <a href="tel:5615557473" class="btn btn-gold" style="text-decoration:none;margin-bottom:10px">📞 Call Now — Free Estimate</a>
+    <p class="fs12 tc-muted" style="margin-top:8px;line-height:1.4">We serve Palm Beach, Broward, Miami-Dade, Martin, St. Lucie, and Indian River counties. All work permitted and code-compliant. We'll call you within 2 hours of form submission — Monday through Sunday.</p>
+  </div>
+
+</div><!-- /tab-quote -->
+
+<!-- TOAST -->
+<div id="toast">✅ We'll call you within 2 hours!</div>
+
+<!-- BOTTOM CTA -->
+<div class="bottomcta">
+  <a href="tel:5615557473" class="cta-call">📞 Call Now</a>
+  <a href="#" class="cta-quote" onclick="switchTab('quote');return false">📋 Free Quote</a>
+</div>
+
+</div><!-- /app -->
+<script>
+/* ============================================================
+   XSS ESCAPE — use on ALL dynamic DOM writes
+   ============================================================ */
+const esc = s => String(s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+  .replace(/'/g,'&#39;');
+
+/* ============================================================
+   SCOPE STATE
+   ============================================================ */
+const ss = {
+  projectType:'',location:'',washerType:'',
+  supply:false,standpipe:false,sink:false,floorDrain:false,
+  mopSink:false,secondWasher:false,washPan:false,recirc:false,
+  lint:false,outdoor:false,hurricane:false,booster:false
+};
+
+/* ============================================================
+   TAB SWITCHING
+   ============================================================ */
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector('[data-tab="'+esc(id)+'"]');
+  const panel = document.getElementById('tab-'+id);
+  if (btn) btn.classList.add('active');
+  if (panel) panel.classList.add('active');
+  if (id === 'cost') buildCostBreakdown();
+  window.scrollTo(0,0);
+}
+
+document.getElementById('tabsNav').addEventListener('click', function(e) {
+  const b = e.target.closest('.tab-btn');
+  if (b && b.dataset.tab) switchTab(b.dataset.tab);
+});
+
+/* ============================================================
+   CHECKBOX TOGGLE VISUAL
+   ============================================================ */
+function toggleCheck(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const cb = el.querySelector('input[type="checkbox"]');
+  if (cb) el.classList.toggle('checked', cb.checked);
+}
+
+/* ============================================================
+   SCOPE UPDATE
+   ============================================================ */
+function updateScope() {
+  ss.projectType = document.getElementById('projectType').value;
+  ss.location    = document.getElementById('location').value;
+  ss.washerType  = document.getElementById('washerType').value;
+  const keys = ['supply','standpipe','sink','floorDrain','mopSink',
+    'secondWasher','washPan','recirc','lint','outdoor','hurricane','booster'];
+  keys.forEach(k => {
+    const el = document.getElementById(k);
+    ss[k] = el ? el.checked : false;
+  });
+  renderScopeSummary();
+}
+
+/* ============================================================
+   SCOPE SUMMARY RENDER
+   ============================================================ */
+function renderScopeSummary() {
+  const ptMap = {
+    new:'New laundry room (no existing plumbing)',
+    convert:'Convert existing space to laundry room',
+    add:'Add to existing laundry room',
+    replace:'Replace connections only'
+  };
+  const locMap = {
+    first:'First floor / Slab on grade',
+    second:'Second floor or above',
+    garage:'Garage',
+    lanai:'Covered lanai (FL outdoor laundry)'
+  };
+  const extras = {
+    supply:'Washer hot/cold supply hookup',standpipe:'Drain standpipe (2")',
+    sink:'Utility / laundry sink',floorDrain:'Floor drain (slab work)',
+    mopSink:'Mop sink',secondWasher:'Second washer hookup',
+    washPan:'Washing machine pan + drain',recirc:'Recirculating hot water',
+    lint:'Lint interceptor',outdoor:'Outdoor wash station',
+    hurricane:'Hurricane shutoff valve',booster:'Pressure booster pump'
+  };
+  const items = [];
+  if (ss.projectType) items.push(ptMap[ss.projectType] || ss.projectType);
+  if (ss.location) items.push('Location: '+(locMap[ss.location]||ss.location));
+  const wSel = document.getElementById('washerType');
+  if (ss.washerType && wSel && wSel.selectedIndex > 0) {
+    items.push('Washer: '+wSel.options[wSel.selectedIndex].text);
+  }
+  Object.entries(extras).forEach(([k,v]) => { if (ss[k]) items.push(v); });
+  const sum = document.getElementById('scopeSummary');
+  const itemsEl = document.getElementById('scopeItems');
+  if (!sum || !itemsEl) return;
+  if (items.length) {
+    itemsEl.innerHTML = items.map(i =>
+      '<div class="si"><span class="sd">●</span>'+esc(i)+'</div>'
+    ).join('');
+    sum.style.display = 'block';
+  } else {
+    sum.style.display = 'none';
+  }
+}
+
+/* ============================================================
+   COST DATA
+   ============================================================ */
+const COSTS = {
+  new:     {lo:800,  hi:1800, lbl:'New laundry room (basic hookup)'},
+  newFull: {lo:1500, hi:3500, lbl:'New laundry room (supply + drain + vent)'},
+  convert: {lo:600,  hi:2000, lbl:'Convert existing space to laundry room'},
+  add:     {lo:300,  hi:1200, lbl:'Add to existing laundry room'},
+  replace: {lo:150,  hi:600,  lbl:'Replace connections / update existing hookup'},
+  second:  {lo:400,  hi:800,  lbl:'2nd floor premium (overflow pan required)'},
+  lanai:   {lo:300,  hi:900,  lbl:'Lanai / exterior installation premium'},
+  garage:  {lo:150,  hi:500,  lbl:'Garage installation premium'},
+  sink:    {lo:350,  hi:900,  lbl:'Utility / laundry sink'},
+  floorDrain:{lo:450,hi:1200, lbl:'Floor drain (saw-cut slab, drain, patch)'},
+  mopSink: {lo:400,  hi:900,  lbl:'Mop sink installation'},
+  secondW: {lo:400,  hi:900,  lbl:'Second washer hookup rough-in'},
+  washPan: {lo:150,  hi:400,  lbl:'Washing machine overflow pan + drain line'},
+  recirc:  {lo:600,  hi:2000, lbl:'Recirculating hot water pump system'},
+  lint:    {lo:600,  hi:1500, lbl:'Lint interceptor (commercial-grade)'},
+  outdoor: {lo:300,  hi:900,  lbl:'Outdoor wash station'},
+  hurricane:{lo:200, hi:500,  lbl:'Hurricane auto-shutoff valve'},
+  booster: {lo:800,  hi:1800, lbl:'Pressure booster pump'},
+  permit:  {lo:150,  hi:400,  lbl:'FL permit (residential, county fee included)'}
+};
+
+/* ============================================================
+   BUILD COST BREAKDOWN — output to DOM
+   ============================================================ */
+function buildCostBreakdown() {
+  const el = document.getElementById('costBreakdown');
+  const empty = document.getElementById('costEmpty');
+  if (!el || !empty) return;
+  const hasProject = ss.projectType;
+  const hasAddon = ss.sink||ss.floorDrain||ss.mopSink||ss.secondWasher||
+    ss.washPan||ss.recirc||ss.lint||ss.outdoor||ss.hurricane||ss.booster;
+  if (!hasProject && !hasAddon) {
+    el.style.display = 'none'; empty.style.display = 'block'; return;
+  }
+  empty.style.display = 'none'; el.style.display = 'block';
+  const lines = []; let tLo = 0, tHi = 0;
+  function add(key) {
+    const c = COSTS[key]; if (!c) return;
+    lines.push(c); tLo += c.lo; tHi += c.hi;
+  }
+  if (ss.projectType === 'new') add((ss.supply||ss.standpipe)?'newFull':'new');
+  else if (ss.projectType === 'convert') add('convert');
+  else if (ss.projectType === 'add') add('add');
+  else if (ss.projectType === 'replace') add('replace');
+  if (ss.location === 'second') add('second');
+  if (ss.location === 'lanai')  add('lanai');
+  if (ss.location === 'garage') add('garage');
+  if (ss.sink)          add('sink');
+  if (ss.floorDrain)    add('floorDrain');
+  if (ss.mopSink)       add('mopSink');
+  if (ss.secondWasher)  add('secondW');
+  if (ss.washPan)       add('washPan');
+  if (ss.recirc)        add('recirc');
+  if (ss.lint)          add('lint');
+  if (ss.outdoor)       add('outdoor');
+  if (ss.hurricane)     add('hurricane');
+  if (ss.booster)       add('booster');
+  if (lines.length)     add('permit');
+  const rows = lines.map(c =>
+    '<div class="crow"><span class="cn">'+esc(c.lbl)+'</span>'+
+    '<span class="cr">$'+c.lo.toLocaleString()+'–$'+c.hi.toLocaleString()+'</span></div>'
+  ).join('');
+  const total =
+    '<div class="ctot"><span class="ctl">📊 Total Estimate Range</span>'+
+    '<span class="ctv">$'+tLo.toLocaleString()+'–$'+tHi.toLocaleString()+'</span></div>';
+  const note =
+    '<p class="fs12 tc-muted mt8" style="line-height:1.5">Estimate reflects South Florida labor + materials. '+
+    'Final price depends on site conditions, access, and material selection. '+
+    'Includes permit coordination and final inspection.</p>';
+  el.innerHTML = rows + total + note;
+}
+
+/* ============================================================
+   EXPANDABLE CARDS
+   ============================================================ */
+function toggleExpand(id) {
+  const card = document.getElementById(id);
+  if (card) card.classList.toggle('open');
+}
+
+/* ============================================================
+   FORM SUBMIT
+   ============================================================ */
+function submitForm(e) {
+  e.preventDefault();
+  const name  = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const proj  = document.getElementById('f-project').value;
+  const city  = document.getElementById('f-city').value;
+  if (!name)  { alert('Please enter your name.'); return; }
+  if (!phone) { alert('Please enter your phone number.'); return; }
+  if (!proj)  { alert('Please select a project type.'); return; }
+  if (!city)  { alert('Please select your city / county.'); return; }
+  showToast('✅ We\'ll call you within 2 hours!');
+  document.getElementById('leadForm').reset();
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4500);
+}
+</script>
+</body>
+</html>

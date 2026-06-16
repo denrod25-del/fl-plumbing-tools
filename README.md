@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**97 interactive cost calculators** for Florida homeowners.
+**100 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -30,6 +30,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Faucet Fixture Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/faucet-fixture/fl_faucet_fixture.html)
 - [FL Fire Sprinkler Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fire-sprinkler/fl_fire_sprinkler.html)
 - [FL Fixture Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fixture-cost/fl_fixture_cost.html)
+- [FL Flood Zone Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/flood-zone-plumbing/fl_flood_zone_plumbing.html)
 - [FL Garbage Disposal Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/garbage-disposal/fl_garbage_disposal.html)
 - [FL Gas Line Installation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-installation/fl_gas_line_installation.html)
 - [FL Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line/fl_gas_line.html)
@@ -46,6 +47,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Inspector Prep Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/inspector-prep/fl_inspector_prep.html)
 - [FL Irrigation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/irrigation/fl_irrigation_guide.html)
 - [FL Kitchen Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/kitchen-cost/fl_kitchen_cost.html)
+- [FL Laundry Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/laundry-plumbing/fl_laundry_plumbing.html)
 - [FL Lead Pipe Risk Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/lead-pipe-risk/fl_lead_pipe_risk.html)
 - [FL Leak Detection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/leak-detection/fl_leak_detection.html)
 - [FL Main Water Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/main-water-line/fl_main_water_line.html)
@@ -102,6 +104,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Safety Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-safety/fl_water_safety.html)
 - [FL Water Softener Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-softener/fl_water_softener.html)
 - [FL Water Treatment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-treatment/fl_water_treatment.html)
+- [FL Well Water Treatment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-water-treatment/fl_well_water_treatment.html)
 - [FL Well Water Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-water/fl_well_water.html)
 - [FL Whole Home Repipe Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/whole-home-repipe/fl_whole_home_repipe.html)
 
