@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**100 interactive cost calculators** for Florida homeowners.
+**103 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -71,9 +71,12 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pool Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-leak/fl_pool_leak.html)
 - [FL Prv Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/prv-replacement/fl_prv_replacement.html)
 - [FL Radiant Floor Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/radiant-floor/fl_radiant_floor.html)
+- [FL Rainwater Harvesting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rainwater-harvesting/fl_rainwater_harvesting.html)
 - [FL Reclaimed Water Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/reclaimed-water/fl_reclaimed_water.html)
+- [FL Rental Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rental-plumbing/fl_rental_plumbing.html)
 - [FL Repipe Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repipe-cost/fl_repipe_cost.html)
 - [FL Repiping Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping/fl_repiping.html)
+- [FL Rough In Calculator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rough-in-calculator/fl_rough_in_calculator.html)
 - [FL Septic To Sewer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-to-sewer/fl_septic_to_sewer.html)
 - [FL Septic Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic/fl_septic.html)
 - [FL Sewage Ejector Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewage-ejector/fl_sewage_ejector.html)

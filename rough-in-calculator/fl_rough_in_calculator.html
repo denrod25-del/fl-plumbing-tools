@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Plumbing Rough-In Spec Calculator | (561) 555-PIPE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:480px;margin:0 auto;padding:0 0 60px}
+header{background:#0F1629;border-bottom:2px solid #00B4FF;padding:16px;text-align:center}
+header h1{font-size:1.1rem;color:#00B4FF;font-weight:700}
+header p{font-size:.8rem;color:#94A3B8;margin-top:4px}
+.emerg-bar{background:#F97316;color:#fff;text-align:center;padding:10px 16px;font-weight:700;font-size:.9rem}
+.emerg-bar a{color:#fff;text-decoration:none}
+.tabs{display:flex;background:#0F1629;border-bottom:1px solid #1e2a45;overflow-x:auto}
+.tab{flex:1;min-width:80px;padding:10px 6px;text-align:center;font-size:.72rem;font-weight:600;color:#94A3B8;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+.tab.active{color:#0A0E1A;background:#00B4FF;border-bottom-color:#00B4FF}
+.pane{display:none;padding:16px}
+.pane.active{display:block}
+h2{font-size:1rem;color:#00B4FF;margin-bottom:12px;font-weight:700}
+h3{font-size:.9rem;color:#F4B942;margin:14px 0 8px;font-weight:700}
+h4{font-size:.85rem;color:#E2E8F0;margin:10px 0 6px;font-weight:700}
+.card{background:#0F1629;border:1px solid #1e2a45;border-radius:8px;padding:14px;margin-bottom:12px}
+.card-dark{background:#141929;border:1px solid #1e2a45;border-radius:8px;padding:14px;margin-bottom:12px}
+.fixture-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.fix-btn{background:#141929;border:2px solid #1e2a45;border-radius:8px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;font-size:.78rem;font-weight:600;color:#94A3B8}
+.fix-btn:hover{border-color:#00B4FF;color:#00B4FF}
+.fix-btn.active{border-color:#00B4FF;background:#00B4FF22;color:#00B4FF}
+.fix-btn .icon{font-size:1.4rem;display:block;margin-bottom:4px}
+.spec-card{background:#0F1629;border:1px solid #1e2a45;border-radius:8px;padding:14px;margin-top:10px;display:none}
+.spec-card.active{display:block}
+.spec-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid #1e2a45;font-size:.82rem}
+.spec-row:last-child{border-bottom:none}
+.spec-label{color:#94A3B8;flex-shrink:0;width:48%}
+.spec-val{color:#E2E8F0;font-weight:600;text-align:right;width:50%}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:700;margin:2px}
+.badge-blue{background:#00B4FF22;color:#00B4FF;border:1px solid #00B4FF44}
+.badge-gold{background:#F4B94222;color:#F4B942;border:1px solid #F4B94244}
+.badge-green{background:#22C55E22;color:#22C55E;border:1px solid #22C55E44}
+.badge-orange{background:#F9731622;color:#F97316;border:1px solid #F9731644}
+.badge-red{background:#EF444422;color:#EF4444;border:1px solid #EF444444}
+.badge-teal{background:#14B8A622;color:#14B8A6;border:1px solid #14B8A644}
+.code-note{background:#00B4FF11;border-left:3px solid #00B4FF;padding:8px 10px;margin:8px 0;font-size:.78rem;color:#94A3B8;border-radius:0 4px 4px 0}
+.warn-note{background:#F9731611;border-left:3px solid #F97316;padding:8px 10px;margin:8px 0;font-size:.78rem;color:#94A3B8;border-radius:0 4px 4px 0}
+.btn{display:block;width:100%;padding:13px;background:#00B4FF;color:#0A0E1A;font-weight:700;font-size:.95rem;border:none;border-radius:8px;cursor:pointer;margin-top:6px;transition:opacity .2s}
+.btn:hover{opacity:.9}
+.btn-gold{background:#F4B942}
+.btn-sm{padding:8px 14px;font-size:.8rem;display:inline-block;width:auto;border-radius:6px;margin-top:8px}
+.btn-outline{background:transparent;border:2px solid #00B4FF;color:#00B4FF;margin-top:8px}
+.phase-btns{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.phase-btn{flex:1;min-width:80px;padding:9px 6px;border-radius:8px;border:2px solid #1e2a45;background:#141929;color:#94A3B8;font-weight:600;font-size:.75rem;cursor:pointer;text-align:center;transition:all .2s}
+.phase-btn.active{background:#00B4FF;color:#0A0E1A;border-color:#00B4FF}
+.checklist{display:none}
+.checklist.active{display:block}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #1e2a45;cursor:pointer}
+.check-item:last-child{border-bottom:none}
+.check-item input[type=checkbox]{accent-color:#22C55E;width:18px;height:18px;flex-shrink:0;margin-top:2px}
+.check-item label{font-size:.82rem;cursor:pointer;flex:1}
+.check-item.checked label{color:#22C55E;text-decoration:line-through;opacity:.7}
+.progress-bar{background:#1e2a45;border-radius:8px;height:10px;margin:10px 0;overflow:hidden}
+.progress-fill{background:#22C55E;height:100%;border-radius:8px;transition:width .3s}
+.progress-label{font-size:.78rem;color:#94A3B8;text-align:right;margin-bottom:4px}
+table{width:100%;border-collapse:collapse;font-size:.78rem;margin-bottom:14px}
+th{background:#1e2a45;color:#94A3B8;padding:8px 6px;text-align:left;font-weight:600}
+td{padding:7px 6px;border-bottom:1px solid #1e2a45;vertical-align:top}
+tr:nth-child(even) td{background:#141929}
+select,input,textarea{width:100%;background:#141929;border:1px solid #2a3a5c;border-radius:6px;color:#E2E8F0;padding:10px 12px;font-size:.9rem;margin-bottom:10px;font-family:inherit}
+select:focus,input:focus,textarea:focus{outline:none;border-color:#00B4FF}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:8px;font-weight:700;font-size:.9rem;z-index:999;display:none;max-width:90%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.trust-item{background:#141929;border:1px solid #1e2a45;border-radius:6px;padding:10px;text-align:center;font-size:.78rem}
+.trust-item .icon{font-size:1.3rem;margin-bottom:4px}
+.expandable{border:1px solid #1e2a45;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.exp-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#141929;cursor:pointer;font-weight:600;font-size:.85rem}
+.exp-head:hover{background:#1e2a45}
+.exp-icon{color:#00B4FF;font-size:1rem;transition:transform .2s}
+.exp-body{display:none;padding:12px 14px;font-size:.82rem;color:#94A3B8;background:#0F1629;line-height:1.7}
+.exp-body.open{display:block}
+.exp-icon.open{transform:rotate(180deg)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.stat{background:#141929;border:1px solid #1e2a45;border-radius:8px;padding:10px;text-align:center}
+.stat .num{font-size:1.3rem;font-weight:700;color:#00B4FF}
+.stat .lbl{font-size:.72rem;color:#94A3B8;margin-top:2px}
+.fail-item{display:flex;gap:8px;background:#EF444411;border-left:3px solid #EF4444;border-radius:0 6px 6px 0;padding:8px 10px;margin-bottom:6px;font-size:.8rem}
+.fail-num{color:#EF4444;font-weight:700;flex-shrink:0;min-width:18px}
+.section-divider{border:none;border-top:1px solid #1e2a45;margin:20px 0}
+.info-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:.82rem}
+.info-row .dot{color:#00B4FF;margin-top:2px;flex-shrink:0}
+.glossary-item{padding:10px 0;border-bottom:1px solid #1e2a45;font-size:.82rem}
+.glossary-term{color:#F4B942;font-weight:700}
+.copy-btn{background:#00B4FF22;border:1px solid #00B4FF44;color:#00B4FF;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.75rem;float:right;font-weight:600}
+.copy-btn:hover{background:#00B4FF33}
+p{margin-bottom:10px;font-size:.85rem;color:#94A3B8}
+li{font-size:.82rem;color:#94A3B8;margin-left:16px;margin-bottom:4px}
+ul{margin-bottom:10px}
+.faq-item{border-bottom:1px solid #1e2a45;padding:12px 0}
+.faq-q{font-weight:600;font-size:.85rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-a{font-size:.82rem;color:#94A3B8;padding-top:8px;display:none;line-height:1.6}
+.faq-a.open{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>📐 FL Plumbing Rough-In Calculator</h1>
+  <p>Tool #132 · Specs · Checklists · FL Code Reference · (561) 555-PIPE</p>
+</header>
+<div class="emerg-bar">⚡ Failed Inspection? Call Now: <a href="tel:5615557473">(561) 555-PIPE</a> — Same Day</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('t1',this)">Bath Specs</div>
+  <div class="tab" onclick="showTab('t2',this)">Kitchen</div>
+  <div class="tab" onclick="showTab('t3',this)">Inspection</div>
+  <div class="tab" onclick="showTab('t4',this)">Quote</div>
+</div>
+
+<!-- TAB 1: BATHROOM ROUGH-IN -->
+<div id="t1" class="pane active">
+  <h2>Bathroom Rough-In Specs</h2>
+  <p>Select a fixture to see FL code-compliant rough-in dimensions. All dimensions in inches unless noted.</p>
+
+  <div class="fixture-grid" id="bathGrid"></div>
+  <div id="bathSpec"></div>
+
+  <hr class="section-divider">
+  <h3>FL Code Clearance Summary</h3>
+  <table>
+    <thead><tr><th>Fixture</th><th>Side Clearance</th><th>Front Clearance</th><th>Between Fixtures</th></tr></thead>
+    <tbody>
+      <tr><td>Toilet</td><td>15" CL to wall (18" FL preferred)</td><td>21" min (24" FL preferred)</td><td>30" CL to CL</td></tr>
+      <tr><td>Lavatory</td><td>15" from any obstruction</td><td>21" min</td><td>30" CL to CL</td></tr>
+      <tr><td>Walk-In Shower</td><td>—</td><td>24" in front</td><td>N/A</td></tr>
+      <tr><td>Bathtub</td><td>—</td><td>24" one long side</td><td>N/A</td></tr>
+      <tr><td>Bidet</td><td>15" CL to wall</td><td>21" min</td><td>30" CL to CL</td></tr>
+      <tr><td>Urinal</td><td>15" CL to wall</td><td>21" min</td><td>30" CL to CL</td></tr>
+    </tbody>
+  </table>
+
+  <h3>FL Code Notes — Bathroom Plumbing</h3>
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">📋 FPC 2023 Table 405.3 — Clearances <span class="exp-icon">▼</span></div>
+    <div class="exp-body">Florida has adopted the International Plumbing Code (IPC) with FL amendments. Table 405.3 sets minimum clearances for plumbing fixtures. FL additionally requires 18" from toilet centerline to side wall in all NEW construction (15" is code minimum, 18" is FL standard of practice). Front clearance of 24" is strongly recommended by FL Building Officials.<br><br>Any residential bathroom remodel pulling a permit in FL must meet current clearance standards if any fixture is being relocated. Like-for-like replacement of the same fixture in the same location does not require clearance upgrades.</div>
+  </div>
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">🔧 FL Shower Pan Requirements <span class="exp-icon">▼</span></div>
+    <div class="exp-body">All showers in FL require either: (1) a pre-fab shower receptor (fiberglass/acrylic); or (2) a tile-ready foam shower base; or (3) a traditional lead or PVC shower pan liner with mortar bed.<br><br>Liner requirements (if tiled): PVC shower liner min 40 mil (0.040"), run up walls 3" above curb height. Liner must be flood-tested (fill with water 2" above threshold) for 24 hours before inspection.<br><br>Shower drain minimum: 2" IPS for residential showers. Tile-ready pans must slope 1/4" per foot to drain. FL inspectors commonly fail showers with insufficient slope — verify with a 4' level during installation.</div>
+  </div>
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">🏠 Slab-on-Grade Rough-In (FL Specific) <span class="exp-icon">▼</span></div>
+    <div class="exp-body">Most FL homes are slab-on-grade construction. All DWV rough-in is done BEFORE the slab is poured, making accuracy critical. Common FL slab rough-in issues:<br><br>1. All pipe penetrations through slab must be sleeved (Schedule 40 PVC sleeve 2 sizes larger than carrier pipe).<br>2. Toilet flange must be at or above finished floor level — FL inspectors commonly fail flanges that are below tile level.<br>3. All slab penetration locations must match blueprint exactly — no post-pour relocations without expensive saw-cutting.<br>4. Underground PVC must be Schedule 40 minimum — Schedule 20 (thin wall) is NOT permitted under slab in FL.<br>5. All underground copper must be sleeved in PVC — bare copper underground is prohibited in FL high-soil-corrosion areas.</div>
+  </div>
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">🌡️ Water Heater Rough-In in FL <span class="exp-icon">▼</span></div>
+    <div class="exp-body">FL-specific water heater requirements:<br><br>1. Overflow pan: REQUIRED under ALL water heaters in FL, regardless of location. Pan drain must extend to exterior or safe termination (not over finished ceiling).<br>2. Expansion tank: Required on all water heaters where a backflow preventer or pressure reducing valve is on the main supply.<br>3. T&P valve drain line: must be same diameter as T&P valve outlet (usually 3/4"), must terminate 6"–18" above floor drain or outside, must NOT use PVC within 18" of valve outlet (must be copper, CPVC, or corrugated SS).<br>4. Gas water heaters in FL: Earthquake straps required in coastal counties. All gas connections must be union fittings for service access.<br>5. Electric water heaters: 240V, 30-amp dedicated circuit minimum. Wire into disconnect switch within 3 feet of WH in FL (required by FL amendment).</div>
+  </div>
+</div>
+
+<!-- TAB 2: KITCHEN & UTILITY -->
+<div id="t2" class="pane">
+  <h2>Kitchen &amp; Utility Rough-In</h2>
+  <p>Select a fixture to see FL code-compliant rough-in dimensions.</p>
+
+  <div class="fixture-grid" id="kitGrid"></div>
+  <div id="kitSpec"></div>
+
+  <hr class="section-divider">
+  <h3>FL-Specific Kitchen &amp; Utility Code Notes</h3>
+
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">💧 Washing Machine Overflow Pan — FL Required <span class="exp-icon">▼</span></div>
+    <div class="exp-body">Florida Building Code requires a washing machine overflow pan with drain in ALL installations where the washing machine is located over a finished living space, whether the same floor or a floor above finished rooms. The pan must be 24" × 24" minimum (or sized to contain the washer footprint) with a minimum 1" depth and a 3/4" drain to exterior or approved drain location. This is one of the most commonly missed items in FL construction.</div>
+  </div>
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">🍽️ Dishwasher High-Loop / Air Gap — FL Rules <span class="exp-icon">▼</span></div>
+    <div class="exp-body">FL requires either a high-loop (drain line looped up to underside of counter before connecting to disposal or drain) or an air gap fitting mounted on the sink deck. Air gaps are required where local codes or health departments specify (common in FL coastal counties). High-loop is acceptable per base FL code but air gaps are strongly recommended by FL health departments in areas with potential backflow risks. The dishwasher drain connection must be above the trap arm of the sink drain — never below the water level in the trap.</div>
+  </div>
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">🧊 Ice Maker Line Requirements in FL <span class="exp-icon">▼</span></div>
+    <div class="exp-body">FL has updated requirements for ice maker connections. Old-style saddle valves (self-piercing saddle taps on copper pipe) are now generally prohibited in FL for new construction and permitted remodels. Current FL standard requires: (1) a tee fitting with a proper 1/4" ball valve or angle stop; (2) 1/4" OD copper, CPVC, or PEX tubing to refrigerator location; (3) compression fitting at refrigerator (not a saddle valve). Maximum run length: 25 feet from shutoff to refrigerator location without re-sizing.</div>
+  </div>
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">♨️ Pot Filler FL Code Requirements <span class="exp-icon">▼</span></div>
+    <div class="exp-body">Pot fillers in FL must have: (1) an integral shutoff at the wall connection — not just the articulating arm valves; (2) anti-siphon protection (either by elevation above flood rim or integral check valve); (3) 1/2" supply line minimum; (4) rough-in height typically 78" AFF (may vary by range height + hood clearance). Pot fillers require a separate permit in most FL counties as they add a new fixture to the supply system. Some FL water authorities also require a backflow preventer at the connection if adding to an existing system with a backflow preventer on the main.</div>
+  </div>
+  <div class="expandable">
+    <div class="exp-head" onclick="toggleExp(this)">🔄 FL AAV Rules for Kitchen/Utility Venting <span class="exp-icon">▼</span></div>
+    <div class="exp-body">Air Admittance Valves (AAVs, sometimes called Studor vents) are permitted in FL for limited use only. FL allows AAVs for: island sink venting where running a vent through the floor is impractical; under-cabinet fixture venting in remodels; utility sink additions. FL does NOT allow AAVs for: main stack venting; toilets (toilet vents must always connect to true vent or stack vent); any application where the AAV would serve as the ONLY vent for an entire branch. AAVs must be accessible (not permanently enclosed in walls) and must be installed per manufacturer specs (minimum 4" above trap arm).</div>
+  </div>
+
+  <h3>FL Material Approvals — Supply &amp; DWV</h3>
+  <table>
+    <thead><tr><th>Material</th><th>Supply</th><th>DWV</th><th>Underground</th><th>FL Note</th></tr></thead>
+    <tbody>
+      <tr><td>Type L Copper</td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-gold">With sleeve</span></td><td>Standard for FL supply</td></tr>
+      <tr><td>Type M Copper</td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-red">Not recommended</span></td><td>Thin wall, FL soils</td></tr>
+      <tr><td>PEX-A</td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-red">Not for DWV</span></td><td><span class="badge badge-gold">With sleeve</span></td><td>Most popular in new FL construction</td></tr>
+      <tr><td>PEX-B / PEX-C</td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-red">Not for DWV</span></td><td><span class="badge badge-gold">With sleeve</span></td><td>FL approved, Zurn/Uponor fittings</td></tr>
+      <tr><td>CPVC</td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-green">✓ Approved</span></td><td>Common in FL commercial</td></tr>
+      <tr><td>PVC Sch 40 (DWV)</td><td><span class="badge badge-red">Not for supply</span></td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-green">✓ Approved</span></td><td>FL standard DWV material</td></tr>
+      <tr><td>ABS</td><td><span class="badge badge-red">Not for supply</span></td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-green">✓ Approved</span></td><td>Less common in FL</td></tr>
+      <tr><td>Cast Iron</td><td><span class="badge badge-red">Not for supply</span></td><td><span class="badge badge-green">✓ Approved</span></td><td><span class="badge badge-green">✓ Approved</span></td><td>Preferred for stacks in FL (noise)</td></tr>
+      <tr><td>Polybutylene (PB)</td><td><span class="badge badge-red">PROHIBITED</span></td><td><span class="badge badge-red">PROHIBITED</span></td><td><span class="badge badge-red">PROHIBITED</span></td><td>Class action recall — never use</td></tr>
+      <tr><td>Galvanized Steel</td><td><span class="badge badge-orange">Replacement only</span></td><td><span class="badge badge-orange">Replacement only</span></td><td><span class="badge badge-red">Not recommended</span></td><td>Cannot use in new FL construction</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- TAB 3: INSPECTION CHECKLIST -->
+<div id="t3" class="pane">
+  <h2>FL Inspection Checklist</h2>
+
+  <div class="stat-grid">
+    <div class="stat"><div class="num" id="totalChecked">0</div><div class="lbl">Items Complete</div></div>
+    <div class="stat"><div class="num" id="totalItems">0</div><div class="lbl">Total Items</div></div>
+  </div>
+  <div class="progress-label" id="progressLabel">0% Complete</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="phase-btns">
+    <div class="phase-btn active" onclick="setPhase('prerough',this)">Pre-Rough-In</div>
+    <div class="phase-btn" onclick="setPhase('roughin',this)">Rough-In</div>
+    <div class="phase-btn" onclick="setPhase('cover',this)">Cover</div>
+    <div class="phase-btn" onclick="setPhase('final',this)">Final</div>
+  </div>
+
+  <div id="cl_prerough" class="checklist active"></div>
+  <div id="cl_roughin" class="checklist"></div>
+  <div id="cl_cover" class="checklist"></div>
+  <div id="cl_final" class="checklist"></div>
+
+  <hr class="section-divider">
+  <h3>⚠️ 15 Most Common FL Inspection Failures</h3>
+
+  <div id="failsList"></div>
+
+  <hr class="section-divider">
+  <h3>DFU (Drain Fixture Unit) Reference</h3>
+  <p>Use DFU values to size drain pipes. Required by FL Plumbing Code Table 709.1.</p>
+  <table>
+    <thead><tr><th>Fixture</th><th>Private (DFU)</th><th>Public (DFU)</th><th>Trap Size</th></tr></thead>
+    <tbody>
+      <tr><td>Toilet</td><td>4</td><td>6</td><td>Floor flange</td></tr>
+      <tr><td>Bathtub</td><td>2</td><td>2</td><td>1-1/2"</td></tr>
+      <tr><td>Shower</td><td>2</td><td>2</td><td>2"</td></tr>
+      <tr><td>Lavatory (sink)</td><td>1</td><td>2</td><td>1-1/4" or 1-1/2"</td></tr>
+      <tr><td>Kitchen Sink</td><td>2</td><td>4</td><td>1-1/2"</td></tr>
+      <tr><td>Dishwasher</td><td>2</td><td>2</td><td>Connects to K sink</td></tr>
+      <tr><td>Garbage Disposal</td><td>+2</td><td>+2</td><td>Add to K sink</td></tr>
+      <tr><td>Clothes Washer</td><td>3</td><td>3</td><td>2" standpipe</td></tr>
+      <tr><td>Floor Drain</td><td>2</td><td>2</td><td>2"</td></tr>
+      <tr><td>Laundry Tub</td><td>2</td><td>2</td><td>1-1/2"</td></tr>
+      <tr><td>Bidet</td><td>2</td><td>2</td><td>1-1/2"</td></tr>
+      <tr><td>Urinal</td><td>4</td><td>4</td><td>2"</td></tr>
+      <tr><td>Mop Sink</td><td>3</td><td>3</td><td>2"</td></tr>
+      <tr><td>Drinking Fountain</td><td>1</td><td>1</td><td>1-1/4"</td></tr>
+      <tr><td>Food Service Sink</td><td>2</td><td>2</td><td>1-1/2"</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Minimum Drain Pipe Size by DFU Load</h3>
+  <table>
+    <thead><tr><th>Pipe Size</th><th>Max DFU (Horizontal)</th><th>Max DFU (Vertical)</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>1-1/4"</td><td>1</td><td>2</td><td>Lavatory only</td></tr>
+      <tr><td>1-1/2"</td><td>3</td><td>4</td><td>No toilet</td></tr>
+      <tr><td>2"</td><td>6</td><td>10</td><td>No toilet on 2" horizontal</td></tr>
+      <tr><td>3"</td><td>20</td><td>48</td><td>No toilet on 3" horizontal</td></tr>
+      <tr><td>4"</td><td>160</td><td>240</td><td>Max for residential stack</td></tr>
+      <tr><td>5"</td><td>360</td><td>540</td><td>Commercial</td></tr>
+      <tr><td>6"</td><td>620</td><td>960</td><td>Commercial</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Venting Guide — What FL Allows</h3>
+  <table>
+    <thead><tr><th>Vent Type</th><th>FL Allowed?</th><th>Use Case</th></tr></thead>
+    <tbody>
+      <tr><td>Individual Vent</td><td><span class="badge badge-green">Yes — Preferred</span></td><td>One fixture, direct to stack or roof</td></tr>
+      <tr><td>Common Vent</td><td><span class="badge badge-green">Yes</span></td><td>Two fixtures on same horizontal branch</td></tr>
+      <tr><td>Wet Vent</td><td><span class="badge badge-green">Yes — limited</span></td><td>Bath group fixtures, sized up</td></tr>
+      <tr><td>Circuit Vent</td><td><span class="badge badge-green">Yes</span></td><td>Battery of fixtures, commercial</td></tr>
+      <tr><td>Stack Vent</td><td><span class="badge badge-green">Yes</span></td><td>Top of soil stack extended through roof</td></tr>
+      <tr><td>AAV (Air Admittance Valve)</td><td><span class="badge badge-gold">Limited use</span></td><td>Islands, remodels — cannot serve main stack or toilet</td></tr>
+      <tr><td>Cheater Vent (auto vent)</td><td><span class="badge badge-red">Not allowed</span></td><td>Old style spring-loaded — not FL code</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Water Supply Sizing Guide (FL Residential)</h3>
+  <table>
+    <thead><tr><th>Supply Size</th><th>Max Fixtures</th><th>Max Length</th><th>Pressure Drop/100ft</th></tr></thead>
+    <tbody>
+      <tr><td>1/2" copper</td><td>1–3 fixtures</td><td>30 ft from manifold</td><td>~10 PSI</td></tr>
+      <tr><td>3/4" copper</td><td>4–8 fixtures</td><td>60 ft from main</td><td>~4 PSI</td></tr>
+      <tr><td>1" copper</td><td>9–15 fixtures</td><td>100 ft from main</td><td>~2 PSI</td></tr>
+      <tr><td>1/2" PEX</td><td>1–2 fixtures</td><td>25 ft from manifold</td><td>~12 PSI</td></tr>
+      <tr><td>3/4" PEX</td><td>3–6 fixtures</td><td>50 ft from manifold</td><td>~5 PSI</td></tr>
+      <tr><td>1" PEX</td><td>7–12 fixtures</td><td>80 ft from main</td><td>~3 PSI</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Plumbing Glossary</h3>
+  <div id="glossaryList"></div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="t4" class="pane">
+  <h2>Get a Rough-In Quote</h2>
+
+  <div class="card">
+    <h3 style="margin-top:0">Request Free Estimate</h3>
+    <input type="text" id="f_name" placeholder="Full Name *">
+    <input type="tel" id="f_phone" placeholder="Phone * — We'll call within 2 hours">
+    <input type="email" id="f_email" placeholder="Email Address">
+    <select id="f_county">
+      <option value="">FL County *</option>
+      <option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option>
+      <option>Brevard</option><option>Broward</option><option>Calhoun</option><option>Charlotte</option>
+      <option>Citrus</option><option>Clay</option><option>Collier</option><option>Columbia</option>
+      <option>DeSoto</option><option>Dixie</option><option>Duval</option><option>Escambia</option>
+      <option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option>
+      <option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option>
+      <option>Hendry</option><option>Hernando</option><option>Highlands</option><option>Hillsborough</option>
+      <option>Holmes</option><option>Indian River</option><option>Jackson</option><option>Jefferson</option>
+      <option>Lafayette</option><option>Lake</option><option>Lee</option><option>Leon</option>
+      <option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option>
+      <option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option>
+      <option>Nassau</option><option>Okaloosa</option><option>Okeechobee</option><option>Orange</option>
+      <option>Osceola</option><option>Palm Beach</option><option>Pasco</option><option>Pinellas</option>
+      <option>Polk</option><option>Putnam</option><option>St. Johns</option><option>St. Lucie</option>
+      <option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>Sumter</option>
+      <option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option>
+      <option>Wakulla</option><option>Walton</option><option>Washington</option>
+    </select>
+    <select id="f_projtype">
+      <option value="">Project Type *</option>
+      <option>New Construction</option>
+      <option>Remodel / Addition</option>
+      <option>ADU / Guest House</option>
+      <option>Commercial TI</option>
+      <option>Failed Inspection Fix</option>
+    </select>
+    <select id="f_stage">
+      <option value="">Project Stage *</option>
+      <option>Planning / Pre-Permit</option>
+      <option>Permit Applied</option>
+      <option>Permit Approved — Ready to Start</option>
+      <option>Rough-In Started</option>
+      <option>Ready for Cover Inspection</option>
+      <option>Failed Inspection — Need Fix</option>
+    </select>
+    <select id="f_fixtures">
+      <option value="">Approximate Fixture Count</option>
+      <option>1–3 fixtures</option>
+      <option>4–6 fixtures (1 bath)</option>
+      <option>7–10 fixtures (2 baths)</option>
+      <option>11–15 fixtures (3 baths)</option>
+      <option>16+ fixtures (whole house)</option>
+    </select>
+    <select id="f_concern">
+      <option value="">Primary Concern</option>
+      <option>Layout / Rough-In Placement Questions</option>
+      <option>Failed Plumbing Inspection</option>
+      <option>FL Code Compliance Questions</option>
+      <option>Getting a Rough-In Price</option>
+      <option>Slab Penetration Layout</option>
+    </select>
+    <textarea id="f_notes" rows="3" placeholder="Describe your project or questions..."></textarea>
+    <button class="btn btn-gold" onclick="submitForm()">📞 Get Free Quote — Call in 2 Hours</button>
+  </div>
+
+  <div class="trust-grid">
+    <div class="trust-item"><div class="icon">🔐</div>FL CFC Licensed</div>
+    <div class="trust-item"><div class="icon">📋</div>Permit Specialists</div>
+    <div class="trust-item"><div class="icon">✅</div>Inspection-Ready</div>
+    <div class="trust-item"><div class="icon">⚡</div>Same-Day Estimates</div>
+    <div class="trust-item"><div class="icon">📐</div>DFU Sizing Included</div>
+    <div class="trust-item"><div class="icon">📸</div>Photo Documentation</div>
+  </div>
+
+  <hr class="section-divider">
+  <h3>🔧 Common Rough-In Mistakes We Fix</h3>
+  <div class="info-row"><span class="dot">1</span><span>Toilet drain too far from wall (wrong rough-in distance for toilet purchased)</span></div>
+  <div class="info-row"><span class="dot">2</span><span>Missing expansion tank with PRV or backflow preventer on main</span></div>
+  <div class="info-row"><span class="dot">3</span><span>Shower drain too shallow — liner can't seal properly, fails flood test</span></div>
+  <div class="info-row"><span class="dot">4</span><span>Vent pipe too small for toilet (FL requires 2" minimum toilet vent)</span></div>
+  <div class="info-row"><span class="dot">5</span><span>Horizontal drain run with wrong slope — too flat (backup risk) or too steep (solids strand)</span></div>
+  <div class="info-row"><span class="dot">6</span><span>Water heater T&amp;P valve discharge line wrong — too long, too small, or wrong material</span></div>
+  <div class="info-row"><span class="dot">7</span><span>Washing machine standpipe wrong height — must be 18"–48" AFF in FL</span></div>
+  <div class="info-row"><span class="dot">8</span><span>Underground copper pipe not sleeved through slab penetration</span></div>
+
+  <hr class="section-divider">
+  <h3>FL Rough-In Pricing Reference (2025)</h3>
+  <table>
+    <thead><tr><th>Scope</th><th>Price Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Toilet rough-in</td><td>$150–$300</td><td>Per toilet, includes flange</td></tr>
+      <tr><td>Sink rough-in (bath)</td><td>$100–$200</td><td>Supply + drain stub-outs</td></tr>
+      <tr><td>Walk-in shower rough-in</td><td>$250–$500</td><td>Includes pan liner if tiled</td></tr>
+      <tr><td>Tub/shower combo rough-in</td><td>$200–$400</td><td>Access panel required</td></tr>
+      <tr><td>Kitchen sink rough-in</td><td>$150–$300</td><td>Includes DW branch</td></tr>
+      <tr><td>Dishwasher rough-in</td><td>$100–$200</td><td>Supply + air gap</td></tr>
+      <tr><td>Water heater rough-in</td><td>$200–$400</td><td>Includes pan + expansion tank</td></tr>
+      <tr><td>Washing machine rough-in</td><td>$150–$300</td><td>Includes overflow pan</td></tr>
+      <tr><td>Full bathroom (3 fixtures)</td><td>$600–$1,200</td><td>Toilet + sink + shower</td></tr>
+      <tr><td>Full kitchen</td><td>$450–$900</td><td>Sink + DW + disposal</td></tr>
+      <tr><td>Whole-house new construction</td><td>$3,500–$8,000</td><td>Includes permit coordination</td></tr>
+      <tr><td>Failed inspection fix</td><td>$250–$1,000</td><td>Depends on scope of failure</td></tr>
+    </tbody>
+  </table>
+
+  <hr class="section-divider">
+  <h3>FAQ — Rough-In &amp; Inspections</h3>
+  <div id="t4FaqList"></div>
+</div>
+</div><!-- /wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// ===== BATHROOM FIXTURE DATA =====
+const BATH_FIXTURES = [
+  {id:'toilet',icon:'🚽',label:'Toilet',specs:[
+    ['Drain Rough-In','12" from finished wall (standard)'],
+    ['Alternate Rough-Ins','10" or 14" also available'],
+    ['Drain AFF (slab)','Floor level (in-slab) or 6" AFF above slab'],
+    ['Cold Supply Height','6" AFF'],
+    ['Cold Supply Offset','6" to left of drain CL'],
+    ['Side Clearance (FL)','15" CL to wall min; 18" FL preferred'],
+    ['Front Clearance (FL)','21" min; 24" FL preferred'],
+    ['Between Toilets','30" CL to CL minimum'],
+    ['Vent Size (FL)','2" minimum — FL code amendment'],
+    ['Supply Size','1/2" min (3/8" to shutoff valve)'],
+  ],
+  notes:'FL requires 2" vent for all toilets regardless of IPC table. Slab rough-in: verify 12" measurement from face of finished tile, not subfloor. Flange must be at or above finished floor level.',
+  warn:'Most common FL failure: flange set at rough floor level, but after tile installation it is below floor level. Always set flange 1/4" above rough floor in FL tile installations.'},
+  {id:'ped_sink',icon:'🚰',label:'Pedestal Sink',specs:[
+    ['Drain Height','18–20" AFF'],
+    ['Drain Location','Centered on sink'],
+    ['Hot Supply Height','21" AFF'],
+    ['Hot Supply Offset','4" LEFT of drain CL'],
+    ['Cold Supply Height','21" AFF'],
+    ['Cold Supply Offset','4" RIGHT of drain CL'],
+    ['Mounting Height','31–36" AFF to rim'],
+    ['Trap Size','1-1/4" or 1-1/2"'],
+    ['Side Clearance','15" from CL to any obstruction'],
+    ['Front Clearance','21" minimum'],
+  ],
+  notes:'Pedestal sinks attach to wall with lag bolts into studs. Locate studs before rough-in; install blocking between studs at mounting height. Supply stop valves at 21" AFF standard.',
+  warn:''},
+  {id:'vanity',icon:'🪞',label:'Vanity Sink',specs:[
+    ['Drain Height','18–20" AFF'],
+    ['Drain Location','Centered on sink opening'],
+    ['Hot Supply Height','21" AFF'],
+    ['Hot Supply Offset','4" LEFT of drain CL'],
+    ['Cold Supply Height','21" AFF'],
+    ['Cold Supply Offset','4" RIGHT of drain CL'],
+    ['Counter Height','32–36" AFF (standard)'],
+    ['Vanity Widths','24", 30", 36", 42", 48", 60", 72"'],
+    ['Trap Size','1-1/2"'],
+    ['Vent','1-1/4" minimum, wet vent or individual'],
+  ],
+  notes:'Verify vanity size before rough-in. Supply offset (4") assumes standard 8" widespread faucet. For single-hole or centerset faucets, supplies may be 0"–2" offset from drain CL. Double vanity: drain each bowl separately or use shared trap arm (code allows for integral top).',
+  warn:''},
+  {id:'shower',icon:'🚿',label:'Walk-In Shower',specs:[
+    ['Drain Location','Centered in shower floor'],
+    ['Drain Size','2" IPS minimum (FL)'],
+    ['Pan Slope','1/4" per foot to drain all directions'],
+    ['Supply Valve Height','48" AFF (center of valve body)'],
+    ['Showerhead Height','72–80" AFF'],
+    ['Min Shower Size (FL)','36" × 36" (60" × 36" recommended)'],
+    ['Valve Type','Pressure-balancing or thermostatic (FL req.)'],
+    ['Supply Size','1/2" to valve'],
+    ['Vent','2" preferred'],
+    ['Flood Test','Fill 2" above threshold, hold 24 hrs'],
+  ],
+  notes:'FL requires pressure-balancing or thermostatic valves in all showers (anti-scald). Access panel required if valve will be concealed. Shower liner (if tiled): PVC min 40 mil, run 3" above curb.',
+  warn:'Shower pans are the #1 FL inspection failure in bathroom rough-in. Flood test required before cover inspection.'},
+  {id:'tub',icon:'🛁',label:'Tub/Shower Combo',specs:[
+    ['Drain Location','15" from back wall (standard 60" tub)'],
+    ['Drain Offset','30" from side wall (for 60" tub)'],
+    ['Overflow Height','17–18" AFF'],
+    ['Faucet (valve) Height','28" AFF (standard)'],
+    ['Showerhead Height','72" AFF'],
+    ['Tub Spout Height','4" AFF'],
+    ['Supply Size','1/2" to valve'],
+    ['Trap Size','1-1/2"'],
+    ['Access Panel (FL)','12" × 12" minimum required'],
+    ['Vent','1-1/2" minimum'],
+  ],
+  notes:'FL requires an access panel for all tub/shower combination units where the valve body is concealed in a wall. Access panel must be in an adjacent room or closet. Standard alcove tub: 60" × 30" or 60" × 32". Drain on left or right — verify before rough-in.',
+  warn:'Access panel missing is a very common FL inspection failure. If tub is against exterior wall, access panel may require water intrusion barrier.'},
+  {id:'fstub',icon:'🛁',label:'Freestanding Tub',specs:[
+    ['Drain Location','Floor drain, centered under tub'],
+    ['Drain Type','Freestanding pop-up waste & overflow kit'],
+    ['Floor Supply Option','Floor supply: 6–8" AFF centered'],
+    ['Wall Supply Option','Wall supply: 24–30" AFF (if wall-mount faucet)'],
+    ['Faucet (floor mount)','Floor-mount: 24–28" from floor to spout'],
+    ['Faucet (wall mount)','Wall valve: 24–30" AFF'],
+    ['Hot/Cold Offset','6–8" each side of drain CL'],
+    ['Supply Size','1/2" each (some freestanding require 3/4")'],
+    ['Trap Size','1-1/2" P-trap below floor'],
+    ['Vent','1-1/2" min'],
+  ],
+  notes:'Freestanding tubs are increasingly popular in FL. Critical: the P-trap is below the subfloor. In slab construction, the trap is in the slab. Verify faucet type (floor vs. wall) before rough-in — you cannot change after slab is poured. Some freestanding tubs have integrated waste kits that are metric — verify before buying supply fittings.',
+  warn:''},
+  {id:'bidet',icon:'🚿',label:'Bidet',specs:[
+    ['Drain Rough-In','15" from finished wall (similar to toilet)'],
+    ['Drain AFF','6" AFF or floor level'],
+    ['Cold Supply Height','6" AFF'],
+    ['Hot Supply Height','6" AFF'],
+    ['Supply Offset','6" each side of drain CL'],
+    ['Clearance — Side','15" CL to any obstruction (18" FL preferred)'],
+    ['Clearance — Front','21" min (24" FL preferred)'],
+    ['Between Bidet & Toilet','30" CL to CL minimum'],
+    ['Vent','1-1/4" minimum'],
+    ['Supply Size','3/8" to fixture stop valves'],
+  ],
+  notes:'Bidets are rare in FL residential but increasingly common in luxury construction. Bidet requires BOTH hot and cold supply (unlike toilet). Rough-in similar to toilet — 15" from wall is standard but 18" FL preferred. Some electronic bidets require 120V GFCI outlet within 3 feet (not plumber\'s work but coordinate rough-in height).',
+  warn:''},
+  {id:'urinal',icon:'🚹',label:'Urinal',specs:[
+    ['Drain Rough-In','12" from finished back wall'],
+    ['Drain Height','24–28" AFF (varies by style)'],
+    ['Cold Supply Height','Variable — see fixture spec'],
+    ['Wall-Hung Height','17–22" AFF to rim (standard)'],
+    ['Clearance — Side','15" CL to wall (18" FL preferred)'],
+    ['Clearance — Front','21" min'],
+    ['Between Urinals','30" CL to CL min; 18" partition recommended'],
+    ['Trap','Integral or external P-trap'],
+    ['Vent','2" preferred'],
+    ['Supply','3/4" flush valve supply (manual or sensor)'],
+  ],
+  notes:'Urinals are primarily commercial fixtures in FL. All urinals in FL must have an integral strainer. Waterless urinals are code-compliant in FL commercial construction. Flush valve: either diaphragm (Sloan/Zurn) or sensor-operated. If sensor: coordinate 120V or battery location with electrician.',
+  warn:''}
+];
+
+// ===== KITCHEN FIXTURE DATA =====
+const KIT_FIXTURES = [
+  {id:'k_single',icon:'🍳',label:'Single Kitchen Sink',specs:[
+    ['Drain Height','18–20" AFF'],
+    ['Drain Location','Centered under sink opening'],
+    ['Hot Supply Height','21" AFF'],
+    ['Hot Supply Offset','3" LEFT of drain CL'],
+    ['Cold Supply Height','21" AFF'],
+    ['Cold Supply Offset','3" RIGHT of drain CL'],
+    ['Trap Size','1-1/2"'],
+    ['Vent','1-1/2" minimum (2" preferred)'],
+    ['Supply Size','1/2" (3/8" to stop valves)'],
+    ['DWV DFU','2 units (+ 2 if disposal)'],
+  ],
+  notes:'Standard FL kitchen sink rough-in. Supply offsets of 3" assume standard 8" spread faucet. Single-handle or 4" centerset: supplies can be 0"–2" offset. Garbage disposal branch: add on same trap arm, downstream of sink trap.',
+  warn:''},
+  {id:'k_double',icon:'🍽️',label:'Double Kitchen Sink',specs:[
+    ['Drain Height','18–20" AFF'],
+    ['Main Drain Location','8–10" from center of one bowl'],
+    ['Shared Drain','1-1/2" trap with cross-tee to second bowl'],
+    ['Hot Supply','21" AFF, 3" LEFT of one bowl CL'],
+    ['Cold Supply','21" AFF, 3" RIGHT of same bowl CL'],
+    ['Trap Size','1-1/2" (2" for disposal + double bowl)'],
+    ['Vent','2" preferred for double bowl with disposal'],
+    ['Supply Size','1/2" (3/8" to stops)'],
+    ['DWV DFU','4 units (+ 2 disposal)'],
+    ['Width Allowance','60"–72" cabinet standard'],
+  ],
+  notes:'Double bowl sinks share one trap arm. Position drain offset to line up with the shared drain basket location for the specific sink model. Measure the cabinet opening and sink reveal before roughing in drain location.',
+  warn:''},
+  {id:'dw',icon:'🫧',label:'Dishwasher',specs:[
+    ['Drain','No separate rough-in — connects to sink drain'],
+    ['Drain Connection','High-loop or air gap to sink drain/disposal'],
+    ['Supply (cold only)','1/2" supply behind DW or under sink, 24" AFF'],
+    ['Supply Type','Dedicated cold supply with shutoff valve'],
+    ['Supply Size','1/2" line, 3/8" flex to DW'],
+    ['Air Gap (if required)','Mount in sink deck or counter cutout'],
+    ['Electrical (not plumber)','120V, 20A dedicated (coordinate with electrician)'],
+    ['DW Opening','24" wide × 24" deep (standard)'],
+    ['Drain Hose','High-loop: under counter, above trap arm level'],
+    ['DWV DFU','2 units (no additional floor penetration needed)'],
+  ],
+  notes:'No dedicated floor penetration needed for dishwasher in FL. Connect drain to disposal inlet or sink tailpiece via high-loop. FL health departments in many counties require air gap fitting instead of high-loop — check local health department rules.',
+  warn:''},
+  {id:'ice',icon:'🧊',label:'Ice Maker',specs:[
+    ['Supply Type','Cold only — 1/4" OD copper or 3/8" PEX'],
+    ['Supply Height','40" AFF behind refrigerator space'],
+    ['Supply Valve (FL)','Proper ball valve or angle stop — no saddle valves'],
+    ['Supply Stub-Out','1/4" male compression fitting'],
+    ['Connection from Main','Tee off 1/2" cold supply with proper fitting'],
+    ['Max Line Length','25 feet from shutoff to refrigerator (standard)'],
+    ['DWV','Not required for ice maker'],
+    ['Supply Line Material','1/4" OD copper, CPVC, or PEX rated tubing'],
+    ['Shutoff Valve','Within 6 feet of refrigerator location, accessible'],
+    ['DWV DFU','0 (no drain connection)'],
+  ],
+  notes:'FL prohibited saddle valves (self-piercing) in new construction and permitted remodels. Must use tee fitting with proper valve. Some FL inspectors require shutoff valve to be visible and accessible — do not enclose behind refrigerator without an access panel.',
+  warn:'Saddle valves are the most common FL code violation on ice maker rough-ins. Always use a proper tee and ball valve.'},
+  {id:'inshothot',icon:'♨️',label:'Instant Hot',specs:[
+    ['Supply Type','Cold only (dedicated)'],
+    ['Supply Height','Under sink — typically 18"–21" AFF'],
+    ['Supply Size','1/2" to under-sink tank, 3/8" flex to tap'],
+    ['Tank Location','Under-sink cabinet'],
+    ['Outlet Temp','190–210°F — tempering valve required in FL if on domestic line'],
+    ['Drain','Small overflow line — 1/4" into sink drain or P-trap'],
+    ['Electrical (not plumber)','120V, 15A dedicated circuit near tank'],
+    ['DWV DFU','0 (negligible — overflow only)'],
+    ['Water Volume','0.5–1 quart tank typical'],
+    ['Tempering Valve','Required in FL for any outlet above 120°F (FPC)'],
+  ],
+  notes:'Instant hot dispensers heat water to near-boiling for tea, oatmeal, etc. FL Plumbing Code requires a tempering valve at any fixture dispensing water above 120°F if connected to the domestic supply. Coordinate 120V outlet placement with electrician.',
+  warn:''},
+  {id:'potfiller',icon:'🫗',label:'Pot Filler',specs:[
+    ['Rough-In Height','78" AFF (center of wall box)'],
+    ['Supply Type','Cold only (or hot — specify)'],
+    ['Supply Size','1/2" line to wall box'],
+    ['Integral Shutoff','REQUIRED at wall — FL code'],
+    ['Anti-Siphon','Elevation above flood rim or integral check valve'],
+    ['Wall Box','3/4" deep recessed box or cover plate area'],
+    ['Articulating Arm','Swing range: 12"–24" from wall'],
+    ['Over Range','Center over range cooking surface, not to one side'],
+    ['Permit','Required in most FL counties'],
+    ['DWV DFU','0 (no drain)'],
+  ],
+  notes:'Pot filler height of 78" AFF assumes standard 30" range height plus 42" hood clearance plus 6" = 78". Adjust if range is 36" or different hood is specified. Rough-in the half-inch supply exactly at 78" AFF centerline to wall box. Permit required — FL inspectors check for integral shutoff.',
+  warn:'Missing shutoff at wall is a FL inspection failure. The articulating arm valves are not a substitute for the required integral wall shutoff.'},
+  {id:'laundry',icon:'🧺',label:'Utility/Laundry Sink',specs:[
+    ['Drain Height','18–20" AFF (or floor drain option)'],
+    ['Hot Supply Height','42" AFF'],
+    ['Cold Supply Height','42" AFF'],
+    ['Hot/Cold Offset','8" each side of drain CL (typical)'],
+    ['Faucet Height (wall)','48" AFF for wall-mounted laundry faucet'],
+    ['Trap Size','1-1/2"'],
+    ['Vent','1-1/2" minimum'],
+    ['Supply Size','1/2" each (hot and cold required)'],
+    ['DWV DFU','2 units'],
+    ['Floor Drain Option','P-trap below floor, same drain CL'],
+  ],
+  notes:'Laundry/utility sinks typically use a simple two-handle faucet with garden hose threads. Mount faucet at 48" AFF wall-hung style. Supply valves at 42" AFF are accessible without bending. Hot water required for laundry sink (FL standard practice).',
+  warn:''},
+  {id:'washer',icon:'🌀',label:'Washing Machine',specs:[
+    ['Standpipe Height','30–36" AFF (FL: 18" min, 48" max)'],
+    ['Standpipe Size','2" minimum (IPS)'],
+    ['Hot Supply Box','42" AFF, hot LEFT, cold RIGHT'],
+    ['Supply Valve','Dedicated shutoff at washing machine box'],
+    ['Supply Size','1/2" each hot and cold'],
+    ['Overflow Pan (FL)','REQUIRED over any finished space — drain to exterior'],
+    ['DWV DFU','3 units'],
+    ['Vent','2" minimum for standpipe'],
+    ['P-Trap Below Standpipe','Required — integral to standpipe box or field-installed'],
+    ['Drain Location','Behind washer space, 42" AFF (for standpipe box)'],
+  ],
+  notes:'FL requires overflow pan for washing machine over ANY finished living space. Pan drain: 3/4" to exterior or approved floor drain. Standpipe must be 18–48" AFF in FL — this is different from some other states. Hot LEFT, cold RIGHT is industry standard (confirmed by looking at the back of the machine).',
+  warn:'Missing overflow pan is one of the most common FL plumbing inspection failures for laundry room rough-ins.'},
+  {id:'mopsink',icon:'🧹',label:'Utility/Mop Sink',specs:[
+    ['Type','Floor-set (walk-in) or wall-hung'],
+    ['Drain (floor-set)','Floor P-trap or trap below floor'],
+    ['Drain (wall-hung)','8" AFF P-trap'],
+    ['Cold Supply','36" AFF (hot optional — specify)'],
+    ['Hot Supply','36" AFF if hot required'],
+    ['Faucet Height','48" AFF wall-mounted (mop faucet)'],
+    ['Supply Size','3/4" recommended for mop sink'],
+    ['Vent','2" minimum'],
+    ['DWV DFU','3 units'],
+    ['Faucet','Mop sink faucet with garden hose threads, integral backflow'],
+  ],
+  notes:'Mop sinks require integral backflow preventer on faucet (FL code) due to submerged spout risk. Commercial mop sinks (36" × 36" floor-set) are most common in FL. Wall-hung mop sinks (Elkay or similar) used in limited spaces. Curb kit for floor-set sink: 3-1/2" curb height is standard.',
+  warn:'Mop sink faucets must have integral atmospheric vacuum breaker (AVB) or equivalent backflow protection per FL code.'}
+];
+
+const CHECKLIST = {
+  prerough:[
+    'Plot plan and site plan approved by AHJ',
+    'Permit pulled, signed, and posted at job site',
+    'All slab penetration locations marked on slab layout',
+    'DWV layout coordinated with framing contractor',
+    'Pipe sizes calculated using DFU method per FPC Table 709.1',
+    'Water service entrance location confirmed with utility',
+    'Trench depths verified: 12" min cover for FL underground supply',
+    'Soil type assessed: FL expansive soils require schedule 40 min',
+    'All underground runs planned before any concrete work',
+    'Underground inspection scheduled (before backfill/pour)'
+  ],
+  roughin:[
+    'All DWV pipe supported: PVC horizontal every 4 ft, vertical every 10 ft',
+    'All horizontal drains at 1/4" per foot slope minimum',
+    'Cleanout installed at base of each vertical stack',
+    'Cleanout installed at every direction change > 45 degrees',
+    'Vent pipes extend through roof minimum 6 inches (FL code)',
+    'All pipe penetrations through fire-rated assemblies fire-blocked',
+    'Supply pressure test: 100 PSI for 15 minutes minimum (FL standard)',
+    'All supply stubs capped, labeled with fixture name',
+    'Water heater overflow pan installed and drain connected',
+    'Expansion tank installed on supply if PRV or backflow preventer present',
+    'Shower pan liner installed — PVC 40 mil min, 3" above curb',
+    'Shower pan flood test: 2" above threshold, 24 hours',
+    'Toilet flange at or above finished floor level (FL critical)',
+    'Access panels roughed in for all concealed tub/shower valves',
+    'Pipe insulation installed on attic supply runs (FL heat code)'
+  ],
+  cover:[
+    'Rough-in inspection PASSED and sign-off received from AHJ',
+    'All inspection punchlist items corrected before cover',
+    'Water test still holding after inspection (verify no damage)',
+    'All pipe penetrations protected from nail damage (metal strike plates)',
+    'Insulation installed around pipes in exterior walls',
+    'Shower pan liner still intact (no punctures from later trades)',
+    'All cleanout access panels built into finish framing',
+    'Final inspection appointment scheduled'
+  ],
+  final:[
+    'All fixtures installed and operational',
+    'All fixture stops operational (open and close cleanly)',
+    'Hot water confirmed at all hot water outlets (≥ 120°F at tap)',
+    'Water pressure at fixtures: 40–80 PSI',
+    'All drains flow freely — no slow drains',
+    'All toilets flush properly — no running after flush',
+    'Water heater T&P valve drain pipe properly terminated',
+    'No active leaks at any supply, drain, or vent connection',
+    'All fixtures ADA-compliant if required by project scope',
+    'Permit inspection PASSED — all sign-offs received',
+    'All fixture manufacturer warranty cards completed'
+  ]
+};
+
+const FAILS = [
+  'Vent pipe too small — 2" minimum required for toilet vent in FL',
+  'Missing expansion tank when PRV or backflow preventer is on main supply',
+  'Water heater overflow pan drain not connected to approved location',
+  'Toilet flange set below finished floor level — must be at or above tile',
+  'Shower pan not flood-tested before cover — required 24-hr test',
+  'Missing cleanout at base of vertical stack',
+  'Horizontal drain slope wrong — too flat (< 1/4"/ft) or too steep (> 1/2"/ft)',
+  'AAV (air admittance valve) used on toilet vent or as only vent for stack',
+  'No access panel for tub/shower valve body — FL requires 12"×12" min',
+  'T&P valve drain pipe wrong — wrong material, wrong size, or wrong termination height',
+  'Washing machine standpipe outside 18"–48" AFF FL range (most common: too tall)',
+  'Pot filler missing integral shutoff valve at wall — FL code requires it',
+  'Underground copper pipe not sleeved through slab penetration in FL',
+  'PVC pipe showing UV degradation from FL sun exposure during construction',
+  'Washing machine overflow pan missing over finished space — FL required'
+];
+
+const GLOSSARY = [
+  {t:'AFF',d:'Above Finished Floor — measurement height from the completed floor surface to the plumbing component'},
+  {t:'DFU',d:'Drain Fixture Unit — a measure of likely drain flow from a plumbing fixture, used to size drain pipes per FL code'},
+  {t:'DWV',d:'Drain-Waste-Vent — the complete drainage system including drain pipes, waste pipes, and vent pipes'},
+  {t:'Rough-In',d:'The phase of plumbing installation where all pipe, fittings, and stub-outs are set before walls and floors are finished'},
+  {t:'Stub-Out',d:'The short section of pipe that extends from the wall or floor to the future fixture connection point'},
+  {t:'CL',d:'Centerline — reference for measuring fixture placement, especially toilet and sink rough-in locations'},
+  {t:'PRV',d:'Pressure Reducing Valve — a device that reduces the water supply pressure to protect plumbing fixtures (FL standard: 40-80 PSI)'},
+  {t:'T&P Valve',d:'Temperature and Pressure Relief Valve — a safety device on water heaters that opens if temperature exceeds 210°F or pressure exceeds 150 PSI'},
+  {t:'AAV',d:'Air Admittance Valve — a mechanical vent device that allows air in but not out; FL permits limited use only'},
+  {t:'Wet Vent',d:'A pipe that simultaneously serves as both a drain and a vent for one or more fixtures'},
+  {t:'P-Trap',d:'The U-shaped section of drain pipe that holds water to prevent sewer gas from entering the living space'},
+  {t:'Trap Arm',d:'The horizontal pipe from the P-trap outlet to the vent connection or drain stack'},
+  {t:'IPC',d:'International Plumbing Code — the base code that FL adopts with state amendments (FL Building Code Plumbing volume)'},
+  {t:'AHJ',d:'Authority Having Jurisdiction — the local building department responsible for issuing permits and conducting inspections'},
+  {t:'Backflow Preventer',d:'A device that prevents contaminated water from flowing backward into the potable supply system'},
+  {t:'Slab Penetration',d:'The location where a drain or supply pipe passes through the concrete slab foundation; must be sleeved in FL'},
+  {t:'Cleanout',d:'An access fitting in a drain line that allows a plumber to insert a snake or camera to clear blockages'},
+  {t:'Stack',d:'A vertical drain pipe that collects waste from multiple floors and carries it to the sewer or septic system'},
+  {t:'Schedule 40',d:'A pipe wall thickness classification; Schedule 40 PVC is the standard thickness for DWV and underground work in FL'}
+];
+
+const T4_FAQS = [
+  {q:'How accurate does rough-in location need to be?',a:'Very accurate — especially for slab-on-grade construction common in FL. Drain locations must be within 1/4" of specification. Supply stub-out heights can vary 1"–2" without issue since supply lines are flexible. Toilet rough-in is most critical: being 1/2" off the specified rough-in distance means a different toilet must be purchased.'},
+
+  {q:'Can PEX pipe be used for all plumbing in FL new construction?',a:'Yes. PEX-A, PEX-B, and PEX-C are all approved for potable water supply in FL. PEX cannot be used for DWV (drain, waste, vent) — only supply lines. PEX must be sleeved when penetrating concrete slabs. PEX-A (Uponor/Wirsbo) is the most flexible and preferred in FL for tight spaces. Use rated fittings — brass crimp, cinch, or expansion fittings — all FL code approved. Do NOT use push-to-connect fittings inside walls without approval from your AHJ.'},
+  {q:'What are FL slab penetration requirements for plumbing?',a:'All pipes passing through a concrete slab must be sleeved with a PVC sleeve two nominal pipe sizes larger than the carrier pipe. The sleeve protects the pipe from concrete abrasion and allows for pipe movement and replacement. Underground PVC DWV must be Schedule 40 minimum (not thin-wall) under slab in FL. Copper supply lines underground must be sleeved. All penetrations must be sealed with hydraulic cement or approved sealant after inspection.'}
+
+  ,{q:'Can I change a rough-in after the slab is poured?',a:'Yes but it is expensive. Saw-cutting FL slab concrete costs $800–$3,000 depending on how much needs to be cut. The slab must be properly patched after. Whenever possible, verify rough-in locations before any concrete is poured.'},
+  {q:'What happens if I fail a rough-in inspection in FL?',a:'You receive a red tag (failed inspection) listing the items to correct. You must correct all items and call for a re-inspection. There is usually a re-inspection fee ($50–$150 depending on county). Most FL rough-in failures can be fixed same-day for minor items. Call us — we specialize in rapid correction of failed rough-in inspections.'},
+  {q:'Do I need a permit for every plumbing rough-in in FL?',a:'Yes, in almost all cases. New fixtures, relocated pipes, added bathroom or kitchen fixtures all require permits in FL. Like-for-like fixture replacement (same location, same type) may be permitted work that doesn\'t need a new permit, but anything involving rough-in changes requires a permit. Work without permits can result in fines and required demolition.'},
+  {q:'How do I know if my toilet rough-in is 10", 12", or 14"?',a:'Measure from the center of the toilet flange to the finished back wall (not baseboard). Standard is 12". You can also measure the existing toilet\'s tank-to-wall distance: add approximately 2" for the toilet body. Most FL toilets use 12" rough-in. 10" and 14" models are available but are special-order at most supply houses.'},
+  {q:'What is an expansion tank and do I need one in FL?',a:'An expansion tank absorbs the thermal expansion of water in a closed system. In FL, if you have a PRV (pressure reducing valve), backflow preventer, or check valve on your main water supply, you have a "closed system" and FL code requires an expansion tank on the water heater. This is one of the most commonly missed items in FL new construction and triggers inspection failures.'},
+  {q:'How far in advance should I schedule a rough-in inspection?',a:'Most FL counties require 24–48 hours advance notice. Some counties (Miami-Dade, Broward) may take 3–5 business days. Schedule your inspection as soon as you know rough-in will be complete, to avoid delays in your construction timeline.'}
+];
+
+function showTab(id, el) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+function buildBathGrid() {
+  const g = document.getElementById('bathGrid');
+  g.innerHTML = BATH_FIXTURES.map((f,i) =>
+    `<div class="fix-btn${i===0?' active':''}" id="bb_${esc(f.id)}" onclick="showBathSpec('${esc(f.id)}')"><span class="icon">${f.icon}</span>${esc(f.label)}</div>`
+  ).join('');
+  showBathSpec('toilet');
+}
+
+function showBathSpec(id) {
+  document.querySelectorAll('#bathGrid .fix-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('bb_' + id);
+  if (btn) btn.classList.add('active');
+  const fx = BATH_FIXTURES.find(f => f.id === id);
+  if (!fx) return;
+  const sc = document.getElementById('bathSpec');
+  const rows = fx.specs.map(r => `<div class="spec-row"><span class="spec-label">${esc(r[0])}</span><span class="spec-val">${esc(r[1])}</span></div>`).join('');
+  const warnHtml = fx.warn ? `<div class="warn-note">⚠️ ${esc(fx.warn)}</div>` : '';
+  const notesHtml = fx.notes ? `<div class="code-note">💡 ${esc(fx.notes)}</div>` : '';
+  sc.innerHTML = `<div class="spec-card active"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><strong style="color:#F4B942">${fx.icon} ${esc(fx.label)} Rough-In</strong><button class="copy-btn" onclick="copySpecs('${esc(fx.id)}','bath')">📋 Copy</button></div>${rows}${notesHtml}${warnHtml}</div>`;
+}
+
+function buildKitGrid() {
+  const g = document.getElementById('kitGrid');
+  g.innerHTML = KIT_FIXTURES.map((f,i) =>
+    `<div class="fix-btn${i===0?' active':''}" id="kb_${esc(f.id)}" onclick="showKitSpec('${esc(f.id)}')"><span class="icon">${f.icon}</span>${esc(f.label)}</div>`
+  ).join('');
+  showKitSpec('k_single');
+}
+
+function showKitSpec(id) {
+  document.querySelectorAll('#kitGrid .fix-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('kb_' + id);
+  if (btn) btn.classList.add('active');
+  const fx = KIT_FIXTURES.find(f => f.id === id);
+  if (!fx) return;
+  const sc = document.getElementById('kitSpec');
+  const rows = fx.specs.map(r => `<div class="spec-row"><span class="spec-label">${esc(r[0])}</span><span class="spec-val">${esc(r[1])}</span></div>`).join('');
+  const warnHtml = fx.warn ? `<div class="warn-note">⚠️ ${esc(fx.warn)}</div>` : '';
+  const notesHtml = fx.notes ? `<div class="code-note">💡 ${esc(fx.notes)}</div>` : '';
+  sc.innerHTML = `<div class="spec-card active"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><strong style="color:#F4B942">${fx.icon} ${esc(fx.label)} Rough-In</strong><button class="copy-btn" onclick="copySpecs('${esc(fx.id)}','kit')">📋 Copy</button></div>${rows}${notesHtml}${warnHtml}</div>`;
+}
+
+function copySpecs(id, type) {
+  const fx = (type === 'bath' ? BATH_FIXTURES : KIT_FIXTURES).find(f => f.id === id);
+  if (!fx) return;
+  const text = `${fx.label} Rough-In Specs (FL Code)\n` +
+    fx.specs.map(r => `${r[0]}: ${r[1]}`).join('\n') +
+    (fx.notes ? `\n\nNotes: ${fx.notes}` : '') +
+    '\n\n(561) 555-PIPE — FL Licensed Plumber';
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Specs copied to clipboard!'));
+}
+
+function buildChecklist() {
+  const phases = ['prerough','roughin','cover','final'];
+  let grand = 0;
+  phases.forEach(phase => {
+    const el = document.getElementById('cl_' + phase);
+    const items = CHECKLIST[phase];
+    grand += items.length;
+    el.innerHTML = items.map((item, idx) =>
+      `<div class="check-item" id="ci_${phase}_${idx}">
+        <input type="checkbox" id="cb_${phase}_${idx}" onchange="updateProgress()">
+        <label for="cb_${phase}_${idx}">${esc(item)}</label>
+      </div>`
+    ).join('');
+  });
+  document.getElementById('totalItems').textContent = grand;
+  updateProgress();
+}
+
+function setPhase(phase, el) {
+  document.querySelectorAll('.checklist').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('cl_' + phase).classList.add('active');
+  el.classList.add('active');
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('.check-item input[type=checkbox]');
+  const checked = document.querySelectorAll('.check-item input[type=checkbox]:checked');
+  all.forEach(cb => {
+    const item = cb.closest('.check-item');
+    if (cb.checked) item.classList.add('checked');
+    else item.classList.remove('checked');
+  });
+  const total = all.length;
+  const done = checked.length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('totalChecked').textContent = done;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '% Complete (' + done + ' of ' + total + ')';
+}
+
+function buildFails() {
+  const el = document.getElementById('failsList');
+  el.innerHTML = FAILS.map((f, i) =>
+    `<div class="fail-item"><span class="fail-num">${i + 1}</span><span>${esc(f)}</span></div>`
+  ).join('');
+}
+
+function buildGlossary() {
+  const el = document.getElementById('glossaryList');
+  el.innerHTML = GLOSSARY.map(g =>
+    `<div class="glossary-item"><span class="glossary-term">${esc(g.t)}</span> — ${esc(g.d)}</div>`
+  ).join('');
+}
+
+function buildT4Faqs() {
+  const el = document.getElementById('t4FaqList');
+  el.innerHTML = T4_FAQS.map(f =>
+    `<div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">${esc(f.q)} <span>+</span></div><div class="faq-a">${esc(f.a)}</div></div>`
+  ).join('');
+}
+
+function toggleFaq(el) {
+  const ans = el.nextElementSibling;
+  const sp = el.querySelector('span');
+  const open = ans.classList.toggle('open');
+  if (sp) sp.textContent = open ? '−' : '+';
+}
+
+function toggleExp(el) {
+  const body = el.nextElementSibling;
+  const icon = el.querySelector('.exp-icon');
+  body.classList.toggle('open');
+  icon.classList.toggle('open');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg || "📞 We'll call you within 2 hours!";
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 4000);
+}
+
+function submitForm() {
+  const phone = document.getElementById('f_phone').value.trim();
+  const name = document.getElementById('f_name').value.trim();
+  if (!phone || !name) { showToast("⚠️ Please enter your name and phone number."); return; }
+  showToast("📞 We'll call you within 2 hours!");
+}
+
+buildBathGrid();
+buildKitGrid();
+buildChecklist();
+buildFails();
+buildGlossary();
+buildT4Faqs();
+</script>
+</body>
+</html>
