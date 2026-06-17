@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**128 interactive cost calculators** for Florida homeowners.
+**131 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -47,10 +47,12 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Grease Trap Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/grease-trap/fl_grease_trap.html)
 - [FL Greywater Conservation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/greywater-conservation/fl_greywater_conservation.html)
 - [FL Hard Water Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hard-water-cost/fl_hard_water_cost.html)
+- [FL Home Addition Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/home-addition-plumbing/fl_home_addition_plumbing.html)
 - [FL Home Buyer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/home-buyer/fl_home_buyer_plumbing.html)
 - [FL Hot Tub Spa Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hot-tub-spa/fl_hot_tub_spa.html)
 - [FL Hot Water Recirculation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hot-water-recirculation/fl_hot_water_recirculation.html)
 - [FL Hurricane Prep Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hurricane-prep/fl_hurricane_prep.html)
+- [FL Hvac Condensate Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hvac-condensate-drain/fl_hvac_condensate_drain.html)
 - [FL Hydro Jetting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hydro-jetting/fl_hydro_jetting.html)
 - [FL Inspector Prep Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/inspector-prep/fl_inspector_prep.html)
 - [FL Irrigation Compliance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/irrigation-compliance/fl_irrigation_compliance.html)
@@ -88,6 +90,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Repipe Estimator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repipe-estimator/fl_whole_house_repipe.html)
 - [FL Repiping Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping/fl_repiping.html)
 - [FL Rough In Calculator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rough-in-calculator/fl_rough_in_calculator.html)
+- [FL Rv Dock Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rv-dock-plumbing/fl_rv_dock_plumbing.html)
 - [FL Septic Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-guide/fl_septic_guide.html)
 - [FL Septic System Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-system/fl_septic_system.html)
 - [FL Septic To Sewer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-to-sewer/fl_septic_to_sewer.html)

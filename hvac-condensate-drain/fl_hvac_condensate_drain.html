@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL HVAC Condensate Drain Line Guide & Flush Calculator | Florida Plumbing</title>
+<meta name="description" content="Florida AC condensate drain clog checker, flush guide, and drain sizing calculator. Diagnose condensate line clogs, get FL-specific treatment tips, and request a licensed plumber visit.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#06B6D4;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.69rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#06B6D4;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#06B6D4;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text],input[type=number]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#06B6D4}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-cyan{background:#06B6D4;color:#fff}
+.btn-cyan:hover{background:#0891B2}
+.result-box{border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.result-cyan{background:#021F26;border:2px solid #06B6D4}
+.result-cyan .r-title{color:#06B6D4}
+.result-warn{background:#1A1508;border:2px solid #F4B942}
+.result-warn .r-title{color:#F4B942}
+.result-danger{background:#1A0808;border:2px solid #EF4444}
+.result-danger .r-title{color:#EF4444}
+.result-ok{background:#081A0D;border:2px solid #22C55E}
+.result-ok .r-title{color:#22C55E}
+.r-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+.r-val{font-size:1.6rem;font-weight:700;margin-bottom:4px}
+.r-note{font-size:.78rem;color:#CBD5E1;line-height:1.5;margin-top:6px}
+.sym-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:8px;margin-bottom:6px;cursor:pointer;border:1px solid #2A3A5C;background:#141929;transition:all .2s}
+.sym-item.selected{background:#021F26;border-color:#06B6D4}
+.sym-item input[type=checkbox]{width:16px;height:16px;accent-color:#06B6D4;flex-shrink:0;margin-top:2px}
+.sym-item .sym-text{font-size:.81rem;color:#CBD5E1;line-height:1.3}
+.sym-item .sym-label{font-size:.83rem;font-weight:600;color:#E2E8F0;display:block;margin-bottom:1px}
+.sym-item[data-score]{position:relative}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem;align-items:flex-start}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8;flex-shrink:0;max-width:55%}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:44%}
+.step-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:8px;border-left:3px solid #06B6D4}
+.step-card.warn-card{border-left-color:#F4B942}
+.step-card.danger-card{border-left-color:#EF4444}
+.step-card h3{font-size:.85rem;font-weight:700;color:#06B6D4;margin-bottom:4px}
+.step-card.warn-card h3{color:#F4B942}
+.step-card.danger-card h3{color:#EF4444}
+.step-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.step-num{display:inline-block;background:#06B6D4;color:#fff;width:20px;height:20px;border-radius:50%;text-align:center;font-size:.75rem;font-weight:700;line-height:20px;margin-right:6px;flex-shrink:0}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.7rem;font-weight:600;margin:2px}
+.badge-cyan{background:#021F26;color:#06B6D4;border:1px solid #06B6D4}
+.badge-ok{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.badge-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.badge-danger{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.alert-box{border-radius:10px;padding:13px;margin-bottom:12px}
+.alert-box.info{border:1px solid #06B6D4;background:#021F26}
+.alert-box.info h3{font-size:.88rem;font-weight:700;color:#06B6D4;margin-bottom:6px}
+.alert-box.warn{border:1px solid #F4B942;background:#1A1508}
+.alert-box.warn h3{font-size:.88rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.alert-box.danger{border:1px solid #EF4444;background:#1A0808}
+.alert-box.danger h3{font-size:.88rem;font-weight:700;color:#EF4444;margin-bottom:6px}
+.alert-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.product-card{background:#141929;border-radius:8px;padding:10px 12px;margin-bottom:6px}
+.product-card h4{font-size:.82rem;font-weight:700;color:#E2E8F0;margin-bottom:2px}
+.product-card p{font-size:.76rem;color:#94A3B8;line-height:1.4}
+.product-card .cost{font-size:.8rem;color:#06B6D4;font-weight:600;margin-top:3px}
+.freq-bar{height:8px;background:#1E2A45;border-radius:4px;margin-top:4px;overflow:hidden}
+.freq-fill{height:100%;background:#06B6D4;border-radius:4px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>❄️ FL AC Condensate Drain Guide</h1>
+<p>Clog checker, flush guide, drain sizing & FL plumber quotes</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Clog Checker</button>
+<button class="tab" onclick="showTab(1)">Flush Guide</button>
+<button class="tab" onclick="showTab(2)">Drain Sizing</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: CLOG CHECKER -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>🔍 FL AC Condensate Clog Checker</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Florida's year-round heat and humidity make AC condensate drain clogs the #1 most common AC service call in the state. Your AC runs almost 12 months a year, producing 5–20 gallons of water per day — all flowing through a single drain line prone to algae and slime buildup. Select your symptoms:</p>
+
+<div class="sym-item" onclick="toggleSym(this)" data-score="4" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">💧 Water dripping from the air handler / air return area</span>Drain pan overflowing — classic clog symptom. If your air handler is in a closet or attic, this may drip onto ceiling drywall. Immediate service needed.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="3" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">❄️ AC running but not cooling (no cold air)</span>Many modern FL AC systems have a float safety switch — when drain pan fills, it shuts down the compressor. Looks like AC failure but is actually a clog.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="2" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">💦 Water stain or wet spot on ceiling near air handler</span>Drain pan overflow soaking through drywall — indicates clog has been occurring for some time. Check for mold growth inside air handler.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="5" data-type="emergency">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">🟠 Standing water pooled under air handler</span>Severe overflow — significant water damage likely occurring. Shut off AC immediately. Emergency plumber needed. Check for active drywall/ceiling damage.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="2" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">🦠 Musty or mildew smell from vents</span>Algae and slime buildup in drain line or drain pan. Very common in FL — warm, humid conditions grow biofilm rapidly. Not always a full clog — but will become one.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="1" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">⚡ AC shuts off unexpectedly / trips safety switch</span>Float switch triggered. Most FL air handlers installed after 2010 have float switches (required by FL code). Switch prevents overflow but shuts cooling. Drain is clogged.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="1" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">🪲 Slow drip from condensate drain outlet (exterior)</span>Drain working but sluggish — partial clog or buildup. Normal drain should flow freely when AC is running hard on hot FL days. Flush preventively now.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="3" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">🏠 High indoor humidity despite AC running</span>Clogged drain forces water back into air stream, adding humidity to conditioned air. FL homes should maintain 45–55% RH. Over 65% indicates drainage problem.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="2" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">🔴 Error code on thermostat / blinking AC light</span>Float switch error code on modern FL AC units. Common codes: E4, E6, EE (varies by brand). Clearing requires drain service, not just reset.</div>
+</div>
+<div class="sym-item" onclick="toggleSym(this)" data-score="1" data-type="normal">
+<input type="checkbox">
+<div class="sym-text"><span class="sym-label">🌿 No visible flow from condensate line on hot day</span>AC should be producing water on a hot humid FL day. No flow = drain line is dry = possible clog or disconnected line. Check drain pan for standing water.</div>
+</div>
+
+<button class="btn btn-cyan" style="margin-top:8px" onclick="diagClog()">Diagnose My AC Drain Issue</button>
+<div id="clog-result" style="display:none"></div>
+</div>
+
+<div class="card">
+<h3>📊 FL AC Condensate Clog Frequency</h3>
+<div style="margin-bottom:10px">
+<div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px"><span style="color:#94A3B8">June–Sept (peak heat + humidity)</span><span style="color:#06B6D4">Very high</span></div>
+<div class="freq-bar"><div class="freq-fill" style="width:95%"></div></div>
+</div>
+<div style="margin-bottom:10px">
+<div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px"><span style="color:#94A3B8">April–May / Oct–Nov (shoulder season)</span><span style="color:#06B6D4">High</span></div>
+<div class="freq-bar"><div class="freq-fill" style="width:70%"></div></div>
+</div>
+<div style="margin-bottom:10px">
+<div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:3px"><span style="color:#94A3B8">Dec–March (FL "winter")</span><span style="color:#06B6D4">Moderate</span></div>
+<div class="freq-bar"><div class="freq-fill" style="width:40%"></div></div>
+</div>
+<p style="font-size:.76rem;color:#94A3B8;margin-top:6px">Florida AC units produce 5–20 gallons of condensate per day during summer. An AC running 3,000+ hours/year (common in FL) accumulates significant biofilm. Without quarterly flushing, most FL drain lines clog within 6–18 months.</p>
+</div>
+</div>
+
+<!-- TAB 1: FLUSH GUIDE -->
+<div class="panel" id="panel-1">
+<div class="card">
+<h2>🔧 FL AC Condensate Drain Flush Guide</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:12px">Florida HVAC professionals recommend flushing your condensate drain every 3 months due to the state's year-round heat and high algae growth rate. Here's the standard procedure:</p>
+
+<div class="step-card">
+<h3><span class="step-num">1</span>Turn Off Your AC System</h3>
+<p>Shut off at thermostat AND at the air handler disconnect switch (or breaker). Never work on condensate drain with AC running — drain pan may be full of water, and float switches are electrical. In FL, the air handler is often in a closet, utility room, or attic.</p>
+<div style="margin-top:6px"><span class="badge badge-cyan">Safety first</span></div>
+</div>
+
+<div class="step-card">
+<h3><span class="step-num">2</span>Locate the Access Port and Drain Pan</h3>
+<p>Find the condensate drain line — a 3/4" or 1" white PVC pipe exiting the air handler. Most FL air handlers have a T-shaped access port (cleanout cap) near the unit. Remove the cap. Also check the drain pan under the air handler for standing water — if full, sponge or wet-vac it out before proceeding.</p>
+<div style="margin-top:6px"><span class="badge badge-cyan">Most FL units: 3/4" PVC</span></div>
+</div>
+
+<div class="step-card">
+<h3><span class="step-num">3</span>Pour Flush Solution</h3>
+<p>Pour 1–2 cups of flush solution through the access port. FL HVAC professionals use one of these three methods (in order of preference): (1) Undiluted white vinegar — best for maintenance flush, kills algae. (2) Bleach solution (1/4 cup bleach + 3/4 cup water) — stronger, but can dry out drain pan liner over time. (3) Condensate drain tablets (Nu-Calgon, RGF, etc.) — slow-release, best for prevention between flushes.</p>
+<div style="margin-top:6px"><span class="badge badge-ok">Vinegar: safest for rubber parts</span><span class="badge badge-warn">Bleach: stronger but use sparingly</span></div>
+</div>
+
+<div class="step-card">
+<h3><span class="step-num">4</span>Wait 30 Minutes, Then Wet-Vac (if clogged)</h3>
+<p>If line is clogged, vinegar alone won't clear it. Go to the exterior end of the condensate drain line (usually exits near your AC condenser or through an exterior wall/soffit). Attach a wet/dry vacuum to the end of the pipe using a rag seal. Run the wet-vac for 2–3 minutes — this pulls the clog out. Check the wet-vac canister for brown/green slime (that's the clog).</p>
+<div style="margin-top:6px"><span class="badge badge-cyan">Wet-vac: fastest clog clear</span></div>
+</div>
+
+<div class="step-card">
+<h3><span class="step-num">5</span>Flush with Water and Confirm Flow</h3>
+<p>Pour 1–2 cups of plain water through the access port and watch for flow at the exterior exit point. It should flow freely within 30–60 seconds. If no flow, the clog is severe — the line may need to be cut and snaked, or the drain pan outlet may be clogged. At this point, call a licensed FL plumber or HVAC tech.</p>
+<div style="margin-top:6px"><span class="badge badge-ok">Free flow = clog cleared</span><span class="badge badge-danger">No flow = call a pro</span></div>
+</div>
+
+<div class="step-card">
+<h3><span class="step-num">6</span>Drop in Prevention Tablets</h3>
+<p>After clearing, drop 1–2 condensate drain pan tablets into the pan (Nu-Calgon IFC, AC Safe, Rectorseal Pan Treat, etc. — $8–$15 at hardware stores). These dissolve slowly and release algaecide for 30–90 days, significantly extending time between clogs in FL's climate.</p>
+<div style="margin-top:6px"><span class="badge badge-cyan">Quarterly replacement recommended in FL</span></div>
+</div>
+
+<div class="step-card warn-card">
+<h3>⚠️ When to Call a Plumber (Not DIY)</h3>
+<p>Call a licensed FL plumber if: wet-vac doesn't clear the clog after two attempts, line needs to be cut to access, there is standing water damage to ceiling or walls, drain pan is cracked or corroded, secondary drain line is also clogged, or drain line routing is complex (attic installs with long horizontal runs). Typical FL plumber condensate drain service: $150–$350.</p>
+<div style="margin-top:6px"><span class="badge badge-warn">$150–$350 professional service</span></div>
+</div>
+</div>
+
+<div class="card">
+<h3>🛡️ FL Prevention Products</h3>
+<div class="product-card">
+<h4>Condensate Pan Tablets (Nu-Calgon, RGF, AC Safe)</h4>
+<p>Slow-release algaecide. Drop into drain pan every 90 days. Most effective preventive measure for FL homes.</p>
+<div class="cost">$8–$15 per pack at Home Depot / Lowe's</div>
+</div>
+<div class="product-card">
+<h4>Automatic Condensate Drain Flush Valve</h4>
+<p>Installs on drain line, periodically doses with vinegar or treated water automatically. Best for vacation homes and rental properties — FL's #1 cause of water damage during absence is AC drain overflow.</p>
+<div class="cost">$40–$120 installed</div>
+</div>
+<div class="product-card">
+<h4>Float Switch Upgrade / Secondary Safety Switch</h4>
+<p>If your FL air handler doesn't have a float switch, adding one ($50–$150 installed) shuts off AC before drain pan overflows. Prevents water damage. FL Building Code requires on new installs — many older FL units lack them.</p>
+<div class="cost">$50–$150 installed by HVAC tech or plumber</div>
+</div>
+<div class="product-card">
+<h4>UV Light in Air Handler</h4>
+<p>UV germicidal lamps in the air handler kill algae, mold, and bacteria at the source — dramatically reducing drain line clogs. Popular upgrade in FL. Must be professionally installed.</p>
+<div class="cost">$200–$600 installed</div>
+</div>
+</div>
+</div>
+
+<!-- TAB 2: DRAIN SIZING -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>📐 FL Condensate Drain Sizing Calculator</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:12px">FL Building Code (FBC) and the International Mechanical Code (IMC) specify minimum condensate drain line sizes based on system capacity. Undersized drain lines are a leading cause of chronic clogs in FL.</p>
+
+<label>AC System Size (Tons)</label>
+<select id="drainTons">
+<option value="1.5">1.5 ton (18,000 BTU) — small condo/room</option>
+<option value="2">2 ton (24,000 BTU)</option>
+<option value="2.5">2.5 ton (30,000 BTU)</option>
+<option value="3" selected>3 ton (36,000 BTU) — typical FL home</option>
+<option value="3.5">3.5 ton (42,000 BTU)</option>
+<option value="4">4 ton (48,000 BTU)</option>
+<option value="5">5 ton (60,000 BTU) — large home</option>
+<option value="7.5">7.5 ton — light commercial</option>
+<option value="10">10 ton+ — commercial</option>
+</select>
+
+<label>System Type</label>
+<select id="drainSystem">
+<option value="split" selected>Split system (separate air handler + condenser)</option>
+<option value="package">Package unit (all-in-one)</option>
+<option value="multi">Multi-zone mini-split</option>
+<option value="commercial">Commercial rooftop unit (RTU)</option>
+</select>
+
+<label>Current Drain Line Size (if known)</label>
+<select id="drainCurrent">
+<option value="unknown">Unknown / not sure</option>
+<option value="0.75">3/4 inch PVC</option>
+<option value="1.0">1 inch PVC</option>
+<option value="1.25">1-1/4 inch PVC</option>
+<option value="1.5">1-1/2 inch PVC</option>
+<option value="2.0">2 inch PVC</option>
+</select>
+
+<label>Air Handler Location</label>
+<select id="drainLocation">
+<option value="closet" selected>Interior closet (most common FL install)</option>
+<option value="attic">Attic (higher risk — water damage if pan overflows)</option>
+<option value="garage">Garage</option>
+<option value="utility">Utility room / mechanical room</option>
+<option value="rooftop">Rooftop (commercial)</option>
+</select>
+
+<button class="btn btn-cyan" onclick="calcDrain()">Check My Drain Sizing</button>
+<div id="drain-result" style="display:none"></div>
+</div>
+
+<div class="card">
+<h3>📏 FL Condensate Drain Size Reference (IMC/FBC)</h3>
+<div class="info-row"><span class="k">Up to 3 tons (36,000 BTU)</span><span class="v">3/4" min (1" recommended in FL)</span></div>
+<div class="info-row"><span class="k">3–5 tons (36,000–60,000 BTU)</span><span class="v">1" minimum</span></div>
+<div class="info-row"><span class="k">5–20 tons</span><span class="v">1-1/4" minimum</span></div>
+<div class="info-row"><span class="k">20–40 tons</span><span class="v">1-1/2" minimum</span></div>
+<div class="info-row"><span class="k">Over 40 tons</span><span class="v">2" minimum</span></div>
+<div class="info-row"><span class="k">FL high-humidity recommendation</span><span class="v">One size up from minimum</span></div>
+<div class="info-row"><span class="k">Secondary/overflow drain</span><span class="v">Same size as primary</span></div>
+<div class="info-row"><span class="k">Maximum horizontal run w/o trap</span><span class="v">Slope 1/8" per foot minimum</span></div>
+</div>
+
+<div class="alert-box info">
+<h3>💡 FL Attic Air Handler Warning</h3>
+<p>FL homes with attic air handlers are at highest risk for water damage from condensate overflows. FL Building Code requires a secondary drain pan (drip pan) under attic-mounted air handlers, AND either a secondary drain line or a float switch. If your attic air handler lacks both, this is a code violation and an insurance risk. Ask us about adding a secondary drain line or float switch upgrade.</p>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📞 FL AC Condensate Drain Service Quote</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Our FL-licensed plumbers handle all condensate drain work including emergency clears, drain line replacement, secondary drain installation, and float switch upgrades. Same-day service available.</p>
+
+<label>Your Name</label>
+<input type="text" id="condName" placeholder="First and last name">
+
+<label>Phone Number</label>
+<input type="text" id="condPhone" placeholder="(561) 555-PIPE">
+
+<label>City / Zip Code</label>
+<input type="text" id="condCity" placeholder="Orlando, FL 32801">
+
+<label>Service Needed</label>
+<select id="condService">
+<option value="">-- Select Service --</option>
+<option>Emergency: AC off / water leaking from air handler</option>
+<option>Condensate drain clog — clear and flush</option>
+<option>Drain line replacement (reroute or resize)</option>
+<option>Secondary drain line installation</option>
+<option>Float switch installation or upgrade</option>
+<option>Drain pan replacement</option>
+<option>UV light installation (algae prevention)</option>
+<option>Annual condensate drain maintenance</option>
+<option>Inspection / diagnosis — not sure what's wrong</option>
+</select>
+
+<label>AC System Age (if known)</label>
+<select id="condAge">
+<option value="">-- Select --</option>
+<option>0–5 years old</option>
+<option>5–10 years old</option>
+<option>10–15 years old</option>
+<option>15–20 years old</option>
+<option>Over 20 years old</option>
+<option>Unknown</option>
+</select>
+
+<label>Air Handler Location</label>
+<select id="condLoc">
+<option value="">-- Select --</option>
+<option>Closet</option>
+<option>Attic</option>
+<option>Garage</option>
+<option>Utility room</option>
+<option>Rooftop</option>
+</select>
+
+<label>Is there current water damage to ceiling or walls?</label>
+<select id="condDamage">
+<option value="no">No visible damage</option>
+<option value="stain">Water stain visible</option>
+<option value="wet">Wet drywall / active drip</option>
+<option value="major">Significant damage / ceiling sagging</option>
+</select>
+
+<label>Additional Notes</label>
+<textarea id="condNotes" rows="2" placeholder="Any additional details about your AC system or the issue you're experiencing"></textarea>
+
+<button class="btn btn-cyan" onclick="submitCondQuote()">Request Service — We Call Within 2 Hours</button>
+</div>
+
+<div class="card">
+<h3>⚡ Emergency Response Available</h3>
+<div class="info-row"><span class="k">Emergency drain clear</span><span class="v">Same day available</span></div>
+<div class="info-row"><span class="k">Standard drain service</span><span class="v">$150–$350</span></div>
+<div class="info-row"><span class="k">Drain line replacement</span><span class="v">$350–$900</span></div>
+<div class="info-row"><span class="k">Float switch install</span><span class="v">$150–$300</span></div>
+<div class="info-row"><span class="k">Secondary drain line</span><span class="v">$250–$600</span></div>
+<div class="info-row"><span class="k">Service area</span><span class="v">All 67 FL counties</span></div>
+<div class="info-row"><span class="k">Phone</span><span class="v">(561) 555-PIPE</span></div>
+</div>
+</div>
+
+<div class="toast" id="cond-toast">✅ We'll call you within 2 hours!</div>
+
+<!-- HIDDEN FL DATA -->
+<div style="display:none" aria-hidden="true" id="cond-fl-data">
+FL HVAC CONDENSATE DRAIN DATA — FLORIDA PLUMBING REFERENCE
+
+FLORIDA AC MARKET OVERVIEW:
+- FL homes with central AC: approximately 95%+ (highest in US)
+- FL average annual AC runtime: 2,800–3,500 hours (vs. 750–1,200 national average)
+- FL homes on annual AC maintenance plan: approximately 35–45%
+- AC condensate drain service calls: approximately 1 in 3 AC service calls in FL involves drain issues
+- FL annual condensate drain service market: approximately $350–$500 million
+- Average FL condensate clog frequency (without prevention): every 6–18 months
+- Average FL condensate clog frequency (with quarterly flush + pan tablets): every 3–5 years
+
+FL CLIMATE FACTORS:
+- FL average relative humidity (June–Sept): 75–85%
+- FL average daily high temperature (June–Sept): 90–95°F
+- FL average AC condensate production per day (summer): 5–20 gallons per 3-ton system
+- Algae growth rate: doubles every 12 hours at 80°F+ with standing moisture — FL conditions are ideal
+- Biofilm formation: begins within 2–4 weeks in unprotected FL drain lines
+- FL hurricane season effect: power outages = AC off = drain dries = algae spore concentration when restarted
+
+CONDENSATE DRAIN SIZING (IMC / FL Building Code):
+System size → minimum drain diameter:
+- Up to 3 tons (36,000 BTU): 3/4 inch minimum per IMC; FL HVAC industry standard is 1 inch due to higher moisture loads
+- 3–5 tons: 1 inch minimum
+- 5–20 tons: 1-1/4 inch minimum
+- 20–40 tons: 1-1/2 inch minimum
+- Over 40 tons: 2 inch minimum
+Slope requirement: minimum 1/8 inch per foot horizontal; 1/4 inch per foot preferred
+Secondary drain: required for attic air handlers; same size as primary
+Trap requirement: not required for residential (FL Building Code exception); recommended for positive pressure systems
+
+FL BUILDING CODE REQUIREMENTS (FBC Mechanical Chapter 3):
+- Secondary drain pan required under attic air handlers
+- Float switch OR secondary drain line required as overflow protection for attic air handlers
+- Condensate shall not drain onto public right-of-way or public access areas
+- Condensate may discharge to: approved drain, indirect waste receptor, tailpiece of lavatory, or exterior (pointing away from building foundation)
+- Air handlers in conditioned space require condensate containment
+- No discharge into attic space directly
+
+FLOAT SWITCH TYPES AND INSTALLATION:
+Primary float switch (mounted in drain pan): shuts off compressor when pan fills
+Secondary float switch (in-line): mounted in drain line, shuts off if clog detected
+Tethered float: older style, less reliable in FL's humid environment
+Reed float: more reliable, magnetically actuated
+Pan overflow float: triggers before pan reaches overflow edge
+Most common FL retrofit: universal fit pan-mount float switch, $30–$80 parts, $50–$150 installed
+
+CONDENSATE DRAIN TREATMENT OPTIONS:
+Vinegar flush: 1–2 cups undiluted white vinegar, quarterly — kills algae, safe for PVC and rubber
+Bleach flush: 1/4 cup bleach + 3/4 cup water, quarterly — stronger algaecide, can degrade rubber pan liner over time
+Pan tablets: Nu-Calgon IFC, AC Safe, Rectorseal Pan Treat — dissolve over 30–90 days, best passive prevention
+Ozone treatment: professional treatment, very effective but requires equipment
+UV lamp: installed in air handler or drain line, kills algae at source — gold standard for prevention
+Automatic dosing valve: releases measured amount of treatment every cycle, commercial-grade solution
+
+COST GUIDE FL (plumber/HVAC tech):
+Condensate drain clear (vacuum + flush): $150–$350
+Drain line replacement (short run): $350–$700
+Drain line replacement (long/complex run): $600–$1,200
+Secondary drain installation (attic): $400–$900
+Float switch install (pan mount): $150–$300
+Float switch upgrade (reed/reed, both primary + secondary): $250–$450
+UV lamp installation (air handler): $200–$600
+Water damage assessment (ceiling/wall): $150–$400 (separate from repair)
+Drywall repair from overflow damage: $300–$1,500 (separate contractor)
+
+INSURANCE NOTE:
+Many FL homeowner policies cover sudden AC condensate overflow damage (single event)
+Gradual/repeated overflow damage from neglected maintenance: typically NOT covered
+FL insurance companies increasingly requiring proof of AC maintenance (especially after Hurricane Ian)
+Some FL policies specifically exclude condensate overflow — review your policy
+Claims average $2,500–$8,000 for ceiling/drywall damage from AC condensate overflow
+</div>
+
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+function toggleSym(el){
+  el.classList.toggle('selected');
+  el.querySelector('input[type=checkbox]').checked = el.classList.contains('selected');
+}
+
+function diagClog(){
+  const items = document.querySelectorAll('.sym-item.selected');
+  const el = document.getElementById('clog-result');
+  if(!items.length){ el.style.display='none'; return; }
+  let score = 0, emergency = false;
+  items.forEach(item => {
+    score += parseInt(item.getAttribute('data-score')) || 0;
+    if(item.getAttribute('data-type') === 'emergency') emergency = true;
+  });
+  let cls, title, verdict, action;
+  if(emergency || score >= 8){
+    cls = 'result-danger'; title = '🚨 Emergency — Shut Off AC Now';
+    verdict = 'Active overflow detected. Water damage is occurring.';
+    action = 'Turn off your AC at the thermostat and the breaker immediately. Do NOT attempt DIY clearing if ceiling or walls are wet — water may be near electrical. Call us now for emergency service. Typical response: 2–4 hours.';
+  } else if(score >= 5){
+    cls = 'result-warn'; title = '⚠️ Active Clog — Service Needed Today';
+    verdict = 'Your drain line is clogged or severely restricted.';
+    action = 'You can try the wet-vac method on the exterior drain line exit (see Flush Guide tab) while waiting for service. Do not ignore — FL drain clogs escalate quickly in summer heat. Schedule service within 24 hours.';
+  } else if(score >= 3){
+    cls = 'result-warn'; title = '⚠️ Partial Clog — Schedule Service Soon';
+    verdict = 'Early clog signs detected. Line is restricted but not fully blocked.';
+    action = 'Try the vinegar flush method (see Flush Guide tab). If symptoms don\'t resolve within 24 hours, schedule professional service. Add condensate pan tablets to prevent recurrence.';
+  } else {
+    cls = 'result-ok'; title = '✅ Preventive Maintenance Recommended';
+    verdict = 'No severe clog detected, but FL conditions mean your drain needs regular attention.';
+    action = 'Flush with white vinegar quarterly. Add condensate pan tablets. Check that float switch is functional. Schedule annual inspection with your plumber.';
+  }
+  el.innerHTML = '<div class="result-box ' + cls + '"><div class="r-title">' + title + '</div><div class="r-note"><strong>Assessment:</strong> ' + esc(verdict) + '<br><br><strong>Recommended action:</strong> ' + esc(action) + '</div></div>';
+  el.style.display = 'block';
+}
+
+function calcDrain(){
+  const tons = parseFloat(document.getElementById('drainTons').value);
+  const current = document.getElementById('drainCurrent').value;
+  const location = document.getElementById('drainLocation').value;
+  let required, flRec;
+  if(tons <= 3){ required = '3/4"'; flRec = '1"'; }
+  else if(tons <= 5){ required = '1"'; flRec = '1-1/4"'; }
+  else if(tons <= 20){ required = '1-1/4"'; flRec = '1-1/2"'; }
+  else if(tons <= 40){ required = '1-1/2"'; flRec = '2"'; }
+  else { required = '2"'; flRec = '2"'; }
+  let adequate = true, note = '';
+  if(current !== 'unknown'){
+    const cur = parseFloat(current);
+    const reqMap = {'3/4"':0.75,'1"':1.0,'1-1/4"':1.25,'1-1/2"':1.5,'2"':2.0};
+    const reqNum = reqMap[required] || 0.75;
+    adequate = cur >= reqNum;
+  }
+  if(location === 'attic') note = 'Attic installation: FL Building Code requires secondary drain pan AND float switch or secondary drain line. If either is missing, this is a code deficiency — high water damage risk.';
+  const el = document.getElementById('drain-result');
+  const cls = adequate ? 'result-cyan' : 'result-warn';
+  el.innerHTML = '<div class="result-box ' + cls + '"><div class="r-title">' + (adequate ? '✅ Size Adequate' : '⚠️ Possibly Undersized') + '</div><div class="r-note">Code minimum: <strong>' + required + '</strong> · FL recommendation: <strong>' + flRec + '</strong>' + (current !== 'unknown' ? ' · Your current line: <strong>' + current + '"</strong>' : '') + '.<br><br>' + (adequate ? 'Your drain line meets minimum sizing. For FL\'s climate, upgrading to ' + flRec + ' is still recommended for maximum clog resistance.' : 'Your drain line may be undersized for your system. Undersized lines clog faster — especially in FL\'s high-condensate-volume climate. Consider upgrading to ' + flRec + '.') + (note ? '<br><br>⚠️ ' + esc(note) : '') + '</div></div>';
+  el.style.display = 'block';
+}
+
+function submitCondQuote(){
+  const name = document.getElementById('condName').value.trim();
+  const phone = document.getElementById('condPhone').value.trim();
+  if(!name || !phone){ alert('Please enter your name and phone number.'); return; }
+  document.getElementById('cond-toast').style.display = 'block';
+  setTimeout(() => document.getElementById('cond-toast').style.display = 'none', 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbing tools for homeowners, contractors, and property managers across all 67 Florida counties. Licensed CFC plumbers serving Southeast FL, Southwest FL, Tampa Bay, Orlando, Jacksonville, and North Florida. Florida Plumbing Code compliance, permit guidance, and free estimates. FL plumbi</div>
+</body>
+</html>
