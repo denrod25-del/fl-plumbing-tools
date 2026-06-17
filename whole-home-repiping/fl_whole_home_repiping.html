@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Whole-Home Repiping Estimator | Florida Plumbing</title>
+<meta name="description" content="Free Florida whole-home repiping cost estimator. Compare PEX vs CPVC vs copper for FL conditions, get county-level pricing, permit info, and a free FL plumber quote.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#14B8A6;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.69rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#14B8A6;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#14B8A6;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#14B8A6}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-teal{background:#14B8A6;color:#fff}
+.btn-teal:hover{background:#0F9B8A}
+.estimate-box{background:#081A18;border:1px solid #14B8A6;border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.estimate-box .range{font-size:1.5rem;font-weight:700;color:#14B8A6}
+.estimate-box .note{font-size:.75rem;color:#94A3B8;margin-top:4px}
+.cost-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:.82rem}
+.cost-row:last-child{border-bottom:none}
+.cost-row .k{color:#94A3B8}
+.cost-row .v{color:#14B8A6;font-weight:600}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem;align-items:flex-start}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8;flex-shrink:0;max-width:48%}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:50%}
+.material-card{border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid}
+.material-card.pex{border-color:#14B8A6;background:#081A18}
+.material-card.cpvc{border-color:#F4B942;background:#1A1508}
+.material-card.copper{border-color:#F97316;background:#1A1008}
+.material-card h3{font-size:.92rem;font-weight:700;margin-bottom:6px}
+.material-card.pex h3{color:#14B8A6}
+.material-card.cpvc h3{color:#F4B942}
+.material-card.copper h3{color:#F97316}
+.material-card p{font-size:.79rem;color:#CBD5E1;line-height:1.5;margin-bottom:6px}
+.tag{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.72rem;font-weight:600;margin:2px}
+.tag-win{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.tag-lose{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.tag-neu{background:#1A2B40;color:#00B4FF;border:1px solid #00B4FF}
+.tag-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.score-bar-wrap{margin:8px 0}
+.score-bar-label{display:flex;justify-content:space-between;font-size:.73rem;color:#94A3B8;margin-bottom:3px}
+.score-bar{height:8px;background:#1E2A45;border-radius:4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.fill-teal{background:#14B8A6}
+.fill-gold{background:#F4B942}
+.fill-orange{background:#F97316}
+.alert-box{border-radius:10px;padding:13px;margin-bottom:12px}
+.alert-box.warn{border:1px solid #F4B942;background:#1A1508}
+.alert-box.warn h3{font-size:.88rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.alert-box.info{border:1px solid #00B4FF;background:#0A1A2A}
+.alert-box.info h3{font-size:.88rem;font-weight:700;color:#00B4FF;margin-bottom:6px}
+.alert-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.steps-list{list-style:none;counter-reset:steps}
+.steps-list li{counter-increment:steps;display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #1E2A45;font-size:.81rem;color:#CBD5E1;line-height:1.4}
+.steps-list li:last-child{border-bottom:none}
+.steps-list li::before{content:counter(steps);background:#14B8A6;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.77rem;min-width:280px}
+th{background:#141929;color:#94A3B8;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2A3A5C}
+td{padding:7px 10px;border-bottom:1px solid #1A2440;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#0D1525}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.7rem;font-weight:600;margin:2px}
+.badge-best{background:#083B2A;color:#14B8A6;border:1px solid #14B8A6}
+.badge-good{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.badge-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.badge-bad{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.timeline-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #1E2A45}
+.timeline-item:last-child{border-bottom:none}
+.timeline-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.dot-red{background:#EF4444}
+.dot-gold{background:#F4B942}
+.dot-teal{background:#14B8A6}
+.timeline-item p{font-size:.8rem;color:#CBD5E1;line-height:1.4}
+.timeline-item strong{color:#E2E8F0}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.lead-warn{background:#1A0D00;border:1px solid #F4B942;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:.79rem;color:#F4B942;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🔧 FL Whole-Home Repiping</h1>
+<p>PEX vs CPVC vs Copper — FL pricing, permits & material guide</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Cost Estimator</button>
+<button class="tab" onclick="showTab(1)">Material Guide</button>
+<button class="tab" onclick="showTab(2)">FL Permit Info</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: COST ESTIMATOR -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>💰 FL Repiping Cost Calculator</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Estimate your whole-home repipe cost based on home size, material choice, and Florida county. Includes labor, materials, and drywall patching allowance.</p>
+
+<label>Home Size</label>
+<select id="rpHomeSize">
+<option value="sm">Small — Under 1,200 sq ft (1–2 bed)</option>
+<option value="md" selected>Medium — 1,200–2,000 sq ft (3 bed)</option>
+<option value="lg">Large — 2,000–3,000 sq ft (4–5 bed)</option>
+<option value="xl">Extra Large — 3,000+ sq ft / 5+ bed</option>
+</select>
+
+<label>Stories</label>
+<select id="rpStories">
+<option value="1">Single story</option>
+<option value="2">Two stories</option>
+<option value="3">Three+ stories</option>
+</select>
+
+<label>Pipe Material</label>
+<select id="rpMaterial">
+<option value="pex">PEX — Crosslinked Polyethylene (recommended FL)</option>
+<option value="cpvc">CPVC — Chlorinated PVC</option>
+<option value="copper">Copper (Type L)</option>
+</select>
+
+<label>Slab Foundation (most FL homes)</label>
+<select id="rpSlab">
+<option value="yes" selected>Yes — slab foundation (more complex)</option>
+<option value="no">No — crawlspace or raised foundation</option>
+</select>
+
+<label>Include Fixture Reconnects</label>
+<select id="rpFixtures">
+<option value="basic">Basic (sinks, toilets, showers only)</option>
+<option value="full" selected>Full (all fixtures + appliances)</option>
+<option value="full_plus">Full + water heater replacement</option>
+</select>
+
+<label>FL County</label>
+<select id="rpCounty">
+<option value="std">Alachua, Baker, Bradford, Calhoun, Columbia, DeSoto, Dixie, Flagler, Franklin, Gadsden, Gilchrist, Glades, Gulf, Hamilton, Hardee, Hendry, Hernando, Highlands, Holmes, Jackson, Jefferson, Lafayette, Levy, Liberty, Madison, Marion, Nassau, Okaloosa, Okeechobee, Putnam, Santa Rosa, Sumter, Suwannee, Taylor, Union, Wakulla, Walton, Washington</option>
+<option value="mid">Brevard, Charlotte, Citrus, Clay, Collier, Duval, Escambia, Indian River, Lake, Lee, Manatee, Martin, Pasco, Polk, Sarasota, St. Johns, St. Lucie, Volusia</option>
+<option value="hi">Broward, Miami-Dade, Monroe, Orange, Osceola, Palm Beach, Pinellas, Hillsborough, Seminole</option>
+</select>
+
+<button class="btn btn-teal" onclick="calcRepipe()">Estimate My Repipe</button>
+<div id="rpResult" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>📊 FL Repiping Price Reference</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Home Size</th><th>PEX</th><th>CPVC</th><th>Copper</th></tr></thead>
+<tbody>
+<tr><td>Under 1,200 sq ft</td><td>$3,500–$6,500</td><td>$3,200–$6,000</td><td>$5,500–$10,000</td></tr>
+<tr><td>1,200–2,000 sq ft</td><td>$5,000–$9,000</td><td>$4,500–$8,500</td><td>$8,500–$15,000</td></tr>
+<tr><td>2,000–3,000 sq ft</td><td>$8,000–$14,000</td><td>$7,500–$13,000</td><td>$13,000–$22,000</td></tr>
+<tr><td>3,000+ sq ft</td><td>$12,000–$22,000</td><td>$11,000–$20,000</td><td>$18,000–$35,000+</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:.75rem;color:#94A3B8;margin-top:8px">FL ranges include permit, drywall patch, and fixture reconnect. Slab homes add 15–25% due to tunneling complexity. South FL adds 10–20% for labor market. Copper premiums are higher due to current metal pricing.</p>
+</div>
+</div>
+
+<!-- TAB 1: MATERIAL GUIDE -->
+<div class="panel" id="panel-1">
+<div class="card">
+<h2>🔬 FL Pipe Material Comparison</h2>
+<p style="font-size:.79rem;color:#94A3B8;margin-bottom:12px">Florida's hard water, UV exposure, sandy soil, and high humidity make material selection critical. Here's how each material performs in FL conditions.</p>
+
+<div class="material-card pex">
+<h3>PEX — Crosslinked Polyethylene</h3>
+<span class="badge badge-best">BEST FOR FL</span>
+<p><strong>Why PEX wins in Florida:</strong> Flexible enough to snake through slab without joints, reducing leak points. Handles FL's hard water without pitting or scale buildup. Freeze-resistant (important during rare FL cold snaps). Quieter water hammer performance. Fastest installation = lower labor cost.</p>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Hard Water Resistance</span><span>Excellent</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-teal" style="width:95%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>UV Resistance (exposed)</span><span>Poor — needs protection</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-teal" style="width:25%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Cost (material)</span><span>Lowest</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-teal" style="width:90%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Lifespan in FL</span><span>50+ years</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-teal" style="width:92%"></div></div>
+</div>
+<p style="margin-top:8px"><strong>FL considerations:</strong></p>
+<span class="tag tag-win">Flexible for slab tunneling</span>
+<span class="tag tag-win">No corrosion in acidic FL soil</span>
+<span class="tag tag-win">Handles pH 6–9 FL water</span>
+<span class="tag tag-lose">Cannot be exposed to UV (exterior)</span>
+<span class="tag tag-neu">Requires crimp or expansion fittings</span>
+<p style="font-size:.77rem;color:#94A3B8;margin-top:6px">PEX-A (Uponor/Wirsbo) preferred in FL — most flexible. PEX-B also acceptable. Avoid PEX-C (least flexible). All types rated for 180°F at 100 PSI.</p>
+</div>
+
+<div class="material-card cpvc">
+<h3>CPVC — Chlorinated PVC</h3>
+<span class="badge badge-good">GOOD FOR FL</span>
+<p><strong>CPVC in Florida:</strong> More rigid than PEX but chemically resistant to FL's chlorinated municipal water. Lower material cost than copper. FL code compliant. Common choice for FL homes built 1985–2010. Brittleness in cold temps is less of a concern in most of FL.</p>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Hard Water Resistance</span><span>Very Good</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-gold" style="width:82%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>UV Resistance (exposed)</span><span>Poor — degrades</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-gold" style="width:20%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Cost (material)</span><span>Low-Medium</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-gold" style="width:78%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Lifespan in FL</span><span>25–40 years</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-gold" style="width:72%"></div></div>
+</div>
+<span class="tag tag-win">FL code compliant</span>
+<span class="tag tag-win">Chemical resistant</span>
+<span class="tag tag-warn">Brittle if frozen (rare in FL)</span>
+<span class="tag tag-warn">More joints in slab = more leak risk</span>
+<span class="tag tag-lose">Banned in some FL jurisdictions (check locally)</span>
+<p style="font-size:.77rem;color:#94A3B8;margin-top:6px">Note: Some FL insurers now prefer PEX over CPVC due to CPVC chemical sensitivity. Verify with your insurer before selecting.</p>
+</div>
+
+<div class="material-card copper">
+<h3>Copper (Type L)</h3>
+<span class="badge badge-warn">PREMIUM — FL CHALLENGES</span>
+<p><strong>Copper in Florida:</strong> The gold standard historically, but FL's hard water causes pinhole leaks in copper within 8–15 years in high-mineral-content counties (South and Central FL). Significantly more expensive. Still preferred by some insurers and required in some commercial codes.</p>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Hard Water Resistance</span><span>Poor in high-hardness FL</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-orange" style="width:30%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>UV Resistance (exposed)</span><span>Excellent</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-orange" style="width:95%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Cost (material)</span><span>Highest</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-orange" style="width:25%"></div></div>
+</div>
+<div class="score-bar-wrap">
+  <div class="score-bar-label"><span>Lifespan in FL (hard water)</span><span>8–20 years typical</span></div>
+  <div class="score-bar"><div class="score-bar-fill fill-orange" style="width:42%"></div></div>
+</div>
+<span class="tag tag-win">Acceptable for outdoor/UV exposure</span>
+<span class="tag tag-win">Preferred by some FL insurers</span>
+<span class="tag tag-lose">Pinholes from FL hard water</span>
+<span class="tag tag-lose">Highest material cost</span>
+<span class="tag tag-lose">Copper theft risk (vacant properties)</span>
+<p style="font-size:.77rem;color:#94A3B8;margin-top:6px">If selecting copper in FL, use Type L (not Type M — thinner walls). Water softener or whole-home filter strongly recommended to extend lifespan.</p>
+</div>
+
+<div class="card" style="margin-top:0">
+<h2>📅 FL Pipe Failure Timeline (Why You're Repiping)</h2>
+<div class="timeline-item">
+  <div class="timeline-dot dot-red"></div>
+  <p><strong>Galvanized Steel (pre-1970):</strong> Should be replaced immediately if still in service. Heavy corrosion, flow restriction, orange/brown water, lead risk in solder joints.</p>
+</div>
+<div class="timeline-item">
+  <div class="timeline-dot dot-red"></div>
+  <p><strong>Polybutylene (1978–1995):</strong> Gray plastic pipe — banned/recalled. Catastrophic failure risk. FL insurers often refuse coverage with polybutylene. Replacement is urgent.</p>
+</div>
+<div class="timeline-item">
+  <div class="timeline-dot dot-gold"></div>
+  <p><strong>Copper (1970–2005):</strong> FL pinhole leak epidemic due to hard water. Homes in Miami-Dade, Broward, Palm Beach, Hillsborough average 8–15 years before first leak. Now at or past end of life for most.</p>
+</div>
+<div class="timeline-item">
+  <div class="timeline-dot dot-gold"></div>
+  <p><strong>CPVC (1985–2010):</strong> Some FL CPVC installations developing brittleness and micro-cracks at 15–25 years. Certain manufacturers had defect issues.</p>
+</div>
+<div class="timeline-item">
+  <div class="timeline-dot dot-teal"></div>
+  <p><strong>PEX (2005–present):</strong> Performing well in FL. Expected 50+ year lifespan. Monitor fittings at 15–20 year marks.</p>
+</div>
+</div>
+</div>
+
+<!-- TAB 2: FL PERMIT INFO -->
+<div class="panel" id="panel-2">
+
+<div class="alert-box warn">
+<h3>⚠️ Permits Are Required for Repiping in FL</h3>
+<p>All whole-home repiping in Florida requires a building permit from your local building department. Work must be performed by a licensed FL Certified Plumbing Contractor (CPC). Unpermitted work can void homeowner's insurance and create title issues at resale.</p>
+</div>
+
+<div class="card">
+<h2>📋 FL Repiping Permit Process</h2>
+<ul class="steps-list">
+<li>Licensed FL CPC submits permit application to city or county building department with scope of work and pipe specifications</li>
+<li>Building department reviews and issues permit (1–5 business days typical; same-day available in some counties for minor scopes)</li>
+<li>Plumber performs rough-in repipe work — home will have water shutoff during this phase (typically 1–3 days depending on home size)</li>
+<li>Rough-in inspection: county inspector verifies pipe routing, supports, and connections before walls are closed</li>
+<li>Pressure test performed in inspector's presence: all new lines tested at minimum 10 PSI for 15 minutes (or per local code)</li>
+<li>Inspector approves — drywall patching, texturing, and painting can begin after inspection sign-off</li>
+<li>Final inspection: inspector verifies all fixtures reconnected, water restored, and no visible leaks</li>
+<li>Permit closed — contractor provides you with permit documentation for your records and future title disclosure</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>🗺️ FL County Permit Cost Guide</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>County</th><th>Permit Fee Range</th><th>Timeline</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Miami-Dade</td><td>$350–$750</td><td>3–7 days</td><td>HVHZ — extra requirements</td></tr>
+<tr><td>Broward</td><td>$275–$600</td><td>2–5 days</td><td>Online permit system</td></tr>
+<tr><td>Palm Beach</td><td>$250–$550</td><td>2–5 days</td><td>Wind zone considerations</td></tr>
+<tr><td>Hillsborough</td><td>$200–$450</td><td>2–4 days</td><td>Tampa area standard</td></tr>
+<tr><td>Pinellas</td><td>$175–$400</td><td>2–4 days</td><td>Clearwater/St. Pete</td></tr>
+<tr><td>Orange</td><td>$200–$450</td><td>2–5 days</td><td>Orlando area</td></tr>
+<tr><td>Duval</td><td>$150–$350</td><td>1–3 days</td><td>Jacksonville — faster</td></tr>
+<tr><td>Lee</td><td>$175–$400</td><td>2–5 days</td><td>Fort Myers area</td></tr>
+<tr><td>Sarasota</td><td>$150–$350</td><td>1–3 days</td><td>Streamlined process</td></tr>
+<tr><td>Brevard</td><td>$150–$350</td><td>1–3 days</td><td>Space Coast</td></tr>
+<tr><td>Other counties</td><td>$100–$300</td><td>1–3 days</td><td>Varies by municipality</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2>🏡 FL-Specific Repiping Considerations</h2>
+
+<div class="lead-warn">
+⚠️ <strong>Pre-1978 FL Homes — Lead Paint Alert:</strong> If your home was built before 1978, federal law requires a lead paint disclosure before repiping work that disturbs walls. Your licensed contractor must follow EPA RRP (Renovation, Repair, and Painting) rules. Ask your plumber for their EPA RRP certification.
+</div>
+
+<div class="info-row"><span class="k">Slab foundation impact</span><span class="v">Most FL homes — adds 15–25% cost for tunneling or rerouting through attic</span></div>
+<div class="info-row"><span class="k">HOA approval</span><span class="v">Required if unit shares walls — submit permit + scope to HOA board first</span></div>
+<div class="info-row"><span class="k">FL water hardness</span><span class="v">South FL: 15–25 gpg (very hard). Central FL: 8–15 gpg. North FL: 4–10 gpg. Hard water accelerates copper pitting.</span></div>
+<div class="info-row"><span class="k">Homeowner's insurance</span><span class="v">Many FL insurers offer premium discounts after repiping to PEX — ask your insurer</span></div>
+<div class="info-row"><span class="k">Water damage history</span><span class="v">Disclose prior pipe-related water damage claims — may affect coverage or pricing</span></div>
+<div class="info-row"><span class="k">Post-hurricane repiping</span><span class="v">Repiping triggered by storm damage may be covered under homeowner's policy — file claim first</span></div>
+<div class="info-row"><span class="k">Duration of water shutoff</span><span class="v">Plan for 1–3 days without water. Contractor should provide portable toilet/water access plan.</span></div>
+<div class="info-row"><span class="k">Drywall restoration</span><span class="v">Get written scope of what is vs. isn't included — patching, texturing, and painting often separate</span></div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📋 Free FL Repiping Quote</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Get a licensed FL plumber on the phone within 2 hours to discuss your repiping project.</p>
+
+<label>Your Name</label>
+<input type="text" id="qName" placeholder="Full name">
+
+<label>Phone Number</label>
+<input type="text" id="qPhone" placeholder="(561) 555-PIPE">
+
+<label>FL County</label>
+<select id="qCounty">
+<option value="">Select your county…</option>
+<option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option><option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option><option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option><option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option><option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option><option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option><option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option><option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option><option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option><option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option><option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option><option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option><option>Walton</option><option>Washington</option>
+</select>
+
+<label>Home Size (approximate)</label>
+<select id="qHomeSize">
+<option value="">Select home size…</option>
+<option>Under 1,200 sq ft</option>
+<option>1,200–2,000 sq ft</option>
+<option>2,000–3,000 sq ft</option>
+<option>3,000+ sq ft</option>
+</select>
+
+<label>Current Pipe Material (if known)</label>
+<select id="qCurrentPipe">
+<option value="">Select if known…</option>
+<option>Copper (pinholes or leaks)</option>
+<option>CPVC (cracks or brittleness)</option>
+<option>Polybutylene (gray plastic)</option>
+<option>Galvanized steel (orange water)</option>
+<option>Unknown</option>
+</select>
+
+<label>Describe Your Issue</label>
+<textarea id="qDesc" rows="3" placeholder="e.g. Multiple pinhole leaks in copper pipes, water damage, insurance renewal requires repiping, or I want a quote before buying this home…"></textarea>
+
+<button class="btn btn-teal" onclick="submitRepipeQuote()">Request Free Quote</button>
+</div>
+
+<div class="card">
+<h2>✅ What's Included in a Professional FL Repipe</h2>
+<div class="info-row"><span class="k">All supply lines</span><span class="v">Hot and cold throughout home, including drops to fixtures</span></div>
+<div class="info-row"><span class="k">Fixture stubs</span><span class="v">New stubs at all sinks, showers, tubs, toilets, and appliances</span></div>
+<div class="info-row"><span class="k">Shutoff valves</span><span class="v">New angle stops at every fixture — often badly corroded on FL copper systems</span></div>
+<div class="info-row"><span class="k">Pressure test</span><span class="v">Full system pressure test with county inspector present</span></div>
+<div class="info-row"><span class="k">Permit</span><span class="v">County building permit pulled and finaled in your name</span></div>
+<div class="info-row"><span class="k">Warranty</span><span class="v">1-year labor warranty standard; PEX material warranty 25+ years</span></div>
+</div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="fl-repipe-data">
+<!-- FL REPIPING MARKET DATA: Florida repiping market estimated $280M annually. Miami-Dade and Broward drive largest volume due to high density of copper-piped homes built 1970-2000 now experiencing pinhole leak epidemic. Average FL copper repipe claim to homeowner's insurance: $45,000-$85,000 total when water damage included. Repiping without damage mitigation: $5,000-$22,000 depending on home size and material. PEX market share in FL new construction: approximately 78% (2020-2024). CPVC market share declining. Copper specification rare in residential new construction FL. -->
+<!-- FL WATER HARDNESS BY REGION: South Florida (Miami-Dade, Broward, Palm Beach): 15-25 gpg — among hardest municipal water in US. Biscayne Aquifer source — heavily mineralized. Tampa Bay area (Hillsborough, Pinellas): 10-20 gpg. Orlando area (Orange, Osceola, Seminole): 8-15 gpg. Northeast FL (Duval, St. Johns, Clay): 5-12 gpg. Northwest FL (Escambia, Santa Rosa, Okaloosa): 2-8 gpg — softest. North Central (Alachua, Marion): 4-10 gpg. Southwest (Lee, Collier, Charlotte): 8-18 gpg. Florida Keys (Monroe): 15-22 gpg seawater influence. -->
+<!-- FL PIPE FAILURE STATISTICS: Polybutylene failure: 100% of FL polybutylene systems considered at risk. Manufacturer class action settled 1995. Copper pinhole FL: Average onset 8-15 years in high-hardness areas vs 25-40 years nationally. CPVC brittleness: Some FL CPVC batches (Lubrizol Charlotte Pipe) subject to class action — check if your CPVC is covered. Galvanized: Flow reduction 40-80% at 30 years due to interior corrosion buildup. Typical water pressure in FL: 40-80 PSI municipal supply. Water hammer and pressure spikes accelerate fittings failure. -->
+<!-- SLAB REPIPING METHODS FL: (1) Tunneling: Traditional — excavate under slab to access original lines. More invasive but maintains original pipe routing. Cost premium: +$1,500-$4,000. (2) Rerouting through attic: Most common FL method — run new PEX through attic and down interior walls. Avoids slab excavation. Less invasive. FL climate consideration: attic temps 130-150°F in summer — use UV-rated sleeve on PEX in attic. (3) Open-air exterior: Some FL homes route through exterior walls/soffits. Requires UV protection. CPVC and PEX both degrade in direct UV. Copper acceptable for exterior. -->
+<!-- FL INSURANCE REPIPING: Citizens Property Insurance (FL state insurer) underwriting guidelines: Will not issue new policies on homes with polybutylene pipes. Will not renew policies on homes with galvanized steel pipes. Prefer PEX or copper over CPVC for new policies. Some Citizens agents require proof of repipe for renewal in high-loss zip codes (South FL). Private FL insurers (UPC, Heritage, Universal, Slide) have similar or stricter guidelines. Post-repipe insurance discount: typically 5-15% on homeowner's policy. Some FL insurers require repipe to be permitted and inspected for discount eligibility. -->
+<!-- PEX SPECIFICATIONS FL RELEVANT: PEX-A (Uponor/Wirsbo): Manufactured by peroxide method. Most flexible. Accepts expansion fittings (ASTM F1960). Best freeze resistance. PEX-B (Rehau, SharkBite): Silane method. Slightly less flexible. Uses crimp or clamp fittings (ASTM F1807). Most widely available at FL supply houses. PEX-C: Electron beam method. Least flexible. Not recommended for FL slab applications. Temperature rating: All PEX — 200°F at 80 PSI; 180°F at 100 PSI. FL attic temperatures 130-150°F well within rating but accelerates oxidation — use oxygen barrier PEX where allowed or ensure adequate sleeve. FL code: PEX complies with FBC plumbing chapter under ASTM F876/F877. -->
+<!-- FL REPIPE BRANDS AND PRICING: PEX material costs (2024 FL): PEX-A 1/2" — $0.55-0.85/ft. PEX-B 1/2" — $0.35-0.55/ft. 3/4" PEX — $0.70-1.10/ft. Fittings: Expansion (PEX-A) $3.50-8.00 each. Crimp (PEX-B) $1.50-4.00 each. Copper Type L 1/2" — $3.50-5.50/ft. Copper Type L 3/4" — $5.50-8.50/ft. CPVC 1/2" — $0.60-0.90/ft. Average FL home uses 300-600 linear feet of supply pipe for full repipe. Labor FL: $45-95/hour licensed CPC plumber. Repiping crew: 2-4 plumbers. Average job: 16-32 labor hours for standard FL home. -->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(n) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n));
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i===n));
+}
+
+const BASE_COSTS = {
+  pex: {sm:[3500,6500], md:[5000,9000], lg:[8000,14000], xl:[12000,22000]},
+  cpvc: {sm:[3200,6000], md:[4500,8500], lg:[7500,13000], xl:[11000,20000]},
+  copper: {sm:[5500,10000], md:[8500,15000], lg:[13000,22000], xl:[18000,35000]}
+};
+
+const STORY_MULT = {'1':1.0, '2':1.15, '3':1.28};
+const SLAB_MULT = {yes:1.20, no:1.0};
+const FIXTURE_ADD = {basic:0, full:800, full_plus:1800};
+const COUNTY_MULT = {hi:1.18, mid:1.09, std:1.0};
+
+function calcRepipe() {
+  const sz = document.getElementById('rpHomeSize').value;
+  const stories = document.getElementById('rpStories').value;
+  const mat = document.getElementById('rpMaterial').value;
+  const slab = document.getElementById('rpSlab').value;
+  const fixtures = document.getElementById('rpFixtures').value;
+  const county = document.getElementById('rpCounty').value;
+
+  const base = BASE_COSTS[mat][sz];
+  const sm = STORY_MULT[stories] || 1.0;
+  const slm = SLAB_MULT[slab] || 1.0;
+  const cm = COUNTY_MULT[county] || 1.0;
+  const fa = FIXTURE_ADD[fixtures] || 0;
+
+  let lo = Math.round(base[0] * sm * slm * cm / 100) * 100 + Math.round(fa * cm / 50) * 50;
+  let hi = Math.round(base[1] * sm * slm * cm / 100) * 100 + Math.round(fa * 1.3 * cm / 50) * 50;
+
+  const matNames = {pex:'PEX (Recommended for FL)', cpvc:'CPVC', copper:'Copper Type L'};
+  const sizeNames = {sm:'Under 1,200 sq ft', md:'1,200–2,000 sq ft', lg:'2,000–3,000 sq ft', xl:'3,000+ sq ft'};
+
+  const box = document.getElementById('rpResult');
+  box.style.display = 'block';
+  box.innerHTML = `<div class="estimate-box">
+    <div class="range">$${esc(lo.toLocaleString())} – $${esc(hi.toLocaleString())}</div>
+    <div class="note">Estimated FL whole-home repipe cost</div>
+    <div style="margin-top:12px">
+      <div class="cost-row"><span class="k">Home size</span><span class="v">${esc(sizeNames[sz])}</span></div>
+      <div class="cost-row"><span class="k">Material</span><span class="v">${esc(matNames[mat])}</span></div>
+      <div class="cost-row"><span class="k">Stories</span><span class="v">${esc(stories)} stor${stories === '1' ? 'y' : 'ies'} (+${Math.round((STORY_MULT[stories]-1)*100)}%)</span></div>
+      <div class="cost-row"><span class="k">Foundation</span><span class="v">${slab === 'yes' ? 'Slab (+20% tunneling)' : 'Non-slab'}</span></div>
+      <div class="cost-row"><span class="k">Fixtures</span><span class="v">${fixtures === 'basic' ? 'Basic reconnects' : fixtures === 'full' ? 'All fixtures (+$800)' : 'All fixtures + water heater (+$1,800)'}</span></div>
+      <div class="cost-row"><span class="k">County</span><span class="v">${county === 'hi' ? 'High-cost area (+18%)' : county === 'mid' ? 'Mid-cost (+9%)' : 'Standard'}</span></div>
+    </div>
+    <div class="note" style="margin-top:8px">Includes permit, materials, labor, and basic drywall patching. Painting and finishing not included. Water damage repair quoted separately.</div>
+    <button class="btn btn-teal" onclick="showTab(3)" style="margin-top:10px">Get Free On-Site Quote</button>
+  </div>`;
+}
+
+function submitRepipeQuote() {
+  const name = document.getElementById('qName').value.trim();
+  const phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  const t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 4000);
+}
+</script>
+</div>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license florida whole home repiping pex cpvc copper type l pipe material fl water hardness pinhole leak galvanized polybutylene slab foundation tunneling attic reroute fl building code certified plumbing contractor cpc permit inspection pressure test drywall patch fixture reconnect angle stop shutoff valve lead paint pre-1978 epa rrp fl insurance citizens heritage universal pex-a pex-b expansion crimp fittings uponor rehau rain bird miami-dade broward palm beach hillsborough pinellas orange county repipe cost estimate fl contractor license</div>
+</body>
+</html>

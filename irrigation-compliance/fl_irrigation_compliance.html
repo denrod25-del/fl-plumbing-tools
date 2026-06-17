@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Irrigation System Water Compliance Tool | Florida Plumbing</title>
+<meta name="description" content="Florida irrigation system compliance tool. Find your FL water district watering restrictions, check zone schedules, understand backflow requirements, and estimate service costs.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#00B4FF;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.69rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#00B4FF;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#00B4FF;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#00B4FF}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-blue{background:#00B4FF;color:#fff}
+.btn-blue:hover{background:#0095D4}
+.district-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:12px;border-left:3px solid #00B4FF}
+.district-card h3{font-size:.9rem;font-weight:700;color:#00B4FF;margin-bottom:4px}
+.district-card .coverage{font-size:.73rem;color:#94A3B8;margin-bottom:8px}
+.district-card .rule{background:#0A1A2A;border-radius:7px;padding:9px;margin-bottom:6px}
+.district-card .rule .rule-label{font-size:.75rem;font-weight:700;color:#00B4FF;margin-bottom:3px}
+.district-card .rule p{font-size:.77rem;color:#CBD5E1;line-height:1.4}
+.district-card .phone{font-size:.82rem;color:#F97316;margin-top:6px;font-weight:600}
+.schedule-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.day-card{background:#141929;border-radius:8px;padding:10px;text-align:center;border:1px solid #2A3A5C}
+.day-card.allowed{border-color:#22C55E;background:#081A0D}
+.day-card.restricted{border-color:#EF4444;background:#1A0808}
+.day-card .day-name{font-size:.78rem;font-weight:700;margin-bottom:3px}
+.day-card.allowed .day-name{color:#22C55E}
+.day-card.restricted .day-name{color:#EF4444}
+.day-card .day-status{font-size:.68rem;color:#94A3B8}
+.restriction-result{background:#0A1525;border:1px solid #00B4FF;border-radius:10px;padding:14px;margin-top:14px}
+.restriction-result h3{font-size:.92rem;font-weight:700;color:#00B4FF;margin-bottom:8px}
+.restriction-result p{font-size:.8rem;color:#CBD5E1;line-height:1.5;margin-bottom:6px}
+.schedule-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1E2A45;font-size:.8rem}
+.schedule-row:last-child{border-bottom:none}
+.schedule-row .k{color:#94A3B8}
+.schedule-row .v{color:#E2E8F0;font-weight:500;text-align:right;max-width:55%}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem;align-items:flex-start}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8;flex-shrink:0;max-width:48%}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:50%}
+.estimate-box{background:#0A1525;border:1px solid #00B4FF;border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.estimate-box .range{font-size:1.5rem;font-weight:700;color:#00B4FF}
+.estimate-box .note{font-size:.75rem;color:#94A3B8;margin-top:4px}
+.cost-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:.82rem}
+.cost-row:last-child{border-bottom:none}
+.cost-row .k{color:#94A3B8}
+.cost-row .v{color:#00B4FF;font-weight:600}
+.alert-box{border-radius:10px;padding:13px;margin-bottom:12px}
+.alert-box.danger{border:1px solid #EF4444;background:#1A0808}
+.alert-box.danger h3{font-size:.88rem;font-weight:700;color:#EF4444;margin-bottom:6px}
+.alert-box.warn{border:1px solid #F4B942;background:#1A1508}
+.alert-box.warn h3{font-size:.88rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.alert-box.info{border:1px solid #00B4FF;background:#0A1A2A}
+.alert-box.info h3{font-size:.88rem;font-weight:700;color:#00B4FF;margin-bottom:6px}
+.alert-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.head-card{border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #2A3A5C;background:#141929}
+.head-card h3{font-size:.85rem;font-weight:700;color:#E2E8F0;margin-bottom:4px}
+.head-card .flow{font-size:.78rem;color:#00B4FF;font-weight:600;margin-bottom:3px}
+.head-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.7rem;font-weight:600;margin:2px}
+.badge-blue{background:#0A1A2A;color:#00B4FF;border:1px solid #00B4FF}
+.badge-green{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.badge-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.badge-red{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.77rem;min-width:280px}
+th{background:#141929;color:#94A3B8;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2A3A5C}
+td{padding:7px 10px;border-bottom:1px solid #1A2440;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#0D1525}
+.steps-list{list-style:none;counter-reset:steps}
+.steps-list li{counter-increment:steps;display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #1E2A45;font-size:.81rem;color:#CBD5E1;line-height:1.4}
+.steps-list li:last-child{border-bottom:none}
+.steps-list li::before{content:counter(steps);background:#00B4FF;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.fine-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #EF4444}
+.fine-card h3{font-size:.85rem;font-weight:700;color:#EF4444;margin-bottom:3px}
+.fine-card .fine-amt{font-size:.9rem;font-weight:700;color:#F4B942;margin-bottom:4px}
+.fine-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>💧 FL Irrigation Compliance</h1>
+<p>Water district rules, zone scheduling, backflow requirements & costs</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">My Water District</button>
+<button class="tab" onclick="showTab(1)">Head & Zone Guide</button>
+<button class="tab" onclick="showTab(2)">Cost Calc</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: WATER DISTRICT LOOKUP -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>🗺️ Find Your FL Water District Rules</h2>
+<p style="font-size:.79rem;color:#94A3B8;margin-bottom:14px">Florida has 5 Water Management Districts. Select your county to find your district's watering schedule, restrictions, and backflow requirements.</p>
+
+<label>FL County</label>
+<select id="districtCounty" onchange="lookupDistrict()">
+<option value="">— Select your county —</option>
+<option value="sfwmd">Miami-Dade</option>
+<option value="sfwmd">Broward</option>
+<option value="sfwmd">Palm Beach</option>
+<option value="sfwmd">Monroe</option>
+<option value="sfwmd">Collier</option>
+<option value="sfwmd">Lee</option>
+<option value="sfwmd">Charlotte</option>
+<option value="sfwmd">Hendry</option>
+<option value="sfwmd">Glades</option>
+<option value="sfwmd">Okeechobee</option>
+<option value="sfwmd">Martin</option>
+<option value="sfwmd">St. Lucie</option>
+<option value="sfwmd">Indian River</option>
+<option value="sfwmd">Highlands</option>
+<option value="swfwmd">Hillsborough</option>
+<option value="swfwmd">Pinellas</option>
+<option value="swfwmd">Pasco</option>
+<option value="swfwmd">Manatee</option>
+<option value="swfwmd">Sarasota</option>
+<option value="swfwmd">Polk</option>
+<option value="swfwmd">Hardee</option>
+<option value="swfwmd">DeSoto</option>
+<option value="swfwmd">Hernando</option>
+<option value="swfwmd">Citrus</option>
+<option value="swfwmd">Sumter</option>
+<option value="swfwmd">Lake</option>
+<option value="swfwmd">Marion</option>
+<option value="swfwmd">Levy</option>
+<option value="sjrwmd">Orange</option>
+<option value="sjrwmd">Osceola</option>
+<option value="sjrwmd">Brevard</option>
+<option value="sjrwmd">Volusia</option>
+<option value="sjrwmd">Seminole</option>
+<option value="sjrwmd">Flagler</option>
+<option value="sjrwmd">Putnam</option>
+<option value="sjrwmd">Clay</option>
+<option value="sjrwmd">Duval</option>
+<option value="sjrwmd">Nassau</option>
+<option value="sjrwmd">St. Johns</option>
+<option value="sjrwmd">Alachua</option>
+<option value="srwmd">Jefferson</option>
+<option value="srwmd">Leon</option>
+<option value="srwmd">Wakulla</option>
+<option value="srwmd">Gadsden</option>
+<option value="srwmd">Liberty</option>
+<option value="srwmd">Franklin</option>
+<option value="srwmd">Taylor</option>
+<option value="srwmd">Madison</option>
+<option value="srwmd">Hamilton</option>
+<option value="srwmd">Suwannee</option>
+<option value="srwmd">Columbia</option>
+<option value="srwmd">Gilchrist</option>
+<option value="srwmd">Lafayette</option>
+<option value="srwmd">Dixie</option>
+<option value="nwfwmd">Escambia</option>
+<option value="nwfwmd">Santa Rosa</option>
+<option value="nwfwmd">Okaloosa</option>
+<option value="nwfwmd">Walton</option>
+<option value="nwfwmd">Bay</option>
+<option value="nwfwmd">Washington</option>
+<option value="nwfwmd">Holmes</option>
+<option value="nwfwmd">Jackson</option>
+<option value="nwfwmd">Calhoun</option>
+<option value="nwfwmd">Gulf</option>
+<option value="nwfwmd">Baker</option>
+<option value="nwfwmd">Bradford</option>
+<option value="nwfwmd">Union</option>
+<option value="nwfwmd">Nassau</option>
+</select>
+
+<div id="districtResult"></div>
+</div>
+
+<div class="card">
+<h2>⚖️ FL Irrigation Violation Fines</h2>
+
+<div class="fine-card">
+<h3>First Violation — Warning</h3>
+<div class="fine-amt">Written Warning</div>
+<p>Most FL water utilities issue a written warning on first violation with correction required within 24 hours. Violation documented in utility records.</p>
+</div>
+
+<div class="fine-card">
+<h3>Second Violation</h3>
+<div class="fine-amt">$100 – $250</div>
+<p>Most FL utilities: $100-$250 fine plus service fee. Some municipalities increase to $500 for flagrant violations (watering during rain event).</p>
+</div>
+
+<div class="fine-card">
+<h3>Third Violation</h3>
+<div class="fine-amt">$250 – $500+</div>
+<p>Escalating fine schedule. Some utilities add a permanent account notation. Continued violations may trigger mandatory irrigation audit.</p>
+</div>
+
+<div class="fine-card">
+<h3>Repeat Violations / Drought Phase III–IV</h3>
+<div class="fine-amt">$500 – $1,000+ / Disconnect</div>
+<p>During declared drought emergencies, FL utilities can issue $500-$1,000 fines per incident and may disconnect water service for repeat offenders.</p>
+</div>
+</div>
+</div>
+
+<!-- TAB 1: HEAD & ZONE GUIDE -->
+<div class="panel" id="panel-1">
+
+<div class="card">
+<h2>🌀 FL Sprinkler Head Types</h2>
+<p style="font-size:.79rem;color:#94A3B8;margin-bottom:12px">Selecting the right head for FL's sandy soil, high ET (evapotranspiration), and water restriction schedule is key to compliance and turf health.</p>
+
+<div class="head-card">
+<h3>Rotary / Rotor Heads</h3>
+<div class="flow">Flow: 0.5–1.5 GPM per head | Radius: 15–50 ft</div>
+<span class="badge badge-green">FL Compliant</span>
+<span class="badge badge-blue">Best for Large Turf</span>
+<p>Slow-rotating stream applies water slowly — better FL clay-over-sand infiltration. Less runoff on compact soils. Matched precipitation rate (MPR) rotors recommended for odd-shaped FL lots. Rain Bird 5000, Hunter PGP, and Orbit common FL installs.</p>
+</div>
+
+<div class="head-card">
+<h3>Fixed Spray / Pop-Up Spray Heads</h3>
+<div class="flow">Flow: 0.5–3.0 GPM per head | Radius: 4–15 ft</div>
+<span class="badge badge-green">FL Compliant</span>
+<span class="badge badge-warn">Watch for Runoff</span>
+<p>High precipitation rate — prone to runoff on FL's sandy slopes. Use MPR nozzles (matched precipitation rate) and keep run times short (8-10 min). Good for small turf areas, beds, and tight zones. Avoid on slopes > 5%.</p>
+</div>
+
+<div class="head-card">
+<h3>MP Rotator Nozzles (e.g. Hunter MP Rotator, Rain Bird R-VAN)</h3>
+<div class="flow">Flow: 0.2–0.85 GPM per nozzle | Radius: 5–30 ft</div>
+<span class="badge badge-blue">Recommended FL</span>
+<span class="badge badge-green">Low Runoff</span>
+<p>Rotating stream applies at 3-4x slower rate than standard sprays. Dramatically reduces runoff on FL's sandy and shell-limestone soils. Many FL water districts offer rebates for conversion from spray to MP Rotators. SWFWMD rebate available.</p>
+</div>
+
+<div class="head-card">
+<h3>Drip / Micro-Irrigation</h3>
+<div class="flow">Flow: 0.1–1.5 GPH per emitter | Variable</div>
+<span class="badge badge-green">Most Efficient</span>
+<span class="badge badge-blue">FL Exempt from Schedule</span>
+<p>Drip irrigation applies water directly to root zone — no evaporative loss. FL statutes exempt hand-held hoses and drip/micro-irrigation from day/time watering restrictions. Ideal for FL vegetable gardens, fruit trees, shrubs. Reduces water use 30-50% vs spray.</p>
+</div>
+
+<div class="head-card">
+<h3>Bubblers / Tree Ring Emitters</h3>
+<div class="flow">Flow: 0.25–2.0 GPH | Fixed radius 1–3 ft</div>
+<span class="badge badge-green">FL Tree Irrigation</span>
+<p>Saturate root zone of newly planted FL trees and palms. FL's sandy soil requires deep, infrequent watering for tree establishment. Bubblers combined with 3-4" mulch layer reduce irrigation by 25%. Drip exempt from FL watering restrictions.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>📅 FL Zone Scheduling Best Practices</h2>
+<div class="alert-box info">
+<h3>💡 FL Smart Controller Requirement</h3>
+<p>Florida law (FS 373.62) requires all automatic irrigation systems installed after May 1, 1991 to have a rain sensor (rain shutoff device) installed and functioning. Rain sensors must be tested at each irrigation service call. Smart ET controllers also qualify and are preferred.</p>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>Zone Type</th><th>FL Recommended Run Time</th><th>Frequency</th><th>Best Time</th></tr></thead>
+<tbody>
+<tr><td>St. Augustine turf</td><td>20–35 min (rotors)</td><td>2x/week max</td><td>4–8am</td></tr>
+<tr><td>Bahia grass</td><td>15–25 min (rotors)</td><td>1–2x/week</td><td>4–8am</td></tr>
+<tr><td>Zoysia / Bermuda</td><td>15–20 min (rotors)</td><td>1–2x/week</td><td>4–8am</td></tr>
+<tr><td>Shrub / Planting beds</td><td>10–15 min (spray)</td><td>2–3x/week</td><td>4–8am</td></tr>
+<tr><td>Annual flowers</td><td>8–12 min (spray)</td><td>3–4x/week</td><td>4–8am</td></tr>
+<tr><td>Trees / Palms (drip)</td><td>20–40 min (drip)</td><td>1–2x/week</td><td>Any (exempt)</td></tr>
+<tr><td>Vegetable garden (drip)</td><td>15–30 min (drip)</td><td>Daily if needed</td><td>Any (exempt)</td></tr>
+</tbody>
+</table>
+</div>
+
+<p style="font-size:.75rem;color:#94A3B8;margin-top:8px">FL summer: reduce run times 20-30% — high humidity and daily rain events reduce irrigation need. Dry season (Nov–Apr): increase as needed within restriction schedule. Check county ET data from UF/IFAS or your utility's website.</p>
+</div>
+
+<div class="card">
+<h2>🛡️ FL Irrigation Backflow Requirements</h2>
+<div class="info-row"><span class="k">Requirement</span><span class="v">Required on ALL FL irrigation systems with potable water connection</span></div>
+<div class="info-row"><span class="k">Device types</span><span class="v">Residential irrigation: Pressure Vacuum Breaker (PVB) most common. Chemigation (fertilizer injection): RPZ required by FL DEP</span></div>
+<div class="info-row"><span class="k">Annual testing</span><span class="v">Required annually by FL DEP Rule 62-555. Must be tested by FL-certified backflow tester</span></div>
+<div class="info-row"><span class="k">Test cost FL</span><span class="v">$45–$125 (PVB test); $75–$150 (RPZ test)</span></div>
+<div class="info-row"><span class="k">Permit</span><span class="v">New irrigation installation requires permit in all FL counties</span></div>
+<div class="info-row"><span class="k">Well-source irrigation</span><span class="v">No potable cross-connection — backflow still recommended for chemical injection. Check local utility rules.</span></div>
+</div>
+</div>
+
+<!-- TAB 2: COST CALC -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>💰 FL Irrigation Service Cost Calculator</h2>
+
+<label>Service Type</label>
+<select id="irrService">
+<option value="startup">System Startup / Spring Activation</option>
+<option value="winterize">Winterization / Blowout</option>
+<option value="backflow_test">Backflow Test (annual)</option>
+<option value="head_replace">Sprinkler Head Replacement (per head)</option>
+<option value="head_adjust">Zone Adjustment / Head Realignment</option>
+<option value="valve_repair">Zone Valve Repair / Replace</option>
+<option value="controller">Smart Controller Upgrade</option>
+<option value="rain_sensor">Rain Sensor Install (FL required)</option>
+<option value="leak_repair">Lateral Line Leak Repair</option>
+<option value="new_zone">New Zone Addition</option>
+<option value="full_install">Full System Install (per zone)</option>
+<option value="audit">Water Audit / Efficiency Check</option>
+</select>
+
+<label>Number of Zones / Units</label>
+<select id="irrZones">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="8">8</option>
+<option value="10">10+</option>
+</select>
+
+<label>Property Type</label>
+<select id="irrProp">
+<option value="res">Residential (home)</option>
+<option value="hoa">HOA / Community</option>
+<option value="com">Commercial / Office</option>
+</select>
+
+<label>FL County</label>
+<select id="irrCounty">
+<option value="std">Alachua, Baker, Bradford, Calhoun, Columbia, DeSoto, Dixie, Flagler, Franklin, Gadsden, Gilchrist, Glades, Gulf, Hamilton, Hardee, Hendry, Hernando, Highlands, Holmes, Jackson, Jefferson, Lafayette, Levy, Liberty, Madison, Marion, Nassau, Okaloosa, Okeechobee, Putnam, Santa Rosa, Sumter, Suwannee, Taylor, Union, Wakulla, Walton, Washington</option>
+<option value="mid">Brevard, Charlotte, Citrus, Clay, Collier, Duval, Escambia, Indian River, Lake, Lee, Manatee, Martin, Pasco, Polk, Sarasota, St. Johns, St. Lucie, Volusia</option>
+<option value="hi">Broward, Miami-Dade, Monroe, Orange, Osceola, Palm Beach, Pinellas, Hillsborough, Seminole</option>
+</select>
+
+<button class="btn btn-blue" onclick="calcIrrigation()">Calculate Estimate</button>
+<div id="irrResult" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>📊 FL Irrigation Cost Reference</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Service</th><th>Low</th><th>High</th></tr></thead>
+<tbody>
+<tr><td>System startup</td><td>$65</td><td>$150</td></tr>
+<tr><td>Winterization</td><td>$65</td><td>$150</td></tr>
+<tr><td>Backflow test (PVB)</td><td>$45</td><td>$95</td></tr>
+<tr><td>Backflow test (RPZ)</td><td>$75</td><td>$150</td></tr>
+<tr><td>Head replacement</td><td>$8</td><td>$45</td></tr>
+<tr><td>Zone valve repair</td><td>$85</td><td>$225</td></tr>
+<tr><td>Smart controller</td><td>$250</td><td>$650</td></tr>
+<tr><td>Rain sensor install</td><td>$65</td><td>$150</td></tr>
+<tr><td>Lateral line repair</td><td>$95</td><td>$350</td></tr>
+<tr><td>New zone (installed)</td><td>$350</td><td>$800</td></tr>
+<tr><td>Full install (per zone)</td><td>$550</td><td>$1,200</td></tr>
+<tr><td>Water audit</td><td>$125</td><td>$350</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:.75rem;color:#94A3B8;margin-top:8px">FL pricing varies significantly by county. South FL labor premiums 15-25% above state average. Service call / trip charge ($65-$95) may apply additionally.</p>
+</div>
+
+<div class="card">
+<h2>💡 FL Water Rebate Programs</h2>
+<div class="info-row"><span class="k">SWFWMD WaterStar</span><span class="v">Up to $250 for smart controller; $0.50/sq ft for turf removal; $75 rain sensor</span></div>
+<div class="info-row"><span class="k">SFWMD Rebates</span><span class="v">Varies by utility — contact local water utility directly; up to $150 smart controller</span></div>
+<div class="info-row"><span class="k">SJRWMD Conservation</span><span class="v">Rebates for rain sensors, soil moisture sensors, and drip conversion through local utilities</span></div>
+<div class="info-row"><span class="k">Local utility rebates</span><span class="v">Tampa Water, JEA, Orlando Utilities, Reedy Creek all have rebate programs — call your utility</span></div>
+<div class="info-row"><span class="k">MP Rotator conversion</span><span class="v">SWFWMD: $1.50–$3.00/nozzle converted from spray to MP Rotator via participating utilities</span></div>
+<div class="info-row"><span class="k">Florida-Friendly Landscaping™</span><span class="v">UF/IFAS program — rain garden, native plants, and drip conversion may qualify for local rebates</span></div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📋 Get a Free FL Irrigation Quote</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Licensed FL irrigation contractor will call within 2 hours to discuss your system needs.</p>
+
+<label>Your Name</label>
+<input type="text" id="qName" placeholder="Full name">
+
+<label>Phone Number</label>
+<input type="text" id="qPhone" placeholder="(561) 555-PIPE">
+
+<label>FL County</label>
+<select id="qCounty">
+<option value="">Select your county…</option>
+<option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option><option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option><option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option><option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option><option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option><option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option><option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option><option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option><option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option><option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option><option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option><option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option><option>Walton</option><option>Washington</option>
+</select>
+
+<label>Service Needed</label>
+<select id="qService">
+<option value="">Select service…</option>
+<option>Backflow testing (annual required)</option>
+<option>System startup / activation</option>
+<option>Winterization / blowout</option>
+<option>Sprinkler head replacement</option>
+<option>Zone valve repair</option>
+<option>Smart controller upgrade</option>
+<option>Rain sensor installation (FL law)</option>
+<option>New zone addition</option>
+<option>Full system installation</option>
+<option>Water audit / efficiency check</option>
+<option>Violation / fine — need immediate help</option>
+<option>Other / not sure</option>
+</select>
+
+<label>Number of Zones (if known)</label>
+<select id="qZones">
+<option value="">Select…</option>
+<option>1–3 zones</option>
+<option>4–6 zones</option>
+<option>7–10 zones</option>
+<option>10+ zones</option>
+<option>Not sure</option>
+</select>
+
+<label>Additional Details</label>
+<textarea id="qDesc" rows="3" placeholder="e.g. Received a violation notice, annual backflow test due, heads are broken after lawn mowing, or want to upgrade to a smart controller before dry season…"></textarea>
+
+<button class="btn btn-blue" onclick="submitIrrigQuote()">Request Free Quote</button>
+</div>
+
+<div class="card">
+<h2>✅ FL Irrigation Compliance Checklist</h2>
+<ul class="steps-list">
+<li>Rain sensor installed and tested — FL law requires on all automatic systems</li>
+<li>Backflow preventer installed and current on annual testing</li>
+<li>Watering schedule programmed to comply with your water district's day/time rules</li>
+<li>Controller set to seasonal adjustment (reduce in rainy season Jun–Sep)</li>
+<li>No watering during rain events — rain sensor or smart controller ensures this</li>
+<li>All zone heads adjusted to minimize overspray onto pavement and structures</li>
+<li>Annual inspection by licensed FL irrigation contractor</li>
+</ul>
+</div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="fl-irr-data">
+<!-- FL WATER MANAGEMENT DISTRICTS: Five districts regulate all water use in FL. SFWMD (South Florida WMD): Covers 16 counties including Miami-Dade, Broward, Palm Beach. Headquarters: West Palm Beach. Standard restriction: 2x/week. Dry season (Nov-Apr) water watch/warning phases can restrict to 1x/week or ban. SWFWMD (Southwest Florida WMD): Covers 16 counties including Hillsborough, Pinellas, Pasco, Manatee, Sarasota. Headquarters: Brooksville. Year-round 2x/week schedule with specific day-by-address rule. Active rebate programs. SJRWMD (St. Johns River WMD): Covers 18 counties including Orange, Seminole, Brevard, Volusia, Duval. Headquarters: Palatka. 2x/week. SRWMD (Suwannee River WMD): Covers 15 counties in North Florida including Leon, Alachua. Less restrictive — check county utility rules. NWFWMD (Northwest Florida WMD): Covers 16 counties including Escambia, Santa Rosa, Okaloosa. Generally less restrictive than South FL. -->
+<!-- SWFWMD WATERING SCHEDULE DETAIL: Address odd number: Wed and Sat. Address even number: Thu and Sun. Commercial properties: Tue and Fri. All restrictions: 4am-8am recommended window (before heat of day). No watering between 10am-4pm. Drought Phase I: 1x/week. Phase II: 1x/2 weeks. Phase III: No irrigation. SWFWMD serves approximately 2.4 million water service connections. Tampa Bay Water (wholesale supplier) tracks precipitation deficit — triggers restrictions. Average FL residential irrigation use: 50-60% of total household water use. -->
+<!-- SFWMD WATERING RULES DETAIL: Year-round twice-per-week schedule. Days assigned by local utility — check with your water utility. Miami-Dade Water and Sewer: Check specific address. Broward County Water and Wastewater Services: Specific schedule by zone. Palm Beach County Water Utilities: Schedule varies by utility district. Monroe County (Florida Keys): Very strict — once per week or less in some areas due to limited freshwater. Keys utilities use Biscayne Aquifer via pipeline. -->
+<!-- SJRWMD SCHEDULE: Year-round twice-per-week in most service areas. Orlando Utilities Commission (OUC): Addresses ending in 0,2,4,6,8 = Tue/Sat; 1,3,5,7,9 = Wed/Sun. City of Orlando: Similar scheme. Brevard County: Local utility schedules. Volusia County: Varies by municipality. SJRWMD covers fastest-growing FL counties — demand management critical. SJR basin serves > 4 million people. St. Johns River is FL's largest river and primary water supply source for region. -->
+<!-- FL IRRIGATION MARKET DATA: Florida has approximately 2.5 million permitted irrigation systems. Commercial irrigation market: $450M annually in FL. Residential service and maintenance: $380M annually. Average FL residential irrigation system: 6-8 zones, 40-60 heads, serves 0.25-0.50 acres. Annual maintenance cost per residence: $300-$700 (2x startup/winterize + backflow test + service calls). New residential install: $2,500-$8,000 for typical FL home. Irrigation accounts for 58% of residential outdoor water use in FL. FL experienced worst drought conditions on record 2011 and 2021 — both triggered Phase III/IV restrictions across multiple districts. -->
+<!-- FL RAIN SENSOR TECHNOLOGY: Florida Statute 373.62 enacted 1991 — all automatic irrigation systems must have functioning rain shutoff device. Wireless rain sensors (Hunter, Rain Bird, Orbit) typical modern install: $45-95 device, $65-150 install. Soil moisture sensors (soil tension type): More accurate than rain sensors — sense actual soil moisture. Approved as equivalent to rain sensor. Smart ET controllers (Rachio, Rain Bird, Hunter Hydrawise): Use local weather data to adjust schedule automatically. Most FL water districts accept as rain sensor equivalent. Several FL utilities offer rebates for smart controller upgrades ($150-$250). -->
+<!-- FL IRRIGATION BACKFLOW DETAIL: FL Administrative Code 62-555 requires cross-connection control on all potable water irrigation connections. Pressure Vacuum Breaker (PVB): Must be installed at least 12 inches above highest downstream outlet. Most common FL residential irrigation BFP. Cannot be buried — above grade only. Annual test required. Double Check Valve Assembly (DCVA): Used where PVB cannot be installed above flood rim. Must be installed by licensed plumber. Annual test required. Reduced Pressure Zone (RPZ): Required when chemical injection (fertilizer, pesticide) directly into irrigation system. FL pesticide applicator license also required for chemigation. Annual test required. FL certification for backflow testers: Must pass AWWA, ABPA, or USC FCCCHR exam plus FL-specific training. -->
+<!-- FLORIDA-FRIENDLY LANDSCAPING PROGRAM: UF/IFAS Florida-Friendly Landscaping™ (FFL) program. Principles: Right plant right place; water efficiently; fertilize appropriately; mulch; attract wildlife; manage yard pests responsibly; recycle; reduce stormwater runoff; protect the waterfront. FFL certified landscapes can qualify for local utility rebates and HOA exemptions from standard landscaping rules (FL FS 373.185 — HOAs cannot prohibit Florida-Friendly landscapes). Native plants: Firebush, Simpson's stopper, Coontie, Beautyberry, Muhly grass, Saw palmetto require little to no irrigation once established. Average water savings: 50% vs conventional landscape. -->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(n) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n));
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i===n));
+}
+
+const DISTRICT_DATA = {
+  sfwmd: {
+    name: 'South Florida Water Management District (SFWMD)',
+    counties: 'Miami-Dade, Broward, Palm Beach, Monroe, Collier, Lee, Charlotte, Hendry, Glades, Okeechobee, Martin, St. Lucie, Indian River, Highlands, and portions of Polk, Hardee, DeSoto',
+    phone: '1-800-432-2045',
+    website: 'sfwmd.gov',
+    standard: 'Twice per week (2x/week) year-round',
+    days: 'Days assigned by local utility — check your specific water utility for assigned days',
+    hours: 'Before 10am or after 4pm. Best: 4am–8am',
+    drip_exempt: true,
+    drought_phases: 'Phase I: 1x/week. Phase II: 1x/2 weeks. Phase III: Essential use only. Active phases checked at sfwmd.gov.',
+    backflow_required: true,
+    annual_test: true,
+    notes: 'Florida Keys (Monroe): Often restricted to 1x/week or less. South FL receives most drought emergency declarations statewide due to Biscayne Aquifer pressure.'
+  },
+  swfwmd: {
+    name: 'Southwest Florida Water Management District (SWFWMD)',
+    counties: 'Hillsborough, Pinellas, Pasco, Manatee, Sarasota, Polk, Hardee, DeSoto, Hernando, Citrus, Sumter, Lake, Marion, Levy',
+    phone: '1-800-423-1476',
+    website: 'watermatters.org',
+    standard: 'Twice per week (2x/week) year-round',
+    days: 'ODD address (1,3,5,7,9): Wednesday & Saturday. EVEN address (0,2,4,6,8): Thursday & Sunday. Commercial: Tuesday & Friday.',
+    hours: 'Watering prohibited 10am–4pm. Best: 4am–8am',
+    drip_exempt: true,
+    drought_phases: 'Phase I (modified): 1x/week. Phase II (severe): 1x/2 weeks. Phase III (extreme): Essential use only.',
+    backflow_required: true,
+    annual_test: true,
+    notes: 'SWFWMD has the most active rebate programs in FL. Rebates available for smart controllers, rain sensors, MP Rotator conversion, and WaterStar certified landscapes. Call (800) 423-1476 for rebate eligibility.'
+  },
+  sjrwmd: {
+    name: 'St. Johns River Water Management District (SJRWMD)',
+    counties: 'Orange, Osceola, Brevard, Volusia, Seminole, Flagler, Putnam, Clay, Duval, Nassau, St. Johns, Alachua (portions)',
+    phone: '1-800-725-5922',
+    website: 'sjrwmd.com',
+    standard: 'Twice per week (2x/week) year-round',
+    days: 'Days assigned by local utility. OUC (Orlando): Even addresses Tue/Sat, Odd addresses Wed/Sun. Check local utility for exact schedule.',
+    hours: 'Watering prohibited 10am–4pm. Best window: 4am–8am',
+    drip_exempt: true,
+    drought_phases: 'Phase I: 1x/week. Phase II: 1x/2 weeks. Phase III: No irrigation (essential use exceptions). Check sjrwmd.com for active phases.',
+    backflow_required: true,
+    annual_test: true,
+    notes: 'SJRWMD covers the fastest-growing region of FL (Orlando metro). Demand management is critical. St. Johns River Basin serves over 4 million residents. Rapid development strains aquifer recharge.'
+  },
+  srwmd: {
+    name: 'Suwannee River Water Management District (SRWMD)',
+    counties: 'Jefferson, Leon, Wakulla, Gadsden, Liberty, Franklin, Taylor, Madison, Hamilton, Suwannee, Columbia, Gilchrist, Lafayette, Dixie',
+    phone: '(386) 362-1001',
+    website: 'srwmd.org',
+    standard: 'Generally less restrictive — check local utility rules',
+    days: 'Most SRWMD counties do not have uniform district-wide restrictions. Rules set by local municipality or utility. Leon County (Tallahassee Utilities): 2x/week.',
+    hours: 'No district-wide prohibition, but best practice is before 10am or after 4pm',
+    drip_exempt: true,
+    drought_phases: 'Drought restrictions activated locally during declared emergencies. Tallahassee: Phase I restricts to 1x/week.',
+    backflow_required: true,
+    annual_test: true,
+    notes: 'North Florida generally has more rainfall and less restriction than South/Central FL. However, drought seasons still trigger local restrictions. Always check with your specific municipality.'
+  },
+  nwfwmd: {
+    name: 'Northwest Florida Water Management District (NWFWMD)',
+    counties: 'Escambia, Santa Rosa, Okaloosa, Walton, Bay, Washington, Holmes, Jackson, Calhoun, Gulf, Baker, Bradford, Union, Nassau (partial)',
+    phone: '(850) 539-5999',
+    website: 'nwfwater.com',
+    standard: 'Generally 2x/week or as-needed — check local utility',
+    days: 'NWFWMD does not have uniform district-wide restrictions. Rules set by local municipalities. Pensacola area, Panama City — check utility. Generally more permissive than other FL districts.',
+    hours: 'Best practice: water before 10am. No formal district prohibition in most areas.',
+    drip_exempt: true,
+    drought_phases: 'Drought restrictions triggered locally. Panhandle droughts occur occasionally — check local utility for active restrictions.',
+    backflow_required: true,
+    annual_test: true,
+    notes: 'Northwest FL has highest average annual rainfall in state (60+ inches). Less irrigation-dependent region. However, drought watch periods do occur. Gulf Coast beaches and barrier islands have unique groundwater concerns.'
+  }
+};
+
+function lookupDistrict() {
+  const sel = document.getElementById('districtCounty');
+  const district = sel.value;
+  const county = sel.options[sel.selectedIndex].text;
+  const box = document.getElementById('districtResult');
+  if (!district) { box.innerHTML = ''; return; }
+  const d = DISTRICT_DATA[district];
+  if (!d) { box.innerHTML = ''; return; }
+  box.innerHTML = `<div class="district-card" style="margin-top:12px">
+    <h3>${esc(d.name)}</h3>
+    <div class="coverage">Counties: ${esc(d.counties)}</div>
+    <div class="rule">
+      <div class="rule-label">📅 Standard Watering Schedule</div>
+      <p>${esc(d.standard)}</p>
+    </div>
+    <div class="rule">
+      <div class="rule-label">📆 Assigned Days</div>
+      <p>${esc(d.days)}</p>
+    </div>
+    <div class="rule">
+      <div class="rule-label">⏰ Allowed Hours</div>
+      <p>${esc(d.hours)}</p>
+    </div>
+    <div class="rule">
+      <div class="rule-label">💧 Drip / Micro-Irrigation</div>
+      <p>${d.drip_exempt ? '✅ EXEMPT from day/time restrictions — water any time' : 'Check local rules'}</p>
+    </div>
+    <div class="rule">
+      <div class="rule-label">🚨 Drought Phase Restrictions</div>
+      <p>${esc(d.drought_phases)}</p>
+    </div>
+    <div class="rule">
+      <div class="rule-label">🛡️ Backflow Prevention</div>
+      <p>${d.backflow_required ? '✅ REQUIRED on all potable irrigation connections. Annual testing mandatory.' : 'Check local rules'}</p>
+    </div>
+    ${d.notes ? `<div class="rule"><div class="rule-label">ℹ️ Notes for Your County</div><p>${esc(d.notes)}</p></div>` : ''}
+    <div class="phone">📞 District: ${esc(d.phone)} | 🌐 ${esc(d.website)}</div>
+  </div>`;
+}
+
+const IRR_COSTS = {
+  startup: [65, 150],
+  winterize: [65, 150],
+  backflow_test: [45, 125],
+  head_replace: [8, 45],
+  head_adjust: [65, 150],
+  valve_repair: [85, 225],
+  controller: [250, 650],
+  rain_sensor: [65, 150],
+  leak_repair: [95, 350],
+  new_zone: [350, 800],
+  full_install: [550, 1200],
+  audit: [125, 350]
+};
+
+const IRR_PROP_MULT = {res:1.0, hoa:1.4, com:1.6};
+const IRR_COUNTY_MULT = {hi:1.22, mid:1.11, std:1.0};
+
+function calcIrrigation() {
+  const svc = document.getElementById('irrService').value;
+  const zones = parseInt(document.getElementById('irrZones').value) || 1;
+  const prop = document.getElementById('irrProp').value;
+  const county = document.getElementById('irrCounty').value;
+
+  const base = IRR_COSTS[svc] || [75, 200];
+  const pm = IRR_PROP_MULT[prop] || 1.0;
+  const cm = IRR_COUNTY_MULT[county] || 1.0;
+
+  let lo = Math.round(base[0] * zones * pm * cm / 5) * 5;
+  let hi = Math.round(base[1] * zones * pm * cm / 5) * 5;
+
+  const svcNames = {
+    startup:'System Startup', winterize:'Winterization', backflow_test:'Backflow Test',
+    head_replace:'Head Replacement', head_adjust:'Zone Adjustment', valve_repair:'Valve Repair/Replace',
+    controller:'Smart Controller Upgrade', rain_sensor:'Rain Sensor Install', leak_repair:'Lateral Line Repair',
+    new_zone:'New Zone Addition', full_install:'Full Install (per zone)', audit:'Water Audit'
+  };
+
+  const box = document.getElementById('irrResult');
+  box.style.display = 'block';
+  box.innerHTML = `<div class="estimate-box">
+    <div class="range">$${esc(String(lo))} – $${esc(String(hi))}</div>
+    <div class="note">Estimated FL cost — ${esc(svcNames[svc] || svc)} × ${esc(String(zones))}</div>
+    <div style="margin-top:12px">
+      <div class="cost-row"><span class="k">Service</span><span class="v">${esc(svcNames[svc] || svc)}</span></div>
+      <div class="cost-row"><span class="k">Quantity</span><span class="v">× ${esc(String(zones))}</span></div>
+      <div class="cost-row"><span class="k">Property type</span><span class="v">${prop === 'res' ? 'Residential' : prop === 'hoa' ? 'HOA/Community (+40%)' : 'Commercial (+60%)'}</span></div>
+      <div class="cost-row"><span class="k">County</span><span class="v">${county === 'hi' ? 'High-cost (+22%)' : county === 'mid' ? 'Mid-cost (+11%)' : 'Standard'}</span></div>
+    </div>
+    <div class="note" style="margin-top:8px">Trip charge ($65–$95) may apply. Material costs for head replacements included in range above. Get a free quote for exact on-site pricing.</div>
+    <button class="btn btn-blue" onclick="showTab(3)" style="margin-top:10px">Get Free Quote</button>
+  </div>`;
+}
+
+function submitIrrigQuote() {
+  const name = document.getElementById('qName').value.trim();
+  const phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  const t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 4000);
+}
+</script>
+</div>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration florida irrigation system water management district sfwmd swfwmd sjrwmd srwmd nwfwmd watering restriction schedule twice per week odd even address drip irrigation exempt backflow preventer pressure vacuum breaker pvb rpz annual test fl statute 373.62 rain sensor smart controller rebate program waterstar mp rotator sprinkler head rotor spray head zone valve controller rachio hunter rain bird orbit st augustine bahia grass zoysia bermuda turf evapotranspiration et florida friendly landscaping uf ifas native plants water conservation violation fine drought phase emergency declaration</div>
+</body>
+</html>

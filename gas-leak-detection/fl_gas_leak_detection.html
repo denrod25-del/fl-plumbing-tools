@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Gas Line Leak Detection & Safety Tool | Florida Plumbing</title>
+<meta name="description" content="Florida gas line leak detection tool. Check leak risk symptoms, find FL utility emergency contacts, estimate detection and repair costs, and get a licensed FL plumber quote.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#F97316;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.69rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#F97316;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#F97316;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#F97316}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-orange{background:#F97316;color:#fff}
+.btn-orange:hover{background:#EA6C0A}
+.btn-red{background:#EF4444;color:#fff}
+.btn-red:hover{background:#DC2626}
+.symptom-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;margin-bottom:8px;cursor:pointer;border:1px solid #2A3A5C;background:#141929;transition:all .2s}
+.symptom-item.selected{background:#2A1000;border-color:#F97316}
+.symptom-item input[type=checkbox]{width:16px;height:16px;accent-color:#F97316;flex-shrink:0;margin-top:2px}
+.symptom-item .sym-text{font-size:.81rem;color:#CBD5E1;line-height:1.4}
+.symptom-item .sym-label{font-size:.84rem;font-weight:600;color:#E2E8F0;display:block;margin-bottom:2px}
+.sym-severity{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.68rem;font-weight:700;margin-left:6px}
+.sev-critical{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.sev-high{background:#3B1D08;color:#F97316;border:1px solid #F97316}
+.sev-med{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.result-box{border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.result-emergency{background:#1A0808;border:2px solid #EF4444}
+.result-emergency .r-title{color:#EF4444}
+.result-urgent{background:#1A1008;border:2px solid #F97316}
+.result-urgent .r-title{color:#F97316}
+.result-moderate{background:#1A1508;border:2px solid #F4B942}
+.result-moderate .r-title{color:#F4B942}
+.result-low{background:#081A0D;border:2px solid #22C55E}
+.result-low .r-title{color:#22C55E}
+.r-title{font-size:1.05rem;font-weight:700;margin-bottom:6px}
+.r-score{font-size:2rem;font-weight:700;margin-bottom:4px}
+.r-action{font-size:.8rem;color:#CBD5E1;line-height:1.5;margin-top:8px}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem;align-items:flex-start}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8;flex-shrink:0;max-width:48%}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:50%}
+.util-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #F97316}
+.util-card h3{font-size:.87rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.util-card .coverage{font-size:.73rem;color:#94A3B8;margin-bottom:6px}
+.util-card .emergency{font-size:.88rem;font-weight:700;color:#EF4444;margin-bottom:3px}
+.util-card .nonemerg{font-size:.82rem;color:#F97316;margin-bottom:3px}
+.util-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.alert-box{border-radius:10px;padding:13px;margin-bottom:12px}
+.alert-box.danger{border:1px solid #EF4444;background:#1A0808}
+.alert-box.danger h3{font-size:.88rem;font-weight:700;color:#EF4444;margin-bottom:6px}
+.alert-box.warn{border:1px solid #F97316;background:#1A1008}
+.alert-box.warn h3{font-size:.88rem;font-weight:700;color:#F97316;margin-bottom:6px}
+.alert-box.info{border:1px solid #00B4FF;background:#0A1A2A}
+.alert-box.info h3{font-size:.88rem;font-weight:700;color:#00B4FF;margin-bottom:6px}
+.alert-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.estimate-box{background:#1A1008;border:1px solid #F97316;border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.estimate-box .range{font-size:1.5rem;font-weight:700;color:#F97316}
+.estimate-box .note{font-size:.75rem;color:#94A3B8;margin-top:4px}
+.cost-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:.82rem}
+.cost-row:last-child{border-bottom:none}
+.cost-row .k{color:#94A3B8}
+.cost-row .v{color:#F97316;font-weight:600}
+.steps-list{list-style:none;counter-reset:steps}
+.steps-list li{counter-increment:steps;display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #1E2A45;font-size:.81rem;color:#CBD5E1;line-height:1.4}
+.steps-list li:last-child{border-bottom:none}
+.steps-list li::before{content:counter(steps);background:#F97316;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.safety-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #EF4444}
+.safety-card h3{font-size:.85rem;font-weight:700;color:#EF4444;margin-bottom:4px}
+.safety-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.code-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #F97316}
+.code-card h3{font-size:.85rem;font-weight:700;color:#F97316;margin-bottom:4px}
+.code-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.77rem;min-width:280px}
+th{background:#141929;color:#94A3B8;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2A3A5C}
+td{padding:7px 10px;border-bottom:1px solid #1A2440;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#0D1525}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.7rem;font-weight:600;margin:2px 2px 6px 0}
+.badge-danger{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.badge-warn{background:#3B1D08;color:#F97316;border:1px solid #F97316}
+.badge-ok{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.badge-info{background:#1A2B40;color:#00B4FF;border:1px solid #00B4FF}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🔥 FL Gas Leak Detection Tool</h1>
+<p>Check symptoms, find FL utility contacts, estimate repair costs</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Leak Risk Check</button>
+<button class="tab" onclick="showTab(1)">FL Safety Guide</button>
+<button class="tab" onclick="showTab(2)">Cost Calc</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: LEAK RISK CHECK -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>⚠️ Gas Leak Symptom Checker</h2>
+<p style="font-size:.79rem;color:#94A3B8;margin-bottom:14px">Select all symptoms present. If you smell gas strongly or hear hissing, <strong style="color:#EF4444">leave immediately and call 911 + your gas utility</strong> before using this tool.</p>
+
+<div class="symptom-item" onclick="toggleSym(this,0)" id="sym0">
+  <input type="checkbox" data-score="10" data-type="emergency">
+  <div class="sym-text">
+    <span class="sym-label">Strong rotten egg / sulfur smell indoors <span class="sym-severity sev-critical">CRITICAL</span></span>
+    Natural gas is odorized with mercaptan. Strong indoor smell = immediate emergency.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,1)" id="sym1">
+  <input type="checkbox" data-score="10" data-type="emergency">
+  <div class="sym-text">
+    <span class="sym-label">Hissing or whistling sound near gas appliance or line <span class="sym-severity sev-critical">CRITICAL</span></span>
+    Audible gas escaping from pipe or fitting joint — evacuate immediately.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,2)" id="sym2">
+  <input type="checkbox" data-score="8" data-type="urgent">
+  <div class="sym-text">
+    <span class="sym-label">Faint intermittent gas odor indoors <span class="sym-severity sev-high">URGENT</span></span>
+    Could indicate small leak at fitting, valve packing, or appliance connection.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,3)" id="sym3">
+  <input type="checkbox" data-score="8" data-type="urgent">
+  <div class="sym-text">
+    <span class="sym-label">Dead or yellowing vegetation in a line over buried gas pipe <span class="sym-severity sev-high">URGENT</span></span>
+    Underground FL gas line leaks displace soil oxygen, killing grass/plants in a strip pattern.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,4)" id="sym4">
+  <input type="checkbox" data-score="7" data-type="urgent">
+  <div class="sym-text">
+    <span class="sym-label">Bubbling water or wet soil patch above buried line <span class="sym-severity sev-high">URGENT</span></span>
+    Gas escaping underground can cause soil disturbance or bubble through standing water.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,5)" id="sym5">
+  <input type="checkbox" data-score="6" data-type="urgent">
+  <div class="sym-text">
+    <span class="sym-label">Gas bill unexpectedly high (20%+ above normal) <span class="sym-severity sev-high">URGENT</span></span>
+    Unexplained consumption increase often indicates a leak in the line or at an appliance.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,6)" id="sym6">
+  <input type="checkbox" data-score="5" data-type="moderate">
+  <div class="sym-text">
+    <span class="sym-label">Pilot light keeps going out on water heater or furnace <span class="sym-severity sev-med">MODERATE</span></span>
+    Repeated pilot outages can signal thermocouple failure, draft issue, or gas supply disruption.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,7)" id="sym7">
+  <input type="checkbox" data-score="5" data-type="moderate">
+  <div class="sym-text">
+    <span class="sym-label">Appliance flame burns orange or yellow instead of blue <span class="sym-severity sev-med">MODERATE</span></span>
+    Improper combustion can indicate incomplete gas flow, blockage, or air/gas ratio issue.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,8)" id="sym8">
+  <input type="checkbox" data-score="4" data-type="moderate">
+  <div class="sym-text">
+    <span class="sym-label">Headaches, dizziness, or nausea when home that clears outdoors <span class="sym-severity sev-med">MODERATE</span></span>
+    Carbon monoxide or partial combustion byproducts — requires immediate evaluation.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,9)" id="sym9">
+  <input type="checkbox" data-score="3" data-type="low">
+  <div class="sym-text">
+    <span class="sym-label">Gas smell outdoors near meter or regulator only</span>
+    Could be utility equipment — contact your gas utility, not an emergency unless strong.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,10)" id="sym10">
+  <input type="checkbox" data-score="3" data-type="low">
+  <div class="sym-text">
+    <span class="sym-label">Recent hurricane, flood, or ground movement near property</span>
+    FL storm events can shift soil and stress buried gas lines or displace fittings.
+  </div>
+</div>
+<div class="symptom-item" onclick="toggleSym(this,11)" id="sym11">
+  <input type="checkbox" data-score="2" data-type="low">
+  <div class="sym-text">
+    <span class="sym-label">Gas system older than 20 years / galvanized steel pipes</span>
+    Older FL homes with galvanized or black iron gas lines have higher corrosion risk.
+  </div>
+</div>
+
+<button class="btn btn-orange" onclick="diagnoseGas()" style="margin-top:8px">Check My Risk Level</button>
+<div id="gasResult" style="display:none"></div>
+</div>
+</div>
+
+<!-- TAB 1: FL SAFETY GUIDE -->
+<div class="panel" id="panel-1">
+
+<div class="alert-box danger">
+<h3>🚨 If You Smell Gas NOW — 3-Step Emergency Protocol</h3>
+<p><strong>1. Don't touch any switch, phone, or flame indoors.</strong> Any spark can ignite gas. Leave immediately. <strong>2. Once outside and clear of the building, call 911 and your gas utility emergency line.</strong> <strong>3. Do not re-enter until the utility or fire department clears the property.</strong></p>
+</div>
+
+<div class="card">
+<h2>📞 FL Gas Utility Emergency Contacts</h2>
+
+<div class="util-card">
+<h3>Peoples Gas (Tampa Bay, Central FL, Statewide)</h3>
+<div class="coverage">Hillsborough, Pinellas, Polk, Orange, Osceola, Brevard + more</div>
+<div class="emergency">🚨 Emergency: 1-800-832-3224 (24/7)</div>
+<div class="nonemerg">📞 Customer Service: 1-877-832-6747</div>
+<p>Largest natural gas distributor in FL. Serves residential, commercial and industrial. Report leaks 24/7.</p>
+</div>
+
+<div class="util-card">
+<h3>Florida City Gas (South FL)</h3>
+<div class="coverage">Miami-Dade, Broward, Palm Beach, Monroe counties</div>
+<div class="emergency">🚨 Emergency: 1-800-993-7546 (24/7)</div>
+<div class="nonemerg">📞 Customer Service: 1-866-630-5001</div>
+<p>Subsidiary of NextEra Energy. Serves South Florida metro communities. Gas leak response 24/7.</p>
+</div>
+
+<div class="util-card">
+<h3>Lake Apopka Natural Gas District</h3>
+<div class="coverage">Orange, Lake, Osceola counties (west Orlando)</div>
+<div class="emergency">🚨 Emergency: (407) 656-2734 (24/7)</div>
+<div class="nonemerg">📞 Office: (407) 656-2734</div>
+<p>Independent municipal gas district. Covers Apopka, Winter Garden, Ocoee area.</p>
+</div>
+
+<div class="util-card">
+<h3>Gainesville Regional Utilities (GRU)</h3>
+<div class="coverage">Alachua County</div>
+<div class="emergency">🚨 Emergency: (352) 334-3434 (24/7)</div>
+<div class="nonemerg">📞 Customer Service: (352) 334-3434</div>
+<p>City-owned utility serving Gainesville area with natural gas service.</p>
+</div>
+
+<div class="util-card">
+<h3>Sebring Gas System</h3>
+<div class="coverage">Highlands County</div>
+<div class="emergency">🚨 Emergency: (863) 471-5100</div>
+<div class="nonemerg">📞 City of Sebring: (863) 471-5100</div>
+<p>Municipal gas system serving Sebring and Highlands County communities.</p>
+</div>
+
+<div class="util-card">
+<h3>Propane (LP Gas) Suppliers</h3>
+<div class="coverage">Statewide — rural areas without natural gas pipeline</div>
+<div class="emergency">🚨 Emergency: Your supplier's 24/7 line (varies)</div>
+<div class="nonemerg">Common FL suppliers: AmeriGas, Ferrellgas, Suburban Propane, Blue Rhino</div>
+<p>LP gas rules differ from natural gas. Tank leaks require immediate supplier contact and area evacuation.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>🏗️ FL Gas Line Codes & Requirements</h2>
+
+<div class="code-card">
+<h3>Florida Building Code — Gas</h3>
+<p>FL adopts the National Fuel Gas Code (NFPA 54) and NFPA 58 (LP-Gas). FL-specific amendments apply. All gas work requires a licensed FL plumbing or gas contractor. Permits required for new lines, extensions, and major repairs.</p>
+</div>
+
+<div class="code-card">
+<h3>Licensed Contractor Requirement</h3>
+<p>Only FL-licensed Certified Plumbing Contractors (CPC), Gas Line Contractors, or Master Plumbers may legally perform gas line work. Verify license at MyFloridaLicense.com before hiring anyone.</p>
+</div>
+
+<div class="code-card">
+<h3>Pressure Testing Requirement</h3>
+<p>FL code requires gas lines to be pressure-tested before cover or use. Standard test: 10 PSI air or gas pressure held for 15 minutes minimum. Utility inspection required before gas restoration.</p>
+</div>
+
+<div class="code-card">
+<h3>FL-Specific Hazard: Hurricane Damage</h3>
+<p>After a hurricane or tropical storm, FL homeowners should have gas lines inspected before restoring service. Storm surge, flooding, and high winds can shift soil, damage buried lines, and compromise fittings and regulators. FBC requires post-storm inspection for damaged structures.</p>
+</div>
+
+<div class="code-card">
+<h3>FL-Specific Hazard: Sandy Soil Corrosion</h3>
+<p>FL's sandy, high-moisture soil accelerates corrosion on older black iron and galvanized steel gas lines. Pre-1980 homes with original lines should be inspected every 5 years. Modern CSST (corrugated stainless steel tubing) and PE (polyethylene) pipe are preferred for FL conditions.</p>
+</div>
+
+<div class="code-card">
+<h3>CO Detector Requirement (FL)</h3>
+<p>Florida Statute 553.885 requires carbon monoxide detectors within 10 feet of each sleeping room in dwellings with fuel-burning appliances. Detectors required in all new construction and at time of sale. Replacement units also required.</p>
+</div>
+
+<div class="card" style="margin-top:12px">
+<h2>🛡️ What NOT To Do During a Gas Leak</h2>
+<ul class="steps-list">
+<li>Do NOT flip any light switch, electrical switch, or plug in/unplug anything — sparks ignite gas</li>
+<li>Do NOT use your cell phone, landline, or any electronic device while still inside the building</li>
+<li>Do NOT light a match, candle, or cigarette anywhere near the area</li>
+<li>Do NOT turn the gas shutoff valve unless you know exactly where it is and are outdoors</li>
+<li>Do NOT use the garage door opener or any motorized equipment</li>
+<li>Do NOT re-enter the building for any reason until cleared by fire department or utility crew</li>
+<li>Do NOT assume a gas smell will dissipate on its own — it requires active ventilation by professionals</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- TAB 2: COST CALC -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>💰 FL Gas Leak Detection & Repair Cost Calculator</h2>
+
+<label>Service Type</label>
+<select id="gasService">
+<option value="detect_basic">Basic Leak Detection (soap/visual)</option>
+<option value="detect_electronic">Electronic Leak Detection (gas sensor)</option>
+<option value="detect_pressure">Pressure Test (whole-house)</option>
+<option value="repair_fitting">Fitting / Connection Repair</option>
+<option value="repair_valve">Gas Valve Replacement</option>
+<option value="repair_section">Line Section Replacement (per 10 ft)</option>
+<option value="repair_full">Full House Repipe (gas lines only)</option>
+<option value="shutoff_install">Gas Shutoff Valve Installation</option>
+<option value="co_detector">CO Detector Installation (per detector)</option>
+<option value="appliance_reconnect">Gas Appliance Disconnection/Reconnection</option>
+<option value="emergency_call">Emergency After-Hours Service Call</option>
+<option value="permit">Permit & Inspection (city/county)</option>
+</select>
+
+<label>Number of Units / Locations</label>
+<select id="gasQty">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5+</option>
+</select>
+
+<label>Property Type</label>
+<select id="gasPropType">
+<option value="res">Residential (single-family)</option>
+<option value="condo">Condo / Townhouse</option>
+<option value="com_sm">Small Commercial</option>
+<option value="com_lg">Large Commercial / Industrial</option>
+</select>
+
+<label>FL County</label>
+<select id="gasCounty">
+<option value="std">Alachua, Baker, Bradford, Calhoun, Columbia, DeSoto, Dixie, Flagler, Franklin, Gadsden, Gilchrist, Glades, Gulf, Hamilton, Hardee, Hendry, Hernando, Highlands, Holmes, Jackson, Jefferson, Lafayette, Levy, Liberty, Madison, Marion, Nassau, Okaloosa, Okeechobee, Putnam, Santa Rosa, Sumter, Suwannee, Taylor, Union, Wakulla, Walton, Washington</option>
+<option value="mid">Brevard, Charlotte, Citrus, Clay, Collier, Duval, Escambia, Indian River, Lake, Lee, Manatee, Martin, Pasco, Polk, Sarasota, St. Johns, St. Lucie, Volusia</option>
+<option value="hi">Broward, Miami-Dade, Monroe, Orange, Osceola, Palm Beach, Pinellas, Hillsborough, Seminole</option>
+</select>
+
+<label>Timing</label>
+<select id="gasTiming">
+<option value="reg">Regular Hours (Mon–Fri 8am–5pm)</option>
+<option value="eve">Evening / Weekend</option>
+<option value="em">Emergency / Same-Day</option>
+</select>
+
+<button class="btn btn-orange" onclick="calcGas()">Calculate Estimate</button>
+<div id="gasEstResult" style="display:none"></div>
+</div>
+
+<div class="card">
+<h2>📊 FL Gas Service Cost Reference</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Service</th><th>Low</th><th>High</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Leak Detection (basic)</td><td>$75</td><td>$150</td><td>Visual + soap test</td></tr>
+<tr><td>Electronic Detection</td><td>$150</td><td>$350</td><td>Gas sensor + mapping</td></tr>
+<tr><td>Pressure Test</td><td>$125</td><td>$275</td><td>Whole-house, permit fee extra</td></tr>
+<tr><td>Fitting Repair</td><td>$95</td><td>$250</td><td>Per fitting/joint</td></tr>
+<tr><td>Gas Valve Replace</td><td>$175</td><td>$450</td><td>Includes parts</td></tr>
+<tr><td>Line Section (per 10 ft)</td><td>$200</td><td>$550</td><td>More for buried lines</td></tr>
+<tr><td>Full Repipe (gas only)</td><td>$2,000</td><td>$8,000</td><td>Avg FL home</td></tr>
+<tr><td>After-Hours Emergency</td><td>$200</td><td>$500</td><td>Service call only</td></tr>
+<tr><td>CO Detector Install</td><td>$65</td><td>$150</td><td>Per detector, wired</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📋 Get a Free FL Gas Line Quote</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Describe your gas line concern and a licensed FL plumber will call you within 2 hours.</p>
+
+<label>Your Name</label>
+<input type="text" id="qName" placeholder="Full name">
+
+<label>Phone Number</label>
+<input type="text" id="qPhone" placeholder="(561) 555-PIPE">
+
+<label>FL County / City</label>
+<select id="qCounty">
+<option value="">Select your county…</option>
+<option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option><option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option><option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option><option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option><option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option><option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option><option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option><option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option><option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option><option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option><option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option><option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option><option>Walton</option><option>Washington</option>
+</select>
+
+<label>Type of Gas (select one)</label>
+<select id="qGasType">
+<option value="">Select gas type…</option>
+<option>Natural Gas (utility pipeline)</option>
+<option>Propane / LP Gas (tank)</option>
+<option>Not sure</option>
+</select>
+
+<label>Describe Your Concern</label>
+<textarea id="qDesc" rows="3" placeholder="e.g. I smell gas near my water heater, the pilot keeps going out, or I want my old gas lines inspected before hurricane season…"></textarea>
+
+<button class="btn btn-orange" onclick="submitGasQuote()">Request Free Quote</button>
+</div>
+
+<div class="card">
+<h2>✅ Why Use a Licensed FL Gas Contractor?</h2>
+<div class="info-row"><span class="k">Licensing</span><span class="v">FL CPC or Gas Contractor — verify at MyFloridaLicense.com</span></div>
+<div class="info-row"><span class="k">Insurance</span><span class="v">$1M+ general liability required for licensed FL contractors</span></div>
+<div class="info-row"><span class="k">Permits</span><span class="v">We pull all required city/county permits and schedule inspections</span></div>
+<div class="info-row"><span class="k">Code compliance</span><span class="v">All work meets FL Building Code Gas provisions + NFPA 54/58</span></div>
+<div class="info-row"><span class="k">Utility coordination</span><span class="v">We coordinate gas shutoff/restoration with your utility</span></div>
+<div class="info-row"><span class="k">Warranty</span><span class="v">1-year labor warranty standard on all gas line repairs</span></div>
+</div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="fl-gas-data">
+<!-- FL NATURAL GAS MARKET DATA: Florida natural gas distribution serves approximately 800,000 residential customers statewide. Natural gas available primarily in urban/suburban corridors; rural FL largely propane-dependent. Peoples Gas serves largest territory. FPL Group (NextEra) acquired Florida City Gas. Approximately 38% of FL homes use natural gas or propane for water heating. FL has no gas storage caverns; pipeline dependent from Gulf Coast and Southeast pipelines. Sabal Trail Transmission pipeline (2017) expanded capacity to central and north FL. -->
+<!-- GAS LINE MATERIALS TIMELINE FL: Pre-1950: wrought iron, cast iron (rare residential). 1950-1970: black iron pipe, galvanized steel (now corrosion-prone in FL soil). 1970-1990: black iron standard, some copper. 1990-2000: introduction of CSST (corrugated stainless steel tubing). 2000-present: CSST most common for flexible runs; polyethylene (PE) for underground; flexible gas connector stainless for appliances. FL soil pH typically 5.5-7.0 (slightly acidic) accelerating corrosion of ferrous metals. High groundwater table creates moisture exposure year-round. -->
+<!-- FL COUNTY GAS AVAILABILITY: Natural gas pipeline available — Alachua, Bay, Brevard, Broward, Charlotte, Citrus, Clay, Collier, Duval, Escambia, Flagler, Hernando, Highlands, Hillsborough, Indian River, Lake, Lee, Leon, Manatee, Marion, Martin, Miami-Dade, Nassau, Okaloosa, Orange, Osceola, Palm Beach, Pasco, Pinellas, Polk, Sarasota, Seminole, St. Johns, St. Lucie, Sumter, Volusia, Wakulla. Propane-primary counties: Baker, Bradford, Calhoun, Columbia, DeSoto, Dixie, Franklin, Gadsden, Gilchrist, Glades, Gulf, Hamilton, Hardee, Hendry, Holmes, Jackson, Jefferson, Lafayette, Levy, Liberty, Madison, Monroe, Nassau (partial), Okeechobee, Putnam, Santa Rosa (partial), Suwannee, Taylor, Union, Walton, Washington. -->
+<!-- FL GAS CODES: Florida Building Code 7th Edition references NFPA 54-2021 (National Fuel Gas Code) and NFPA 58-2021 (LP-Gas Code). FL amendments: FBC 603.1 — all gas contractors must be licensed under FL Statute 489. FBC Gas — pressure test requirements: 10 psi air/inert gas for minimum 15 minutes before inspection. Sizing per NFPA 54 Table 402.4. CSST bonding required per FBC amendment: CSST must be bonded to electrical grounding electrode within 75 feet of gas meter per FL-specific amendment (added after lightning strike concerns). -->
+<!-- LEAK DETECTION MARKET FL: Average FL gas leak detection service $75-350. Electronic combustible gas detectors (CGD) most reliable for methane/propane. Thermal imaging supplemental for identifying heat patterns. Pressure decay testing industry standard. FL licensed plumbers performing gas work must have gas-specific endorsement. Average repair time: fitting = 1-2 hours; line section = 2-4 hours; full repipe = 1-3 days. Post-hurricane gas line inspection demand spikes 300-500% in affected counties. -->
+<!-- FL HURRICANE GAS RISK DATA: Hurricanes Ian (2022), Irma (2017), Michael (2018) all generated significant gas line claims. FEMA guidance: do not restore gas after hurricane without licensed inspection. Storm surge > 3 feet can displace buried PE lines. Wind uplift on structures can stress gas riser connections. After Irma: Peoples Gas reported 2,400+ leak reports in first week. FL insurance typically covers gas line repair if storm-related (subject to deductible). -->
+<!-- PROPANE SAFETY FL: Florida has approximately 420,000 propane customers. Propane is heavier than air (unlike natural gas) — collects in low areas, basements, pits. FL homes lack basements typically but propane can pool under slabs or in low-lying areas. FL LP gas dealers licensed under DACS (Department of Agriculture and Consumer Services). Tank inspection required every 10 years. Overfill Protection Device (OPD) required on cylinders 4-40 lbs since 2002. Underground propane tanks: cathodic protection required, fiberglass tanks preferred in FL soil. -->
+<!-- CO SAFETY FL: Carbon monoxide poisoning sends approximately 2,100 Floridians to emergency rooms annually (FL Dept of Health). Generator-related CO poisoning spikes post-hurricane — generators must be 20+ feet from any opening. FL Statute 553.885 enacted 2012 requiring CO detectors in new construction. Sealed combustion appliances (direct vent) significantly reduce CO risk vs. atmospherically vented. FL homes converting from electric to gas should upgrade to sealed combustion equipment. CO detector placement: 5-10 ft from floor (CO slightly lighter than air), near sleeping areas, not directly above combustion appliances. -->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(n) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n));
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i===n));
+}
+
+function toggleSym(el, idx) {
+  el.classList.toggle('selected');
+  const cb = el.querySelector('input[type=checkbox]');
+  cb.checked = !cb.checked;
+}
+
+function diagnoseGas() {
+  const items = document.querySelectorAll('.symptom-item');
+  let score = 0;
+  let hasEmergency = false;
+  let hasUrgent = false;
+  items.forEach(item => {
+    const cb = item.querySelector('input[type=checkbox]');
+    if (cb.checked) {
+      const s = parseInt(cb.dataset.score) || 0;
+      const t = cb.dataset.type || 'low';
+      score += s;
+      if (t === 'emergency') hasEmergency = true;
+      if (t === 'urgent') hasUrgent = true;
+    }
+  });
+
+  const box = document.getElementById('gasResult');
+  box.style.display = 'block';
+
+  let cls, title, action;
+  if (hasEmergency || score >= 18) {
+    cls = 'result-emergency';
+    title = '🚨 EMERGENCY — Evacuate Now';
+    action = 'You have critical gas leak symptoms. <strong>Leave the building immediately without touching any switches.</strong> From a safe distance outside, call 911 and your gas utility emergency line. Do NOT re-enter until cleared by emergency responders.';
+  } else if (hasUrgent || score >= 10) {
+    cls = 'result-urgent';
+    title = '⚠️ URGENT — Call a Plumber Today';
+    action = 'Your symptoms indicate a likely active or developing gas leak. Do not ignore these signs. Call a licensed FL gas plumber immediately (same-day service). Do not use gas appliances until inspected.';
+  } else if (score >= 5) {
+    cls = 'result-moderate';
+    title = '⚡ MODERATE — Schedule Inspection Soon';
+    action = 'Your symptoms suggest potential gas system issues. Schedule a professional gas line inspection within 1–3 days. Avoid using affected appliances. Monitor for worsening symptoms.';
+  } else if (score > 0) {
+    cls = 'result-low';
+    title = '✅ LOW RISK — Monitor & Inspect';
+    action = 'Your symptoms are lower-severity but worth monitoring. Schedule a routine gas system inspection and consider upgrading older lines. Install CO detectors near all sleeping areas.';
+  } else {
+    cls = 'result-low';
+    title = '✅ No Symptoms Selected';
+    action = 'No symptoms selected. If you have general concerns about aging gas lines, schedule a routine inspection. FL homes over 20 years old should have gas lines inspected every 5 years.';
+  }
+
+  box.innerHTML = `<div class="result-box ${esc(cls)}">
+    <div class="r-title">${title}</div>
+    <div class="r-score">${score > 0 ? esc(String(score)) + ' pts' : '—'}</div>
+    <div class="r-action">${action}</div>
+    <button class="btn btn-orange" onclick="showTab(3)" style="margin-top:12px">Get Emergency Quote</button>
+  </div>`;
+}
+
+const GAS_COSTS = {
+  detect_basic: [75, 150],
+  detect_electronic: [150, 350],
+  detect_pressure: [125, 275],
+  repair_fitting: [95, 250],
+  repair_valve: [175, 450],
+  repair_section: [200, 550],
+  repair_full: [2000, 8000],
+  shutoff_install: [125, 300],
+  co_detector: [65, 150],
+  appliance_reconnect: [85, 200],
+  emergency_call: [200, 500],
+  permit: [75, 250]
+};
+
+const GAS_PROP_MULT = {res:1.0, condo:1.1, com_sm:1.25, com_lg:1.65};
+const GAS_COUNTY_MULT = {hi:1.20, mid:1.10, std:1.0};
+const GAS_TIME_MULT = {reg:1.0, eve:1.35, em:1.65};
+
+function calcGas() {
+  const svc = document.getElementById('gasService').value;
+  const qty = parseInt(document.getElementById('gasQty').value) || 1;
+  const prop = document.getElementById('gasPropType').value;
+  const county = document.getElementById('gasCounty').value;
+  const timing = document.getElementById('gasTiming').value;
+
+  const base = GAS_COSTS[svc] || [100, 300];
+  const pm = GAS_PROP_MULT[prop] || 1.0;
+  const cm = GAS_COUNTY_MULT[county] || 1.0;
+  const tm = GAS_TIME_MULT[timing] || 1.0;
+
+  let lo = Math.round(base[0] * qty * pm * cm * tm / 5) * 5;
+  let hi = Math.round(base[1] * qty * pm * cm * tm / 5) * 5;
+
+  const serviceNames = {
+    detect_basic:'Basic Leak Detection', detect_electronic:'Electronic Detection', detect_pressure:'Pressure Test',
+    repair_fitting:'Fitting Repair', repair_valve:'Gas Valve Replace', repair_section:'Line Section Replace',
+    repair_full:'Full Gas Repipe', shutoff_install:'Shutoff Valve Install', co_detector:'CO Detector Install',
+    appliance_reconnect:'Appliance Reconnect', emergency_call:'Emergency Service Call', permit:'Permit & Inspection'
+  };
+
+  const timingNote = {reg:'Regular hours rate','eve':'Evening/weekend rate (+35%)','em':'Emergency same-day rate (+65%)'};
+
+  const box = document.getElementById('gasEstResult');
+  box.style.display = 'block';
+  box.innerHTML = `<div class="estimate-box">
+    <div class="range">$${esc(String(lo))} – $${esc(String(hi))}</div>
+    <div class="note">Estimated FL range for ${esc(serviceNames[svc] || svc)} × ${esc(String(qty))}</div>
+    <div style="margin-top:12px">
+      <div class="cost-row"><span class="k">Service</span><span class="v">${esc(serviceNames[svc] || svc)}</span></div>
+      <div class="cost-row"><span class="k">Quantity</span><span class="v">× ${esc(String(qty))}</span></div>
+      <div class="cost-row"><span class="k">Property type</span><span class="v">${esc(prop === 'res' ? 'Residential' : prop === 'condo' ? 'Condo' : prop === 'com_sm' ? 'Small commercial' : 'Large commercial')}</span></div>
+      <div class="cost-row"><span class="k">County adjustment</span><span class="v">${county === 'hi' ? 'High-cost (+20%)' : county === 'mid' ? 'Mid-cost (+10%)' : 'Standard'}</span></div>
+      <div class="cost-row"><span class="k">Timing</span><span class="v">${esc(timingNote[timing] || timing)}</span></div>
+    </div>
+    <div class="note" style="margin-top:8px">Permit fees, material costs, and utility reconnection fees may apply additionally. Get a free on-site quote for exact pricing.</div>
+    <button class="btn btn-orange" onclick="showTab(3)" style="margin-top:10px">Get Free Quote</button>
+  </div>`;
+}
+
+function submitGasQuote() {
+  const name = document.getElementById('qName').value.trim();
+  const phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  const t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 4000);
+}
+</script>
+</div>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue florida gas line leak detection natural gas propane safety plumbing cpc licensed contractor fl building code nfpa 54 nfpa 58 peoples gas florida city gas hurricane gas line damage sandy soil corrosion csst polyethylene pe pipe carbon monoxide detector co detector fl statute 553.885 pressure test 10 psi leak repair fitting valve replacement emergency gas service south florida central florida north florida gas utility contact emergency line 911 evacuation protocol rotten egg smell mercaptan odorized natural gas gas meter regulator annual inspection pinhole leak gas appliance pilot light orange flame combustion issue</div>
+</body>
+</html>
