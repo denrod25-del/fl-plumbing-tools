@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Sewer Line Inspection & Root Intrusion Guide | Florida Plumbing</title>
+<meta name="description" content="Florida sewer line inspection tool. Diagnose drain and sewer symptoms, check FL tree root intrusion risk, estimate camera inspection costs, and get a free licensed FL plumber quote.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#22C55E;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.69rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#22C55E;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#22C55E;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#22C55E}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-green{background:#22C55E;color:#fff}
+.btn-green:hover{background:#16A34A}
+.symptom-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;margin-bottom:8px;cursor:pointer;border:1px solid #2A3A5C;background:#141929;transition:all .2s}
+.symptom-item.selected{background:#0A1F0D;border-color:#22C55E}
+.symptom-item input[type=checkbox]{width:16px;height:16px;accent-color:#22C55E;flex-shrink:0;margin-top:2px}
+.symptom-item .sym-text{font-size:.81rem;color:#CBD5E1;line-height:1.4}
+.symptom-item .sym-label{font-size:.84rem;font-weight:600;color:#E2E8F0;display:block;margin-bottom:2px}
+.sym-severity{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.68rem;font-weight:700;margin-left:6px}
+.sev-critical{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.sev-high{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.sev-med{background:#1A2B40;color:#00B4FF;border:1px solid #00B4FF}
+.result-box{border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.result-emergency{background:#1A0808;border:2px solid #EF4444}
+.result-emergency .r-title{color:#EF4444}
+.result-urgent{background:#1A1508;border:2px solid #F4B942}
+.result-urgent .r-title{color:#F4B942}
+.result-moderate{background:#0A1A2A;border:2px solid #00B4FF}
+.result-moderate .r-title{color:#00B4FF}
+.result-low{background:#081A0D;border:2px solid #22C55E}
+.result-low .r-title{color:#22C55E}
+.r-title{font-size:1.05rem;font-weight:700;margin-bottom:6px}
+.r-score{font-size:2rem;font-weight:700;margin-bottom:4px}
+.r-action{font-size:.8rem;color:#CBD5E1;line-height:1.5;margin-top:8px}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem;align-items:flex-start}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8;flex-shrink:0;max-width:48%}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:50%}
+.tree-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #22C55E}
+.tree-card.high-risk{border-left-color:#EF4444}
+.tree-card.med-risk{border-left-color:#F4B942}
+.tree-card.low-risk{border-left-color:#22C55E}
+.tree-card h3{font-size:.87rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.tree-card .risk-badge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.7rem;font-weight:700;margin-bottom:6px}
+.risk-high{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.risk-med{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.risk-low{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.tree-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.tree-card .root-depth{font-size:.78rem;color:#CBD5E1;font-weight:600;margin-bottom:3px}
+.cost-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:.82rem}
+.cost-row:last-child{border-bottom:none}
+.cost-row .k{color:#94A3B8}
+.cost-row .v{color:#22C55E;font-weight:600}
+.alert-box{border-radius:10px;padding:13px;margin-bottom:12px}
+.alert-box.danger{border:1px solid #EF4444;background:#1A0808}
+.alert-box.danger h3{font-size:.88rem;font-weight:700;color:#EF4444;margin-bottom:6px}
+.alert-box.warn{border:1px solid #F4B942;background:#1A1508}
+.alert-box.warn h3{font-size:.88rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.alert-box.info{border:1px solid #22C55E;background:#081A0D}
+.alert-box.info h3{font-size:.88rem;font-weight:700;color:#22C55E;margin-bottom:6px}
+.alert-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.estimate-box{background:#081A0D;border:1px solid #22C55E;border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.estimate-box .range{font-size:1.5rem;font-weight:700;color:#22C55E}
+.estimate-box .note{font-size:.75rem;color:#94A3B8;margin-top:4px}
+.steps-list{list-style:none;counter-reset:steps}
+.steps-list li{counter-increment:steps;display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #1E2A45;font-size:.81rem;color:#CBD5E1;line-height:1.4}
+.steps-list li:last-child{border-bottom:none}
+.steps-list li::before{content:counter(steps);background:#22C55E;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.77rem;min-width:280px}
+th{background:#141929;color:#94A3B8;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2A3A5C}
+td{padding:7px 10px;border-bottom:1px solid #1A2440;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#0D1525}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.7rem;font-weight:600;margin:2px}
+.badge-danger{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.badge-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.badge-ok{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.badge-info{background:#1A2B40;color:#00B4FF;border:1px solid #00B4FF}
+.tag{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.72rem;font-weight:600;margin:2px}
+.tag-win{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.tag-lose{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.tag-neu{background:#1A2B40;color:#00B4FF;border:1px solid #00B4FF}
+.tag-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.repair-card{border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid}
+.repair-card.trenchless{border-color:#22C55E;background:#081A0D}
+.repair-card.traditional{border-color:#F4B942;background:#1A1508}
+.repair-card.spot{border-color:#00B4FF;background:#0A1A2A}
+.repair-card h3{font-size:.92rem;font-weight:700;margin-bottom:4px}
+.repair-card.trenchless h3{color:#22C55E}
+.repair-card.traditional h3{color:#F4B942}
+.repair-card.spot h3{color:#00B4FF}
+.repair-card p{font-size:.79rem;color:#CBD5E1;line-height:1.5;margin-bottom:6px}
+.score-bar-wrap{margin:8px 0}
+.score-bar-label{display:flex;justify-content:space-between;font-size:.73rem;color:#94A3B8;margin-bottom:3px}
+.score-bar{height:8px;background:#1E2A45;border-radius:4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px}
+.fill-green{background:#22C55E}
+.fill-gold{background:#F4B942}
+.fill-blue{background:#00B4FF}
+.fill-red{background:#EF4444}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🌿 FL Sewer & Root Inspection</h1>
+<p>Diagnose sewer symptoms, FL tree root risk, camera costs & quotes</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Symptom Checker</button>
+<button class="tab" onclick="showTab(1)">Root Risk Guide</button>
+<button class="tab" onclick="showTab(2)">Cost Calc</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: SYMPTOM CHECKER -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>🔍 FL Sewer Symptom Checker</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Select all symptoms you're experiencing. FL's sandy soil, mature trees, and aging clay pipes create unique sewer challenges. This tool identifies your likely issue and urgency level.</p>
+
+<div class="symptom-item" onclick="toggleSym(this,0)">
+<input type="checkbox" data-score="9" data-type="emergency">
+<div class="sym-text"><span class="sym-label">Raw sewage backing up into tubs/toilets <span class="sym-severity sev-critical">EMERGENCY</span></span>Sewage overflowing inside home — health hazard, call immediately</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,1)">
+<input type="checkbox" data-score="8" data-type="emergency">
+<div class="sym-text"><span class="sym-label">Multiple drains clogged simultaneously <span class="sym-severity sev-critical">EMERGENCY</span></span>All slow or stopped: tub, toilet, sink — indicates main line blockage</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,2)">
+<input type="checkbox" data-score="7" data-type="emergency">
+<div class="sym-text"><span class="sym-label">Sewage smell inside home <span class="sym-severity sev-critical">EMERGENCY</span></span>Strong sewer gas inside — methane/H2S risk, evacuate if strong</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,3)">
+<input type="checkbox" data-score="6" data-type="urgent">
+<div class="sym-text"><span class="sym-label">Gurgling sound from toilet when using sink <span class="sym-severity sev-high">URGENT</span></span>Air trapped in sewer line — partial blockage causing pressure imbalance</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,4)">
+<input type="checkbox" data-score="6" data-type="urgent">
+<div class="sym-text"><span class="sym-label">Sewage smell in yard or near foundation <span class="sym-severity sev-high">URGENT</span></span>Underground pipe crack or joint failure — FL sandy soil accelerates collapse</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,5)">
+<input type="checkbox" data-score="5" data-type="urgent">
+<div class="sym-text"><span class="sym-label">Unusually green/lush strip of grass in yard <span class="sym-severity sev-high">URGENT</span></span>Classic FL sign of underground sewage leak fertilizing the lawn above</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,6)">
+<input type="checkbox" data-score="5" data-type="urgent">
+<div class="sym-text"><span class="sym-label">Sinkholes or soft spots in yard <span class="sym-severity sev-high">URGENT</span></span>FL's sandy soil washes into broken sewer pipes — can collapse suddenly</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,7)">
+<input type="checkbox" data-score="4" data-type="moderate">
+<div class="sym-text"><span class="sym-label">Frequently recurring drain clogs <span class="sym-severity sev-med">MODERATE</span></span>Same drain clogs monthly — likely root intrusion or buildup in FL clay/cast iron pipes</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,8)">
+<input type="checkbox" data-score="4" data-type="moderate">
+<div class="sym-text"><span class="sym-label">Slow drains throughout home <span class="sym-severity sev-med">MODERATE</span></span>All drains slow but functional — partial main line restriction, common in older FL homes</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,9)">
+<input type="checkbox" data-score="3" data-type="moderate">
+<div class="sym-text"><span class="sym-label">Tree roots visible near cleanout <span class="sym-severity sev-med">MODERATE</span></span>Surface roots near cleanout or sewer access — root penetration likely already occurring</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,10)">
+<input type="checkbox" data-score="3" data-type="low">
+<div class="sym-text"><span class="sym-label">Home is 30+ years old (FL pre-1990) <span class="sym-severity sev-med">RISK FACTOR</span></span>Pre-1990 FL homes often have clay or orangeburg pipe — due for inspection</div>
+</div>
+
+<div class="symptom-item" onclick="toggleSym(this,11)">
+<input type="checkbox" data-score="2" data-type="low">
+<div class="sym-text"><span class="sym-label">Large trees (oak, ficus, laurel) within 20 ft of sewer <span class="sym-severity sev-med">RISK FACTOR</span></span>FL's aggressive root systems can penetrate pipe joints within 5–10 years</div>
+</div>
+
+<button class="btn btn-green" style="margin-top:8px" onclick="diagnoseSewer()">Diagnose My Sewer Issue</button>
+<div id="sewer-result" style="display:none"></div>
+</div>
+
+<div class="card">
+<h3>🚨 FL Sewer Emergency Signs — Act Immediately</h3>
+<div class="alert-box danger">
+<h3>Call a Plumber NOW If You See:</h3>
+<p>• Sewage actively backing up into tubs, showers, or floor drains<br>
+• Strong sewer smell inside home (methane risk)<br>
+• Visible sewage pooling in yard<br>
+• All toilets gurgling simultaneously when flushing<br>
+• Toilet water rising after flushing (main line full blockage)</p>
+</div>
+<div class="alert-box warn">
+<h3>FL-Specific Warning: Post-Hurricane Sewer Damage</h3>
+<p>After major FL hurricanes, storm surge and flooding can collapse clay sewer pipes, wash debris into lines, and shift underground infrastructure. If you experienced flooding, schedule a camera inspection within 60 days — especially for pre-1990 homes with clay or cast iron pipes.</p>
+</div>
+</div>
+</div>
+
+<!-- TAB 1: ROOT RISK GUIDE -->
+<div class="panel" id="panel-1">
+
+<div class="card">
+<h2>🌳 FL Tree Root Intrusion Risk Guide</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:12px">Florida's aggressive tree species and year-round warm growing season create unique root intrusion risks. Roots follow moisture — and your sewer pipe is full of it. Check the risk level of trees near your sewer line.</p>
+</div>
+
+<div class="tree-card high-risk">
+<h3>🔴 Ficus / Strangler Fig (Ficus benjamina, F. aurea)</h3>
+<div class="risk-badge risk-high">EXTREME RISK</div>
+<div class="root-depth">Root spread: 50–100+ feet | Depth: 2–6 feet</div>
+<p>The #1 sewer-killer in South FL. Ficus roots are aggressive, fast-growing, and can enter the tiniest pipe joint. A 20-foot ficus can send roots 100 feet to find water. In Miami-Dade, Broward, and Palm Beach, ficus is the most common cause of complete sewer line collapse. Many FL municipalities now ban new ficus plantings within 30 feet of infrastructure. Recommend camera inspection if any ficus within 50 feet of sewer line.</p>
+</div>
+
+<div class="tree-card high-risk">
+<h3>🔴 Live Oak (Quercus virginiana)</h3>
+<div class="risk-badge risk-high">VERY HIGH RISK</div>
+<div class="root-depth">Root spread: 3–4× canopy width | Depth: 3–8 feet</div>
+<p>Florida's iconic live oak is beautiful but destructive to underground infrastructure. Root spread equals 3–4× the canopy width — a 30-foot wide oak sends roots 90–120 feet horizontally. Roots stay shallow (3–8 feet), precisely where most FL sewer laterals run. Common cause of cast iron and clay pipe failures in pre-1980 FL neighborhoods. Central FL (Orlando metro) and North FL especially affected.</p>
+</div>
+
+<div class="tree-card high-risk">
+<h3>🔴 Laurel Oak (Quercus laurifolia)</h3>
+<div class="risk-badge risk-high">VERY HIGH RISK</div>
+<div class="root-depth">Root spread: 30–60 feet | Depth: 2–5 feet</div>
+<p>Even more aggressive than live oak for root spread. Very shallow roots — often visible at surface level. Common in Central and North FL suburban neighborhoods. Shorter lifespan (30–50 years) means the tree may die and roots rot, causing pipe collapse from soil shifts. Active root cutting (hydro-jetting) every 18–24 months required if laurel oak is within 30 feet of sewer line.</p>
+</div>
+
+<div class="tree-card high-risk">
+<h3>🔴 Weeping Willow & Willow Species</h3>
+<div class="risk-badge risk-high">EXTREME RISK</div>
+<div class="root-depth">Root spread: up to 100 feet | Seeks moisture</div>
+<p>The most moisture-seeking tree species. Willows near any water source — including sewers — will find and invade pipe joints within 5 years of planting. FL's year-round moisture makes willows especially aggressive. If a willow is within 100 feet of your sewer, plan on hydro-jetting every 12 months. Root barrier installation is recommended but rarely 100% effective against mature willows.</p>
+</div>
+
+<div class="tree-card med-risk">
+<h3>🟡 Royal Poinciana (Flamboyant)</h3>
+<div class="risk-badge risk-med">MODERATE RISK</div>
+<div class="root-depth">Root spread: 30–50 feet | Depth: 2–4 feet</div>
+<p>Popular ornamental tree in South FL. Surface roots are a trip hazard and can lift driveways, sidewalks, and damage sewer laterals. More of a concern for drain/sewer joints than pipe walls. Annual inspection recommended if within 20 feet of sewer. Often seen in Miami-Dade and Broward county yards.</p>
+</div>
+
+<div class="tree-card med-risk">
+<h3>🟡 Slash Pine / Loblolly Pine</h3>
+<div class="risk-badge risk-med">MODERATE RISK</div>
+<div class="root-depth">Root spread: 20–40 feet | Depth: 3–6 feet</div>
+<p>Common in North and Central FL. Pine roots are less aggressive than oaks but still capable of entering cracked clay or old cast iron pipes. Much less of a concern with newer PVC sewer lines that have fewer joints. Roots more likely to follow existing cracks than create new intrusions.</p>
+</div>
+
+<div class="tree-card med-risk">
+<h3>🟡 Crepe Myrtle</h3>
+<div class="risk-badge risk-med">LOWER-MODERATE RISK</div>
+<div class="root-depth">Root spread: 10–20 feet | Depth: 2–3 feet</div>
+<p>One of FL's most popular landscape trees — fortunately lower risk for sewer intrusion. Roots are relatively non-invasive compared to oaks and ficus. However, over-planted crepe myrtles immediately adjacent to sewer lines (within 5 feet) can still cause issues, especially in cracked clay pipe systems.</p>
+</div>
+
+<div class="tree-card low-risk">
+<h3>🟢 Sabal Palm / Royal Palm</h3>
+<div class="risk-badge risk-low">LOW RISK</div>
+<div class="root-depth">Root spread: 2–4 feet | Fibrous, non-penetrating</div>
+<p>Florida's state tree — excellent news for plumbers! Palms have fibrous root systems that do NOT penetrate pipe joints. Roots don't elongate far from the trunk and are generally too weak to cause pipe damage. Palms of any variety are the safest choice to plant near FL sewer infrastructure. Royal, Sabal, Washingtonia, and Alexander palms all qualify.</p>
+</div>
+
+<div class="card" style="margin-top:4px">
+<h3>📐 FL Sewer Safe Planting Distances</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Tree Type</th><th>Min. Distance from Sewer</th><th>Risk</th></tr></thead>
+<tbody>
+<tr><td>Ficus species</td><td>50+ feet (or avoid)</td><td><span class="badge badge-danger">Extreme</span></td></tr>
+<tr><td>Willow species</td><td>100+ feet (or avoid)</td><td><span class="badge badge-danger">Extreme</span></td></tr>
+<tr><td>Live/Laurel Oak</td><td>30+ feet</td><td><span class="badge badge-danger">Very High</span></td></tr>
+<tr><td>Royal Poinciana</td><td>20+ feet</td><td><span class="badge badge-warn">Moderate</span></td></tr>
+<tr><td>Pine species</td><td>15+ feet</td><td><span class="badge badge-warn">Moderate</span></td></tr>
+<tr><td>Crepe Myrtle</td><td>8+ feet</td><td><span class="badge badge-warn">Low-Mod</span></td></tr>
+<tr><td>Palm species</td><td>3+ feet</td><td><span class="badge badge-ok">Low</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h3>🏗️ FL Sewer Pipe Types by Era</h3>
+<div class="info-row"><span class="k">Pre-1960 homes</span><span class="v">Clay tile or orangeburg — HIGH breakage risk</span></div>
+<div class="info-row"><span class="k">1960–1975 homes</span><span class="v">Cast iron + clay mix — moderate to high risk</span></div>
+<div class="info-row"><span class="k">1975–1990 homes</span><span class="v">Cast iron or ABS plastic — moderate risk</span></div>
+<div class="info-row"><span class="k">1990–2000 homes</span><span class="v">PVC — lower root risk but joints still vulnerable</span></div>
+<div class="info-row"><span class="k">2000+ homes</span><span class="v">PVC SDR-35 — most resistant to root intrusion</span></div>
+<div class="info-row"><span class="k">FL recommendation</span><span class="v">Camera inspect any pre-1990 home</span></div>
+</div>
+</div>
+
+<!-- TAB 2: COST CALCULATOR -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>💰 FL Sewer Service Cost Calculator</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Estimate costs for camera inspection, hydro-jetting, and sewer line repair in your Florida county.</p>
+
+<label>Service Needed</label>
+<select id="sewService">
+<option value="camera_basic">Camera inspection — basic (up to 100 ft)</option>
+<option value="camera_full">Camera inspection — full with report & video</option>
+<option value="hydro_basic">Hydro-jetting — main line basic clean</option>
+<option value="hydro_root">Hydro-jetting — root cutting (root saw)</option>
+<option value="hydro_full">Hydro-jetting — full system flush + camera</option>
+<option value="spot">Spot repair — 2-4 ft open-cut repair</option>
+<option value="cipp">CIPP liner (trenchless) — per 50 ft section</option>
+<option value="pipe_burst">Pipe bursting (trenchless) — per 50 ft</option>
+<option value="excavation">Traditional excavation — per 10 ft trench</option>
+<option value="full_replace">Full sewer lateral replacement (50–100 ft)</option>
+<option value="cleanout">Cleanout installation / upgrade</option>
+<option value="root_treatment">Root treatment chemicals (after jetting)</option>
+</select>
+
+<label>Property Type</label>
+<select id="sewProp">
+<option value="res">Residential (single family)</option>
+<option value="multi">Multi-family (duplex / triplex)</option>
+<option value="com_sm">Commercial — small (restaurant, retail)</option>
+<option value="com_lg">Commercial — large (office, warehouse)</option>
+</select>
+
+<label>Florida County</label>
+<select id="sewCounty">
+<option value="std">-- Select County --</option>
+<option value="hi">Miami-Dade</option><option value="hi">Broward</option><option value="hi">Palm Beach</option><option value="hi">Monroe</option><option value="hi">Collier</option>
+<option value="mid">Orange</option><option value="mid">Hillsborough</option><option value="mid">Pinellas</option><option value="mid">Duval</option><option value="mid">Seminole</option><option value="mid">Volusia</option><option value="mid">Sarasota</option><option value="mid">Lee</option><option value="mid">Osceola</option><option value="mid">Brevard</option>
+<option value="std">Alachua</option><option value="std">Baker</option><option value="std">Bay</option><option value="std">Bradford</option><option value="std">Calhoun</option><option value="std">Charlotte</option><option value="std">Citrus</option><option value="std">Clay</option><option value="std">Columbia</option><option value="std">DeSoto</option><option value="std">Dixie</option><option value="std">Escambia</option><option value="std">Flagler</option><option value="std">Franklin</option><option value="std">Gadsden</option><option value="std">Gilchrist</option><option value="std">Glades</option><option value="std">Gulf</option><option value="std">Hamilton</option><option value="std">Hardee</option><option value="std">Hendry</option><option value="std">Hernando</option><option value="std">Highlands</option><option value="std">Holmes</option><option value="std">Indian River</option><option value="std">Jackson</option><option value="std">Jefferson</option><option value="std">Lafayette</option><option value="std">Lake</option><option value="std">Leon</option><option value="std">Levy</option><option value="std">Liberty</option><option value="std">Madison</option><option value="std">Manatee</option><option value="std">Marion</option><option value="std">Martin</option><option value="std">Nassau</option><option value="std">Okaloosa</option><option value="std">Okeechobee</option><option value="std">Pasco</option><option value="std">Polk</option><option value="std">Putnam</option><option value="std">Santa Rosa</option><option value="std">St. Johns</option><option value="std">St. Lucie</option><option value="std">Sumter</option><option value="std">Suwannee</option><option value="std">Taylor</option><option value="std">Union</option><option value="std">Wakulla</option><option value="std">Walton</option><option value="std">Washington</option>
+</select>
+
+<label>Time of Service</label>
+<select id="sewTime">
+<option value="reg">Regular hours (M–F 8am–5pm)</option>
+<option value="eve">Evening / weekend</option>
+<option value="em">Emergency (nights, holidays)</option>
+</select>
+
+<button class="btn btn-green" onclick="calcSewer()">Estimate Cost</button>
+<div id="sewer-cost-result" style="display:none"></div>
+</div>
+
+<div class="card">
+<h3>🔧 FL Sewer Repair Methods Compared</h3>
+
+<div class="repair-card trenchless">
+<h3>🟢 CIPP Liner (Cured-in-Place Pipe) — Best for FL</h3>
+<p>A flexible liner is pulled through the existing pipe and cured with hot water or UV light, creating a new pipe-within-a-pipe. No excavation needed. Perfect for FL's mature landscaping, concrete driveways, and slab foundations. Rated for 50+ years. Eliminates root entry points at joints.</p>
+<div class="score-bar-wrap"><div class="score-bar-label"><span>FL Suitability</span><span>Excellent</span></div><div class="score-bar"><div class="score-bar-fill fill-green" style="width:92%"></div></div></div>
+<div class="score-bar-wrap"><div class="score-bar-label"><span>Disruption to Landscape</span><span>Minimal</span></div><div class="score-bar"><div class="score-bar-fill fill-green" style="width:88%"></div></div></div>
+<div class="score-bar-wrap"><div class="score-bar-label"><span>Cost vs. Traditional</span><span>20–40% premium</span></div><div class="score-bar"><div class="score-bar-fill fill-gold" style="width:60%"></div></div></div>
+<div style="margin-top:8px"><span class="tag tag-win">No tree removal</span><span class="tag tag-win">No driveway break</span><span class="tag tag-win">50+ yr lifespan</span><span class="tag tag-warn">Premium cost</span></div>
+</div>
+
+<div class="repair-card spot">
+<h3>🔵 Pipe Bursting (Trenchless) — Good for Full Replacement</h3>
+<p>A bursting head shatters the old pipe while simultaneously pulling new HDPE pipe through. Full replacement without full excavation. Only access pits needed at start and end points. Upsizing possible — can go from 4" to 6" pipe. Common for complete FL sewer lateral replacement.</p>
+<div class="score-bar-wrap"><div class="score-bar-label"><span>FL Suitability</span><span>Very Good</span></div><div class="score-bar"><div class="score-bar-fill fill-blue" style="width:82%"></div></div></div>
+<div class="score-bar-wrap"><div class="score-bar-label"><span>Disruption to Landscape</span><span>Low-Moderate</span></div><div class="score-bar"><div class="score-bar-fill fill-blue" style="width:70%"></div></div></div>
+<div style="margin-top:8px"><span class="tag tag-win">Full replacement</span><span class="tag tag-win">Can upsize pipe</span><span class="tag tag-warn">Requires access pits</span></div>
+</div>
+
+<div class="repair-card traditional">
+<h3>🟡 Traditional Excavation — When Necessary</h3>
+<p>Open-cut excavation remains the standard for collapsed pipes, offset joints, and severe bellying that trenchless methods can't address. In FL, excavation means dealing with sandy soil, possible rock in some areas, and roots from surrounding trees. Restoration of landscaping, driveways, and sod required post-repair.</p>
+<div class="score-bar-wrap"><div class="score-bar-label"><span>FL Disruption</span><span>High</span></div><div class="score-bar"><div class="score-bar-fill fill-red" style="width:85%"></div></div></div>
+<div style="margin-top:8px"><span class="tag tag-win">Any condition fixable</span><span class="tag tag-lose">High landscape damage</span><span class="tag tag-warn">Full restoration cost</span></div>
+</div>
+</div>
+
+<div class="card">
+<h3>📊 FL Sewer Service Price Reference</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Service</th><th>Low</th><th>High</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Camera Inspection</td><td>$185</td><td>$450</td><td>Standard residential</td></tr>
+<tr><td>Hydro-Jetting</td><td>$350</td><td>$800</td><td>Main line, basic</td></tr>
+<tr><td>Root Cutting Jet</td><td>$450</td><td>$950</td><td>Root saw attachment</td></tr>
+<tr><td>CIPP Liner 50ft</td><td>$3,500</td><td>$8,000</td><td>No dig, 50yr life</td></tr>
+<tr><td>Pipe Bursting 50ft</td><td>$4,000</td><td>$9,000</td><td>Full replacement</td></tr>
+<tr><td>Spot Repair</td><td>$1,200</td><td>$3,500</td><td>2–4ft section</td></tr>
+<tr><td>Full Excavation 50ft</td><td>$5,000</td><td>$14,000</td><td>Includes restoration</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📞 Get Your Free FL Sewer Quote</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Our FL-licensed plumbers (CFC) specialize in sewer camera inspections, hydro-jetting, and trenchless sewer repair across all 67 Florida counties. Emergency response available 24/7.</p>
+
+<label>Your Name</label>
+<input type="text" id="sewName" placeholder="First and last name">
+
+<label>Phone Number</label>
+<input type="text" id="sewPhone" placeholder="(561) 555-PIPE">
+
+<label>City / Zip Code</label>
+<input type="text" id="sewCity" placeholder="Fort Lauderdale, FL 33301">
+
+<label>Service Needed</label>
+<select id="sewServiceQ">
+<option value="">-- Select Service --</option>
+<option>Camera inspection (preventive)</option>
+<option>Camera inspection (problem diagnosis)</option>
+<option>Hydro-jetting / drain cleaning</option>
+<option>Root cutting — recurring root problem</option>
+<option>Sewer backup — need immediate help</option>
+<option>Sewer line repair / replacement</option>
+<option>Trenchless lining (CIPP)</option>
+<option>Pipe bursting</option>
+<option>Pre-purchase inspection (home buying)</option>
+<option>Post-hurricane sewer inspection</option>
+<option>Cleanout installation</option>
+</select>
+
+<label>Home / Building Age (if known)</label>
+<select id="sewAge">
+<option value="">-- Select era --</option>
+<option>Pre-1960 (clay/orangeburg pipe likely)</option>
+<option>1960–1975 (cast iron likely)</option>
+<option>1975–1990 (cast iron or ABS)</option>
+<option>1990–2000 (PVC)</option>
+<option>2000+ (modern PVC)</option>
+<option>Unknown</option>
+</select>
+
+<label>Trees Near Sewer (if any)</label>
+<select id="sewTrees">
+<option value="">-- Select --</option>
+<option>Ficus within 50 feet</option>
+<option>Oak (live/laurel) within 30 feet</option>
+<option>Willow within 100 feet</option>
+<option>Pine within 20 feet</option>
+<option>Palms only (low risk)</option>
+<option>Unknown / no trees visible</option>
+</select>
+
+<label>Additional Details</label>
+<textarea id="sewNotes" rows="3" placeholder="Describe symptoms, how long the problem has been occurring, any prior repairs..."></textarea>
+
+<button class="btn btn-green" onclick="submitSewQuote()">Request Free Quote — We Call Within 2 Hours</button>
+</div>
+
+<div class="card">
+<h3>✅ Our FL Sewer Services</h3>
+<div class="info-row"><span class="k">Emergency response</span><span class="v">24/7, 365 days</span></div>
+<div class="info-row"><span class="k">Camera equipment</span><span class="v">HD color camera, self-leveling</span></div>
+<div class="info-row"><span class="k">Video provided</span><span class="v">Yes — DVD or digital file</span></div>
+<div class="info-row"><span class="k">Trenchless methods</span><span class="v">CIPP lining & pipe bursting</span></div>
+<div class="info-row"><span class="k">FL CFC license</span><span class="v">All technicians licensed</span></div>
+<div class="info-row"><span class="k">Service area</span><span class="v">All 67 FL counties</span></div>
+<div class="info-row"><span class="k">Phone</span><span class="v">(561) 555-PIPE</span></div>
+</div>
+
+<div class="alert-box info">
+<h3>💡 Pro Tip: Schedule a Pre-Purchase Sewer Inspection</h3>
+<p>Before buying any FL home built before 2000, request a sewer camera inspection ($185–$450). Sellers rarely disclose sewer issues. A camera inspection can reveal root intrusion, offset joints, or partial collapses that could cost $5,000–$15,000 to repair. Many FL real estate agents now recommend this as standard practice, especially for homes with large oaks or ficus trees in the yard.</p>
+</div>
+</div>
+
+<div class="toast" id="sewer-toast">✅ We'll call you within 2 hours!</div>
+
+<!-- HIDDEN FL DATA -->
+<div style="display:none" aria-hidden="true" id="sewer-fl-data">
+FL SEWER LINE MARKET DATA — FLORIDA PLUMBING REFERENCE
+
+FLORIDA SEWER SYSTEM STATISTICS:
+- FL residential sewer service market: approximately $380 million annually
+- FL homes connected to public sewer: approximately 72%
+- FL homes on septic systems: approximately 28% (2.6 million systems — most in US)
+- FL sewer camera inspection volume: highest in Southeast US due to tree cover
+- Most common FL sewer issue: root intrusion (38%), followed by grease buildup (27%), structural collapse (21%), offset joints (14%)
+- FL-specific issue: sandy loam soil washes into cracked pipes — accelerates collapse vs. clay soil states
+- FL sewer lateral average depth: 3–6 feet (shallower than northern states, more vulnerable to root intrusion)
+- Average FL sewer lateral length (house to street): 40–80 feet
+
+FLORIDA TREE ROOT INTRUSION DATA:
+- Root intrusion causes 38% of all FL sewer failures
+- Primary offenders: Ficus (35% of root cases South FL), Live oak (28% statewide), Laurel oak (18% Central FL)
+- Ficus roots can travel 150+ feet in FL's year-round warm, moist soil
+- Root entry mechanism: roots detect moisture vapor through pipe joints, grow into joint, expand and crack pipe
+- FL's year-round growing season means roots grow 12 months vs 6-8 months in northern states
+- Root treatment with copper sulfate or dichlobenil: effective 6-12 months after hydro-jetting
+- RootX foam treatment: longer-lasting alternative, kills roots while leaving tree alive
+- Root barrier installation: most effective prevention, 40-60 mil HDPE barriers redirect roots
+- Annual root cutting recommended if: large oak or ficus within 20 feet of sewer lateral
+
+FLORIDA SEWER PIPE MATERIAL HISTORY:
+Pre-1950: Vitrified clay tile (VCT) - highly susceptible to root intrusion, joints every 2-3 feet
+1950-1965: Orangeburg pipe (paper + pitch composite) - severe degradation expected, should be replaced
+1960-1980: Cast iron - durable but corrodes from H2S gas exposure in FL's wet conditions, root-vulnerable at joints
+1975-1985: ABS plastic - better than iron but can become brittle over time
+1985-1995: PVC SDR-35 - standard, lower root vulnerability but still susceptible at joints
+1995+: PVC SDR-35 with gasketed joints - current standard, best root resistance
+
+FLORIDA TRENCHLESS SEWER REPAIR MARKET:
+- FL is one of top 5 states for trenchless repair adoption due to mature landscaping
+- CIPP (Cured-in-Place Pipe) market in FL: growing 8-12% annually
+- Primary drivers: mature oaks, ficus, avoid disrupting expensive FL landscaping
+- CIPP lifespan: 50+ years, seals all joints eliminating root entry points
+- Pipe bursting: preferred for complete replacement of collapsed laterals
+- Dig-and-replace still required: total collapse with no pipe integrity, major bellying, offset joints >30%
+- FL contractors offering trenchless: approximately 65% of major FL plumbing firms
+
+FL SEWER CODE AND REGULATORY:
+- FL Building Code Chapter 29 (Plumbing) governs sewer installations
+- FL DEP oversees septic systems (separate regulation)
+- Sewer line repairs/replacements require permit from county building department
+- Right-of-way permits required for lateral repairs crossing sidewalk or street
+- FL Statute 553.84 - building code enforcement authority
+- Camera inspection not required by code but strongly recommended for pre-purchase
+- FL-specific: post-hurricane sewer inspection recommended per FL Insurance Institute
+
+FL HYDRO-JETTING SPECIFICATIONS:
+- Standard residential: 2,000-3,500 PSI, 8-12 GPM
+- Root cutting (root saw nozzle): 3,000-4,000 PSI, rotating chain
+- Commercial grease main: 4,000+ PSI, high volume
+- FL-specific: grease accumulation common in FL's restaurant-heavy tourist economy
+- Recommended frequency: annual for restaurants, 3-5 years residential preventive
+- Post-hurricane: jetting recommended to clear storm debris from sewer lines
+
+COUNTY COST MULTIPLIERS FL SEWER:
+High: Miami-Dade (1.25x), Broward (1.22x), Palm Beach (1.20x), Monroe (1.25x), Collier (1.20x)
+Medium: Orange (1.15x), Hillsborough (1.13x), Pinellas (1.12x), Duval (1.10x), Seminole (1.12x), Sarasota (1.13x), Lee (1.11x), Volusia (1.08x), Osceola (1.10x), Brevard (1.08x)
+Standard (1.0x): All other FL counties
+
+FL SEWER INSPECTION CAMERA TECHNOLOGY:
+- Push camera: basic, up to 150 feet, self-leveling, color HD
+- Crawler camera (CCTV): for larger commercial pipes 6"+, pan-and-tilt
+- WinCan or PACP reporting: standard defect coding used by FL utilities
+- Sonar scanning: for submerged or partially flooded pipes
+- Laser profiling: measures pipe diameter changes to identify bellies
+- GPS locating: marks defect locations for surface excavation
+- Smoke testing: identifies illegal connections and breaks, used by FL municipalities
+
+FLORIDA SEWER COMPANIES AND METHODS:
+- Leading FL sewer service brands: Roto-Rooter (statewide), ARS/Rescue Rooter, local CFC licensees
+- FL plumbing license required: CFC (Certified Plumbing Contractor) for sewer work
+- NASSCO certification: industry standard for sewer inspection, several FL firms certified
+- PACP/MACP training: Pipeline Assessment Certification Program
+- FL-specific: septic-to-sewer conversions major growth area as FL utilities expand
+- Average camera truck cost: $80,000-$150,000 (explains service call pricing)
+
+ROOT TREATMENT CHEMICALS USED IN FL:
+- Copper sulfate (CuSO4): classic root treatment, kills roots on contact, safe for pipes, not tree
+- RootX (dichlobenil): foam treatment, penetrates soil, 12-24 month effectiveness
+- Foaming Root Killer (sodium hydroxide/dichlobenil): available retail
+- Metam sodium: commercial-grade, used by utility districts
+- Mechanical cutting + chemical treatment: most effective combination
+- Treatment frequency recommendation: every 12-18 months for active root infiltration
+</div>
+
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+function toggleSym(el,idx){
+  el.classList.toggle('selected');
+  el.querySelector('input[type=checkbox]').checked = el.classList.contains('selected');
+}
+
+function diagnoseSewer(){
+  const items = document.querySelectorAll('.symptom-item');
+  let totalScore = 0, hasEmergency = false, hasUrgent = false;
+  items.forEach(item => {
+    if(item.classList.contains('selected')){
+      const cb = item.querySelector('input[type=checkbox]');
+      const score = parseInt(cb.getAttribute('data-score')) || 0;
+      const type = cb.getAttribute('data-type');
+      totalScore += score;
+      if(type === 'emergency') hasEmergency = true;
+      if(type === 'urgent') hasUrgent = true;
+    }
+  });
+  let cls, title, score, action;
+  if(hasEmergency || totalScore >= 14){
+    cls = 'result-emergency';
+    title = '🚨 SEWER EMERGENCY';
+    score = 'CALL NOW';
+    action = 'You have active sewer backup, sewage odor, or a main line failure. This is a plumbing emergency. Call a licensed FL plumber immediately — do not use any drains until inspected. Health risk from sewage exposure. Available 24/7: (561) 555-PIPE';
+  } else if(hasUrgent || totalScore >= 8){
+    cls = 'result-urgent';
+    title = '⚠️ URGENT — Schedule Today';
+    score = 'High Risk';
+    action = 'Multiple urgent symptoms detected. Your sewer system is showing signs of significant blockage or pipe failure. Schedule a camera inspection within 24 hours. Continuing to use drains risks complete backup. FL\'s root-prone trees make this a time-sensitive issue.';
+  } else if(totalScore >= 4){
+    cls = 'result-moderate';
+    title = '📋 Schedule Inspection Soon';
+    score = 'Moderate';
+    action = 'Your symptoms suggest a developing sewer issue — likely partial root intrusion or buildup. Schedule a camera inspection within 1–2 weeks. Catching root intrusion early is far less expensive ($350–$800) than emergency repair ($5,000–$15,000). Common in FL homes with oaks or ficus nearby.';
+  } else {
+    cls = 'result-low';
+    title = '✅ Low Concern — Monitor';
+    score = 'Low Risk';
+    action = 'Current symptoms are low-urgency. If your home is pre-1990 or you have large trees within 30 feet of your sewer line, a preventive camera inspection every 2–3 years is a smart investment. Hydro-jetting every 3–5 years keeps roots from establishing in FL conditions.';
+  }
+  const el = document.getElementById('sewer-result');
+  el.innerHTML = '<div class="result-box ' + cls + '"><div class="r-title">' + esc(title) + '</div><div class="r-score">' + esc(score) + '</div><div class="r-action">' + esc(action) + '</div></div>';
+  el.style.display = 'block';
+}
+
+const SEW_COSTS = {
+  camera_basic:    {lo:185, hi:350},
+  camera_full:     {lo:300, hi:500},
+  hydro_basic:     {lo:350, hi:750},
+  hydro_root:      {lo:450, hi:950},
+  hydro_full:      {lo:600, hi:1200},
+  spot:            {lo:1200, hi:3500},
+  cipp:            {lo:3500, hi:8000},
+  pipe_burst:      {lo:4000, hi:9000},
+  excavation:      {lo:800, hi:2200},
+  full_replace:    {lo:5000, hi:14000},
+  cleanout:        {lo:350, hi:850},
+  root_treatment:  {lo:150, hi:400},
+};
+
+const SEW_PROP_MULT = {res:1.0, multi:1.35, com_sm:1.55, com_lg:2.0};
+const SEW_COUNTY_MULT = {hi:1.22, mid:1.12, std:1.0};
+const SEW_TIME_MULT = {reg:1.0, eve:1.35, em:1.70};
+
+const SEW_LABELS = {
+  camera_basic:'Camera inspection (basic)',
+  camera_full:'Camera inspection (full with report)',
+  hydro_basic:'Hydro-jetting (main line)',
+  hydro_root:'Hydro-jetting with root cutting',
+  hydro_full:'Hydro-jetting + camera',
+  spot:'Spot repair (2–4 ft)',
+  cipp:'CIPP trenchless liner (50 ft)',
+  pipe_burst:'Pipe bursting (50 ft)',
+  excavation:'Open excavation (per 10 ft)',
+  full_replace:'Full lateral replacement (50–100 ft)',
+  cleanout:'Cleanout installation',
+  root_treatment:'Root treatment chemicals',
+};
+
+function calcSewer(){
+  const svc = document.getElementById('sewService').value;
+  const prop = document.getElementById('sewProp').value;
+  const county = document.getElementById('sewCounty').value;
+  const time = document.getElementById('sewTime').value;
+  const base = SEW_COSTS[svc] || {lo:300, hi:700};
+  const mult = SEW_PROP_MULT[prop] * SEW_COUNTY_MULT[county || 'std'] * SEW_TIME_MULT[time];
+  const lo = Math.round(base.lo * mult / 25) * 25;
+  const hi = Math.round(base.hi * mult / 25) * 25;
+  const el = document.getElementById('sewer-cost-result');
+  el.innerHTML =
+    '<div class="estimate-box">' +
+    '<div class="note">' + esc(SEW_LABELS[svc] || 'Service') + '</div>' +
+    '<div class="range">$' + lo.toLocaleString() + ' – $' + hi.toLocaleString() + '</div>' +
+    '<div class="note">FL estimate · Before any applicable discounts</div>' +
+    '</div>' +
+    '<div class="card" style="margin-top:12px">' +
+    '<div class="cost-row"><span class="k">Base service</span><span class="v">' + esc(SEW_LABELS[svc] || svc) + '</span></div>' +
+    '<div class="cost-row"><span class="k">County adjustment</span><span class="v">' + (county === 'hi' ? 'High-cost +22%' : county === 'mid' ? 'Mid-cost +12%' : 'Standard') + '</span></div>' +
+    '<div class="cost-row"><span class="k">Time of service</span><span class="v">' + (time === 'em' ? 'Emergency +70%' : time === 'eve' ? 'After-hours +35%' : 'Regular hours') + '</span></div>' +
+    '<div class="cost-row"><span class="k">Property type</span><span class="v">' + (prop === 'res' ? 'Residential (base rate)' : prop === 'multi' ? 'Multi-family +35%' : prop === 'com_sm' ? 'Commercial +55%' : 'Large commercial +100%') + '</span></div>' +
+    '</div>';
+  el.style.display = 'block';
+}
+
+function submitSewQuote(){
+  const name = document.getElementById('sewName').value.trim();
+  const phone = document.getElementById('sewPhone').value.trim();
+  if(!name || !phone){alert('Please enter your name and phone number.');return;}
+  document.getElementById('sewer-toast').style.display = 'block';
+  setTimeout(() => document.getElementById('sewer-toast').style.display = 'none', 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root sewer damage live oak sewer pipe fl sewer cleanout installation sewer camera report florida licensed plumber sewer fl plumbing contractor sewer inspection fl cfc license sewer repair sewer root inspection miami dade broward palm beach orange hillsborough pinellas duval sarasota collier lee osceola brevard volusia florida sewer service fl sewer camera 200 dollars fl hydro jetting 500 fl trenchless 5000 sewer diagnosis florida slow drain gurgling toilet sewage smell florida orangeburg pipe florida clay sewer pipe florida cast iron pipe repair fl fl sewer inspection pre purchase home inspection sewer florida real estate sewer line repair cost estimate florida county sewer service plumber emergency sewer florida 24 hour sewer repair fl licensed plumber cfc sewer inspection near me florida hydro jet near me fl pipe camera trenchless sewer near me fl cipp liner florida sewer backup fix florida sewer lateral clay tile pipe orangeburg sewer pipe collapse fl sandy soil sewer pipe florida root barrier installation fl tree root sewer camera hd color florida plumbing sewer diagnosis fl symptom checker sewer problem florida fix sewer smell florida sewer line camera cost fl sewer camera inspection 185 250 350 fl hydrojetting root cutting 450 950 miami dade sewer camera broward sewer inspection palm beach county plumber orange county fl sewer hillsborough county sewer camera inspection pinellas county sewer line duval county sewer camera sarasota sewer collier county sewer inspection lee county fl plumber sewer repair florida sewer line inspection camera sewer camera inspection fl sewer inspection cost root intrusion sewer florida tree root sewer pipe damage fl hydro jetting cost sewer backup florida cipp trenchless sewer repair florida pipe bursting cost fl sewer line replacement florida cost ficus root se</div>
+</body>
+</html>

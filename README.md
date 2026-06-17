@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**124 interactive cost calculators** for Florida homeowners.
+**125 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -94,6 +94,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Sewer Drain Diagnosis Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-drain-diagnosis/fl_sewer_drain_diagnosis.html)
 - [FL Sewer Line Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-line-cost/fl_sewer_line_cost.html)
 - [FL Sewer Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-line/fl_sewer_line_guide.html)
+- [FL Sewer Root Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-root-inspection/fl_sewer_root_inspection.html)
 - [FL Shower Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-leak/fl_shower_leak.html)
 - [FL Shower Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-remodel/fl_shower_remodel.html)
 - [FL Shower Valve Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-valve/fl_shower_valve.html)
