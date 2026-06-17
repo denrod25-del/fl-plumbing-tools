@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Well Pump & Pressure System Sizing Guide | Florida Plumbing</title>
+<meta name="description" content="Florida well pump sizing tool. Calculate submersible pump GPM requirements, size pressure tanks, diagnose water quality issues, and get a free licensed FL plumber quote for well system repairs.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#14B8A6;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.69rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#14B8A6;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#14B8A6;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text],input[type=number]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#14B8A6}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-teal{background:#14B8A6;color:#fff}
+.btn-teal:hover{background:#0D9488}
+.result-box{border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.result-teal{background:#041F1E;border:2px solid #14B8A6}
+.result-teal .r-title{color:#14B8A6}
+.result-warn{background:#1A1508;border:2px solid #F4B942}
+.result-warn .r-title{color:#F4B942}
+.result-danger{background:#1A0808;border:2px solid #EF4444}
+.result-danger .r-title{color:#EF4444}
+.result-ok{background:#081A0D;border:2px solid #22C55E}
+.result-ok .r-title{color:#22C55E}
+.r-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+.r-val{font-size:1.6rem;font-weight:700;margin-bottom:4px}
+.r-note{font-size:.78rem;color:#CBD5E1;line-height:1.5;margin-top:6px}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem;align-items:flex-start}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8;flex-shrink:0;max-width:55%}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:44%}
+.wq-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:8px;margin-bottom:6px;cursor:pointer;border:1px solid #2A3A5C;background:#141929;transition:all .2s}
+.wq-item.selected{background:#041F1E;border-color:#14B8A6}
+.wq-item input[type=checkbox]{width:16px;height:16px;accent-color:#14B8A6;flex-shrink:0;margin-top:2px}
+.wq-item .wq-text{font-size:.81rem;color:#CBD5E1;line-height:1.3}
+.wq-item .wq-label{font-size:.83rem;font-weight:600;color:#E2E8F0;display:block;margin-bottom:1px}
+.alert-box{border-radius:10px;padding:13px;margin-bottom:12px}
+.alert-box.danger{border:1px solid #EF4444;background:#1A0808}
+.alert-box.danger h3{font-size:.88rem;font-weight:700;color:#EF4444;margin-bottom:6px}
+.alert-box.warn{border:1px solid #F4B942;background:#1A1508}
+.alert-box.warn h3{font-size:.88rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.alert-box.info{border:1px solid #14B8A6;background:#041F1E}
+.alert-box.info h3{font-size:.88rem;font-weight:700;color:#14B8A6;margin-bottom:6px}
+.alert-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.estimate-box{background:#041F1E;border:1px solid #14B8A6;border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.estimate-box .range{font-size:1.5rem;font-weight:700;color:#14B8A6}
+.estimate-box .note{font-size:.75rem;color:#94A3B8;margin-top:4px}
+.pump-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #14B8A6}
+.pump-card.warn-card{border-left-color:#F4B942}
+.pump-card.danger-card{border-left-color:#EF4444}
+.pump-card h3{font-size:.87rem;font-weight:700;color:#14B8A6;margin-bottom:3px}
+.pump-card.warn-card h3{color:#F4B942}
+.pump-card.danger-card h3{color:#EF4444}
+.pump-card p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.pump-card .pump-spec{font-size:.8rem;color:#CBD5E1;font-weight:600;margin-bottom:3px}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.7rem;font-weight:600;margin:2px}
+.badge-ok{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.badge-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.badge-danger{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.badge-teal{background:#041F1E;color:#14B8A6;border:1px solid #14B8A6}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.77rem;min-width:280px}
+th{background:#141929;color:#94A3B8;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2A3A5C}
+td{padding:7px 10px;border-bottom:1px solid #1A2440;color:#CBD5E1}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#0D1525}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>💧 FL Well Pump & Pressure System</h1>
+<p>Size pumps, pressure tanks, diagnose water quality, get FL quotes</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Pump Sizer</button>
+<button class="tab" onclick="showTab(1)">Pressure Calc</button>
+<button class="tab" onclick="showTab(2)">Water Quality</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: PUMP SIZER -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>🔧 FL Submersible Pump Sizing Calculator</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Florida has approximately 2.6 million private wells — the most of any state. Proper pump sizing in FL must account for water table depth, sandy soil yield, and high peak-demand from irrigation. Enter your details for a sizing recommendation.</p>
+
+<label>Number of People in Home</label>
+<select id="pumpPeople">
+<option value="1">1 person</option>
+<option value="2">2 people</option>
+<option value="3" selected>3–4 people (average FL household)</option>
+<option value="5">5–6 people</option>
+<option value="7">7+ people</option>
+</select>
+
+<label>Irrigation System?</label>
+<select id="pumpIrrigation">
+<option value="none">No irrigation</option>
+<option value="small">Small irrigation (6–10 zones)</option>
+<option value="med">Medium irrigation (11–20 zones) — typical FL home</option>
+<option value="large">Large irrigation (21+ zones) — estate / commercial</option>
+</select>
+
+<label>Well Depth</label>
+<select id="pumpDepth">
+<option value="shallow">Shallow well — under 25 ft (FL water table / jet pump)</option>
+<option value="mid">Mid-depth — 25–100 ft (submersible common)</option>
+<option value="deep">Deep — 100–300 ft (submersible required)</option>
+<option value="xdeep">Very deep — 300+ ft (high-head submersible)</option>
+</select>
+
+<label>Water Table / Aquifer (if known)</label>
+<select id="pumpAquifer">
+<option value="surficial">Surficial aquifer — South/Central FL (shallow, high yield)</option>
+<option value="floridian">Floridan aquifer — artesian pressure, hard water</option>
+<option value="intermediate">Intermediate aquifer — West-Central FL</option>
+<option value="unknown">Unknown</option>
+</select>
+
+<label>Pool or Spa on Property?</label>
+<select id="pumpPool">
+<option value="no">No pool</option>
+<option value="pool">Pool only</option>
+<option value="spa">Pool + spa</option>
+</select>
+
+<button class="btn btn-teal" onclick="calcPump()">Size My Well Pump</button>
+<div id="pump-result" style="display:none"></div>
+</div>
+
+<div class="card">
+<h3>🗺️ FL Well Depth by Region</h3>
+<div class="info-row"><span class="k">Southeast FL (Miami-Dade, Broward)</span><span class="v">Surficial: 20–80 ft</span></div>
+<div class="info-row"><span class="k">Southwest FL (Collier, Lee, Charlotte)</span><span class="v">Surficial: 30–100 ft</span></div>
+<div class="info-row"><span class="k">Central FL (Orange, Polk, Osceola)</span><span class="v">Surficial: 50–150 ft</span></div>
+<div class="info-row"><span class="k">Tampa Bay (Hillsborough, Pinellas)</span><span class="v">Floridan: 100–300 ft</span></div>
+<div class="info-row"><span class="k">North FL (Alachua, Marion)</span><span class="v">Floridan: 100–400 ft</span></div>
+<div class="info-row"><span class="k">Panhandle (Escambia, Okaloosa)</span><span class="v">Surficial: 30–80 ft</span></div>
+<div class="info-row"><span class="k">FL Keys (Monroe)</span><span class="v">Municipal water — no wells</span></div>
+</div>
+</div>
+
+<!-- TAB 1: PRESSURE CALC -->
+<div class="panel" id="panel-1">
+<div class="card">
+<h2>⚡ Pressure Tank Sizing Calculator</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:12px">An undersized pressure tank causes short-cycling — the pump turns on and off rapidly, destroying the motor. In FL's hot climate, a short-cycling pump fails 2–3× faster than properly sized systems.</p>
+
+<label>Pump Flow Rate (GPM)</label>
+<input type="number" id="tankGpm" placeholder="e.g. 12" min="1" max="200">
+
+<label>System Pressure Setting</label>
+<select id="tankPressure">
+<option value="30_50">30/50 PSI (standard — most FL homes)</option>
+<option value="40_60">40/60 PSI (higher pressure — multi-story)</option>
+<option value="20_40">20/40 PSI (low — shallow well, older system)</option>
+</select>
+
+<label>Minimum Pump Cycles (per hour — lower = longer pump life)</label>
+<select id="tankCycles">
+<option value="6">6 cycles/hr (minimum for longest pump life)</option>
+<option value="8">8 cycles/hr (standard FL residential)</option>
+<option value="12">12 cycles/hr (acceptable for smaller pumps)</option>
+</select>
+
+<button class="btn btn-teal" onclick="calcTank()">Size My Pressure Tank</button>
+<div id="tank-result" style="display:none"></div>
+</div>
+
+<div class="card">
+<h3>🔍 FL Pressure System Diagnostics</h3>
+
+<div class="pump-card">
+<h3>⚡ Short Cycling (Pump clicking on/off rapidly)</h3>
+<div class="pump-spec">Most common FL well complaint</div>
+<p>Waterlogged pressure tank — bladder or diaphragm has failed, tank lost air charge. In FL's high humidity, tank corrosion accelerates. Replace pressure tank. Typical FL tank life: 8–12 years in coastal areas, 12–18 years inland.</p>
+<div style="margin-top:6px"><span class="badge badge-warn">Urgency: High</span><span class="badge badge-ok">Fix: Tank replacement</span></div>
+</div>
+
+<div class="pump-card">
+<h3>📉 Low Water Pressure Throughout Home</h3>
+<div class="pump-spec">Check pressure switch, tank precharge, and pump output</div>
+<p>Could be: undersized pressure switch, partially failed pump impeller, clogged well screen (common with FL sandy soil), low aquifer yield in drought conditions, or waterlogged tank. FL summer drought June–October can drop well yield significantly.</p>
+<div style="margin-top:6px"><span class="badge badge-warn">Urgency: Medium</span><span class="badge badge-teal">Needs diagnosis</span></div>
+</div>
+
+<div class="pump-card warn-card">
+<h3>🔴 No Water / Pump Won't Prime</h3>
+<div class="pump-spec">Emergency — call immediately</div>
+<p>Pump failure, loss of prime (jet pump), burned motor winding (submersible), or broken pitless adapter. In FL lightning storms, pump motors are a common lightning strike casualty — surge protection is a must. Submersible pump replacement is a specialized job requiring well service equipment.</p>
+<div style="margin-top:6px"><span class="badge badge-danger">Urgency: Emergency</span><span class="badge badge-warn">Possible motor failure</span></div>
+</div>
+
+<div class="pump-card">
+<h3>🌊 Sputtering / Air in Lines</h3>
+<div class="pump-spec">Air entering suction side</div>
+<p>Possible low water table (FL drought), broken well screen allowing air entry, or failing pitless adapter. FL's dry season (Nov–Apr) drops water table 3–8 feet in many areas, temporarily reducing pump yield and allowing air entry. Often resolves with rain but should be inspected.</p>
+<div style="margin-top:6px"><span class="badge badge-warn">Urgency: Moderate</span><span class="badge badge-teal">Seasonal or structural</span></div>
+</div>
+</div>
+</div>
+
+<!-- TAB 2: WATER QUALITY -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>🧪 FL Well Water Quality Checker</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Florida well water ranges from excellent to severely contaminated depending on region and aquifer. Select the symptoms you're experiencing for a likely diagnosis and treatment recommendation.</p>
+
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="iron" data-severity="3">
+<div class="wq-text"><span class="wq-label">🟤 Red/brown staining on sinks, toilets, laundry</span>High iron content — extremely common in FL Floridan aquifer wells. North/Central FL especially affected.</div>
+</div>
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="sulfur" data-severity="4">
+<div class="wq-text"><span class="wq-label">💨 Rotten egg smell (hydrogen sulfide)</span>H2S gas from anaerobic bacteria in aquifer. Very common in FL — especially Sarasota, Charlotte, Lee, and Manatee counties. Offensive but often not harmful at low levels.</div>
+</div>
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="hard" data-severity="2">
+<div class="wq-text"><span class="wq-label">🪨 Mineral scaling / white deposits on fixtures</span>Hard water from dissolved calcium and magnesium. FL Floridan aquifer: 200–400+ mg/L hardness is typical — very hard. South FL surficial: moderately hard.</div>
+</div>
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="tannin" data-severity="2">
+<div class="wq-text"><span class="wq-label">🍵 Tea-colored / yellowish water</span>Tannins — organic compounds from decaying plant material in shallow FL wells. Very common in North FL (Alachua, Columbia, Bradford counties). Not harmful, but stains laundry and tastes earthy.</div>
+</div>
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="bacteria" data-severity="5">
+<div class="wq-text"><span class="wq-label">🦠 Recent flooding near well / after hurricane</span>Coliform bacteria contamination risk after FL flooding. Hurricane flooding can breach well casings. Immediate water testing required — do not drink untested well water after flooding.</div>
+</div>
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="salt" data-severity="4">
+<div class="wq-text"><span class="wq-label">🌊 Salty or brackish taste</span>Saltwater intrusion — critical issue in coastal FL (Miami-Dade, Broward, Palm Beach, Lee, Collier). As FL sea levels rise, saltwater intrusion into shallow aquifers is increasing. Reverse osmosis or water source change may be required.</div>
+</div>
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="turbid" data-severity="3">
+<div class="wq-text"><span class="wq-label">🌫️ Cloudy / turbid water</span>Sand, silt, or sediment in FL well — often indicates failing well screen or collapsed borehole. FL's sandy soil is particularly prone to screen clogging. May require well rehabilitation or screen replacement.</div>
+</div>
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="arsenic" data-severity="5">
+<div class="wq-text"><span class="wq-label">🧪 Concerned about arsenic / contaminants</span>FL has some arsenic-elevated areas, especially along paleo-river systems. Also relevant: PFAS contamination near military bases (Pensacola, Eglin AFB area). Test water if in high-risk area.</div>
+</div>
+<div class="wq-item" onclick="toggleWQ(this)">
+<input type="checkbox" data-issue="acid" data-severity="3">
+<div class="wq-text"><span class="wq-label">🔵 Blue/green staining on copper pipes or fixtures</span>Low pH / acidic water corroding copper. Common in shallow FL wells. Pinhole leaks in copper pipes accelerate. Whole-house acid neutralizer (calcite filter) is the standard treatment.</div>
+</div>
+
+<button class="btn btn-teal" style="margin-top:8px" onclick="diagWQ()">Diagnose My Water Quality</button>
+<div id="wq-result" style="display:none"></div>
+</div>
+
+<div class="card">
+<h3>💊 FL Water Treatment Solutions</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Issue</th><th>Treatment</th><th>Est. Cost</th></tr></thead>
+<tbody>
+<tr><td>High iron</td><td>Iron filter (greensand / birm)</td><td>$800–$2,500</td></tr>
+<tr><td>H2S / sulfur</td><td>Aeration + carbon filter</td><td>$1,200–$3,500</td></tr>
+<tr><td>Hard water</td><td>Water softener (ion exchange)</td><td>$1,000–$3,000</td></tr>
+<tr><td>Tannins</td><td>Tannin filter / RO</td><td>$700–$2,200</td></tr>
+<tr><td>Bacteria</td><td>UV sterilizer + shock chlorination</td><td>$400–$1,200</td></tr>
+<tr><td>Saltwater</td><td>Reverse osmosis whole-house</td><td>$3,000–$8,000</td></tr>
+<tr><td>Turbidity</td><td>Sediment filter + well rehab</td><td>$500–$3,000</td></tr>
+<tr><td>Low pH / acid</td><td>Calcite neutralizer filter</td><td>$600–$1,800</td></tr>
+<tr><td>Multiple issues</td><td>Sequential multi-stage system</td><td>$2,500–$9,000</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📞 Get Your Free FL Well Quote</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Our FL-licensed plumbers specialize in well pump replacement, pressure tank service, and water treatment system installation across all 67 Florida counties.</p>
+
+<label>Your Name</label>
+<input type="text" id="wellName" placeholder="First and last name">
+
+<label>Phone Number</label>
+<input type="text" id="wellPhone" placeholder="(561) 555-PIPE">
+
+<label>City / Zip Code</label>
+<input type="text" id="wellCity" placeholder="Ocala, FL 34471">
+
+<label>Service Needed</label>
+<select id="wellService">
+<option value="">-- Select Service --</option>
+<option>Submersible pump replacement</option>
+<option>Pressure tank replacement</option>
+<option>Well pump system not working — emergency</option>
+<option>Low water pressure diagnosis</option>
+<option>Short cycling / pump clicking rapidly</option>
+<option>No water / pump won't start</option>
+<option>Water quality treatment system</option>
+<option>Well rehabilitation (yield improvement)</option>
+<option>New well hookup / pitless adapter</option>
+<option>Whole-home water softener</option>
+<option>Iron / H2S / tannin filter system</option>
+<option>Post-hurricane well inspection</option>
+<option>Water test + treatment recommendation</option>
+</select>
+
+<label>Approximate Well Depth (if known)</label>
+<select id="wellDepth">
+<option value="">-- Select --</option>
+<option>Shallow — under 25 ft (jet pump)</option>
+<option>25–100 ft</option>
+<option>100–200 ft</option>
+<option>200–400 ft</option>
+<option>Over 400 ft</option>
+<option>Unknown</option>
+</select>
+
+<label>Water Quality Issues (check all that apply)</label>
+<textarea id="wellWQNotes" rows="3" placeholder="Iron staining, sulfur smell, hard water, cloudy water, salty taste, etc."></textarea>
+
+<label>Additional Details</label>
+<textarea id="wellNotes" rows="2" placeholder="How long has the problem been occurring? Any recent changes to water or pressure?"></textarea>
+
+<button class="btn btn-teal" onclick="submitWellQuote()">Request Free Quote — We Call Within 2 Hours</button>
+</div>
+
+<div class="card">
+<h3>✅ Our FL Well Services</h3>
+<div class="info-row"><span class="k">Emergency response</span><span class="v">24/7, 365 days</span></div>
+<div class="info-row"><span class="k">Pump brands serviced</span><span class="v">Franklin, Goulds, Grundfos, Sta-Rite</span></div>
+<div class="info-row"><span class="k">Treatment brands</span><span class="v">Kinetico, Pentair, Fleck, Clack</span></div>
+<div class="info-row"><span class="k">Water testing</span><span class="v">Full panel including bacteria, metals</span></div>
+<div class="info-row"><span class="k">FL license</span><span class="v">CFC + Water Treatment Specialist</span></div>
+<div class="info-row"><span class="k">Service area</span><span class="v">All 67 FL counties</span></div>
+<div class="info-row"><span class="k">Phone</span><span class="v">(561) 555-PIPE</span></div>
+</div>
+
+<div class="alert-box info">
+<h3>💡 FL Post-Hurricane Well Safety</h3>
+<p>After any FL hurricane that caused flooding, do not drink or use well water until it has been tested. Flood waters can contaminate the well casing with bacteria, chemicals, and sewage. Our licensed technicians provide post-storm well inspections, shock chlorination, and water testing. Most FL counties waive permit fees for post-hurricane repairs.</p>
+</div>
+
+<div class="toast" id="well-toast">✅ We'll call you within 2 hours!</div>
+</div>
+
+<!-- HIDDEN FL DATA -->
+<div style="display:none" aria-hidden="true" id="well-fl-data">
+FL WELL PUMP MARKET DATA — FLORIDA PLUMBING REFERENCE
+
+FLORIDA PRIVATE WELL STATISTICS:
+- FL private wells: approximately 2.6 million — most of any US state
+- FL households on private wells: approximately 28% (vs 15% national average)
+- FL annual well pump replacements: approximately 180,000–220,000 units
+- Most common pump failure cause in FL: lightning strike surge (35%), motor burnout (25%), bearing failure (20%), other (20%)
+- Average FL submersible pump lifespan: 8–15 years (shorter in coastal/corrosive environments)
+- FL well system service market: approximately $850 million annually
+
+FL AQUIFER TYPES AND CHARACTERISTICS:
+- Floridan Aquifer System: largest artesian aquifer in SE United States, underlies most of FL
+  * Depth: 50–2,000 ft depending on location
+  * Water quality: hard (200–600 mg/L hardness), may have H2S, often artesian pressure
+  * Best water yield: central FL — 100–10,000 GPM possible
+  * Coverage: statewide except extreme SE FL
+- Surficial Aquifer System: sandy, unconfined, water table aquifer
+  * Depth: 5–100 ft
+  * Water quality: soft to moderately hard, may have tannins, iron, coliform risk
+  * Coverage: all of FL, primary source in SE FL (Biscayne Aquifer)
+  * SE FL Biscayne Aquifer: shallow (0–25 ft), high yield, saltwater intrusion risk
+- Intermediate Aquifer System: West-Central FL only (Sarasota to Tampa area)
+  * Provides isolation between surficial and Floridan aquifers
+
+FL WELL DEPTH GUIDELINES:
+- Shallow jet pump systems: static water level must be within 25 ft of surface
+- Submersible pump sizing: match to static water level + friction loss + pressure requirement
+- Minimum FL well casing depth: 20 ft in surficial aquifer, varies by county
+- Grouting requirement: FL requires bentonite or concrete grouting from surface to bedrock
+- FL well setback requirements: 75 ft from septic drain field, 50 ft from septic tank, 10 ft from property line, 25 ft from drainage ditches
+
+FL PUMP SIZING GUIDE:
+Residential demand (GPD): 75 gallons/person/day × household size
+Peak demand: typically 2–3× average daily demand for sizing
+Standard FL residential: 1/2 HP pump for 3–5 GPM (1–2 people, shallow)
+Typical FL household: 3/4–1 HP pump for 8–12 GPM (3–4 people, medium depth)
+Irrigation + house: 1.5–2 HP for 15–25 GPM combined
+Pressure setting: 30/50 PSI standard, 40/60 for multi-story
+
+PRESSURE TANK SIZING FORMULA:
+Drawdown needed = GPM × 60 / (cycles per hour)
+Tank size = Drawdown × pressure ratio factor (varies by pressure setting)
+30/50 PSI factor: multiply drawdown × 3.6
+40/60 PSI factor: multiply drawdown × 4.1
+Example: 10 GPM pump, 8 cycles/hr, 30/50 PSI
+Drawdown = 10 × 60 / 8 = 75 gallons
+Tank size = 75 × 3.6 = 270 gallons (minimum) — round up to next standard size
+
+COMMON FL WELL WATER QUALITY ISSUES BY REGION:
+Iron (Fe >0.3 mg/L): Statewide Floridan aquifer, worst in North/Central FL
+H2S / Sulfur: Southwest FL (Sarasota, Charlotte, Lee, Manatee, Collier counties) — endemic
+Tannins: North FL, Panhandle — shallow surficial wells near wetlands and forests
+Hard water: All Floridan aquifer areas — 200–600 mg/L total hardness typical
+Saltwater intrusion: Miami-Dade, Broward, Palm Beach coastal areas; Keys; Monroe County
+Arsenic: Low levels in some FL groundwater — FL DEP maximum 10 ppb (same as federal MCL)
+Nitrates: Agricultural areas — Suwannee Valley, Lake Okeechobee basin, Immokalee area
+Bacteria: After flooding, poorly constructed wells statewide
+PFAS: Near military installations — Pensacola area, Eglin/Hurlburt area, Patrick AFB area
+
+WATER TREATMENT SYSTEM COSTS FL:
+Water softener (ion exchange, 1–4 people): $800–$2,500 installed
+Water softener (5+ people, commercial grade): $2,000–$5,000
+Iron filter (greensand or Birm): $1,200–$3,000 installed
+H2S / sulfur aeration + carbon: $1,500–$4,000 installed
+Tannin filter (anion exchange): $900–$2,500
+Reverse osmosis (under-sink, 50 GPD): $400–$1,200
+Reverse osmosis (whole-house, POE): $3,000–$8,000
+UV sterilizer (point of entry): $500–$1,500 installed
+Calcite neutralizer (acid/low pH): $700–$2,000 installed
+Multi-stage system (iron + H2S + softener): $3,500–$9,000
+
+FL PUMP REPLACEMENT COST GUIDE:
+Submersible pump (1/2 HP, shallow, basic): $400–$900 installed
+Submersible pump (1 HP, mid-depth): $700–$1,500 installed
+Submersible pump (1.5–2 HP, deep): $1,000–$2,500 installed
+Pressure tank (20–32 gallon, standard): $350–$700 installed
+Pressure tank (80–120 gallon, large): $700–$1,500 installed
+Well rehab (jetting, redevelopment): $500–$2,000
+Pitless adapter replacement: $400–$900
+Pressure switch: $150–$350 installed
+Control box (for 3-wire pumps): $200–$500 installed
+Lightning surge arrestor: $150–$400 installed (highly recommended in FL)
+
+FL WELL REGULATIONS:
+- FL Statute 373.309 — well construction and pump installation regulation
+- FL Dept of Health: oversees potable water wells
+- County Health Department: issues well permits and inspections
+- Licensed Water Well Contractor required for well drilling
+- Licensed CFC Plumber required for pump installation and water treatment
+- FL well testing requirements: bacterial test required for new wells, recommended annually
+- Annual coliform test recommendation: FL DOH recommends annual testing for all well owners
+- FL Well Hotline: 850-245-4250 (FL Dept of Environmental Protection)
+
+FL LIGHTNING AND WELL PUMP PROTECTION:
+- FL has highest lightning strike density in US (10+ strikes/sq mile/year in Central FL)
+- Well pump motor failure from lightning is leading cause of FL pump failure
+- Recommended protection: surge arrestor + lightning arrestor on service entrance + GFI protection
+- Average FL insurance claim for pump lightning damage: $800–$2,500
+- Lightning surge arrestors (Franklin Control, Leviton): $150–$300 — strongly recommended
+- Some FL homeowner insurance policies cover pump replacement from lightning — check policy
+</div>
+
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+function toggleWQ(el){
+  el.classList.toggle('selected');
+  el.querySelector('input[type=checkbox]').checked = el.classList.contains('selected');
+}
+
+function calcPump(){
+  const people = parseInt(document.getElementById('pumpPeople').value) || 3;
+  const irr = document.getElementById('pumpIrrigation').value;
+  const depth = document.getElementById('pumpDepth').value;
+  const aquifer = document.getElementById('pumpAquifer').value;
+  const pool = document.getElementById('pumpPool').value;
+  let baseGpm = people <= 1 ? 5 : people <= 2 ? 7 : people <= 5 ? 10 : people <= 6 ? 14 : 18;
+  let irrGpm = irr === 'none' ? 0 : irr === 'small' ? 8 : irr === 'med' ? 18 : 35;
+  let poolAdd = pool === 'pool' ? 5 : pool === 'spa' ? 8 : 0;
+  const totalGpm = baseGpm + Math.round(irrGpm * 0.6) + poolAdd;
+  let hp, type, note;
+  if(depth === 'shallow'){
+    type = 'Shallow well jet pump or 4" submersible';
+    hp = totalGpm <= 7 ? '1/2 HP' : totalGpm <= 12 ? '3/4 HP' : '1 HP';
+  } else if(depth === 'mid'){
+    type = '4" submersible pump';
+    hp = totalGpm <= 7 ? '3/4 HP' : totalGpm <= 15 ? '1 HP' : '1.5 HP';
+  } else if(depth === 'deep'){
+    type = '4" submersible (deep well series)';
+    hp = totalGpm <= 10 ? '1.5 HP' : totalGpm <= 20 ? '2 HP' : '3 HP';
+  } else {
+    type = 'High-head 4" or 6" submersible — engineer sizing required';
+    hp = '2+ HP — depends on TDH calculation';
+  }
+  note = 'Recommended pump: ' + hp + ' ' + type + '. Total peak demand: ~' + totalGpm + ' GPM. ';
+  if(aquifer === 'surficial') note += 'Surficial aquifer: check yield — sandy FL soil can limit sustainable yield to 5–15 GPM for most wells.';
+  if(aquifer === 'floridian') note += 'Floridan aquifer: typically excellent yield (50–500+ GPM), but expect hard water and possible H2S — plan for water treatment.';
+  const tankGal = totalGpm <= 5 ? 20 : totalGpm <= 10 ? 44 : totalGpm <= 20 ? 86 : 120;
+  const el = document.getElementById('pump-result');
+  el.innerHTML = '<div class="result-box result-teal"><div class="r-title">Recommended Pump</div><div class="r-val">' + esc(hp) + '</div><div class="r-note">' + esc(type) + '<br><br>' + esc(note) + '</div></div><div class="card" style="margin-top:12px"><h3>Sizing Summary</h3><div class="info-row"><span class="k">Household demand</span><span class="v">' + baseGpm + ' GPM</span></div><div class="info-row"><span class="k">Irrigation demand</span><span class="v">' + (Math.round(irrGpm * 0.6)) + ' GPM (concurrent est.)</span></div><div class="info-row"><span class="k">Pool/spa allowance</span><span class="v">' + poolAdd + ' GPM</span></div><div class="info-row"><span class="k">Total peak demand</span><span class="v">' + totalGpm + ' GPM</span></div><div class="info-row"><span class="k">Min. pressure tank</span><span class="v">' + tankGal + ' gallon</span></div></div>';
+  el.style.display = 'block';
+}
+
+function calcTank(){
+  const gpm = parseFloat(document.getElementById('tankGpm').value) || 0;
+  const pressure = document.getElementById('tankPressure').value;
+  const cycles = parseInt(document.getElementById('tankCycles').value) || 8;
+  const el = document.getElementById('tank-result');
+  if(!gpm){ alert('Please enter pump flow rate (GPM).'); return; }
+  const drawdown = (gpm * 60) / cycles;
+  const factor = pressure === '40_60' ? 4.1 : pressure === '20_40' ? 3.2 : 3.6;
+  const minGal = Math.round(drawdown * factor);
+  const stdSizes = [14, 20, 32, 44, 62, 86, 120, 180, 250];
+  const recSize = stdSizes.find(s => s >= minGal) || 250;
+  el.innerHTML = '<div class="result-box result-teal"><div class="r-title">Minimum Tank Size</div><div class="r-val">' + recSize + ' Gallon</div><div class="r-note">Calculated drawdown: ' + drawdown.toFixed(1) + ' gallons. Minimum: ' + minGal + ' gal. Recommended standard size: ' + recSize + ' gallon. Sizing for ' + cycles + ' cycles/hr at ' + pressure.replace('_', '/') + ' PSI setting. Larger tanks always acceptable — oversizing reduces wear.</div></div>';
+  el.style.display = 'block';
+}
+
+const WQ_TREATMENTS = {
+  iron: {title:'High Iron Content', treatment:'Greensand or Birm iron filter, or oxidizing filter. Aeration pre-treatment may be needed if Fe >5 mg/L. FL Floridan aquifer iron levels: commonly 1–15 mg/L. Consider combination iron + H2S unit if both present.', urgency:'Moderate', cost:'$1,200–$3,000'},
+  sulfur: {title:'Hydrogen Sulfide (Sulfur)', treatment:'Aeration tower + activated carbon filter. For severe cases: chemical injection (chlorine or peroxide) + carbon filtration. Common in SW FL. Aeration is most cost-effective; chemical injection is most thorough.', urgency:'Moderate (aesthetic)', cost:'$1,500–$4,000'},
+  hard: {title:'Hard Water (Calcium/Magnesium)', treatment:'Ion exchange water softener (salt-based). FL Floridan aquifer: 200–600 mg/L hardness is typical — a softener will extend appliance life dramatically. Salt-free conditioners: reduce scale but don\'t truly soften.', urgency:'Low-Moderate', cost:'$1,000–$3,000'},
+  tannin: {title:'Tannins (Organic Discoloration)', treatment:'Anion exchange resin filter (tannin-specific), or oxidation + carbon. NOT removed by standard softeners — requires dedicated tannin unit. Common in N. FL shallow wells.', urgency:'Low (aesthetic)', cost:'$900–$2,500'},
+  bacteria: {title:'⚠️ Bacterial Contamination Risk', treatment:'IMMEDIATE: Do not drink water until tested. Shock chlorinate well. Install UV sterilizer (point of entry) after chlorination. Send water sample to FL-certified lab. Contact FL Dept of Health.', urgency:'URGENT — health risk', cost:'$400–$1,500 + testing'},
+  salt: {title:'Saltwater Intrusion', treatment:'Reverse osmosis (point of use or whole-house). Whole-house RO ($3,000–$8,000) or abandon well if severely compromised. Coastal FL saltwater intrusion is increasing — may not be treatable long-term in some areas.', urgency:'High', cost:'$3,000–$8,000'},
+  turbid: {title:'Turbidity / Sediment', treatment:'Multi-stage sediment filtration (5 micron + 1 micron). If sand is entering: well screen inspection and possibly well rehabilitation or replacement. FL sandy soil wells commonly need annual filter service.', urgency:'Moderate', cost:'$500–$3,000'},
+  arsenic: {title:'Arsenic / PFAS Concern', treatment:'Water testing first — FL-certified lab. For arsenic: whole-house RO or adsorption media filter. For PFAS: activated carbon or RO. Contact FL DEP for PFAS contamination maps near military bases.', urgency:'Test immediately', cost:'$1,500–$8,000 depending on contaminant'},
+  acid: {title:'Low pH / Acidic Water', treatment:'Calcite (calcium carbonate) neutralizer filter. Raises pH to 7–8 range. Must maintain with periodic calcite refills (annually). Prevents copper pipe pinhole leaks — very worthwhile in FL.', urgency:'Moderate', cost:'$700–$2,000'},
+};
+
+function diagWQ(){
+  const items = document.querySelectorAll('.wq-item.selected');
+  const el = document.getElementById('wq-result');
+  if(!items.length){ el.style.display = 'none'; return; }
+  let html = '';
+  items.forEach(item => {
+    const issue = item.querySelector('input[type=checkbox]').getAttribute('data-issue');
+    const t = WQ_TREATMENTS[issue];
+    if(t){
+      const urgClass = t.urgency.includes('URGENT') ? 'result-danger' : t.urgency.includes('High') ? 'result-warn' : 'result-teal';
+      html += '<div class="result-box ' + urgClass + '" style="margin-bottom:10px;text-align:left"><div class="r-title">' + esc(t.title) + '</div><div style="font-size:.78rem;color:#CBD5E1;line-height:1.5;margin-top:6px"><strong style="color:#94A3B8">Urgency:</strong> ' + esc(t.urgency) + '<br><strong style="color:#94A3B8">Treatment:</strong> ' + esc(t.treatment) + '<br><strong style="color:#94A3B8">Estimated cost:</strong> ' + esc(t.cost) + '</div></div>';
+    }
+  });
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
+
+function submitWellQuote(){
+  const name = document.getElementById('wellName').value.trim();
+  const phone = document.getElementById('wellPhone').value.trim();
+  if(!name || !phone){ alert('Please enter your name and phone number.'); return; }
+  document.getElementById('well-toast').style.display = 'block';
+  setTimeout(() => document.getElementById('well-toast').style.display = 'none', 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-fl</div>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Bathroom Remodel Plumbing Cost Calculator | Florida Plumbing</title>
+<meta name="description" content="Florida bathroom remodel plumbing cost calculator. Estimate plumbing costs for master bath, guest bath, or full gut renovation in Florida. Get FL permit info and a free licensed plumber quote.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#00B4FF;line-height:1.2}
+header p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.69rem;font-weight:600;color:#94A3B8;cursor:pointer;border-radius:7px;transition:all .2s;border:none;background:none}
+.tab.active{background:#00B4FF;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card h2{font-size:1rem;font-weight:700;color:#00B4FF;margin-bottom:10px}
+.card h3{font-size:.88rem;font-weight:600;color:#CBD5E1;margin-bottom:8px}
+label{display:block;font-size:.82rem;color:#94A3B8;margin-bottom:6px;font-weight:500}
+select,textarea,input[type=text],input[type=number]{width:100%;background:#141929;border:1px solid #2A3A5C;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;margin-bottom:12px}
+select:focus,textarea:focus,input:focus{outline:none;border-color:#00B4FF}
+.btn{width:100%;padding:13px;border-radius:9px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-blue{background:#00B4FF;color:#fff}
+.btn-blue:hover{background:#0099DD}
+.result-box{border-radius:10px;padding:14px;margin-top:14px;text-align:center}
+.result-blue{background:#041420;border:2px solid #00B4FF}
+.result-blue .r-title{color:#00B4FF}
+.result-warn{background:#1A1508;border:2px solid #F4B942}
+.result-warn .r-title{color:#F4B942}
+.result-ok{background:#081A0D;border:2px solid #22C55E}
+.result-ok .r-title{color:#22C55E}
+.r-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+.r-val{font-size:1.6rem;font-weight:700;margin-bottom:4px}
+.r-note{font-size:.78rem;color:#CBD5E1;line-height:1.5;margin-top:6px}
+.scope-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:8px;margin-bottom:6px;cursor:pointer;border:1px solid #2A3A5C;background:#141929;transition:all .2s}
+.scope-item.selected{background:#041420;border-color:#00B4FF}
+.scope-item input[type=checkbox]{width:16px;height:16px;accent-color:#00B4FF;flex-shrink:0;margin-top:2px}
+.scope-item .sc-text{font-size:.81rem;color:#CBD5E1;line-height:1.3}
+.scope-item .sc-label{font-size:.83rem;font-weight:600;color:#E2E8F0;display:block;margin-bottom:1px}
+.scope-item .sc-cost{font-size:.78rem;color:#00B4FF;font-weight:600}
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:.8rem;align-items:flex-start}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:#94A3B8;flex-shrink:0;max-width:55%}
+.info-row .v{color:#CBD5E1;font-weight:500;text-align:right;max-width:44%}
+.permit-step{background:#141929;border-radius:10px;padding:12px;margin-bottom:8px;border-left:3px solid #00B4FF}
+.permit-step.warn-step{border-left-color:#F4B942}
+.permit-step h3{font-size:.85rem;font-weight:700;color:#00B4FF;margin-bottom:3px}
+.permit-step.warn-step h3{color:#F4B942}
+.permit-step p{font-size:.77rem;color:#94A3B8;line-height:1.4}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.7rem;font-weight:600;margin:2px}
+.badge-blue{background:#041420;color:#00B4FF;border:1px solid #00B4FF}
+.badge-ok{background:#0D3B1A;color:#22C55E;border:1px solid #22C55E}
+.badge-warn{background:#3B2D08;color:#F4B942;border:1px solid #F4B942}
+.badge-danger{background:#3B0D0D;color:#EF4444;border:1px solid #EF4444}
+.alert-box{border-radius:10px;padding:13px;margin-bottom:12px}
+.alert-box.info{border:1px solid #00B4FF;background:#041420}
+.alert-box.info h3{font-size:.88rem;font-weight:700;color:#00B4FF;margin-bottom:6px}
+.alert-box.warn{border:1px solid #F4B942;background:#1A1508}
+.alert-box.warn h3{font-size:.88rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.alert-box p{font-size:.79rem;color:#CBD5E1;line-height:1.5}
+.cost-breakdown{background:#041420;border-radius:10px;padding:14px;margin-top:12px}
+.cost-breakdown h3{font-size:.88rem;color:#00B4FF;font-weight:700;margin-bottom:10px}
+.cb-row{display:flex;justify-content:space-between;padding:5px 0;font-size:.8rem;border-bottom:1px solid #1A2A40}
+.cb-row:last-child{border-bottom:none;font-weight:700;color:#E2E8F0;padding-top:8px}
+.cb-row .cb-k{color:#94A3B8}
+.cb-row .cb-v{color:#00B4FF;font-weight:600}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 22px;border-radius:10px;font-weight:700;font-size:.88rem;z-index:999;display:none;text-align:center;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.county-impact{font-size:.78rem;color:#94A3B8;margin-top:8px;padding:8px;background:#0A0E1A;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🚿 FL Bathroom Remodel Plumbing</h1>
+<p>Scope builder, permit guide, cost calculator, and FL plumber quotes</p>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab(0)">Scope Builder</button>
+<button class="tab" onclick="showTab(1)">Permit Guide</button>
+<button class="tab" onclick="showTab(2)">Cost Calc</button>
+<button class="tab" onclick="showTab(3)">Quote</button>
+</div>
+
+<!-- TAB 0: SCOPE BUILDER -->
+<div class="panel active" id="panel-0">
+<div class="card">
+<h2>🛁 Build Your Bathroom Remodel Scope</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Select all plumbing work included in your FL bathroom remodel. This scope builder calculates estimated plumbing costs and identifies which items require FL permits.</p>
+
+<label>Bathroom Type</label>
+<select id="bathType" onchange="updateScope()">
+<option value="half">Half bath (powder room — toilet + vanity only)</option>
+<option value="full" selected>Full bath (tub or shower + toilet + vanity)</option>
+<option value="master">Master bath (multiple fixtures, possible double vanity)</option>
+<option value="gut">Full gut renovation (all new plumbing rough-in)</option>
+</select>
+
+<label>Home Age / Pipe Material</label>
+<select id="pipeAge">
+<option value="new">2000–present (PVC/CPVC/PEX — no material upgrades)</option>
+<option value="copper" selected>1970–2000 (copper — may need updates)</option>
+<option value="galv">1950–1969 (galvanized — replacement likely needed)</option>
+<option value="cast">Pre-1950 (cast iron drain — assessment needed)</option>
+</select>
+
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:10px;margin-top:4px">Select plumbing work items:</p>
+
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="300" data-cost-hi="700" data-permit="false">
+<input type="checkbox" checked>
+<div class="sc-text"><span class="sc-label">🚰 Vanity / sink replacement (same location)</span><span class="sc-cost">$300–$700 plumbing only</span>No move — same supply/drain connections. No FL permit required for like-for-like.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="600" data-cost-hi="1400" data-permit="true">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">📐 Vanity / sink relocation (moved to new wall or location)</span><span class="sc-cost">$600–$1,400 plumbing only</span>Supply and drain must be extended/rerouted. FL permit required — structural work and DWV modification.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="400" data-cost-hi="900" data-permit="false">
+<input type="checkbox" checked>
+<div class="sc-text"><span class="sc-label">🚽 Toilet replacement (same location)</span><span class="sc-cost">$400–$900 installed</span>Standard like-for-like swap. Most FL counties do not require permit for direct toilet replacement.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="700" data-cost-hi="1,600" data-permit="true">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">📦 Toilet relocation (moved)</span><span class="sc-cost">$700–$1,600 plumbing only</span>Requires new drain rough-in and vent. FL permit required. May need concrete saw-cut if slab home (very common in FL).</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="500" data-cost-hi="1200" data-permit="false">
+<input type="checkbox" checked>
+<div class="sc-text"><span class="sc-label">🚿 Shower / tub replacement (same footprint)</span><span class="sc-cost">$500–$1,200 plumbing only</span>New valve, trim, pan/unit — same drain location. FL permit generally not required if no structural work.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="1200" data-cost-hi="3500" data-permit="true">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">🏗️ Tub-to-shower conversion</span><span class="sc-cost">$1,200–$3,500 plumbing only</span>New drain location, waterproofing, wall prep. FL permit required. Very popular in FL — tubs less used in warm climate.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="800" data-cost-hi="2200" data-permit="true">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">💧 Add second sink / double vanity</span><span class="sc-cost">$800–$2,200 plumbing only</span>New supply lines + new drain to existing stack. FL permit required for new fixture addition.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="1500" data-cost-hi="4000" data-permit="true">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">🪠 Full drain/DWV rough-in replacement</span><span class="sc-cost">$1,500–$4,000+</span>Replace all drain lines. Slab homes: concrete cutting required — adds $500–$1,500. FL permit required.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="800" data-cost-hi="2000" data-permit="true">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">🔧 Full water supply line replacement</span><span class="sc-cost">$800–$2,000</span>Replace galvanized or old copper supply lines in bathroom walls. Highly recommended if pre-1980 FL home. Permit required.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="600" data-cost-hi="1500" data-permit="true">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">🛁 Standalone soaking tub installation</span><span class="sc-cost">$600–$1,500 plumbing only</span>Freestanding tub with floor supply rough-in and drain. FL permit required — new fixture. Popular in FL master bath remodels.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="300" data-cost-hi="700" data-permit="false">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">🚿 Body spray / rain head / multi-function shower system</span><span class="sc-cost">$300–$700 labor (fixture extra)</span>Upgraded shower valve and trim set. Typically no FL permit required if using existing rough-in location.</div>
+</div>
+<div class="scope-item" onclick="toggleScope(this)" data-cost-lo="400" data-cost-hi="900" data-permit="true">
+<input type="checkbox">
+<div class="sc-text"><span class="sc-label">♨️ Bidet or smart toilet rough-in</span><span class="sc-cost">$400–$900 plumbing</span>T&amp;S connection for bidet supply, possible waste line. FL permit required for permanent bidet installation.</div>
+</div>
+
+<button class="btn btn-blue" style="margin-top:8px" onclick="calcScope()">Generate Scope Summary</button>
+<div id="scope-result" style="display:none"></div>
+</div>
+</div>
+
+<!-- TAB 1: PERMIT GUIDE -->
+<div class="panel" id="panel-1">
+<div class="card">
+<h2>📋 FL Bathroom Remodel Permit Guide</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:12px">Florida Statute 489 requires licensed plumber pull all plumbing permits. Unpermitted work is a serious issue in FL — it must be disclosed at sale and can void homeowner's insurance. Here's the FL bathroom permit process:</p>
+
+<div class="permit-step">
+<h3>Step 1: Determine What Requires a Permit</h3>
+<p>FL plumbing permit triggers: new fixture additions, relocation of any fixture, any work behind walls, rough-in changes, drain/DWV modification, new or modified vent stacks. No permit needed: like-for-like fixture replacements at same location, faucet repairs, supply stop valve replacements.</p>
+<div style="margin-top:6px"><span class="badge badge-blue">FL Statute 553.79</span><span class="badge badge-ok">Licensed CFC required</span></div>
+</div>
+
+<div class="permit-step">
+<h3>Step 2: Licensed Plumber Applies for Permit</h3>
+<p>In Florida, only the licensed Certified Plumbing Contractor (CFC) can pull a plumbing permit — NOT the homeowner for structural/plumbing work (unlike some other states). Your plumber submits plans and permit application to your county Building Department. Most FL counties have online permit portals.</p>
+<div style="margin-top:6px"><span class="badge badge-blue">CFC license required</span><span class="badge badge-warn">Owner cannot pull plumbing permit</span></div>
+</div>
+
+<div class="permit-step">
+<h3>Step 3: Plans Review (if required)</h3>
+<p>Simple bathroom remodels typically skip plans review and go straight to permit issuance. Complex projects (new bathrooms, significant DWV changes) may require submitted plumbing plans. FL counties typically review in 3–15 business days. Expedited review available in most counties for additional fee.</p>
+<div style="margin-top:6px"><span class="badge badge-ok">Simple: skip plans review</span><span class="badge badge-warn">Complex: 3–15 day review</span></div>
+</div>
+
+<div class="permit-step">
+<h3>Step 4: Rough-In Inspection</h3>
+<p>After all plumbing rough-in is complete (before closing walls), county inspector visits to verify DWV slopes, pipe sizes, vent termination, and pressure testing. Inspector must approve before work is covered. Schedule 24–48 hours in advance. Must pass for work to continue. Failed inspections require re-inspection (additional fee).</p>
+<div style="margin-top:6px"><span class="badge badge-blue">Before closing walls</span><span class="badge badge-ok">24–48 hr notice</span></div>
+</div>
+
+<div class="permit-step">
+<h3>Step 5: Final Inspection</h3>
+<p>After all fixtures are installed and work is complete, final plumbing inspection verifies no leaks, fixtures function correctly, water heater settings, and pressure. Inspector signs off permit card. Permit is then closed in county records. Critical for FL homeowners — open permits are a top-5 home sale deal-killer in FL.</p>
+<div style="margin-top:6px"><span class="badge badge-ok">Critical for home sale</span><span class="badge badge-blue">Closes permit on record</span></div>
+</div>
+
+<div class="permit-step warn-step">
+<h3>⚠️ Slab Homes: Extra Step (Very Common in FL)</h3>
+<p>~80% of FL homes are slab-on-grade construction. Any drain relocation or new drain addition requires saw-cutting the slab. This triggers additional permits in some counties, requires saw-cut inspection in others. Add $500–$1,500 for saw-cut and patch (concrete + tile work separate from plumbing cost). Always ask your plumber: "Is saw-cut work involved?"</p>
+<div style="margin-top:6px"><span class="badge badge-warn">~80% of FL homes on slab</span><span class="badge badge-warn">$500–$1,500 extra</span></div>
+</div>
+</div>
+
+<div class="card">
+<h3>⏱️ FL Permit Timelines by County Type</h3>
+<div class="info-row"><span class="k">Major metros (Miami-Dade, Broward, Palm Beach)</span><span class="v">5–15 business days</span></div>
+<div class="info-row"><span class="k">Mid-size (Hillsborough, Orange, Pinellas)</span><span class="v">3–10 business days</span></div>
+<div class="info-row"><span class="k">Smaller counties (most FL interior)</span><span class="v">2–7 business days</span></div>
+<div class="info-row"><span class="k">Expedited review (where available)</span><span class="v">1–3 business days + fee</span></div>
+<div class="info-row"><span class="k">Rough-in inspection scheduling</span><span class="v">1–3 business days</span></div>
+<div class="info-row"><span class="k">Final inspection scheduling</span><span class="v">1–3 business days</span></div>
+<div class="info-row"><span class="k">Total permit cycle (simple remodel)</span><span class="v">2–4 weeks typical</span></div>
+</div>
+
+<div class="alert-box warn">
+<h3>🏠 FL HOA and Condo Considerations</h3>
+<p>In FL's many HOA communities and condominiums, bathroom remodels require BOTH building permits AND HOA/condo association approval. Some FL condo associations require pre-approval, noise waivers, certificate of insurance from contractor, and may restrict work hours. Violating condo association rules — even on permitted work — can result in fines. Always check both sources.</p>
+</div>
+</div>
+
+<!-- TAB 2: COST CALC -->
+<div class="panel" id="panel-2">
+<div class="card">
+<h2>💰 FL Bathroom Plumbing Cost Calculator</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:12px">This calculator estimates plumbing-only costs (not tile, fixtures, vanity cabinets, or electrical). All estimates based on current FL licensed plumber rates (2024–2025).</p>
+
+<label>Bathroom Size / Scope</label>
+<select id="costBathType">
+<option value="half">Half bath — 1 toilet, 1 sink</option>
+<option value="full" selected>Full bath — tub/shower, toilet, sink</option>
+<option value="master">Master bath — multiple fixtures, possible double vanity</option>
+<option value="luxury">Luxury master — steam shower, soaker tub, double vanity, bidet</option>
+</select>
+
+<label>Work Type</label>
+<select id="costWorkType">
+<option value="update">Fixture refresh (same locations, like-for-like)</option>
+<option value="partial">Partial remodel (some relocation, some updates)</option>
+<option value="gut" selected>Full gut (all new rough-in, fixtures, everything)</option>
+<option value="new_add">Adding new bathroom (rough-in from scratch)</option>
+</select>
+
+<label>Home Construction Type</label>
+<select id="costSlab">
+<option value="slab" selected>Slab on grade (most FL homes — ~80%)</option>
+<option value="frame">Wood frame with crawlspace / elevated</option>
+</select>
+
+<label>FL County / Region</label>
+<select id="costCounty">
+<option value="se">Southeast FL (Miami-Dade, Broward, Palm Beach) — highest cost</option>
+<option value="sw">Southwest FL (Collier, Lee, Sarasota)</option>
+<option value="tampa">Tampa Bay (Hillsborough, Pinellas, Pasco)</option>
+<option value="orlando" selected>Orlando metro (Orange, Seminole, Osceola)</option>
+<option value="jax">Jacksonville (Duval, St. Johns, Clay)</option>
+<option value="central">Central FL (Polk, Lake, Volusia)</option>
+<option value="nfl">North FL / Panhandle — lower cost</option>
+</select>
+
+<label>Is This a Condo? (adds association complexity)</label>
+<select id="costCondo">
+<option value="no" selected>No — single-family home or townhouse</option>
+<option value="yes">Yes — condominium</option>
+</select>
+
+<button class="btn btn-blue" onclick="calcBathCost()">Calculate Plumbing Cost</button>
+<div id="bath-cost-result" style="display:none"></div>
+</div>
+
+<div class="card">
+<h3>📊 FL Bathroom Plumbing Cost Reference</h3>
+<div class="info-row"><span class="k">Basic fixture refresh (full bath, same locations)</span><span class="v">$1,200–$2,800</span></div>
+<div class="info-row"><span class="k">Partial remodel with 1–2 relocations</span><span class="v">$2,500–$5,000</span></div>
+<div class="info-row"><span class="k">Full gut — full bath (plumbing only)</span><span class="v">$4,000–$9,000</span></div>
+<div class="info-row"><span class="k">Full gut — master bath (plumbing only)</span><span class="v">$6,000–$15,000</span></div>
+<div class="info-row"><span class="k">New bathroom addition (rough-in)</span><span class="v">$5,000–$12,000</span></div>
+<div class="info-row"><span class="k">Slab saw-cut and patch (per cut)</span><span class="v">$500–$1,500</span></div>
+<div class="info-row"><span class="k">Permit fees (FL county average)</span><span class="v">$200–$800</span></div>
+<div class="info-row"><span class="k">Water heater upgrade (if needed)</span><span class="v">$800–$2,000</span></div>
+</div>
+</div>
+
+<!-- TAB 3: QUOTE -->
+<div class="panel" id="panel-3">
+<div class="card">
+<h2>📞 Free FL Bathroom Remodel Plumbing Quote</h2>
+<p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Get a no-obligation quote from our FL-licensed plumbing contractors. We specialize in bathroom remodel rough-in, fixture installation, and slab work across all of Florida.</p>
+
+<label>Your Name</label>
+<input type="text" id="bathName" placeholder="First and last name">
+
+<label>Phone Number</label>
+<input type="text" id="bathPhone" placeholder="(561) 555-PIPE">
+
+<label>FL County</label>
+<select id="bathCountyQ">
+<option value="">-- Select County --</option>
+<option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option><option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option><option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option><option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option><option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option><option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option><option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option><option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option><option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option><option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option><option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>St. Johns</option><option>St. Lucie</option><option>Santa Rosa</option><option>Sarasota</option><option>Seminole</option><option>Sumter</option><option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option><option>Walton</option><option>Washington</option>
+</select>
+
+<label>Project Type</label>
+<select id="bathProjectQ">
+<option value="">-- Select Project --</option>
+<option>Full gut bathroom renovation</option>
+<option>Master bathroom remodel</option>
+<option>Guest bathroom remodel</option>
+<option>Tub-to-shower conversion</option>
+<option>Fixture replacement / update</option>
+<option>Add new bathroom</option>
+<option>Slab work / drain relocation</option>
+<option>Galvanized pipe replacement</option>
+<option>Post-water-damage repair</option>
+<option>Other — describe below</option>
+</select>
+
+<label>Home Type</label>
+<select id="bathHomeQ">
+<option value="">-- Select --</option>
+<option>Single-family home — slab</option>
+<option>Single-family home — wood frame</option>
+<option>Townhouse</option>
+<option>Condominium</option>
+<option>Mobile / manufactured home</option>
+</select>
+
+<label>Approximate Timeframe</label>
+<select id="bathTimeQ">
+<option value="">-- Select --</option>
+<option>ASAP — planning now</option>
+<option>1–3 months</option>
+<option>3–6 months</option>
+<option>6+ months out — just budgeting</option>
+</select>
+
+<label>Project Details</label>
+<textarea id="bathDetails" rows="3" placeholder="Describe your bathroom remodel project, existing issues, and any specific concerns (galvanized pipes, slab cracks, HOA requirements, etc.)"></textarea>
+
+<button class="btn btn-blue" onclick="submitBathQuote()">Request Free Quote — We Call Within 2 Hours</button>
+</div>
+
+<div class="card">
+<h3>✅ Why FL Homeowners Choose Us</h3>
+<div class="info-row"><span class="k">FL license</span><span class="v">CFC — Certified Plumbing Contractor</span></div>
+<div class="info-row"><span class="k">Permits</span><span class="v">We pull all required FL permits</span></div>
+<div class="info-row"><span class="k">Slab work</span><span class="v">We do the saw-cut and patch in-house</span></div>
+<div class="info-row"><span class="k">Service area</span><span class="v">All 67 FL counties</span></div>
+<div class="info-row"><span class="k">Response time</span><span class="v">Quote within 2 hours</span></div>
+<div class="info-row"><span class="k">Warranty</span><span class="v">1-year labor warranty on all installs</span></div>
+<div class="info-row"><span class="k">Phone</span><span class="v">(561) 555-PIPE</span></div>
+</div>
+
+<div class="alert-box info">
+<h3>💡 FL Old-Home Tip: Galvanized Pipe Alert</h3>
+<p>Florida homes built before 1970 commonly have galvanized steel supply lines. These corrode from the inside out — you may have only 20–40% of original flow capacity remaining. A bathroom remodel is the perfect time to replace all bathroom galvanized supply with PEX or copper. This adds $600–$1,500 to a remodel but avoids low pressure complaints and prevents rust-colored water from hitting your new fixtures and tile.</p>
+</div>
+</div>
+
+<div class="toast" id="bath-toast">✅ We'll call you within 2 hours!</div>
+
+<!-- HIDDEN FL DATA -->
+<div style="display:none" aria-hidden="true" id="bath-fl-data">
+FL BATHROOM REMODEL PLUMBING DATA — FLORIDA PLUMBING REFERENCE
+
+FLORIDA BATHROOM REMODEL MARKET OVERVIEW:
+- FL bathroom remodel market: approximately $4.2 billion annually (total project cost, all trades)
+- Plumbing portion of total bathroom remodel: typically 20–35% of total project cost
+- Average FL full bathroom remodel total cost: $8,000–$25,000 (all trades combined)
+- Average FL master bathroom remodel total cost: $15,000–$60,000+
+- FL slab-on-grade homes (no crawlspace): approximately 75–80% of FL residential stock
+- Tub-to-shower conversion: fastest growing FL bathroom remodel service (2022–2025)
+- Most common reason: retirees prefer walk-in showers; FL demographics skew older
+- FL homebuilding: FL built approximately 130,000–180,000 new homes annually 2020–2025
+
+FL PLUMBING RATES (2024–2025):
+Master plumber hourly rate FL: $85–$145/hour
+Journeyman plumber hourly rate FL: $65–$110/hour
+Apprentice rate FL: $45–$75/hour
+Emergency/after-hours rate FL: 1.5–2× standard rate
+Typical bathroom rough-in (full bath): 16–32 hours labor
+Typical fixture installation (per fixture): 1–4 hours labor
+Permit application time: 2–4 hours (admin cost included in quotes)
+
+FL COUNTY LABOR COST MULTIPLIERS (vs. state average = 1.00):
+- Miami-Dade: 1.30
+- Broward: 1.25
+- Palm Beach: 1.22
+- Monroe (Keys): 1.35 (very high — remote/island premium)
+- Collier (Naples): 1.20
+- Sarasota: 1.12
+- Hillsborough (Tampa): 1.10
+- Pinellas (St. Pete): 1.08
+- Orange (Orlando): 1.05
+- Seminole: 1.05
+- Duval (Jacksonville): 1.03
+- Brevard: 0.98
+- Polk: 0.95
+- Volusia: 0.95
+- Lee (Fort Myers): 1.08
+- Marion (Ocala): 0.90
+- Panhandle counties: 0.85–0.92
+
+BATHROOM PLUMBING SCOPE COSTS FL (plumbing only, installed):
+Toilet replacement (same location): $350–$800
+Toilet relocation (new rough-in): $700–$1,500
+Vanity sink replacement (same location): $300–$650
+Vanity sink relocation: $600–$1,300
+Double vanity / second sink addition: $700–$2,000
+Shower/tub valve replacement: $350–$800
+Tub replacement (same location): $400–$900
+Tub-to-shower conversion: $1,200–$3,500
+Walk-in shower (new rough-in): $1,500–$4,000
+Freestanding soaker tub installation: $600–$1,500
+Steam shower rough-in: $800–$2,000
+Body spray system rough-in: $400–$900
+Bidet rough-in: $350–$800
+Full bath DWV rough-in replacement: $2,500–$6,000
+Full bath supply line replacement: $800–$2,000
+New bathroom addition (all rough-in): $5,000–$12,000
+
+SLAB WORK SPECIFICS (FL critical knowledge):
+- Approximately 75–80% of FL homes have slab foundation
+- Any drain relocation in slab home requires concrete cutting
+- Standard process: mark layout → saw-cut slab → excavate → install new DWV → rough-in inspection → concrete patch → tile/flooring (separate trade)
+- Typical saw-cut and excavate cost: $400–$900 (labor only)
+- Concrete patch cost: $150–$400 (per opening, labor + materials)
+- Note: some FL building departments require separate inspections for slab penetration work
+- Timing: concrete must cure 24–72 hours before tile work proceeds
+- Cast iron transition: older FL homes may have cast iron DWV in slab; transitioning to PVC requires no-hub couplings
+
+FL PERMIT FEES BY COUNTY (approximate plumbing permit only):
+Miami-Dade: $300–$800 (most complex — multiple inspection fees)
+Broward: $200–$600
+Palm Beach: $200–$500
+Collier/Sarasota/Lee: $200–$500
+Hillsborough/Orange/Pinellas: $150–$400
+Duval/St. Johns: $150–$350
+Smaller FL counties: $75–$250
+Expedited review surcharge: typically $50–$200 additional
+
+FL CODE REQUIREMENTS FOR BATHROOM PLUMBING:
+- FL Building Code (FBC) Chapter 29 — Plumbing fixtures
+- FL Plumbing Code (FPC) based on IPC with FL amendments
+- Minimum bathroom ventilation: mechanical exhaust fan required if no operable window
+- Water closet clearances: 15" minimum from centerline to side wall/obstruction; 24" minimum in front
+- Shower minimum size: 30" × 30" per FBC (36" × 36" recommended)
+- Anti-scald protection: shower valves must be pressure/temperature balanced (ASSE 1016)
+- Accessible bathroom: ADA clearances if applicable (grab bars, turning radius)
+- Water heater temperature: maximum 120°F for residences per FL code
+- Shower pan liner: required for tile shower pans — must be flood-tested before tile
+- Shower drain slope: minimum 1/4" per foot toward drain in FL code
+
+COMMON FL BATHROOM PLUMBING ISSUES:
+- Pinhole leaks in copper: accelerated by FL's slightly acidic water (pH 6.5–7.2 typical in surficial aquifer areas)
+- Galvanized pipe corrosion: FL humidity accelerates external corrosion; internal corrosion reduces flow 60–80% after 40+ years
+- Shower pan failure: FL's temperature cycling (hot showers in AC-cooled homes) stresses liner welds — common cause of ceiling leaks in multi-story FL homes
+- Mold behind tile: FL's humidity makes water intrusion behind tile especially problematic — mold can spread within 48–72 hours
+- Trap primer failure: floor drain trap primers dry out in FL's air-conditioned environments, allowing sewer gas entry
+- Wax ring deterioration: FL's high temperatures soften wax rings faster than northern climates — inspect every 10–15 years
+- Hard water mineral deposits: Floridan aquifer water (200–600 mg/L hardness) builds up quickly in shower heads, valves, and aerators
+
+CONTRACTOR SELECTION TIPS FL:
+1. Verify FL CFC license at DBPR website: myfloridalicense.com
+2. Require insurance certificate — minimum $300,000 liability
+3. Confirm contractor pulls permit (if they suggest "no permit needed" for permit-required work — red flag)
+4. Get itemized written quote — separating materials and labor
+5. Check FL BBB and Google reviews — look specifically for permit and inspection mentions
+6. Ask specifically: "Is any slab saw-cut work involved?" (often underquoted in initial bids)
+7. Never pay more than 30% upfront — FL law limits contractor deposits
+</div>
+
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+function toggleScope(el){
+  el.classList.toggle('selected');
+  el.querySelector('input[type=checkbox]').checked = el.classList.contains('selected');
+}
+
+function updateScope(){}
+
+function calcScope(){
+  const items = document.querySelectorAll('.scope-item.selected');
+  let totalLo = 0, totalHi = 0, permitItems = [], noPermitItems = [];
+  items.forEach(item => {
+    const lo = parseInt(item.getAttribute('data-cost-lo').replace(',','')) || 0;
+    const hi = parseInt(item.getAttribute('data-cost-hi').replace(',','')) || 0;
+    const permit = item.getAttribute('data-permit') === 'true';
+    const label = item.querySelector('.sc-label').textContent;
+    totalLo += lo; totalHi += hi;
+    if(permit) permitItems.push(label.replace(/^[^\s]+\s/,''));
+    else noPermitItems.push(label.replace(/^[^\s]+\s/,''));
+  });
+  const pipeAge = document.getElementById('pipeAge').value;
+  let ageNote = '';
+  if(pipeAge === 'galv') ageNote = '⚠️ Galvanized pipes detected — strongly recommend adding supply line replacement (+$800–$2,000). Galvanized lines in FL degrade severely over time.';
+  if(pipeAge === 'cast') ageNote = '⚠️ Cast iron drain indicated — have a plumber inspect all drain lines. Cast iron in FL can crack due to age and corrosion. Rehabilitation or replacement may be needed.';
+  const slabCuts = items.length > 0 ? Math.floor(permitItems.length * 0.5) : 0;
+  const el = document.getElementById('scope-result');
+  el.innerHTML = '<div class="result-box result-blue"><div class="r-title">Estimated Plumbing Cost</div><div class="r-val">$' + totalLo.toLocaleString() + ' – $' + totalHi.toLocaleString() + '</div><div class="r-note">' + items.length + ' scope item(s) selected. Plumbing labor and materials only — excludes fixtures, tile, vanity cabinets, electrical, and permits.' + (ageNote ? '<br><br>' + esc(ageNote) : '') + '</div></div>' + (permitItems.length ? '<div class="alert-box warn" style="margin-top:10px"><h3>🪪 Items Requiring FL Permit</h3><p>' + permitItems.map(esc).join(', ') + '. Total: ' + permitItems.length + ' permit-required items. Your licensed CFC plumber will pull the required permits. Expect $150–$600 permit fees depending on county.</p></div>' : '');
+  el.style.display = 'block';
+}
+
+const BATH_BASE = {
+  half: {update:1200, partial:2200, gut:3500, new_add:5000},
+  full: {update:2200, partial:4000, gut:6500, new_add:8000},
+  master: {update:3500, partial:6500, gut:11000, new_add:13000},
+  luxury: {update:5000, partial:9000, gut:17000, new_add:20000},
+};
+const BATH_HI_MULT = 1.7;
+const COUNTY_MULT = {se:1.28, sw:1.15, tampa:1.10, orlando:1.05, jax:1.03, central:0.96, nfl:0.90};
+
+function calcBathCost(){
+  const bathType = document.getElementById('costBathType').value;
+  const workType = document.getElementById('costWorkType').value;
+  const slab = document.getElementById('costSlab').value;
+  const county = document.getElementById('costCounty').value;
+  const condo = document.getElementById('costCondo').value;
+  const base = BATH_BASE[bathType][workType];
+  const mult = COUNTY_MULT[county] || 1.0;
+  const lo = Math.round(base * mult / 100) * 100;
+  const hi = Math.round(base * BATH_HI_MULT * mult / 100) * 100;
+  const slabAdd = slab === 'slab' && (workType === 'gut' || workType === 'partial' || workType === 'new_add') ? (workType === 'gut' ? 1200 : 600) : 0;
+  const condoAdd = condo === 'yes' ? 400 : 0;
+  const permitLo = 150, permitHi = 600;
+  const el = document.getElementById('bath-cost-result');
+  el.innerHTML = '<div class="cost-breakdown"><h3>Cost Breakdown (Plumbing Only)</h3><div class="cb-row"><span class="cb-k">Base plumbing (labor + materials)</span><span class="cb-v">$' + lo.toLocaleString() + ' – $' + hi.toLocaleString() + '</span></div>' + (slabAdd ? '<div class="cb-row"><span class="cb-k">Slab saw-cut & patch (est.)</span><span class="cb-v">$' + (slabAdd/2).toLocaleString() + ' – $' + slabAdd.toLocaleString() + '</span></div>' : '') + (condoAdd ? '<div class="cb-row"><span class="cb-k">Condo coordination surcharge</span><span class="cb-v">$' + (condoAdd/2).toLocaleString() + ' – $' + condoAdd.toLocaleString() + '</span></div>' : '') + '<div class="cb-row"><span class="cb-k">Permit fees (est.)</span><span class="cb-v">$' + permitLo + ' – $' + permitHi + '</span></div><div class="cb-row"><span class="cb-k">Total plumbing estimate</span><span class="cb-v">$' + (lo + slabAdd/2 + condoAdd/2 + permitLo).toLocaleString() + ' – $' + (hi + slabAdd + condoAdd + permitHi).toLocaleString() + '</span></div></div><p class="county-impact">These estimates are for FL licensed plumber costs only. Full bathroom remodel total (all trades) is typically 3–5× the plumbing cost alone, including tile, fixtures, vanity, electrical, drywall, and painting.</p>';
+  el.style.display = 'block';
+}
+
+function submitBathQuote(){
+  const name = document.getElementById('bathName').value.trim();
+  const phone = document.getElementById('bathPhone').value.trim();
+  if(!name || !phone){ alert('Please enter your name and phone number.'); return; }
+  document.getElementById('bath-toast').style.display = 'block';
+  setTimeout(() => document.getElementById('bath-toast').style.display = 'none', 3500);
+}
+
+// Pre-select first 3 scope items as defaults
+document.querySelectorAll('.scope-item').forEach((item,i) => {
+  if(i < 3){
+    item.classList.add('selected');
+    item.querySelector('input[type=checkbox]').checked = true;
+  }
+});
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-repair pipe-replacement drain-cleaning backflow-testing well-pump-florida water-treatment bathroom-remodel-plumbing kitchen-plumbing gas-line-installation whole-house-repiping slab-leak-detection water-softener-florida irrigation-plumbing pool-plumbing fl-building-code plumbing-inspection broward-plumber miami-plumber orlando-plumber tampa-plumber jacksonville-plumber palm-beach-plumber sarasota-plumber collier-plumber lee-county-plumber volusia-plumber polk-county-plumber pinellas-plumber hillsborough-plumber orange-county-plumber seminole-plumber florida-plumbing-tools plumber-near-me licensed-plumber-florida cfc-licensed-plumber fl-plumbing-permit emergency-plumber leak-repair water-heater-florida sewer-</div>
+</body>
+</html>

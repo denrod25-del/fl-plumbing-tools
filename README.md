@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**125 interactive cost calculators** for Florida homeowners.
+**128 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -14,6 +14,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Backflow Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow/fl_backflow.html)
 - [FL Bathroom Addition Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-addition/fl_bathroom_addition.html)
 - [FL Bathroom Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-cost/fl_bathroom_cost.html)
+- [FL Bathroom Remodel Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-remodel-plumbing/fl_bathroom_remodel_plumbing.html)
 - [FL Bathroom Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-remodel/fl_bathroom_remodel.html)
 - [FL Bathtub Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathtub-replacement/fl_bathtub_replacement.html)
 - [FL Booster Pump Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/booster-pump/fl_booster_pump.html)
@@ -37,6 +38,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Flood Zone Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/flood-zone-plumbing/fl_flood_zone_plumbing.html)
 - [FL Garbage Disposal Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/garbage-disposal/fl_garbage_disposal.html)
 - [FL Gas Leak Detection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-leak-detection/fl_gas_leak_detection.html)
+- [FL Gas Line Generator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-generator/fl_gas_line_generator.html)
 - [FL Gas Line Installation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-installation/fl_gas_line_installation.html)
 - [FL Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line/fl_gas_line.html)
 - [FL Gas Pressure Test Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-pressure-test/fl_gas_pressure_test.html)
@@ -127,6 +129,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Softener Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-softener-sizing/fl_water_softener_sizing.html)
 - [FL Water Softener Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-softener/fl_water_softener.html)
 - [FL Water Treatment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-treatment/fl_water_treatment.html)
+- [FL Well Pump Pressure Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-pump-pressure/fl_well_pump_pressure.html)
 - [FL Well Pump Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-pump/fl_well_pump.html)
 - [FL Well Water Treatment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-water-treatment/fl_well_water_treatment.html)
 - [FL Well Water Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/well-water/fl_well_water.html)
