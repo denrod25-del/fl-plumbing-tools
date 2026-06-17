@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**134 interactive cost calculators** for Florida homeowners.
+**137 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -22,6 +22,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Code Violations Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/code-violations/fl_code_violations.html)
 - [FL Commercial Kitchen Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-kitchen/fl_commercial_kitchen.html)
 - [FL Commercial Plumbing Code Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-plumbing-code/fl_commercial_plumbing_code.html)
+- [FL Commercial Restroom Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-restroom-calc/fl_commercial_restroom_calc.html)
 - [FL Condo Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/condo-plumbing/fl_condo_plumbing.html)
 - [FL Construction Defect Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/construction-defect/fl_construction_defect.html)
 - [FL Drain Cleaning Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-cleaning/fl_drain_cleaning.html)
@@ -45,6 +46,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line/fl_gas_line.html)
 - [FL Gas Pressure Test Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-pressure-test/fl_gas_pressure_test.html)
 - [FL Gas Propane Electric Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-propane-electric/fl_gas_propane_electric.html)
+- [FL Gas Tankless Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-tankless-sizing/fl_gas_tankless_sizing.html)
 - [FL Generator Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/generator-gas-line/fl_generator_gas_line.html)
 - [FL Grease Trap Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/grease-trap/fl_grease_trap.html)
 - [FL Greywater Conservation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/greywater-conservation/fl_greywater_conservation.html)
@@ -105,6 +107,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Sewer Root Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-root-inspection/fl_sewer_root_inspection.html)
 - [FL Shower Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-leak/fl_shower_leak.html)
 - [FL Shower Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-remodel/fl_shower_remodel.html)
+- [FL Shower Valve Antiscald Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-valve-antiscald/fl_shower_valve_antiscald.html)
 - [FL Shower Valve Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-valve/fl_shower_valve.html)
 - [FL Slab Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-leak/fl_slab_leak.html)
 - [FL Slab Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-repair/fl_slab_repair.html)

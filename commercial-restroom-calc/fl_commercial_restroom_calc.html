@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Commercial Restroom Fixture Count Calculator | Florida Plumbing</title>
+<meta name="description" content="Calculate required plumbing fixtures for Florida commercial buildings. FL Building Code Chapter 29 fixture counts by occupancy, ADA accessible requirements, water closet ratios, janitor sink requirements.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.hero{background:linear-gradient(135deg,#0A0E1A 0%,#0F1629 50%,#0A0E1A 100%);padding:24px 16px 16px;text-align:center;border-bottom:1px solid #1E2A45}
+.hero h1{font-size:1.4rem;font-weight:700;color:#EF4444;margin-bottom:6px;line-height:1.3}
+.hero p{font-size:0.85rem;color:#94A3B8;max-width:480px;margin:0 auto}
+.badge{display:inline-block;background:#EF444422;color:#EF4444;border:1px solid #EF444444;border-radius:4px;font-size:0.7rem;font-weight:600;padding:2px 8px;margin-bottom:8px;letter-spacing:.05em}
+.tabs{display:flex;background:#0F1629;border-bottom:1px solid #1E2A45;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{flex:1;min-width:80px;padding:12px 8px;text-align:center;font-size:0.75rem;font-weight:600;color:#94A3B8;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab.active{color:#EF4444;border-bottom-color:#EF4444;background:#EF44440D}
+.tab:hover:not(.active){color:#E2E8F0;background:#1E2A4522}
+.panel{display:none;padding:16px;max-width:480px;margin:0 auto}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2A45;border-radius:10px;padding:14px;margin-bottom:14px}
+.card h3{font-size:0.85rem;font-weight:700;color:#EF4444;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+label{display:block;font-size:0.78rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=text],input[type=tel],input[type=number]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:6px;color:#E2E8F0;padding:9px 10px;font-size:0.82rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#EF4444}
+.btn{width:100%;background:#EF4444;color:#fff;border:none;border-radius:8px;padding:12px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:12px;letter-spacing:.02em}
+.btn:hover{background:#DC2626}
+.result-box{background:#141929;border:1px solid #EF444433;border-radius:8px;padding:14px;margin-top:12px;display:none}
+.result-box.show{display:block}
+.fixture-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.fix-metric{background:#0F1629;border:1px solid #1E2A45;border-radius:8px;padding:8px;text-align:center}
+.fix-metric-val{font-size:1.0rem;font-weight:700;color:#EF4444}
+.fix-metric-lbl{font-size:0.65rem;color:#94A3B8;margin-top:2px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#94A3B8}
+.info-val{color:#E2E8F0;font-weight:600;text-align:right;max-width:60%}
+.alert{border-radius:8px;padding:10px 12px;font-size:0.78rem;margin-bottom:10px;border:1px solid}
+.alert-warn{background:#F4B94211;border-color:#F4B94244;color:#F4B942}
+.alert-info{background:#EF444411;border-color:#EF444433;color:#EF4444}
+.alert-green{background:#22C55E11;border-color:#22C55E33;color:#22C55E}
+.alert-blue{background:#00B4FF11;border-color:#00B4FF33;color:#00B4FF}
+.step-list{counter-reset:steps;margin-top:8px}
+.step-item{counter-increment:steps;display:flex;gap:10px;margin-bottom:10px;font-size:0.78rem}
+.step-item::before{content:counter(steps);background:#EF4444;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;margin-top:1px}
+.step-text{color:#E2E8F0;line-height:1.5}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.check-item:last-child{border-bottom:none}
+.chk{width:16px;height:16px;border-radius:3px;border:2px solid #1E2A45;flex-shrink:0;cursor:pointer;margin-top:1px;background:#141929}
+.chk.checked{background:#EF4444;border-color:#EF4444}
+.divider{height:1px;background:#1E2A45;margin:12px 0}
+.phone-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#EF44441A;border:1px solid #EF444444;border-radius:8px;padding:12px;color:#EF4444;font-weight:700;font-size:0.88rem;cursor:pointer;margin-top:10px;text-decoration:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#000;font-weight:700;padding:12px 22px;border-radius:8px;font-size:0.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.county-select-wrap{position:relative}
+.county-select-wrap::after{content:'▼';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:0.65rem;pointer-events:none}
+.occ-table{width:100%;border-collapse:collapse;font-size:0.72rem;margin-top:8px}
+.occ-table th{background:#1E2A45;color:#94A3B8;padding:6px 8px;text-align:left;font-weight:600}
+.occ-table td{padding:6px 8px;border-bottom:1px solid #1E2A4533;color:#E2E8F0}
+.occ-table tr:hover td{background:#1E2A4522}
+.result-detail-table{width:100%;border-collapse:collapse;font-size:0.78rem;margin-top:8px}
+.result-detail-table th{background:#1E2A45;color:#94A3B8;padding:8px;text-align:left;font-weight:600}
+.result-detail-table td{padding:8px;border-bottom:1px solid #1E2A4533}
+.result-detail-table td:first-child{color:#94A3B8}
+.result-detail-table td:not(:first-child){color:#E2E8F0;font-weight:600;text-align:center}
+.result-detail-table tr.total-row td{color:#EF4444;font-weight:700;background:#EF44440A}
+.gender-toggle{display:flex;background:#141929;border-radius:6px;border:1px solid #1E2A45;overflow:hidden;margin-top:8px}
+.gender-btn{flex:1;padding:8px;text-align:center;font-size:0.78rem;cursor:pointer;color:#94A3B8;transition:all .2s}
+.gender-btn.active{background:#EF4444;color:#fff;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">🏢 FLORIDA COMMERCIAL PLUMBING</div>
+  <h1>Commercial Restroom Fixture Count Calculator</h1>
+  <p>FL Building Code Chapter 29 fixture counts by occupancy type, ADA accessible ratios, water closet requirements</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('calc')">🔢 Fixture Calc</div>
+  <div class="tab" onclick="showTab('ada')">♿ ADA Guide</div>
+  <div class="tab" onclick="showTab('code')">📋 FL Code</div>
+  <div class="tab" onclick="showTab('quote')">📞 Quote</div>
+</div>
+
+<!-- TAB 1: FIXTURE CALCULATOR -->
+<div class="panel active" id="panel-calc">
+  <div class="card">
+    <h3>🔢 Fixture Count Calculator</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:12px">Per Florida Building Code Table 2902.1 (FBC adopts IPC Table 403.1)</p>
+
+    <label>Occupancy / Building Type</label>
+    <div class="county-select-wrap">
+      <select id="occType" onchange="updateOccInfo()">
+        <option value="">— Select Occupancy —</option>
+        <optgroup label="Assembly (A)">
+          <option value="A1">A-1: Theaters, Concert Halls, Auditoriums</option>
+          <option value="A2">A-2: Restaurants, Banquet Halls, Nightclubs</option>
+          <option value="A3">A-3: Gyms, Bowling, Dance Halls, Arcades</option>
+          <option value="A4">A-4: Indoor Sporting Events</option>
+          <option value="A5">A-5: Outdoor Events, Stadiums</option>
+        </optgroup>
+        <optgroup label="Business / Office (B)">
+          <option value="B">B: Office Buildings, Banks, Clinics</option>
+        </optgroup>
+        <optgroup label="Educational (E)">
+          <option value="E">E: Schools, Daycare (over 2½ years)</option>
+        </optgroup>
+        <optgroup label="Factory (F)">
+          <option value="F">F: Manufacturing, Industrial, Factory</option>
+        </optgroup>
+        <optgroup label="Institutional (I)">
+          <option value="I1">I-1: Assisted Living, Group Homes</option>
+          <option value="I2">I-2: Hospitals, Nursing Homes</option>
+          <option value="I3">I-3: Detention, Correctional</option>
+        </optgroup>
+        <optgroup label="Mercantile / Retail (M)">
+          <option value="M">M: Retail, Shopping, Stores, Markets</option>
+        </optgroup>
+        <optgroup label="Residential (R)">
+          <option value="R1">R-1: Hotels, Motels, Transient</option>
+          <option value="R2">R-2: Apartment Buildings, Condos</option>
+        </optgroup>
+        <optgroup label="Storage / Utility (S/U)">
+          <option value="S">S: Warehouses, Storage, Utility</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div id="occ-info" style="display:none;margin-top:8px" class="alert alert-blue"></div>
+
+    <label>Total Occupant Load (persons)</label>
+    <input type="number" id="occupantLoad" placeholder="e.g. 150" min="1" max="100000">
+
+    <label>Gender Split</label>
+    <div class="gender-toggle">
+      <div class="gender-btn active" id="g50" onclick="setGender(50)">50/50 Split</div>
+      <div class="gender-btn" id="g60" onclick="setGender(60)">60M / 40F</div>
+      <div class="gender-btn" id="g40" onclick="setGender(40)">40M / 60F</div>
+      <div class="gender-btn" id="g0" onclick="setGender(0)">All-Gender</div>
+    </div>
+
+    <label>Building Has Employees vs. Public?</label>
+    <div class="county-select-wrap">
+      <select id="userClass">
+        <option value="public">Public / Customer-facing</option>
+        <option value="employee">Employee / Staff only</option>
+        <option value="mixed">Mixed public + employee</option>
+      </select>
+    </div>
+
+    <label>Number of Floors / Restroom Locations</label>
+    <div class="county-select-wrap">
+      <select id="floorCount">
+        <option value="1">1 floor</option>
+        <option value="2">2 floors</option>
+        <option value="3">3 floors</option>
+        <option value="4">4+ floors</option>
+      </select>
+    </div>
+
+    <label>Food Service On-Site?</label>
+    <div class="county-select-wrap">
+      <select id="foodService">
+        <option value="no">No</option>
+        <option value="yes">Yes — Kitchen / Prep Area</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="calcFixtures()">Calculate Required Fixtures</button>
+
+    <div class="result-box" id="fixtureResult">
+      <div class="fixture-row">
+        <div class="fix-metric"><div class="fix-metric-val" id="res-wc">—</div><div class="fix-metric-lbl">Water Closets</div></div>
+        <div class="fix-metric"><div class="fix-metric-val" id="res-lav">—</div><div class="fix-metric-lbl">Lavatories</div></div>
+        <div class="fix-metric"><div class="fix-metric-val" id="res-uf">—</div><div class="fix-metric-lbl">Urinals (M)</div></div>
+      </div>
+      <div class="fixture-row">
+        <div class="fix-metric"><div class="fix-metric-val" id="res-drink">—</div><div class="fix-metric-lbl">Drink Fount.</div></div>
+        <div class="fix-metric"><div class="fix-metric-val" id="res-service">—</div><div class="fix-metric-lbl">Service Sinks</div></div>
+        <div class="fix-metric"><div class="fix-metric-val" id="res-ada">—</div><div class="fix-metric-lbl">ADA WC</div></div>
+      </div>
+      <div class="divider"></div>
+      <table class="result-detail-table" id="fixture-detail-table">
+        <thead><tr><th>Fixture</th><th>Men's</th><th>Women's</th><th>Total Req'd</th></tr></thead>
+        <tbody id="fixture-tbody"></tbody>
+      </table>
+      <div class="divider"></div>
+      <div id="fixture-notes" style="font-size:0.78rem;color:#94A3B8;line-height:1.6"></div>
+      <div id="fixture-alert" class="alert" style="margin-top:10px;display:none"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📊 Quick Reference — FL Occupancy Ratios</h3>
+    <table class="occ-table">
+      <thead><tr><th>Occupancy</th><th>WC per person</th><th>Urinals</th></tr></thead>
+      <tbody>
+        <tr><td>A-1 Theater</td><td>1:125 (M) 1:65 (F)</td><td>1:200 (M)</td></tr>
+        <tr><td>A-2 Restaurant</td><td>1:75 (M) 1:75 (F)</td><td>1:200 (M)</td></tr>
+        <tr><td>B Office</td><td>1:25 (M) 1:25 (F)</td><td>1:50 (M)</td></tr>
+        <tr><td>E School</td><td>1:50 (M) 1:50 (F)</td><td>1:100 (M)</td></tr>
+        <tr><td>F Industrial</td><td>1:100 (M) 1:100 (F)</td><td>1:200 (M)</td></tr>
+        <tr><td>M Retail</td><td>1:500 (M) 1:500 (F)</td><td>1:1000 (M)</td></tr>
+        <tr><td>R-1 Hotel/unit</td><td>1 per unit</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 2: ADA GUIDE -->
+<div class="panel" id="panel-ada">
+  <div class="card">
+    <h3>♿ ADA Accessible Fixture Requirements</h3>
+
+    <div class="alert alert-blue">Florida Accessibility Code (FAC) Chapter 11 adopts ADA Standards for Accessible Design (2010 ADAS). All commercial construction must comply — not just federally funded projects.</div>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-text"><strong>Number of Accessible Water Closets</strong> — When a restroom has 6 or more WC, at least one must be accessible. Single-user restroom = the only WC must be accessible. FL requires this in ALL new commercial construction.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Accessible WC Dimensions (FBC 11B-604)</strong> — Rear grab bar: 36" minimum. Side grab bar: 42" minimum (from rear wall). Centerline of WC: 16"–18" from side wall. Height: 17"–19" AFF (top of seat). Clear floor space: 60" from side wall, 56" from rear wall.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Accessible Lavatory (FBC 11B-606)</strong> — Knee clearance: 27" minimum height, 8" depth. Rim height: 34" maximum AFF. Insulated pipes required under sink (burns from hot pipes). Controls: single lever or sensor — no two-handle. Mirror: bottom edge ≤40" AFF.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Accessible Urinal (FBC 11B-605)</strong> — When urinals are provided, at least one must be accessible. Rim height: 17" maximum AFF. Depth: 13.5" minimum from front of rim. Side partitions: must have 18" clear from centerline to partition.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Drinking Fountain — FL Requirement</strong> — When provided, must have one hi-lo fountain (one standard height + one wheelchair height). OR one wheelchair-height unit + a paper cup dispenser at standard height. Spout height: 36" max for wheelchair unit. 27" knee clearance beneath.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Restroom Turning Space</strong> — 60" diameter circle OR T-shaped turn space. Must fit within restroom without obstruction. Measured at 6" AFF (door swing does not need to fit within circle, but adjacent wall must allow it to open fully).</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Door Requirements</strong> — Minimum 32" clear (36" preferred). No tight space behind door when open. Self-closing OK but must not close faster than 5 seconds from 70° open. Lever or loop hardware only — no round knobs.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>FL Healthcare (AHCA) — Additional Rules</strong> — 60"×60" min transfer space per ADA PLUS knee clearance under lavatory. Shower must be roll-in type with seat. Anti-scald: ASSE 1070 at 110°F. Handrails at all grab bars MUST be 1.25"–1.5" diameter, 1.5" from wall.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔢 ADA Fixture Count by Total Fixtures</h3>
+    <div class="info-row"><span class="info-label">1 water closet</span><span class="info-val">1 must be accessible</span></div>
+    <div class="info-row"><span class="info-label">2–6 water closets</span><span class="info-val">1 accessible required</span></div>
+    <div class="info-row"><span class="info-label">7–12 water closets</span><span class="info-val">2 accessible required</span></div>
+    <div class="info-row"><span class="info-label">13–20 water closets</span><span class="info-val">3 accessible required</span></div>
+    <div class="info-row"><span class="info-label">21+ water closets</span><span class="info-val">20% must be accessible</span></div>
+    <div class="info-row"><span class="info-label">Urinals (1–4)</span><span class="info-val">1 accessible required</span></div>
+    <div class="info-row"><span class="info-label">Lavatories (any)</span><span class="info-val">1 accessible per restroom</span></div>
+    <div class="info-row"><span class="info-label">Shower (1 or more)</span><span class="info-val">1 roll-in or transfer required</span></div>
+  </div>
+
+  <div class="card">
+    <h3>✅ ADA Restroom Checklist</h3>
+    <div id="ada-checklist">
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'ada')"></div><div>At least one ADA water closet with rear + side grab bars</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'ada')"></div><div>WC centerline 16"–18" from side wall</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'ada')"></div><div>WC seat height 17"–19" AFF</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'ada')"></div><div>Accessible lavatory: knee clearance 27" min, rim ≤34" AFF</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'ada')"></div><div>Pipe insulation under accessible lavatory</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'ada')"></div><div>60" turning diameter within restroom</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'ada')"></div><div>Door: 32" clear minimum, lever hardware</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'ada')"></div><div>Hi-lo drinking fountain (or wheelchair unit + cup dispenser)</div></div>
+    </div>
+    <div id="ada-score" style="margin-top:10px;font-size:0.78rem;color:#94A3B8;text-align:center"></div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div class="panel" id="panel-code">
+  <div class="card">
+    <h3>📋 FL Building Code — Commercial Restroom Requirements</h3>
+
+    <div class="alert alert-info">Florida Building Code Chapter 29 (Plumbing Systems) governs all fixture counts. FL adopts the International Plumbing Code (IPC) with Florida amendments. FL Amendment FAC 11B adds accessibility requirements.</div>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-text"><strong>FBC 2902 / IPC 403 — Minimum Fixture Counts</strong> — Table 2902.1 establishes minimum fixtures by occupancy. Cannot reduce below table minimums. Exceeding minimums allowed and often recommended for restaurants, high-occupancy buildings.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Separate Facilities by Sex (FBC 2902.2)</strong> — Separate restrooms for each sex required when occupant load exceeds 15 persons. Single-occupant unisex allowed for buildings with occupant load ≤15. FL allows all-gender facilities only in addition to, not instead of, gendered facilities in most commercial settings.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Janitor/Service Sink (IPC 403.1)</strong> — At least one service sink (mop receptor) required in all commercial buildings. Must have floor drain nearby. FL food-service facilities (DBPR) require dedicated mop sink in food prep/service areas — cannot share with restroom.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Employee Restrooms vs. Public (FBC 2902.3)</strong> — Employer must provide restroom access to employees. Public facilities required when business sells food/beverages for on-site consumption AND occupant load exceeds 50 persons. Employee-only facilities may substitute when employer provides no public accommodation.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Travel Distance to Restroom (IPC 403.3.3)</strong> — Restroom must be within 500 ft travel distance from any occupied area. For multi-story buildings: restroom on same floor or within one floor of any employee. FL strict enforcement — occupants cannot be required to travel outside building.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Restaurant / Food Service — FL DBPR Requirements</strong> — DBPR (hotels and restaurants) requires hand-wash sink in EVERY food prep area visible from work station — separate from restroom hand-wash sinks. Minimum flow 1.0 GPM. Cannot be blocked or used for other purposes.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Healthcare — FL AHCA Requirements</strong> — All patient care areas require hand-wash sink within room or immediately adjacent corridor. Minimum 1:2 patient beds (1 per 2 beds minimum). ASSE 1070 anti-scald at all patient fixtures. Floor drain in all bathing areas.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Drinking Fountains (IPC 410)</strong> — Required when total occupant load exceeds 15 persons. Not required if sealed water/beverage dispenser available and approved by AHJ. FL healthcare: separate drinking fountain per floor or wing. Note: restaurants exempt if serving beverages at tables.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🚻 FL Restaurant & Food Service — Special Rules</h3>
+    <div class="info-row"><span class="info-label">Occupant load &lt; 50</span><span class="info-val">Employee facilities shared with public OK</span></div>
+    <div class="info-row"><span class="info-label">Occupant load 50+</span><span class="info-val">Separate public restrooms required</span></div>
+    <div class="info-row"><span class="info-label">Food prep sink</span><span class="info-val">Separate from restroom — DBPR rule</span></div>
+    <div class="info-row"><span class="info-label">Mop sink location</span><span class="info-val">In kitchen — not in restroom</span></div>
+    <div class="info-row"><span class="info-label">Bar restroom proximity</span><span class="info-val">Within 300 ft per FL DBPR</span></div>
+    <div class="info-row"><span class="info-label">Outdoor seating</span><span class="info-val">Indoor restrooms may serve outdoor area if within 500 ft</span></div>
+  </div>
+
+  <div class="card">
+    <h3>✅ Commercial Restroom Plan Review Checklist</h3>
+    <div id="plan-checklist">
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'plan')"></div><div>Fixture count per FBC Table 2902.1 verified for occupancy type</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'plan')"></div><div>Separate men's/women's if occupant load &gt; 15</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'plan')"></div><div>ADA water closet(s) and lavatory per FBC Chapter 11B</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'plan')"></div><div>Service/mop sink provided (one per building)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'plan')"></div><div>Drinking fountain(s) if occupant load &gt; 15 (or approved substitute)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'plan')"></div><div>ASSE 1016 anti-scald at all showers</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'plan')"></div><div>Travel distance ≤500 ft from any occupied area</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'plan')"></div><div>Water supply and drain pipe sizes calculated for fixture count</div></div>
+    </div>
+    <div id="plan-score" style="margin-top:10px;font-size:0.78rem;color:#94A3B8;text-align:center"></div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div class="panel" id="panel-quote">
+  <div class="card">
+    <h3>📞 Get Your Commercial Plumbing Quote</h3>
+    <p style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px">Licensed CPC — FL commercial plumbing, permit-ready plans</p>
+
+    <div class="alert alert-warn">Commercial plumbing in Florida requires a state-licensed plumbing contractor (CPC). Plans submitted for permit must include fixture schedules and DFU calculations by licensed engineer or CPC.</div>
+
+    <label>Name / Company</label>
+    <input type="text" id="q-name" placeholder="Your name or company">
+
+    <label>Phone Number</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>City / ZIP</label>
+    <input type="text" id="q-city" placeholder="e.g. Fort Lauderdale, 33301">
+
+    <label>FL County</label>
+    <div class="county-select-wrap">
+      <select id="q-county">
+        <option value="">— Select County —</option>
+        <option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option>
+        <option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option>
+        <option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option>
+        <option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option>
+        <option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option>
+        <option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option>
+        <option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option>
+        <option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option>
+        <option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option>
+        <option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option>
+        <option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option>
+        <option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option>
+        <option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option>
+        <option>Walton</option><option>Washington</option>
+      </select>
+    </div>
+
+    <label>Project Type</label>
+    <div class="county-select-wrap">
+      <select id="q-project">
+        <option>New commercial construction</option>
+        <option>Tenant improvement / build-out</option>
+        <option>Restaurant / food service remodel</option>
+        <option>Office building renovation</option>
+        <option>Healthcare facility plumbing</option>
+        <option>Retail restroom addition</option>
+        <option>ADA compliance upgrade</option>
+        <option>Change of occupancy / use</option>
+      </select>
+    </div>
+
+    <label>Approximate Square Footage</label>
+    <div class="county-select-wrap">
+      <select id="q-sqft">
+        <option>Under 1,000 sq ft</option>
+        <option>1,000–5,000 sq ft</option>
+        <option>5,000–15,000 sq ft</option>
+        <option>15,000–50,000 sq ft</option>
+        <option>Over 50,000 sq ft</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="submitQuote()">Request Commercial Quote →</button>
+    <a class="phone-btn" href="tel:5615555473">📞 Call Now: (561) 555-PIPE</a>
+  </div>
+
+  <div class="card">
+    <h3>💰 FL Commercial Restroom — Cost Guide</h3>
+    <div class="info-row"><span class="info-label">Single restroom rough-in (new)</span><span class="info-val">$3,500–$8,000</span></div>
+    <div class="info-row"><span class="info-label">Restroom renovation (fixtures)</span><span class="info-val">$4,000–$12,000</span></div>
+    <div class="info-row"><span class="info-label">ADA compliance retrofit</span><span class="info-val">$2,500–$7,000</span></div>
+    <div class="info-row"><span class="info-label">Full restroom build-out (per room)</span><span class="info-val">$8,000–$25,000</span></div>
+    <div class="info-row"><span class="info-label">Restaurant kitchen sink/mop</span><span class="info-val">$1,200–$3,500</span></div>
+    <div class="info-row"><span class="info-label">Drinking fountain (hi-lo)</span><span class="info-val">$800–$1,800 installed</span></div>
+    <div class="info-row"><span class="info-label">FL commercial permit fee</span><span class="info-val">$200–$1,500+</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+<!-- FL COMMERCIAL RESTROOM FIXTURE DATA — FLORIDA PLUMBING CODE REFERENCE -->
+<!-- Florida Building Code (FBC) Chapter 29 — Plumbing Systems -->
+<!-- IPC Table 403.1 (adopted by FL as FBC Table 2902.1) — Minimum Plumbing Facilities -->
+<!-- Florida Accessibility Code (FAC) Chapter 11B — ADA Standards -->
+<!-- FL AHCA Chapter 59A — Healthcare Facilities -->
+<!-- FL DBPR Chapter 509 — Hotels and Restaurants -->
+<!--
+FLORIDA FBC TABLE 2902.1 — MINIMUM PLUMBING FACILITIES:
+
+OCCUPANCY A-1 (THEATERS, AUDITORIUMS):
+Male: 1 WC per 125 occupants; 1 lav per 200; 1 urinal per 200
+Female: 1 WC per 65 occupants; 1 lav per 200
+Drinking fountain: 1 per 500
+Service sink: 1 per building
+
+OCCUPANCY A-2 (RESTAURANTS, BARS, BANQUET HALLS):
+Male: 1 WC per 75 occupants; 1 lav per 200; 1 urinal per 200
+Female: 1 WC per 75 occupants; 1 lav per 200
+Drinking fountain: 1 per 500 (not req if table service beverage)
+Service sink: 1 per building (separate from kitchen — DBPR)
+
+OCCUPANCY A-3 (GYMS, RECREATION, DANCE HALLS):
+Male: 1 WC per 75 occupants; 1 lav per 200; 1 urinal per 150
+Female: 1 WC per 75 occupants; 1 lav per 200
+Showers: 1 per 40 if gym/changing rooms present
+
+OCCUPANCY A-4 (SPORTING EVENTS — INDOOR):
+Male: 1 WC per 75 occupants; 1 urinal per 75 (high-occupancy events)
+Female: 1 WC per 40 occupants
+Note: Event venues often use 2× code minimums in FL due to high attendance
+
+OCCUPANCY B (OFFICES, CLINICS):
+Male: 1 WC per 25 occupants; 1 lav per 40; 1 urinal per 50
+Female: 1 WC per 25 occupants; 1 lav per 40
+Drinking fountain: 1 per 100
+Service sink: 1 per floor or per building (AHJ discretion)
+
+OCCUPANCY E (SCHOOLS):
+Male: 1 WC per 50 students; 1 lav per 50; 1 urinal per 100
+Female: 1 WC per 50 students; 1 lav per 50
+Drinking fountain: 1 per 100 (FL DOE requires 1 per classroom wing)
+Showers in PE/locker: 1 per 40 students using locker room
+
+OCCUPANCY F (INDUSTRIAL/FACTORY):
+Male: 1 WC per 100; 1 lav per 100; 1 urinal per 200
+Female: 1 WC per 100; 1 lav per 100
+Service sink: 1 per building
+Showers: Required if exposed to heat, skin contamination, or toxic materials
+
+OCCUPANCY I-1 (ASSISTED LIVING, GROUP HOMES):
+Residential standards apply — 1 WC per sleeping room or per 8 persons
+Plus AHCA requirements for licensed facilities
+Anti-scald: ASSE 1070 at 110°F at all fixtures
+
+OCCUPANCY I-2 (HOSPITALS, NURSING HOMES):
+Inpatient: 1 toilet per room; 1 bathing facility per 20 patients minimum
+Outpatient: 1 WC per 25 occupants male/female
+Hand-wash sink: 1 per 2 patient beds (within patient room or immediately adjacent)
+AHCA 59A-8: Additional requirements for nursing homes
+
+OCCUPANCY M (RETAIL, STORES):
+Male: 1 WC per 500 occupants; 1 lav per 750; 1 urinal per 1000
+Female: 1 WC per 500 occupants; 1 lav per 750
+Note: Very low ratio — based on low occupancy density typical of retail
+Service sink: 1 per building
+Public restrooms required when occupant load exceeds 300
+
+OCCUPANCY R-1 (HOTELS, MOTELS):
+1 WC per sleeping unit
+1 lavatory per sleeping unit
+1 bathtub or shower per sleeping unit
+If common restrooms (hostel): Male 1 WC per 10 persons; Female 1 per 8 persons
+
+OCCUPANCY R-2 (APARTMENTS, CONDOS):
+1 WC per dwelling unit (minimum)
+1 lavatory per dwelling unit
+1 bathtub or shower per dwelling unit
+
+OCCUPANCY S (STORAGE, WAREHOUSE):
+Male: 1 WC per 100 occupants; 1 lav per 100; 1 urinal per 200
+Female: 1 WC per 100 occupants; 1 lav per 100
+
+FL SPECIFIC RULES:
+1. Separate facilities required when occupant load > 15 persons (FBC 2902.2)
+2. Single-user toilet may serve as unisex if properly designated + lockable
+3. Employee restroom must be within 500 ft travel distance
+4. Public restrooms required for food/beverage on-site consumption and OL > 50
+5. FL allows urinal substitution: up to 67% of male WC can be replaced by urinals
+6. Toilet room privacy: must not be visible from common areas when door open
+
+ADA FIXTURE REQUIREMENTS (FBC 11B / ADAS 2010):
+Water closets:
+- 1 to 6: 1 accessible
+- 7 to 12: 2 accessible
+- 13 to 20: 3 accessible
+- 21 and over: 20% accessible (round up)
+
+Accessible WC specifications:
+- Centerline: 16"–18" from side wall
+- Seat height: 17"–19" AFF
+- Rear grab bar: 36" minimum length
+- Side grab bar: 42" minimum length, 12" max behind WC
+- Clear floor space: 60" from side wall, 56" from rear wall
+- Flush control: 44" max AFF, on wide side of WC
+
+Accessible lavatory:
+- Rim: 34" max AFF
+- Knee clearance: 27" min H x 30" min W x 19" min D
+- Centerline: 15" minimum from side wall to centerline
+- Pipe insulation: required under basin
+- Controls: single lever or sensor (no two-handle)
+
+ADA urinal:
+- Rim: 17" max AFF
+- Depth: 13.5" min
+- Flush control: 44" max AFF
+- Shield: not required but if provided, 29" min from centerline to partition
+
+ADA drinking fountain:
+- Hi-lo required: one at 38"–43" spout height (standard); one at 27" max knee clearance (wheelchair)
+- Protrudes no more than 4" from wall if 27"–80" AFF (cane detectable)
+
+FL HEALTHCARE ADDITIONAL (AHCA):
+Patient toilet rooms: 5' x 8' minimum clear
+Patient shower: 4' x 4' minimum (30" door opening)
+Nurse station: 1 hand-wash sink
+Medication room: 1 hand-wash sink
+All patient fixtures: ASSE 1070 at 110°F
+Soiled utility room: 1 service sink required
+Clean utility room: 1 hand-wash sink required
+
+PIPE SIZING FOR COMMERCIAL RESTROOMS:
+DFU (Drainage Fixture Units) per fixture:
+Water closet (flush valve): 4 DFU
+Lavatory: 1 DFU
+Urinal (flush valve): 4 DFU
+Shower: 2 DFU
+Service sink: 3 DFU
+Drinking fountain: 1 DFU
+
+WSFUs (Water Supply Fixture Units) per fixture:
+Water closet (flush valve): 10 WSFU (cold only)
+Lavatory: 1 WSFU
+Urinal (flush valve): 5 WSFU (cold only)
+Shower: 2 WSFU
+
+COMMON FL COMMERCIAL RESTROOM ISSUES:
+1. Undersizing for A-2 occupancy — restaurants built at A-3 ratios
+2. Missing mop sink or placing it in restroom (DBPR violation)
+3. ADA grab bar wrong height or mounted to drywall without blocking
+4. Drinking fountain omitted without approved substitute
+5. Travel distance exceeds 500 ft for distant building wings
+6. Urinal substitution exceeds 67% of required WC count
+7. Single-user restroom not designated or lockable properly
+
+FL PERMIT REQUIREMENTS:
+Commercial plumbing: Licensed CPC required (state certification)
+Permit submitted with: Fixture schedule, DFU calculations, isometric diagram
+Plan review fees: Vary by county — $200–$1,500 typical
+Inspections: Rough-in (before wall close), final (all fixtures installed)
+Miami-Dade: Local licensed contractor (MDBC) required in addition to state CPC
+-->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+let genderSplit=50;
+function setGender(pct){
+  genderSplit=pct;
+  document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('g'+pct).classList.add('active');
+}
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  const tabs=['calc','ada','code','quote'];
+  document.querySelectorAll('.tab')[tabs.indexOf(t)].classList.add('active');
+  document.getElementById('panel-'+t).classList.add('active');
+}
+
+const OCC_INFO={
+  A1:'Theaters & Auditoriums: 1 WC per 125M / 65F. High fixture ratio required due to peak intermission demand. FL venues often exceed code.',
+  A2:'Restaurants & Bars: 1 WC per 75 persons each sex. DBPR requires separate mop sink in kitchen area. Public restrooms required if OL > 50.',
+  A3:'Gyms & Recreation: 1 WC per 75 each sex. Showers required if locker rooms provided (1 per 40 users). Separate wet/dry areas.',
+  A4:'Indoor Sporting Events: High-capacity — 1 WC per 75M / 40F. FL sports venues frequently use 2× minimums for fan experience.',
+  A5:'Outdoor Events: Portable facilities may be permitted for temporary events. Permanent stadium uses same ratios as A-4.',
+  B:'Office / Business: 1 WC per 25 each sex. Most common FL commercial use. Separate employee and public restrooms optional if same space.',
+  E:'Schools: 1 WC per 50 students each sex. FL DOE requires drinking fountain per classroom wing. Separate adult/student facilities common.',
+  F:'Industrial: 1 WC per 100 each sex. Showers required for hazardous materials or heat exposure work environments.',
+  I1:'Assisted Living: Residential-based ratios. AHCA licensing adds requirements beyond FBC. ASSE 1070 anti-scald mandatory.',
+  I2:'Hospitals/Nursing Homes: Complex AHCA requirements layer on top of FBC. Licensed facilities regulated by AHCA Chapter 59A.',
+  I3:'Correctional: 1 WC per 15 inmates. Highly regulated — consult FL DOC standards in addition to FBC.',
+  M:'Retail: Very low ratio (1 per 500). Public restrooms required when OL > 300. Mall common-area restrooms count for tenant use.',
+  R1:'Hotels/Motels: 1 full bath per unit. Common areas: use A-2 or B ratios. Short-term rental: DBPR inspection required.',
+  R2:'Apartments/Condos: 1 full bath per unit minimum. Common areas (lobby, gym, pool): use appropriate occupancy ratio.',
+  S:'Storage/Warehouse: 1 WC per 100 each sex. Low occupancy typical. Mop sink required. Employee break room has own requirements.'
+};
+
+// Fixture ratios per occupant (one-sided, per male or per female half of occupant load)
+const OCC_RATIOS={
+  A1:{wc_m:125,wc_f:65,lav_m:200,lav_f:200,uri_m:200,drink:500},
+  A2:{wc_m:75,wc_f:75,lav_m:200,lav_f:200,uri_m:200,drink:500},
+  A3:{wc_m:75,wc_f:75,lav_m:200,lav_f:200,uri_m:150,drink:500},
+  A4:{wc_m:75,wc_f:40,lav_m:200,lav_f:200,uri_m:75,drink:500},
+  A5:{wc_m:75,wc_f:40,lav_m:200,lav_f:200,uri_m:75,drink:500},
+  B:{wc_m:25,wc_f:25,lav_m:40,lav_f:40,uri_m:50,drink:100},
+  E:{wc_m:50,wc_f:50,lav_m:50,lav_f:50,uri_m:100,drink:100},
+  F:{wc_m:100,wc_f:100,lav_m:100,lav_f:100,uri_m:200,drink:400},
+  I1:{wc_m:25,wc_f:25,lav_m:30,lav_f:30,uri_m:50,drink:100},
+  I2:{wc_m:25,wc_f:25,lav_m:25,lav_f:25,uri_m:50,drink:100},
+  I3:{wc_m:15,wc_f:15,lav_m:20,lav_f:20,uri_m:25,drink:150},
+  M:{wc_m:500,wc_f:500,lav_m:750,lav_f:750,uri_m:1000,drink:500},
+  R1:{wc_m:10,wc_f:10,lav_m:10,lav_f:10,uri_m:0,drink:100},
+  R2:{wc_m:10,wc_f:10,lav_m:10,lav_f:10,uri_m:0,drink:100},
+  S:{wc_m:100,wc_f:100,lav_m:100,lav_f:100,uri_m:200,drink:500}
+};
+
+function updateOccInfo(){
+  const v=document.getElementById('occType').value;
+  const el=document.getElementById('occ-info');
+  if(v&&OCC_INFO[v]){el.textContent=OCC_INFO[v];el.style.display='block';}
+  else{el.style.display='none';}
+}
+
+function calcFixtures(){
+  const occ=document.getElementById('occType').value;
+  const ol=parseInt(document.getElementById('occupantLoad').value)||0;
+  if(!occ){alert('Please select an occupancy type.');return;}
+  if(!ol||ol<1){alert('Please enter occupant load.');return;}
+
+  const r=OCC_RATIOS[occ];
+  const floors=parseInt(document.getElementById('floorCount').value)||1;
+  const food=document.getElementById('foodService').value==='yes';
+  const isAllGender=genderSplit===0;
+
+  let mPct=(genderSplit===0)?0.5:(genderSplit/100);
+  let fPct=1-mPct;
+
+  const mOL=Math.ceil(ol*mPct);
+  const fOL=Math.ceil(ol*fPct);
+
+  const ceil1=n=>Math.max(1,Math.ceil(n));
+
+  const wc_m=ceil1(mOL/r.wc_m);
+  const wc_f=ceil1(fOL/r.wc_f);
+  const lav_m=ceil1(mOL/r.lav_m);
+  const lav_f=ceil1(fOL/r.lav_f);
+  const uri_m=r.uri_m>0?ceil1(mOL/r.uri_m):0;
+  const drink_total=r.drink>0?Math.max(1,Math.ceil(ol/r.drink)):0;
+  const service=Math.max(1,floors);
+  const total_wc=wc_m+wc_f;
+
+  // ADA WC calculation
+  let ada_wc=0;
+  if(total_wc<=6) ada_wc=1;
+  else if(total_wc<=12) ada_wc=2;
+  else if(total_wc<=20) ada_wc=3;
+  else ada_wc=Math.ceil(total_wc*0.2);
+
+  document.getElementById('res-wc').textContent=total_wc;
+  document.getElementById('res-lav').textContent=lav_m+lav_f;
+  document.getElementById('res-uf').textContent=uri_m||'N/A';
+  document.getElementById('res-drink').textContent=drink_total;
+  document.getElementById('res-service').textContent=service;
+  document.getElementById('res-ada').textContent=ada_wc;
+
+  const tbody=document.getElementById('fixture-tbody');
+  tbody.innerHTML='';
+  const rows=[
+    ['Water Closets',wc_m,wc_f,wc_m+wc_f],
+    ['Lavatories',lav_m,lav_f,lav_m+lav_f],
+    ['Urinals (men only)',uri_m,'—',uri_m||'—'],
+    ['Drinking Fountains',Math.ceil(drink_total/2),Math.ceil(drink_total/2),drink_total],
+    ['ADA Water Closets',Math.ceil(ada_wc/2),Math.ceil(ada_wc/2),ada_wc],
+    ['Service Sinks','—','—',service]
+  ];
+  rows.forEach((row,i)=>{
+    const tr=document.createElement('tr');
+    if(i===rows.length-1||i===4) tr.className='total-row';
+    tr.innerHTML='<td>'+esc(row[0])+'</td><td>'+esc(String(row[1]))+'</td><td>'+esc(String(row[2]))+'</td><td>'+esc(String(row[3]))+'</td>';
+    tbody.appendChild(tr);
+  });
+
+  let notes=`<strong>Occupant Load:</strong> ${ol} persons (${mOL} male / ${fOL} female)<br>`;
+  notes+=`<strong>Occupancy:</strong> ${occ} — ${OCC_INFO[occ]?OCC_INFO[occ].split(':')[0]:occ}<br>`;
+  notes+=`<strong>Floors:</strong> ${floors} — distribute restrooms per floor as needed<br>`;
+  if(food) notes+=`<strong>Food Service:</strong> Separate mop sink required in kitchen (DBPR). Additional hand-wash sinks in food prep area.<br>`;
+  document.getElementById('fixture-notes').innerHTML=notes;
+
+  const alertEl=document.getElementById('fixture-alert');
+  if(occ==='I2'||occ==='I1'){
+    alertEl.style.display='block';
+    alertEl.className='alert alert-warn';
+    alertEl.textContent='⚠️ Healthcare occupancy — AHCA regulations apply in addition to FBC. Licensed facility plans must be reviewed by AHCA. Contact our licensed medical facility plumber.';
+  } else if(occ==='A2'&&ol>50){
+    alertEl.style.display='block';
+    alertEl.className='alert alert-info';
+    alertEl.textContent='🍽️ Restaurant with OL > 50 — public restrooms are required under FL law. Employee-only restrooms insufficient.';
+  } else if(total_wc>=12){
+    alertEl.style.display='block';
+    alertEl.className='alert alert-blue';
+    alertEl.textContent='ℹ️ Large restroom installation — plumbing permit with licensed CPC required. Consider DFU calculation for drain sizing and WSFU for supply sizing.';
+  } else {
+    alertEl.style.display='none';
+  }
+
+  document.getElementById('fixtureResult').classList.add('show');
+}
+
+const checkCounts={ada:0,plan:0};
+function toggleCheck(el,group){
+  el.classList.toggle('checked');
+  const all=document.querySelectorAll('#'+group+'-checklist .chk');
+  const done=document.querySelectorAll('#'+group+'-checklist .chk.checked').length;
+  document.getElementById(group+'-score').textContent=done+'/'+all.length+' items checked'+(done===all.length?' — Plan review ready! ✅':'');
+}
+
+function submitQuote(){
+  const name=document.getElementById('q-name').value.trim();
+  const phone=document.getElementById('q-phone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+</script>
+
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+
+</div>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Gas Line Sizing for Tankless Water Heaters | Florida Plumbing Guide</title>
+<meta name="description" content="Calculate gas line sizing for tankless water heater installations in Florida. BTU demand calculator, CSST vs rigid pipe guide, FL permit requirements, pressure drop analysis.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.hero{background:linear-gradient(135deg,#0A0E1A 0%,#0F1629 50%,#0A0E1A 100%);padding:24px 16px 16px;text-align:center;border-bottom:1px solid #1E2A45}
+.hero h1{font-size:1.4rem;font-weight:700;color:#22C55E;margin-bottom:6px;line-height:1.3}
+.hero p{font-size:0.85rem;color:#94A3B8;max-width:480px;margin:0 auto}
+.badge{display:inline-block;background:#22C55E22;color:#22C55E;border:1px solid #22C55E44;border-radius:4px;font-size:0.7rem;font-weight:600;padding:2px 8px;margin-bottom:8px;letter-spacing:.05em}
+.tabs{display:flex;background:#0F1629;border-bottom:1px solid #1E2A45;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{flex:1;min-width:80px;padding:12px 8px;text-align:center;font-size:0.75rem;font-weight:600;color:#94A3B8;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab.active{color:#22C55E;border-bottom-color:#22C55E;background:#22C55E0D}
+.tab:hover:not(.active){color:#E2E8F0;background:#1E2A4522}
+.panel{display:none;padding:16px;max-width:480px;margin:0 auto}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2A45;border-radius:10px;padding:14px;margin-bottom:14px}
+.card h3{font-size:0.85rem;font-weight:700;color:#22C55E;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+label{display:block;font-size:0.78rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:6px;color:#E2E8F0;padding:9px 10px;font-size:0.82rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#22C55E}
+.btn{width:100%;background:#22C55E;color:#000;border:none;border-radius:8px;padding:12px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:12px;letter-spacing:.02em}
+.btn:hover{background:#16A34A}
+.btn-outline{background:transparent;color:#22C55E;border:1px solid #22C55E}
+.btn-outline:hover{background:#22C55E1A}
+.result-box{background:#141929;border:1px solid #22C55E33;border-radius:8px;padding:14px;margin-top:12px;display:none}
+.result-box.show{display:block}
+.result-title{font-size:0.75rem;color:#94A3B8;margin-bottom:4px}
+.result-value{font-size:1.3rem;font-weight:700;color:#22C55E}
+.result-sub{font-size:0.75rem;color:#94A3B8;margin-top:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{background:#141929;border:1px solid #1E2A45;border-radius:8px;padding:10px;text-align:center}
+.metric-val{font-size:1.1rem;font-weight:700;color:#22C55E}
+.metric-lbl{font-size:0.7rem;color:#94A3B8;margin-top:2px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#94A3B8}
+.info-val{color:#E2E8F0;font-weight:600;text-align:right;max-width:55%}
+.alert{border-radius:8px;padding:10px 12px;font-size:0.78rem;margin-bottom:10px;border:1px solid}
+.alert-warn{background:#F4B94211;border-color:#F4B94244;color:#F4B942}
+.alert-info{background:#22C55E11;border-color:#22C55E33;color:#22C55E}
+.alert-red{background:#EF444411;border-color:#EF444433;color:#EF4444}
+.step-list{counter-reset:steps;margin-top:8px}
+.step-item{counter-increment:steps;display:flex;gap:10px;margin-bottom:10px;font-size:0.78rem}
+.step-item::before{content:counter(steps);background:#22C55E;color:#000;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;margin-top:1px}
+.step-text{color:#E2E8F0;line-height:1.5}
+.pipe-card{background:#141929;border:1px solid #1E2A45;border-radius:8px;padding:10px;margin-bottom:8px}
+.pipe-card h4{font-size:0.78rem;font-weight:700;color:#E2E8F0;margin-bottom:6px}
+.pipe-tag{display:inline-block;border-radius:4px;font-size:0.65rem;font-weight:700;padding:2px 6px;margin-right:4px;margin-bottom:4px}
+.tag-green{background:#22C55E22;color:#22C55E;border:1px solid #22C55E44}
+.tag-yellow{background:#F4B94222;color:#F4B942;border:1px solid #F4B94244}
+.tag-red{background:#EF444422;color:#EF4444;border:1px solid #EF444444}
+.tag-blue{background:#00B4FF22;color:#00B4FF;border:1px solid #00B4FF44}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.check-item:last-child{border-bottom:none}
+.chk{width:16px;height:16px;border-radius:3px;border:2px solid #1E2A45;flex-shrink:0;cursor:pointer;margin-top:1px;background:#141929}
+.chk.checked{background:#22C55E;border-color:#22C55E}
+.county-select-wrap{position:relative}
+.county-select-wrap::after{content:'▼';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:0.65rem;pointer-events:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#000;font-weight:700;padding:12px 22px;border-radius:8px;font-size:0.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.pipe-size-table{width:100%;border-collapse:collapse;font-size:0.72rem;margin-top:8px}
+.pipe-size-table th{background:#1E2A45;color:#94A3B8;padding:6px 8px;text-align:left;font-weight:600}
+.pipe-size-table td{padding:6px 8px;border-bottom:1px solid #1E2A4533;color:#E2E8F0}
+.pipe-size-table tr.highlight td{color:#22C55E;font-weight:700;background:#22C55E11}
+.divider{height:1px;background:#1E2A45;margin:12px 0}
+.phone-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#22C55E1A;border:1px solid #22C55E44;border-radius:8px;padding:12px;color:#22C55E;font-weight:700;font-size:0.88rem;cursor:pointer;margin-top:10px;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">🔥 FLORIDA GAS PLUMBING</div>
+  <h1>Gas Line Sizing for Tankless Water Heaters</h1>
+  <p>BTU demand calculator, CSST vs rigid pipe selector, FL permit guide — size your gas line right the first time</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('planner')">⚙️ Gas Planner</div>
+  <div class="tab" onclick="showTab('btu')">🔥 BTU Calc</div>
+  <div class="tab" onclick="showTab('code')">📋 FL Code</div>
+  <div class="tab" onclick="showTab('quote')">📞 Quote</div>
+</div>
+
+<!-- TAB 1: GAS PLANNER -->
+<div class="panel active" id="panel-planner">
+  <div class="card">
+    <h3>⚙️ Gas Line Sizing Planner</h3>
+    <label>Tankless Water Heater Type</label>
+    <div class="county-select-wrap">
+      <select id="whType">
+        <option value="">— Select Type —</option>
+        <option value="pt_small">Point-of-Use Small (60,000–80,000 BTU)</option>
+        <option value="pt_mid">Residential Mid (140,000–180,000 BTU)</option>
+        <option value="pt_large">Residential Large (199,000 BTU)</option>
+        <option value="commercial">Commercial/Multi-Family (280,000–400,000 BTU)</option>
+      </select>
+    </div>
+
+    <label>Number of Tankless Units</label>
+    <div class="county-select-wrap">
+      <select id="unitCount">
+        <option value="1">1 Unit</option>
+        <option value="2">2 Units</option>
+        <option value="3">3 Units</option>
+        <option value="4">4 Units</option>
+      </select>
+    </div>
+
+    <label>Gas Type</label>
+    <div class="county-select-wrap">
+      <select id="gasType">
+        <option value="ng">Natural Gas (NG)</option>
+        <option value="lp">Propane / LP Gas</option>
+      </select>
+    </div>
+
+    <label>Distance from Meter/Regulator to Unit (feet)</label>
+    <div class="county-select-wrap">
+      <select id="runLength">
+        <option value="10">Under 10 ft</option>
+        <option value="25">10–25 ft</option>
+        <option value="50">26–50 ft</option>
+        <option value="75">51–75 ft</option>
+        <option value="100">76–100 ft</option>
+        <option value="150">101–150 ft</option>
+        <option value="200">Over 150 ft</option>
+      </select>
+    </div>
+
+    <label>Existing Gas Appliances on Same Line</label>
+    <div class="county-select-wrap">
+      <select id="otherAppliances">
+        <option value="0">None — dedicated line</option>
+        <option value="30000">1 Range/Oven (~30,000 BTU)</option>
+        <option value="50000">Range + Dryer (~50,000 BTU)</option>
+        <option value="80000">Range + Dryer + Fireplace (~80,000 BTU)</option>
+        <option value="110000">Full Home System (110,000+ BTU)</option>
+      </select>
+    </div>
+
+    <label>Pipe Material Preference</label>
+    <div class="county-select-wrap">
+      <select id="pipeMat">
+        <option value="csst">CSST (Corrugated Stainless Steel Tubing)</option>
+        <option value="black">Black Iron / Schedule 40</option>
+        <option value="hybrid">Hybrid — Black iron mains + CSST branches</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="calcGasLine()">Calculate Gas Line Size</button>
+
+    <div class="result-box" id="gasResult">
+      <div class="grid2">
+        <div class="metric">
+          <div class="metric-val" id="res-total-btu">—</div>
+          <div class="metric-lbl">Total BTU Demand</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val" id="res-pipe-size">—</div>
+          <div class="metric-lbl">Min Pipe Size</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val" id="res-meter">—</div>
+          <div class="metric-lbl">Meter/Regulator Size</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val" id="res-pressure">—</div>
+          <div class="metric-lbl">Line Pressure</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div id="res-detail" style="font-size:0.78rem;color:#94A3B8;line-height:1.6"></div>
+      <div class="divider"></div>
+      <div id="res-alert" class="alert alert-warn" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📊 Pipe Sizing Quick Reference</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px">Natural Gas — 0.5" WC pressure drop, specific gravity 0.60</p>
+    <table class="pipe-size-table" id="pipeTable">
+      <thead><tr><th>Pipe Size</th><th>10 ft</th><th>50 ft</th><th>100 ft</th><th>Max BTU</th></tr></thead>
+      <tbody>
+        <tr><td>½"</td><td>172k</td><td>95k</td><td>66k</td><td>172k BTU</td></tr>
+        <tr><td>¾"</td><td>360k</td><td>199k</td><td>138k</td><td>360k BTU</td></tr>
+        <tr><td>1"</td><td>678k</td><td>374k</td><td>259k</td><td>678k BTU</td></tr>
+        <tr><td>1¼"</td><td>1,290k</td><td>714k</td><td>494k</td><td>1.29M BTU</td></tr>
+        <tr><td>1½"</td><td>1,960k</td><td>1,080k</td><td>748k</td><td>1.96M BTU</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 2: BTU CALCULATOR -->
+<div class="panel" id="panel-btu">
+  <div class="card">
+    <h3>🔥 Whole-Home BTU Demand Calculator</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:12px">Calculate total simultaneous gas demand for all appliances</p>
+
+    <label>Tankless Water Heater BTU (see unit nameplate)</label>
+    <input type="number" id="btu-wh" placeholder="e.g. 199000" value="199000">
+
+    <label>Gas Range / Cooktop</label>
+    <div class="county-select-wrap">
+      <select id="btu-range">
+        <option value="0">None</option>
+        <option value="25000">Basic Range (25,000 BTU)</option>
+        <option value="50000">Standard Range (50,000 BTU)</option>
+        <option value="75000">High-Output Range (75,000 BTU)</option>
+      </select>
+    </div>
+
+    <label>Gas Dryer</label>
+    <div class="county-select-wrap">
+      <select id="btu-dryer">
+        <option value="0">None</option>
+        <option value="22000">Standard Dryer (22,000 BTU)</option>
+        <option value="30000">Commercial Dryer (30,000 BTU)</option>
+      </select>
+    </div>
+
+    <label>Gas Fireplace / Log Set</label>
+    <div class="county-select-wrap">
+      <select id="btu-fire">
+        <option value="0">None</option>
+        <option value="30000">Decorative Set (30,000 BTU)</option>
+        <option value="60000">Fireplace Insert (60,000 BTU)</option>
+        <option value="90000">Full Fireplace (90,000 BTU)</option>
+      </select>
+    </div>
+
+    <label>Gas Generator / Standby</label>
+    <div class="county-select-wrap">
+      <select id="btu-gen">
+        <option value="0">None</option>
+        <option value="95000">7kW Generator (~95,000 BTU)</option>
+        <option value="155000">12kW Generator (~155,000 BTU)</option>
+        <option value="240000">20kW Generator (~240,000 BTU)</option>
+      </select>
+    </div>
+
+    <label>Pool/Spa Heater</label>
+    <div class="county-select-wrap">
+      <select id="btu-pool">
+        <option value="0">None</option>
+        <option value="150000">Pool Heater (150,000 BTU)</option>
+        <option value="250000">Pool + Spa (250,000 BTU)</option>
+        <option value="400000">Large Pool (400,000 BTU)</option>
+      </select>
+    </div>
+
+    <label>Gas Pool Heater / Other</label>
+    <input type="number" id="btu-other" placeholder="Other BTU demand (0 if none)" value="0">
+
+    <label>Demand Factor (% simultaneous use)</label>
+    <div class="county-select-wrap">
+      <select id="demandFactor">
+        <option value="1.0">100% — Worst case / permit sizing</option>
+        <option value="0.75">75% — Typical residential</option>
+        <option value="0.60">60% — Diversity factor applied</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="calcBTU()">Calculate Total Demand</button>
+
+    <div class="result-box" id="btuResult">
+      <div class="result-title">Total Connected Load</div>
+      <div class="result-value" id="btu-connected">—</div>
+      <div class="result-sub" id="btu-design">Design Demand: —</div>
+      <div class="divider" style="margin:10px 0"></div>
+      <div id="btu-rec" style="font-size:0.78rem;color:#94A3B8;line-height:1.6"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚡ Common FL Tankless Models — BTU Reference</h3>
+    <div class="pipe-card">
+      <h4>Rinnai RU199iN / RU199eN</h4>
+      <span class="pipe-tag tag-green">NG</span>
+      <span class="pipe-tag tag-blue">199,000 BTU</span>
+      <span class="pipe-tag tag-green">9.8 GPM</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:4px">Most popular residential. Requires ¾" gas min. 2" PVC or stainless exhaust. FL rebate eligible.</p>
+    </div>
+    <div class="pipe-card">
+      <h4>Navien NPE-240A2</h4>
+      <span class="pipe-tag tag-green">NG/LP</span>
+      <span class="pipe-tag tag-blue">199,900 BTU</span>
+      <span class="pipe-tag tag-green">11.2 GPM</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:4px">Built-in recirculation pump. Popular in FL for solar-assist systems. ¾" gas line minimum.</p>
+    </div>
+    <div class="pipe-card">
+      <h4>Takagi T-KJr2-IN</h4>
+      <span class="pipe-tag tag-green">NG</span>
+      <span class="pipe-tag tag-blue">140,000 BTU</span>
+      <span class="pipe-tag tag-green">6.6 GPM</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:4px">Compact, good for 1–2 bath homes. ½" gas acceptable under 25 ft. Budget-friendly FL option.</p>
+    </div>
+    <div class="pipe-card">
+      <h4>Rheem RTG-84XLN</h4>
+      <span class="pipe-tag tag-green">NG</span>
+      <span class="pipe-tag tag-blue">180,000 BTU</span>
+      <span class="pipe-tag tag-green">8.4 GPM</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:4px">Most sold at FL big-box stores. ¾" gas required. ENERGY STAR certified, utility rebate eligible.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div class="panel" id="panel-code">
+  <div class="card">
+    <h3>📋 FL Gas Code — Tankless WH Requirements</h3>
+
+    <div class="alert alert-info">Florida requires a permit for ALL gas appliance installations — including tankless water heater replacements. No exceptions under FPC 106.</div>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-text"><strong>Pull a Plumbing/Gas Permit (FPC 106.1)</strong> — Required for new tankless installation, gas line extension, and meter upgrades. Submit load calculation showing BTU demand. Florida does NOT allow unlicensed gas work.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>CSST Bonding (NFPA 54 / FL Amendment)</strong> — All CSST must be bonded with #6 AWG copper wire to electrical panel ground. Florida enforces this strictly — it is code, not optional. Required within 6 ft of meter.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Earthquake/Flexible Connector at Unit (ANSI Z21.69)</strong> — Appliance connector must be listed, max 3 ft, cannot pass through walls. Must be stainless corrugated type — rubber hose prohibited for FL installations.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Seismic Shut-Off Valve</strong> — Not required in FL (no seismic zone), but excess-flow valve (EFV) is recommended by utilities. Many FL gas utilities (FPL, TECO) require EFV at meter on new installs.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Venting — Direct-Vent Required (FL IRC G2427)</strong> — Must use manufacturer-approved direct vent or power vent. Category III or IV stainless flue. Cannot vent into chimney with other appliances unless listed for combined use.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>CO Detector (FL SB 528)</strong> — Required in all sleeping areas within 10 ft if gas appliance installed after 2012. Tankless WH replacement triggers inspection for CO detector compliance.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Pressure Test (FPC 406.4)</strong> — All new gas piping must be pressure-tested at 1.5× design pressure minimum — typically 3 PSI for residential. Test must be witnessed by inspector. New CSST runs require separate pressure test.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Water Heater Permit Placard</strong> — FL law requires completed permit placard attached to unit. Annual inspection not required, but placard must remain visible per FL Statute 553.73.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔧 CSST vs Black Iron — FL Comparison</h3>
+    <div class="pipe-card">
+      <h4>CSST (Corrugated Stainless Steel Tubing)</h4>
+      <span class="pipe-tag tag-green">Faster Install</span>
+      <span class="pipe-tag tag-yellow">Must Bond</span>
+      <span class="pipe-tag tag-green">Flexible</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:4px">Best for retrofit in FL concrete block homes. Runs around corners, through walls without fittings. Bonding required at entry point. Approved brands: Gastite, TracPipe, CounterStrike. Do NOT use CounterStrike in exterior exposed locations (UV).</p>
+    </div>
+    <div class="pipe-card">
+      <h4>Black Iron Pipe / Schedule 40</h4>
+      <span class="pipe-tag tag-blue">Most Common</span>
+      <span class="pipe-tag tag-green">No Bonding Issue</span>
+      <span class="pipe-tag tag-yellow">More Fittings</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:4px">Standard for exposed or mechanical room runs. Requires pipe dope or yellow Teflon tape on all fittings. FL humidity causes exterior rust — paint or coat exposed runs. Cannot use in direct contact with concrete slab.</p>
+    </div>
+    <div class="pipe-card">
+      <h4>PE (Polyethylene) — Underground Only</h4>
+      <span class="pipe-tag tag-green">Underground</span>
+      <span class="pipe-tag tag-red">Not Indoor</span>
+      <span class="pipe-tag tag-green">FL Code OK</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:4px">Used for utility company service laterals and exterior yard runs. Cannot penetrate building without transition to metallic pipe at entry point. HDPE is not permitted for gas in FL.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ Pre-Inspection Checklist</h3>
+    <div id="code-checklist">
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Gas permit pulled from local building department</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>BTU load calculation submitted with permit application</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>CSST bonded with #6 AWG copper to electrical ground</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Listed appliance connector, max 3 ft, not through wall</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Pressure test completed at 1.5× design pressure (3 PSI min)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Direct vent or power vent properly terminated exterior</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>CO detector within 10 ft of all sleeping areas</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Shut-off valve within 6 ft of unit, accessible</div></div>
+    </div>
+    <div id="checklist-score" style="margin-top:10px;font-size:0.78rem;color:#94A3B8;text-align:center"></div>
+  </div>
+
+  <div class="card">
+    <h3>🏡 FL County — Inspector Notes</h3>
+    <div class="county-select-wrap">
+      <select id="countySelect" onchange="showCountyNote()">
+        <option value="">— Select your county —</option>
+        <option value="miami-dade">Miami-Dade</option>
+        <option value="broward">Broward</option>
+        <option value="palm-beach">Palm Beach</option>
+        <option value="hillsborough">Hillsborough (Tampa)</option>
+        <option value="orange">Orange (Orlando)</option>
+        <option value="duval">Duval (Jacksonville)</option>
+        <option value="pinellas">Pinellas (St. Pete)</option>
+        <option value="other">Other County</option>
+      </select>
+    </div>
+    <div id="county-note" style="margin-top:10px;font-size:0.78rem;color:#94A3B8;display:none"></div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div class="panel" id="panel-quote">
+  <div class="card">
+    <h3>📞 Get Your Gas Line Sizing Quote</h3>
+    <p style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px">Licensed CPC/master plumber — FL state certified gas piping</p>
+
+    <div class="alert alert-warn">⚠️ Gas work requires a licensed plumber or gas contractor in Florida. Never hire unlicensed — it voids insurance and your homeowner's policy.</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone Number</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>City / ZIP Code</label>
+    <input type="text" id="q-city" placeholder="e.g. Boca Raton, 33431">
+
+    <label>FL County</label>
+    <div class="county-select-wrap">
+      <select id="q-county">
+        <option value="">— Select County —</option>
+        <option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option>
+        <option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option>
+        <option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option>
+        <option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option>
+        <option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option>
+        <option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option>
+        <option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option>
+        <option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option>
+        <option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option>
+        <option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option>
+        <option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option>
+        <option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option>
+        <option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option>
+        <option>Walton</option><option>Washington</option>
+      </select>
+    </div>
+
+    <label>What Do You Need?</label>
+    <div class="county-select-wrap">
+      <select id="q-service">
+        <option value="new-line">New gas line for tankless WH</option>
+        <option value="upgrade">Upgrade existing gas line (undersized)</option>
+        <option value="replace">Replace tank WH with tankless</option>
+        <option value="meter">Meter upgrade + gas line</option>
+        <option value="csst-bond">CSST bonding (code compliance)</option>
+        <option value="full">Full gas system assessment</option>
+      </select>
+    </div>
+
+    <label>Current Setup</label>
+    <div class="county-select-wrap">
+      <select id="q-current">
+        <option value="tank-ng">Electric tank WH — switching to NG tankless</option>
+        <option value="tank-lp">LP tank WH — switching to LP tankless</option>
+        <option value="tankless-replace">Replacing old tankless unit</option>
+        <option value="new-build">New construction</option>
+        <option value="add-unit">Adding 2nd tankless unit</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="submitQuote()">Request Free Estimate →</button>
+    <a class="phone-btn" href="tel:5615555473">📞 Call Now: (561) 555-PIPE</a>
+  </div>
+
+  <div class="card">
+    <h3>💰 FL Gas Line Sizing — Cost Guide</h3>
+    <div class="info-row"><span class="info-label">Gas line extension (10–25 ft)</span><span class="info-val">$350–$650</span></div>
+    <div class="info-row"><span class="info-label">Gas line extension (25–50 ft)</span><span class="info-val">$600–$1,100</span></div>
+    <div class="info-row"><span class="info-label">Gas line upgrade (upsize run)</span><span class="info-val">$800–$1,800</span></div>
+    <div class="info-row"><span class="info-label">Meter upgrade (utility coordinated)</span><span class="info-val">$200–$500 + utility fee</span></div>
+    <div class="info-row"><span class="info-label">CSST bonding (existing system)</span><span class="info-val">$250–$450</span></div>
+    <div class="info-row"><span class="info-label">Full install (tankless + gas line)</span><span class="info-val">$1,800–$4,500</span></div>
+    <div class="info-row"><span class="info-label">Permit fee (FL average)</span><span class="info-val">$85–$250</span></div>
+    <div class="info-row"><span class="info-label">FL FPU / TECO meter upgrade fee</span><span class="info-val">Often waived for high-BTU</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+<!-- FL GAS LINE SIZING DATA — FLORIDA PLUMBING REFERENCE -->
+<!-- NFPA 54 (National Fuel Gas Code) as adopted by Florida -->
+<!-- FL Building Code — Fuel Gas FBC-FG (latest edition) -->
+<!-- Florida Statute 553.73 — Building Code Standards -->
+<!-- Florida CPC Section 406 — Gas Pressure Testing -->
+<!-- CSST bonding per NFPA 54 Section 7.13 and FL amendment -->
+<!--
+GAS LINE SIZING — NATURAL GAS (NG):
+Pressure drop allowed: 0.5" water column (WC) for residential
+Specific gravity NG: 0.60
+Heating value NG: ~1,020 BTU/cubic foot
+
+PIPE CAPACITY TABLE — NG AT 0.5" WC PRESSURE DROP:
+Size    10ft    20ft    30ft    40ft    50ft    75ft    100ft   150ft   200ft
+1/2"    172k    118k    95k     82k     72k     58k     50k     40k     34k
+3/4"    360k    247k    199k    172k    151k    122k    105k    84k     72k
+1"      678k    466k    374k    324k    285k    229k    199k    159k    136k
+1-1/4"  1290k   884k    714k    616k    542k    434k    378k    302k    260k
+1-1/2"  1960k   1340k   1080k   935k    822k    659k    573k    458k    394k
+2"      3630k   2490k   2010k   1740k   1530k   1220k   1060k   850k    730k
+
+PROPANE / LP GAS:
+LP has ~2,516 BTU/cubic foot — approximately 2.5× denser than NG
+LP sizing: use same table but divide BTU by 2.5 for equivalent flow
+LP requires larger pipe for same energy output due to different SG
+
+PRESSURE REQUIREMENTS:
+Residential NG: 0.25 PSI (7" WC) at meter, 0.25 PSI at appliance
+High-pressure system: 2 PSI distribution, regulator at appliance
+Commercial: May use 5 PSI or higher with 2-stage regulation
+Tankless WH minimum inlet pressure: typically 4–7" WC (0.14–0.25 PSI)
+Maximum inlet pressure for most tankless: 10.5" WC (0.38 PSI)
+
+METER CAPACITY — FPL/TECO/PEOPLES GAS:
+Residential standard meter: 250 CFH (~255,000 BTU)
+Medium meter: 400 CFH (~408,000 BTU)
+Large commercial: 800+ CFH
+Meter upgrades: coordinated with utility — typically free for 199,000 BTU upgrade
+Timeline: FPL 1–3 weeks, Peoples Gas 2–4 weeks, TECO 1–2 weeks
+
+CSST BONDING (NFPA 54 / FL REQUIREMENT):
+All CSST runs must be bonded to electrical grounding system
+Bond wire: #6 AWG copper minimum (some FL counties require #4 AWG)
+Bond point: within 6 ft of meter/regulator entry
+CounterStrike CSST: listed as lightning-resistant — reduced bonding requirements
+Standard CSST (Gastite, TracPipe): full bonding required
+Bonding does NOT ground the gas system — it equalizes electrical potential to prevent arc
+
+VENTING REQUIREMENTS FOR TANKLESS WH:
+Category IV (condensing): PVC 2" or 3" concentric or two-pipe
+Category III (non-condensing): AL-29-4C stainless steel
+Direct vent: combustion air intake + exhaust — sealed from living space
+Power vent: uses induced draft blower — can use PVC
+Vent termination: 12" above grade, 3 ft from openings, 6 ft from corners (FL)
+
+FLORIDA PERMIT REQUIREMENTS:
+All gas appliance installation: permit required (FPC 106.1)
+Fee range: $50–$350 depending on jurisdiction
+Inspections: rough-in (new piping) + final (appliance installed)
+Pressure test: 3 PSI for 15 minutes witnessed by inspector
+Permit placard: must remain on water heater (FL Statute 553.73)
+License required: State-certified plumber (CPC) or gas contractor
+
+COUNTY-SPECIFIC NOTES:
+Miami-Dade: Uses local amendments — all gas work requires MDC licensed contractor
+Broward: Wind zone requirements affect venting termination for hurricane exposure
+Palm Beach: Palm Beach County Building has online permit — ~$125 for gas WH
+Hillsborough (Tampa): Tampa Gas requires utility notification for meter upgrades >150,000 BTU
+Orange (Orlando): Duke Energy gas — 2–3 week meter upgrade lead time
+Duval (Jacksonville): JEA gas — requires EFV at meter on all new tankless installs
+Pinellas (St. Pete): Strict windstorm inspection — venting must meet FBC High Velocity Hurricane Zone if applicable
+
+COMMON MISTAKES:
+1. Undersizing gas line — the most common issue for tankless installs
+2. Forgetting CSST bonding — fails inspection, creates insurance issue
+3. Using rubber appliance connector — only listed corrugated metal connectors allowed
+4. Not coordinating meter upgrade with utility before permit
+5. Using LP pipe sizing for NG or vice versa
+6. Forgetting to pressure test new CSST runs separately
+7. Venting into existing masonry chimney without listing
+
+ENERGY EFFICIENCY / REBATES (FL):
+FPL rebate: $100–$300 for ENERGY STAR tankless WH (NG)
+Peoples Gas: $100–$200 rebate for qualifying units
+Duke Energy: Check local program — may offer rebate for high-efficiency units
+Federal Tax Credit: 30% of cost up to $600 for ENERGY STAR qualified units (IRA 2022)
+FPL On-Bill Financing: 0% for WH upgrades — ask at permit
+
+FL CLIMATE CONSIDERATIONS:
+Inlet water temp FL average: 72°F (much higher than northern states)
+Temperature rise needed: ~30°F to reach 100°F output (much less than 60°F needed in cold climates)
+This means FL tankless units can deliver MORE hot water than rated — 6 GPM unit acts like 8 GPM
+Legionella risk: Set WH to 120°F minimum — FL standing water risk
+Scale/corrosion: FL hard water (especially SE FL) requires descaling every 12–18 months
+Hurricane prep: Shut off gas at meter before storm — many FL utilities have lockout protocol
+
+SIZING EXAMPLE CALCULATION:
+Home: 3BR/2BA, 2 baths running simultaneously
+Tankless WH: Rinnai RU199iN (199,000 BTU)
+Range: 50,000 BTU
+Dryer: 22,000 BTU
+Gas distance: 50 ft from meter
+Total connected: 199,000 + 50,000 + 22,000 = 271,000 BTU
+Demand factor (75%): 203,250 BTU design demand
+At 50 ft, ¾" pipe carries 199,000 BTU — INSUFFICIENT
+Required: 1" pipe at 50 ft = 285,000 BTU capacity — CORRECT SIZE
+-->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+const BTU_LOOKUP = {
+  ng: {
+    10:  {half:172000, threequarter:360000, one:678000, oneq:1290000, oneh:1960000},
+    25:  {half:103000, threequarter:216000, one:407000, oneq:775000,  oneh:1175000},
+    50:  {half:72000,  threequarter:151000, one:285000, oneq:542000,  oneh:822000},
+    75:  {half:58000,  threequarter:122000, one:229000, oneq:434000,  oneh:659000},
+    100: {half:50000,  threequarter:105000, one:199000, oneq:378000,  oneh:573000},
+    150: {half:40000,  threequarter:84000,  one:159000, oneq:302000,  oneh:458000},
+    200: {half:34000,  threequarter:72000,  one:136000, oneq:260000,  oneh:394000}
+  },
+  lp: {
+    10:  {half:68000,  threequarter:143000, one:270000, oneq:513000,  oneh:780000},
+    25:  {half:41000,  threequarter:86000,  one:162000, oneq:308000,  oneh:468000},
+    50:  {half:29000,  threequarter:60000,  one:114000, oneq:216000,  oneh:327000},
+    75:  {half:23000,  threequarter:49000,  one:91000,  oneq:173000,  oneh:262000},
+    100: {half:20000,  threequarter:42000,  one:79000,  oneq:150000,  oneh:228000},
+    150: {half:16000,  threequarter:33000,  one:63000,  oneq:120000,  oneh:182000},
+    200: {half:14000,  threequarter:29000,  one:54000,  oneq:103000,  oneh:157000}
+  }
+};
+
+const WH_BTU = {pt_small:80000, pt_mid:180000, pt_large:199000, commercial:340000};
+const PIPE_NAMES = {half:'½"',threequarter:'¾"',one:'1"',oneq:'1¼"',oneh:'1½"'};
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach((el,i)=>{el.classList.remove('active')});
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  const tabs=['planner','btu','code','quote'];
+  document.querySelectorAll('.tab')[tabs.indexOf(t)].classList.add('active');
+  document.getElementById('panel-'+t).classList.add('active');
+}
+
+function calcGasLine(){
+  const whType=document.getElementById('whType').value;
+  if(!whType){alert('Please select a tankless WH type.');return;}
+  const gasType=document.getElementById('gasType').value;
+  const runLength=parseInt(document.getElementById('runLength').value);
+  const unitCount=parseInt(document.getElementById('unitCount').value);
+  const otherBTU=parseInt(document.getElementById('otherAppliances').value)||0;
+  const pipeMat=document.getElementById('pipeMat').value;
+
+  const whBTU = WH_BTU[whType] * unitCount;
+  const totalBTU = whBTU + otherBTU;
+  const table = BTU_LOOKUP[gasType][runLength];
+
+  let recPipe='', recName='';
+  const sizes=['half','threequarter','one','oneq','oneh'];
+  for(let s of sizes){
+    if(table[s]>=totalBTU){recPipe=s;break;}
+  }
+  recName = recPipe ? PIPE_NAMES[recPipe] : '2" or larger';
+
+  const pressure = gasType==='ng' ? '7" WC (0.25 PSI)' : '11" WC (0.40 PSI)';
+  const meterSize = totalBTU>400000 ? 'Commercial Meter Required' : totalBTU>250000 ? 'Medium Meter (400 CFH)' : 'Standard Meter (250 CFH)';
+
+  const formatted = n => n>=1000000 ? (n/1000000).toFixed(2)+'M' : (n/1000).toFixed(0)+'k';
+
+  document.getElementById('res-total-btu').textContent = formatted(totalBTU)+' BTU';
+  document.getElementById('res-pipe-size').textContent = recName;
+  document.getElementById('res-meter').textContent = meterSize;
+  document.getElementById('res-pressure').textContent = pressure;
+
+  let detail = `<strong>WH Demand:</strong> ${formatted(whBTU)} BTU (${unitCount}× unit${unitCount>1?'s':''})<br>`;
+  detail += `<strong>Other Appliances:</strong> ${formatted(otherBTU)} BTU<br>`;
+  detail += `<strong>Total Load:</strong> ${formatted(totalBTU)} BTU<br>`;
+  detail += `<strong>Run Length:</strong> ${runLength} ft (${gasType.toUpperCase()})<br>`;
+  detail += `<strong>Pipe Material:</strong> ${pipeMat==='csst'?'CSST — bonding required':pipeMat==='black'?'Black Iron — paint exterior runs':'Hybrid — black iron main + CSST branches'}<br>`;
+  if(recPipe) detail += `<strong>Next size up:</strong> ${PIPE_NAMES[sizes[Math.min(sizes.indexOf(recPipe)+1,4)]]} recommended for future-proofing`;
+  document.getElementById('res-detail').innerHTML = detail;
+
+  const alertEl = document.getElementById('res-alert');
+  if(pipeMat==='csst'){
+    alertEl.style.display='block';
+    alertEl.className='alert alert-warn';
+    alertEl.textContent='⚠️ CSST requires #6 AWG copper bonding wire to electrical ground per NFPA 54 and FL code. Failure to bond fails inspection.';
+  } else if(totalBTU>350000){
+    alertEl.style.display='block';
+    alertEl.className='alert alert-red';
+    alertEl.textContent='🔴 High BTU load — utility may require meter upgrade. Contact your FL gas utility (FPL/Peoples Gas/TECO/JEA) before permit application.';
+  } else {
+    alertEl.style.display='none';
+  }
+
+  document.getElementById('gasResult').classList.add('show');
+}
+
+function calcBTU(){
+  const wh = parseInt(document.getElementById('btu-wh').value)||0;
+  const range = parseInt(document.getElementById('btu-range').value)||0;
+  const dryer = parseInt(document.getElementById('btu-dryer').value)||0;
+  const fire = parseInt(document.getElementById('btu-fire').value)||0;
+  const gen = parseInt(document.getElementById('btu-gen').value)||0;
+  const pool = parseInt(document.getElementById('btu-pool').value)||0;
+  const other = parseInt(document.getElementById('btu-other').value)||0;
+  const factor = parseFloat(document.getElementById('demandFactor').value)||1.0;
+
+  const connected = wh+range+dryer+fire+gen+pool+other;
+  const design = Math.round(connected*factor);
+
+  const fmt = n => (n/1000).toFixed(0)+'k BTU';
+  document.getElementById('btu-connected').textContent = fmt(connected);
+  document.getElementById('btu-design').textContent = 'Design Demand ('+Math.round(factor*100)+'%): '+fmt(design);
+
+  let rec = '';
+  if(design<=250000) rec='Standard residential meter (250 CFH) — no meter upgrade needed for most FL utilities.';
+  else if(design<=400000) rec='Medium meter upgrade may be required — contact your gas utility before pulling permit.';
+  else rec='Large commercial meter required — coordinate with utility 3–6 weeks before installation.';
+
+  const sizes=['half','threequarter','one','oneq','oneh'];
+  const table=BTU_LOOKUP['ng'][50];
+  let pipe='2" or larger';
+  for(let s of sizes){if(table[s]>=design){pipe=PIPE_NAMES[s];break;}}
+  rec += '<br><br><strong>Minimum pipe size at 50 ft run (NG):</strong> '+pipe;
+  rec += '<br><em>Use Gas Planner tab for exact sizing at your run length.</em>';
+
+  document.getElementById('btu-rec').innerHTML = rec;
+  document.getElementById('btuResult').classList.add('show');
+}
+
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  const all = document.querySelectorAll('#code-checklist .chk');
+  const done = document.querySelectorAll('#code-checklist .chk.checked').length;
+  document.getElementById('checklist-score').textContent = done+'/'+all.length+' items checked'+( done===all.length ? ' — Ready for inspection! ✅' : '');
+}
+
+const COUNTY_NOTES = {
+  'miami-dade':'Miami-Dade uses local amendments — all gas work requires a MDC licensed contractor (not just state CPC). MDBC enforces strictly. Miami-Dade has its own permit portal (ePermits.miamidade.gov). Expect 3–5 business day review.',
+  'broward':'Broward County Building Division — online permits available. Hurricane/wind zone requirements affect vent termination clearances. Many cities in Broward have their own building departments (Ft. Lauderdale, Hollywood, etc.) — verify jurisdiction.',
+  'palm-beach':'Palm Beach County ePermits — about $125 for gas WH permit. Some municipalities (Boca Raton, West Palm Beach) handle their own permitting. FPL meter upgrades: call 1-800-226-3545 — typically 2-3 week lead time.',
+  'hillsborough':'Hillsborough County BCS — online permit portal. Tampa Gas (Peoples Gas) requires utility notification for upgrades >150,000 BTU. Some areas use city of Tampa permit (separate from county).',
+  'orange':'Orange County Building — OC Permits portal. Duke Energy gas — contact for meter upgrades — 2–3 week lead time. Some areas: City of Orlando has own permit department.',
+  'duval':'Duval County/City of Jacksonville — JEA gas requires EFV (excess flow valve) at meter on all new tankless installs. JEA online gas permit coordination — good process. Permit fee ~$100–$150.',
+  'pinellas':'Pinellas County Building — some areas (Clearwater, St. Pete) have city departments. Windstorm inspection district — venting must meet FBC High Velocity Hurricane Zone if in rated area. TECO gas: 1–2 week meter lead time.',
+  'other':'Contact your county building department to confirm: (1) permit requirement (all FL counties — yes), (2) licensed contractor requirement, (3) your gas utility for meter upgrade process. FL Statute 553.73 applies statewide.'
+};
+
+function showCountyNote(){
+  const v=document.getElementById('countySelect').value;
+  const el=document.getElementById('county-note');
+  if(v&&COUNTY_NOTES[v]){el.innerHTML=COUNTY_NOTES[v];el.style.display='block';}
+  else{el.style.display='none';}
+}
+
+function submitQuote(){
+  const name=document.getElementById('q-name').value.trim();
+  const phone=document.getElementById('q-phone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+</script>
+
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+<!-- fl-plumbing-seo: gas-line-sizing tankless-water-heater BTU-calculator NFPA-54 CSST-bonding Florida-gas-permit FPC-406 natural-gas LP-gas pipe-sizing-table meter-sizing CO-detector FL-SB-528 shower-valve ASSE-1016 anti-scald thermostatic pressure-balancing 120F-FL-code ASSE-1070 ADA-shower-valve commercial-restroom fixture-count FL-building-code-chapter-29 IPC-table-403 ADA-accessible water-closet-ratio urinal-count janitor-sink DBPR-restaurant-plumbing AHCA-healthcare occupancy-load fl-plumbing-contractor CPC-license Palm-Beach-County Broward-County Miami-Dade-County Hillsborough-County Orange-County Duval-County Pinellas-County Sarasota-County Lee-County Collier-County Manatee-County Volusia-County Brevard-County Polk-County Pasco-County Seminole-County Alachua-County Marion-County Osceola-County St-Johns-County Charlotte-County Indian-River-County Martin-County St-Lucie-County -->
+
+</div>
+</body>
+</html>
