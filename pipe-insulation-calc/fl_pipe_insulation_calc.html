@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="new">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Pipe Insulation Calculator | AC Condensate | Freeze Protection | FBC Energy Code | Florida</title>
+<meta name="description" content="Florida pipe insulation calculator for AC condensate lines, dew point condensation check, north FL freeze protection, and FBC energy code R-value requirements. Calculate required insulation thickness for all FL pipe types.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#00B4FF;color:#0A0E1A;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#00B4FF;border-bottom-color:#00B4FF}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#00B4FF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#00B4FF}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#00B4FF;color:#0A0E1A}
+.btn-primary:hover{background:#0284c7}
+.result-box{background:#141929;border:1px solid #00B4FF;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metrics-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.1rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.67rem;margin-top:2px}
+.metric.blue .mv{color:#00B4FF}
+.metric.green .mv{color:#22C55E}
+.metric.red .mv{color:#EF4444}
+.metric.warn .mv{color:#F97316}
+.metric.gold .mv{color:#F4B942}
+.metric.cyan .mv{color:#06B6D4}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.alert-cyan{background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.4);color:#06B6D4}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.ins-table{width:100%;border-collapse:collapse;margin-top:8px}
+.ins-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:5px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.ins-table td{font-size:.72rem;color:#E2E8F0;padding:6px 8px;border-bottom:1px solid #0F1629}
+.ins-table tr:hover td{background:#141929}
+.ins-table .rec td{color:#22C55E;font-weight:700}
+.ins-table .warn td{color:#F97316}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#00B4FF;border-color:#00B4FF}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#0A0E1A;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#00B4FF;transition:width .4s}
+.dew-viz{background:#141929;border-radius:10px;padding:14px;margin-top:10px}
+.dew-bar-wrap{height:20px;background:#1E293B;border-radius:999px;overflow:hidden;margin-top:8px}
+.dew-bar{height:100%;border-radius:999px;transition:width .5s,background .5s}
+.insulation-preview{background:#141929;border-radius:10px;padding:14px;margin-top:12px;text-align:center}
+.map-zone{display:inline-block;padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:700;margin:3px;cursor:pointer;border:1px solid transparent}
+.map-zone.north{background:rgba(239,68,68,.15);color:#EF4444;border-color:rgba(239,68,68,.4)}
+.map-zone.central{background:rgba(249,115,22,.15);color:#F97316;border-color:rgba(249,115,22,.4)}
+.map-zone.south{background:rgba(34,197,94,.15);color:#22C55E;border-color:rgba(34,197,94,.4)}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#00B4FF}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.gauge-ring{display:inline-block;width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;margin:8px auto}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🧊 FL Pipe Insulation Calculator</h1>
+  <p>AC condensate lines, dew point condensation check, north FL freeze protection, FBC energy code R-value requirements</p>
+  <span class="badge">FBC ENERGY CODE</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('cond')">Condensate</div>
+  <div class="tab" onclick="showTab('freeze')">Freeze Protect</div>
+  <div class="tab" onclick="showTab('code')">FBC Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: CONDENSATE / DEW POINT -->
+<div id="tab-cond" class="panel active">
+  <div class="card">
+    <div class="card-title">❄️ AC Condensate Line Insulation Calculator</div>
+    <div class="info-block" style="margin-bottom:12px">
+      <p><strong>Why insulate FL AC condensate lines?</strong> In Florida's humid climate, uninsulated condensate drain lines drip condensation (pipe sweat) — causing water damage, mold, and ceiling stains. The chilled condensate line (35–50°F) in 80%+ RH conditions will sweat heavily without insulation.</p>
+    </div>
+
+    <label>FL Climate Zone / County</label>
+    <select id="c-zone">
+      <option value="1a">Zone 1A — South FL (Miami-Dade, Broward, Keys)</option>
+      <option value="2a" selected>Zone 2A — Central FL (Tampa, Orlando, Jacksonville)</option>
+      <option value="3a">Zone 3A — North FL (Tallahassee, Gainesville, Pensacola)</option>
+    </select>
+
+    <label>Pipe / Line Diameter (inches)</label>
+    <select id="c-dia">
+      <option value="0.5">½" (small condensate drain)</option>
+      <option value="0.75" selected>¾" (standard residential condensate)</option>
+      <option value="1.0">1" (larger system / dual coil)</option>
+      <option value="1.25">1¼"</option>
+      <option value="1.5">1½"</option>
+      <option value="2.0">2" (commercial / large tonnage)</option>
+    </select>
+
+    <label>Pipe / Line Temperature (°F) — typically chilled water or condensate drain</label>
+    <input type="number" id="c-temp" value="45" min="32" max="80">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">AC condensate drain: 45–55°F. Chilled water supply: 40–45°F. Cold water supply: 55–70°F.</p>
+
+    <label>Ambient Temperature (°F) — conditioned space around pipe</label>
+    <input type="number" id="c-amb" value="78" min="60" max="100">
+
+    <label>Ambient Relative Humidity (%)</label>
+    <input type="number" id="c-rh" value="75" min="20" max="100">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">FL indoor RH typically 50–80%. Attic / unconditioned space can reach 80–95% in summer.</p>
+
+    <label>Insulation Type</label>
+    <select id="c-ins">
+      <option value="armaflex" selected>Armaflex / closed-cell elastomeric foam (most common FL)</option>
+      <option value="fiberglass">Fiberglass pipe wrap</option>
+      <option value="polyethylene">Polyethylene foam (Tundra / Frost King)</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcCondensate()">Calculate Condensation Risk</button>
+
+    <div class="result-box" id="cond-result">
+      <div style="font-size:.85rem;font-weight:700;color:#00B4FF;margin-bottom:6px">Condensation Risk Analysis</div>
+      <div id="cond-dew-display"></div>
+      <div class="metrics-grid" id="cond-metrics"></div>
+      <div id="cond-recs"></div>
+      <div class="insulation-preview" id="ins-preview"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌡️ FL Dew Point Quick Reference</div>
+    <div class="info-block">
+      <p><strong>Dew point</strong> is the temperature at which moisture in the air will condense on a surface. If your pipe surface is BELOW the dew point, it will sweat. Florida's high humidity makes this a critical concern for all cold pipes.</p>
+    </div>
+    <table class="ins-table" style="margin-top:8px">
+      <thead><tr><th>RH %</th><th>78°F Dew Pt</th><th>85°F Dew Pt</th><th>Uninsulated Risk</th></tr></thead>
+      <tbody>
+        <tr class="rec"><td>50%</td><td>58°F</td><td>63°F</td><td>Low — pipe ≥58°F safe</td></tr>
+        <tr><td>60%</td><td>63°F</td><td>69°F</td><td>Moderate — 45°F pipe sweats</td></tr>
+        <tr class="warn"><td>70%</td><td>66°F</td><td>72°F</td><td>High — all AC lines sweat</td></tr>
+        <tr class="warn"><td>80%</td><td>71°F</td><td>77°F</td><td>Severe — significant dripping</td></tr>
+        <tr style="color:#EF4444"><td>90%</td><td>75°F</td><td>82°F</td><td>Extreme — even warm pipes sweat</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-warn" style="margin-top:8px">⚠️ <strong>FL attic conditions:</strong> Summer FL attics reach 130–150°F with 60–80% RH. Dew point in attic can be 75°F+. All AC condensate lines in attics MUST be insulated — uninsulated lines will drip heavily and cause ceiling damage.</div>
+  </div>
+</div>
+
+<!-- TAB 2: FREEZE PROTECTION -->
+<div id="tab-freeze" class="panel">
+  <div class="card">
+    <div class="card-title">🌨️ North FL Freeze Protection Calculator</div>
+
+    <div class="info-block" style="margin-bottom:12px">
+      <p><strong>Freeze risk in Florida:</strong> North FL (Zone 3A) regularly sees temperatures below 32°F. Central FL (Zone 2A) has occasional hard freezes. South FL (Zone 1A) rarely freezes. Exposed or poorly insulated pipes can burst within 6 hours below 20°F.</p>
+    </div>
+
+    <label>FL Zone / Region</label>
+    <div style="margin-top:6px">
+      <span class="map-zone north" onclick="setFreezeZone('north','3a')">North FL (Zone 3A)</span>
+      <span class="map-zone central" onclick="setFreezeZone('central','2a')">Central FL (Zone 2A)</span>
+      <span class="map-zone south" onclick="setFreezeZone('south','1a')">South FL (Zone 1A)</span>
+    </div>
+
+    <label style="margin-top:12px">Design Minimum Temperature (°F)</label>
+    <input type="number" id="f-mintemp" value="25" min="-10" max="45">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">North FL: 15–25°F; Central FL: 25–35°F; South FL: 35–45°F. Use 99% design temp from ASHRAE data.</p>
+
+    <label>Pipe Location</label>
+    <select id="f-loc">
+      <option value="exterior">Exposed exterior — no protection</option>
+      <option value="crawl">Crawl space / under floor</option>
+      <option value="attic">Attic (vented)</option>
+      <option value="garage">Unheated garage</option>
+      <option value="interior" selected>Interior conditioned space</option>
+    </select>
+
+    <label>Pipe Material</label>
+    <select id="f-mat">
+      <option value="copper" selected>Copper</option>
+      <option value="pex">PEX</option>
+      <option value="cpvc">CPVC</option>
+      <option value="pvc">PVC (drain)</option>
+      <option value="galv">Galvanized steel</option>
+    </select>
+
+    <label>Pipe Diameter (inches)</label>
+    <select id="f-dia">
+      <option value="0.5" selected>½"</option>
+      <option value="0.75">¾"</option>
+      <option value="1.0">1"</option>
+      <option value="1.5">1½"</option>
+      <option value="2.0">2"</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcFreeze()">Calculate Freeze Risk</button>
+
+    <div class="result-box" id="freeze-result">
+      <div style="font-size:.85rem;font-weight:700;color:#00B4FF;margin-bottom:6px">Freeze Protection Results</div>
+      <div class="metrics-grid" id="freeze-metrics"></div>
+      <div id="freeze-recs"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌡️ FL Freeze Event History & Design Data</div>
+    <table class="ins-table">
+      <thead><tr><th>City / Zone</th><th>Record Low</th><th>99% Design°F</th><th>Avg Freeze Days/Yr</th></tr></thead>
+      <tbody>
+        <tr><td>Pensacola (Zone 3A)</td><td>5°F (1985)</td><td>22°F</td><td>20–30 days</td></tr>
+        <tr><td>Tallahassee (Zone 3A)</td><td>7°F (1985)</td><td>23°F</td><td>25–35 days</td></tr>
+        <tr><td>Gainesville (Zone 3A)</td><td>10°F (1985)</td><td>26°F</td><td>15–20 days</td></tr>
+        <tr><td>Jacksonville (Zone 2A)</td><td>10°F (1985)</td><td>28°F</td><td>10–15 days</td></tr>
+        <tr><td>Orlando (Zone 2A)</td><td>18°F (1989)</td><td>34°F</td><td>3–6 days</td></tr>
+        <tr><td>Tampa (Zone 2A)</td><td>18°F (1985)</td><td>35°F</td><td>2–4 days</td></tr>
+        <tr><td>Fort Myers (Zone 1A)</td><td>27°F (1989)</td><td>38°F</td><td>&lt;1 day</td></tr>
+        <tr><td>Miami (Zone 1A)</td><td>30°F (1977)</td><td>44°F</td><td>Rare event</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">FL Pipe Freeze Protection Methods</div>
+    <div class="info-block">
+      <p><strong>Insulation alone (R-value):</strong> Slows freeze but won't prevent indefinitely. Best for short cold events in Zone 2A–3A.</p>
+      <p style="margin-top:6px"><strong>Heat tape / self-regulating cable:</strong> Self-regulating cable automatically activates at temperatures above freezing. Required for exterior pipes in Zone 3A. 5–10W/ft rating for FL conditions. Must be listed for plastic pipe if used on PEX/CPVC.</p>
+      <p style="margin-top:6px"><strong>Drip faucets:</strong> Dripping at 1 drip/second prevents freeze in most FL conditions. Effective for short hard freeze events. Leave both hot and cold sides dripping.</p>
+      <p style="margin-top:6px"><strong>Heat the space:</strong> For crawl space or garage, a small space heater or leaving interior doors open can prevent freezes during short events.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FBC ENERGY CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FBC Energy Code Pipe Insulation Requirements</div>
+
+    <div class="info-block">
+      <p><strong>Florida Building Code — Energy Conservation (FBC-EC)</strong> Section R403.4.2 (residential) and C403.10 (commercial) specify minimum insulation requirements for mechanical system piping based on fluid temperature and pipe diameter.</p>
+    </div>
+
+    <div class="section-title">FBC-EC Table R403.4.2 — Residential Pipe Insulation</div>
+    <table class="ins-table">
+      <thead><tr><th>Fluid Temp Range</th><th>Pipe Dia ≤1"</th><th>Pipe Dia 1–2"</th><th>Pipe Dia &gt;2"</th></tr></thead>
+      <tbody>
+        <tr style="color:#00B4FF"><td>≤40°F (chilled water / refrigerant)</td><td>1" min (R-4)</td><td>1½" (R-6)</td><td>2" (R-8)</td></tr>
+        <tr><td>41–60°F (cold water, AC drain)</td><td>½" (R-2)</td><td>¾" (R-3)</td><td>1" (R-4)</td></tr>
+        <tr><td>61–100°F (cool water)</td><td>None req.</td><td>None req.</td><td>None req.</td></tr>
+        <tr style="color:#F97316"><td>101–200°F (hot water / steam)</td><td>½" (R-2)</td><td>¾" (R-3)</td><td>1" (R-4)</td></tr>
+        <tr style="color:#EF4444"><td>&gt;200°F (high temp steam / HHW)</td><td>1" (R-4)</td><td>1½" (R-6)</td><td>2" (R-8)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">FBC-EC Section C403.10 — Commercial HVAC Piping</div>
+    <div class="info-block">
+      <p><strong>C403.10.1:</strong> Chilled water supply and return pipe insulation in FL commercial buildings: minimum R-3 for pipes ≤1", R-5 for 1–4", R-7 for &gt;4".</p>
+      <p style="margin-top:6px"><strong>C403.10.2:</strong> All piping outside conditioned space (attic, crawl, exterior) requires vapor retarder jacketing over insulation — prevents moisture migration in FL humid climate.</p>
+      <p style="margin-top:6px"><strong>AC Condensate drain lines:</strong> FBC-EC explicitly requires insulation on condensate drain lines in unconditioned attic spaces per R403.4.2. ½" Armaflex is minimum; ¾"–1" recommended for FL attics.</p>
+    </div>
+
+    <div class="section-title">Insulation Material R-Values per Inch (FL Applications)</div>
+    <table class="ins-table">
+      <thead><tr><th>Material</th><th>R/inch</th><th>Vapor Barrier</th><th>FL Use</th></tr></thead>
+      <tbody>
+        <tr class="rec"><td>Armaflex / Elastomeric foam</td><td>R-3.7 to R-4.0</td><td>Yes (closed-cell)</td><td>Best for FL — resists moisture</td></tr>
+        <tr><td>Fiberglass w/ vapor jacket</td><td>R-3.5 to R-3.7</td><td>With jacket only</td><td>Good for hot pipes</td></tr>
+        <tr><td>Polyethylene foam (Tundra)</td><td>R-3.0 to R-3.5</td><td>Partial</td><td>OK for short sections</td></tr>
+        <tr class="warn"><td>Foam rubber (cheap)</td><td>R-2.0 to R-2.5</td><td>No — absorbs moisture</td><td>Avoid in FL attics</td></tr>
+        <tr><td>Mineral wool</td><td>R-3.7 to R-4.2</td><td>With jacket</td><td>Industrial / high temp</td></tr>
+        <tr><td>Spray foam (2-lb closed)</td><td>R-6.0 to R-7.0</td><td>Yes</td><td>Encapsulation / hard to access</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Pipe Insulation Compliance Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">AC condensate lines insulated with ½" min Armaflex in attic <span class="check-sub">FBC-EC R403.4.2 — all condensate drain lines in unconditioned space require insulation; ¾" recommended for FL attics</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Chilled water supply/return lines meet R-value minimums <span class="check-sub">FBC-EC Table R403.4.2 — fluid ≤40°F requires min 1" insulation (R-4) for pipe ≤1"; increase thickness for larger pipe</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Vapor retarder jacket on all cold pipe insulation <span class="check-sub">FBC-EC C403.10.2 — closed-cell foam or foil-faced jacket required to prevent moisture migration into insulation</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">All insulation seams sealed with appropriate adhesive <span class="check-sub">Open seams allow moisture infiltration — use manufacturer-specified adhesive; do not use duct tape on elastomeric foam</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Freeze-exposed lines in north FL have heat tape or R-8+ insulation <span class="check-sub">Zone 3A — exterior or crawl space pipes may need self-regulating heat cable for freeze events below 20°F</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Hot water supply pipes insulated for energy conservation <span class="check-sub">FBC-EC R403.4.2 — hot water pipes ≥3/8" diameter from WH to fixture require minimum ½" insulation; reduces standby losses</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Condensate drain insulation continues through wall penetrations <span class="check-sub">Continuous insulation required — gaps at wall penetrations allow condensation on uninsulated section and water to run inside wall</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Insulated pipes properly supported (not resting on insulation) <span class="check-sub">Use insulated pipe hangers for cold lines — standard metal hangers compress insulation and create thermal bridges where condensation will form</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 8 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a Pipe Insulation Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Polk</option><option>Seminole</option>
+      <option>Alachua</option><option>Leon</option><option>Escambia</option>
+      <option>Other</option>
+    </select>
+
+    <label>Service Needed</label>
+    <select id="q-service">
+      <option>AC condensate line insulation</option>
+      <option>Pipe sweating / condensation problem</option>
+      <option>Freeze protection — north FL</option>
+      <option>Hot water line insulation</option>
+      <option>Chilled water system insulation</option>
+      <option>Full attic pipe insulation survey</option>
+      <option>Energy code compliance inspection</option>
+      <option>Mold / water damage from sweating pipes</option>
+    </select>
+
+    <label>Problem Description</label>
+    <select id="q-prob">
+      <option>Water dripping from AC drain line</option>
+      <option>Ceiling stains from condensate sweating</option>
+      <option>Pipes froze during cold snap</option>
+      <option>Energy code inspection requirement</option>
+      <option>Mold on pipe insulation</option>
+      <option>New construction pipe insulation</option>
+    </select>
+
+    <label>Additional Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="Describe the issue — location of pipes, type of system, any visible damage..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Consultation</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | FL Licensed Plumbing Contractor | CPC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🧊</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+florida pipe insulation calculator, AC condensate line insulation florida, pipe sweating florida, dew point pipe condensation florida, pipe insulation FBC energy code florida, freeze protection florida pipes, north florida pipe freeze, pipe insulation R value florida, armaflex florida, closed cell pipe insulation florida, chilled water pipe insulation florida, FBC EC R403.4.2 pipe insulation, condensate drain line insulation attic florida, pipe insulation thickness florida, HVAC pipe insulation florida, pipe insulation vapor barrier florida, heat tape florida pipes, self regulating heat cable florida, drip faucet freeze florida, zone 2A zone 3A florida pipe insulation, insulated pipe hanger florida, pipe insulation mold florida, ceiling stains condensate pipe florida, hot water pipe insulation florida, plumbing energy code florida, FBC energy conservation florida, pipe insulation commercial florida, C403.10 commercial pipe insulation florida, polyethylene foam pipe insulation florida
+Florida dew point calculation: dew point Td equals T minus 100 minus RH divided by 5; where T is air temperature in Celsius and RH is relative humidity in percent; simpler approximation: dew point equals dry bulb minus quantity 100 minus RH times 0.2; at 78F and 75 percent RH dew point approximately 69F; at 78F and 90 percent RH dew point approximately 75F; pipe surface must be above dew point to avoid condensation; all AC condensate lines at 45F are well below any FL dew point
+Armaflex pipe insulation selection guide florida: 3/8 inch Armaflex R value 1.5 adequate only for pipes above dew point; 1/2 inch R value 2.0 minimum for AC condensate in conditioned space; 3/4 inch R value 3.0 recommended for AC condensate in attic; 1 inch R value 4.0 required for chilled water below 40F; all seams must be glued with 520 adhesive or equivalent; do not use duct tape; black color resists UV for exterior exposed pipe
+North Florida freeze protection design: Tallahassee ASHRAE 99 percent design temperature 25F; Jacksonville 30F; Pensacola 24F; Gainesville 28F; minimum insulation for freeze protection in Zone 3A: 1 inch for exterior copper 1/2 inch; 1.5 inch for exterior copper 3/4 inch; self regulating heat cable 5W per foot adequate for North FL typical freeze events; pipe freeze damage common in north FL January through February; exposed hose bibs and irrigation lines most vulnerable
+Florida energy code pipe insulation reference: FBC Energy Conservation sixth edition residential Table R403.4.2 pipe insulation; runout length exception: pipes with runout length less than 4 feet do not require insulation; recirculation hot water system requires all pipes insulated; solar water heating system all pipes insulated; condensate drain lines in mechanical rooms require 1/2 inch minimum; commercial FBC C403.10.1 chilled water pipe minimum requirements by size
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// Dew point approximation (Magnus formula simplified)
+function dewPoint(tempF, rhPct){
+  const tempC=(tempF-32)*5/9;
+  const rh=rhPct;
+  const a=17.27, b=237.7;
+  const alpha=((a*tempC)/(b+tempC))+Math.log(rh/100);
+  const dpC=(b*alpha)/(a-alpha);
+  return dpC*9/5+32;
+}
+
+// R-value per inch by insulation type
+const INS_R={armaflex:3.8, fiberglass:3.5, polyethylene:3.2};
+
+// Minimum thickness for target R (FBC)
+function minThickness(targetR, insType){
+  const rpi=INS_R[insType]||3.8;
+  return Math.ceil((targetR/rpi)*4)/4; // Round up to nearest 0.25"
+}
+
+function calcCondensate(){
+  const zone=document.getElementById('c-zone').value;
+  const dia=parseFloat(document.getElementById('c-dia').value)||0.75;
+  const pipeTemp=parseFloat(document.getElementById('c-temp').value)||45;
+  const ambTemp=parseFloat(document.getElementById('c-amb').value)||78;
+  const rh=parseFloat(document.getElementById('c-rh').value)||75;
+  const insType=document.getElementById('c-ins').value;
+
+  const dp=dewPoint(ambTemp,rh);
+  const margin=pipeTemp-dp;
+  const rpi=INS_R[insType]||3.8;
+
+  // Required insulation to raise outer surface above dew point
+  // Simplified: need R such that outer surface temp > dp
+  // Rough approximation: needed R ~ (dp - pipeTemp) / (ambTemp - pipeTemp) * (some factor)
+  // More practical: use minimum FBC + condensation risk label
+  let reqThk, reqR, riskLevel, riskCls, riskLabel;
+  if(margin>=10){
+    riskLevel='Low';riskCls='green';riskLabel='Pipe surface well above dew point — minimal sweating risk.';
+    reqThk=0;reqR=0;
+  } else if(margin>=0){
+    riskLevel='Moderate';riskCls='warn';riskLabel='Pipe surface close to dew point — some sweating likely during peak FL humidity.';
+    reqThk=0.5;reqR=reqThk*rpi;
+  } else if(margin>=-15){
+    riskLevel='High';riskCls='warn';riskLabel='Pipe BELOW dew point — condensation guaranteed without insulation. Install min ½" Armaflex.';
+    reqThk=0.75;reqR=reqThk*rpi;
+  } else {
+    riskLevel='Severe';riskCls='red';riskLabel='Pipe far below dew point — heavy condensation and dripping. Minimum 1" Armaflex required.';
+    reqThk=1.0;reqR=reqThk*rpi;
+  }
+
+  // Add attic factor
+  const zoneNote=zone==='3a'?'(Attic temps to 140°F — increase insulation by 25% for attic runs)':
+    zone==='1a'?'(South FL extreme humidity — Armaflex preferred; verify all seams)':'';
+
+  const metrics=[
+    {val:dp.toFixed(1)+'°F',lbl:'Dew Point',cls:dp<pipeTemp?'green':'red',sub:'At '+rh+'% RH, '+ambTemp+'°F'},
+    {val:margin.toFixed(1)+'°F',lbl:'Pipe vs Dew Pt',cls:margin>5?'green':margin>0?'warn':'red',sub:margin>0?'Above dew point':'BELOW dew point'},
+    {val:riskLevel,lbl:'Sweat Risk',cls:riskCls,sub:zone.toUpperCase()+' zone'},
+    {val:reqThk>0?reqThk+'"':'None req',lbl:'Min Insulation',cls:reqThk>0?'blue':'green',sub:'Thickness needed'},
+  ];
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('cond-metrics').innerHTML=mHtml;
+
+  // Dew point visual
+  const dpBarPct=Math.min(100,Math.max(0,(dp-30)/(110-30)*100));
+  const ptBarPct=Math.min(100,Math.max(0,(pipeTemp-30)/(110-30)*100));
+  const dpHtml=`<div class="dew-viz">
+    <div style="font-size:.75rem;font-weight:700;color:#94A3B8;margin-bottom:6px">Temperature Scale (30°F – 110°F)</div>
+    <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94A3B8;margin-bottom:3px"><span>Pipe Surface</span><span>${pipeTemp}°F</span></div>
+    <div class="dew-bar-wrap"><div class="dew-bar" style="width:${ptBarPct.toFixed(0)}%;background:#00B4FF"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94A3B8;margin:6px 0 3px"><span>Dew Point</span><span>${dp.toFixed(1)}°F</span></div>
+    <div class="dew-bar-wrap"><div class="dew-bar" style="width:${dpBarPct.toFixed(0)}%;background:${margin<0?'#EF4444':'#22C55E'}"></div></div>
+    ${zoneNote?`<div style="font-size:.67rem;color:#F97316;margin-top:8px">${esc(zoneNote)}</div>`:''}
+  </div>`;
+  document.getElementById('cond-dew-display').innerHTML=dpHtml;
+
+  const alertCls=riskCls==='red'?'alert-red':riskCls==='warn'?'alert-warn':'alert-ok';
+  const recsHtml=`<div class="alert ${alertCls}" style="margin-top:6px">${esc(riskLabel)}</div>
+    ${reqThk>0?`<div class="alert alert-blue" style="margin-top:6px">✅ <strong>Recommended:</strong> ${reqThk}" closed-cell elastomeric foam (Armaflex AF or similar) on all ${dia}" condensate lines. Total R-value: R-${(reqThk*rpi).toFixed(1)}. Glue all seams with manufacturer adhesive. Insulate through all wall penetrations continuously.</div>`:''}`;
+  document.getElementById('cond-recs').innerHTML=recsHtml;
+
+  const ins_names={armaflex:'Armaflex AF Elastomeric',fiberglass:'Fiberglass w/ FRK Jacket',polyethylene:'Polyethylene Foam (Tundra)'};
+  const previewHtml=`<div style="font-size:.75rem;font-weight:700;color:#94A3B8;margin-bottom:8px">SELECTED: ${esc(ins_names[insType]||insType)}</div>
+    <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" width="160">
+      <circle cx="100" cy="50" r="40" fill="rgba(0,180,255,0.2)" stroke="#00B4FF" stroke-width="2"/>
+      <circle cx="100" cy="50" r="${Math.round(30*(dia/2+reqThk)/2)}" fill="rgba(0,180,255,0.1)" stroke="#00B4FF" stroke-dasharray="4,3" stroke-width="1"/>
+      <circle cx="100" cy="50" r="${Math.round(30*(dia/2)/2)}" fill="#141929" stroke="#06B6D4" stroke-width="2"/>
+      <text x="100" y="54" fill="#06B6D4" font-size="9" text-anchor="middle" font-weight="700">PIPE</text>
+      <text x="100" y="5" fill="#94A3B8" font-size="8" text-anchor="middle">INSULATION CROSS-SECTION</text>
+      <text x="100" y="95" fill="#94A3B8" font-size="8" text-anchor="middle">${dia}" pipe + ${reqThk>0?reqThk+'"':'no'} insulation</text>
+    </svg>`;
+  document.getElementById('ins-preview').innerHTML=previewHtml;
+  document.getElementById('cond-result').classList.add('show');
+}
+
+function setFreezeZone(region, zone){
+  const temps={north:22,central:32,south:40};
+  document.getElementById('f-mintemp').value=temps[region]||25;
+}
+
+function calcFreeze(){
+  const minTemp=parseFloat(document.getElementById('f-mintemp').value)||25;
+  const loc=document.getElementById('f-loc').value;
+  const mat=document.getElementById('f-mat').value;
+  const dia=parseFloat(document.getElementById('f-dia').value)||0.5;
+
+  // Risk scoring
+  let risk=0;
+  if(minTemp<20)risk+=40;
+  else if(minTemp<28)risk+=25;
+  else if(minTemp<32)risk+=12;
+  else if(minTemp<36)risk+=5;
+
+  const locRisk={exterior:40,crawl:25,attic:20,garage:15,interior:0};
+  risk+=locRisk[loc]||0;
+
+  const matRisk={copper:10,galv:8,cpvc:5,pex:3,pvc:2};
+  risk+=matRisk[mat]||5;
+
+  if(dia<=0.5)risk+=5;
+
+  const riskLabel=risk>=60?'Extreme':risk>=40?'High':risk>=20?'Moderate':risk>=8?'Low':'Minimal';
+  const riskCls=risk>=60?'red':risk>=40?'warn':risk>=20?'warn':risk>=8?'blue':'green';
+
+  let reqInsThk=0;
+  let needsHeatTape=false;
+  if(risk>=60){reqInsThk=2.0;needsHeatTape=true;}
+  else if(risk>=40){reqInsThk=1.5;needsHeatTape=loc==='exterior'||loc==='crawl';}
+  else if(risk>=20){reqInsThk=1.0;}
+  else if(risk>=8){reqInsThk=0.5;}
+
+  const metrics=[
+    {val:minTemp+'°F',lbl:'Design Min Temp',cls:minTemp<28?'red':minTemp<32?'warn':'blue',sub:'99% design temp'},
+    {val:riskLabel,lbl:'Freeze Risk',cls:riskCls,sub:'Combined score'},
+    {val:reqInsThk>0?reqInsThk+'"':'None req',lbl:'Min Insulation',cls:reqInsThk>0?'blue':'green',sub:'Thickness'},
+    {val:needsHeatTape?'Required':'Not needed',lbl:'Heat Tape',cls:needsHeatTape?'warn':'green',sub:'Self-regulating cable'},
+  ];
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('freeze-metrics').innerHTML=mHtml;
+
+  const matNames={copper:'Copper',pex:'PEX',cpvc:'CPVC',pvc:'PVC',galv:'Galvanized'};
+  const locNames={exterior:'Exposed exterior',crawl:'Crawl space',attic:'Vented attic',garage:'Unheated garage',interior:'Conditioned interior'};
+  const isMostVulnerable=loc==='exterior'&&minTemp<28;
+  let recsHtml='';
+  if(risk<8){
+    recsHtml=`<div class="alert alert-ok" style="margin-top:8px">✅ Low freeze risk. ${matNames[mat]} pipe at ${dia}" in ${locNames[loc]} location is adequately protected. Standard insulation for condensation control only.</div>`;
+  } else {
+    recsHtml=`<div class="alert alert-${riskCls==='red'?'red':'warn'}" style="margin-top:8px">⚠️ <strong>${riskLabel} freeze risk</strong> for ${dia}" ${matNames[mat]} pipe in ${locNames[loc]}. `;
+    if(reqInsThk>0)recsHtml+=`Install minimum ${reqInsThk}" insulation. `;
+    if(needsHeatTape)recsHtml+=`Self-regulating heat cable (5W/ft minimum) required for reliable freeze protection during extended cold events.`;
+    recsHtml+='</div>';
+    if(mat==='pex')recsHtml+=`<div class="alert alert-blue" style="margin-top:6px">ℹ️ PEX is more freeze-resistant than copper or CPVC — it can expand slightly before bursting. Still requires insulation and heat tape for sustained below-freezing exposure.</div>`;
+    if(isMostVulnerable)recsHtml+=`<div class="alert alert-red" style="margin-top:6px">🚨 <strong>Extreme risk:</strong> Exterior exposure + below 28°F design temp. Insulation alone is insufficient. Self-regulating heat cable + insulation jacket required. Drip faucets as backup during freeze events.</div>`;
+  }
+  document.getElementById('freeze-recs').innerHTML=recsHtml;
+  document.getElementById('freeze-result').classList.add('show');
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['cond','freeze','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+<!-- fl-plumbing-seo: pipe insulation calculator florida AC condensate line insulation dew point condensation check freeze protection north florida FBC energy code R-value armaflex chilled water pipe insulation FBC-EC R403.4.2 C403.10 pipe sweat attic florida -->
+
+</div>
+</body>
+</html>

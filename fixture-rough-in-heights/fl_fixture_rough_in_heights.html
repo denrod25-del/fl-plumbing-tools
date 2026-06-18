@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Fixture Rough-In Height Calculator | ADA | Standard | FPC Reference | Florida</title>
+<meta name="description" content="Complete Florida plumbing fixture rough-in height reference. Standard and ADA heights for toilets, sinks, showers, tubs, and water heaters. Toilet rough-in distance calculator, shower valve height, FPC code references for all 67 FL counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#22C55E;color:#0A0E1A;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#22C55E;border-bottom-color:#22C55E}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#22C55E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#22C55E}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#22C55E;color:#0A0E1A}
+.btn-primary:hover{background:#16a34a}
+.btn-sm{padding:7px 12px;font-size:.72rem;font-weight:700;border-radius:7px;border:none;cursor:pointer;margin:0 3px 4px;background:#1E293B;color:#E2E8F0;transition:.2s;display:inline-block}
+.btn-sm.active{background:#22C55E;color:#0A0E1A}
+.result-box{background:#141929;border:1px solid #22C55E;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.1rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.67rem;margin-top:2px}
+.metric.green .mv{color:#22C55E}
+.metric.blue .mv{color:#00B4FF}
+.metric.cyan .mv{color:#06B6D4}
+.metric.gold .mv{color:#F4B942}
+.metric.warn .mv{color:#F97316}
+.metric.info .mv{color:#E2E8F0}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-green{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.alert-cyan{background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.4);color:#06B6D4}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.ri-table{width:100%;border-collapse:collapse;margin-top:8px}
+.ri-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:6px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.ri-table td{font-size:.72rem;color:#E2E8F0;padding:7px 8px;border-bottom:1px solid #0F1629}
+.ri-table tr:hover td{background:#141929}
+.ri-table .green{color:#22C55E;font-weight:700}
+.ri-table .blue{color:#00B4FF;font-weight:700}
+.ri-table .gold{color:#F4B942}
+.fixture-card{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:12px;margin:8px 0;cursor:pointer;transition:.2s}
+.fixture-card:hover{border-color:#22C55E}
+.fixture-card.expanded{border-color:#22C55E}
+.fixture-header{display:flex;justify-content:space-between;align-items:center}
+.fixture-name{font-size:.82rem;font-weight:700;color:#E2E8F0}
+.fixture-std{font-size:.72rem;color:#22C55E;font-weight:600}
+.fixture-detail{display:none;padding-top:10px;border-top:1px solid #1E293B;margin-top:10px}
+.fixture-card.expanded .fixture-detail{display:block}
+.dim-row{display:flex;justify-content:space-between;padding:3px 0;font-size:.72rem}
+.dim-row .dk{color:#94A3B8}.dim-row .dv{color:#E2E8F0;font-weight:600}
+.dim-row .dv.green{color:#22C55E}
+.dim-row .dv.blue{color:#00B4FF}
+.ada-badge{display:inline-block;background:rgba(0,180,255,.15);color:#00B4FF;border:1px solid rgba(0,180,255,.4);font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#22C55E;border-color:#22C55E}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#0A0E1A;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#22C55E;transition:width .4s}
+.toilet-diagram{background:#141929;border-radius:10px;padding:16px;margin-top:10px;text-align:center}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#22C55E}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.mode-toggle{display:flex;gap:6px;margin-bottom:12px}
+.mode-btn{flex:1;padding:8px;border-radius:8px;border:1px solid #1E293B;background:#141929;color:#94A3B8;font-size:.75rem;font-weight:600;cursor:pointer;text-align:center;transition:.2s}
+.mode-btn.active{background:#22C55E;border-color:#22C55E;color:#0A0E1A}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>📐 FL Fixture Rough-In Height Reference</h1>
+  <p>Standard &amp; ADA rough-in heights for all plumbing fixtures — FL code requirements, toilet rough-in distance, shower valve placement</p>
+  <span class="badge">ADA + STANDARD</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('calc')">Rough-In Calc</div>
+  <div class="tab" onclick="showTab('fixtures')">All Fixtures</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: CALCULATOR -->
+<div id="tab-calc" class="panel active">
+  <div class="card">
+    <div class="card-title">📏 Toilet Rough-In Distance Calculator</div>
+    <div class="info-block" style="margin-bottom:12px">
+      <p><strong>Toilet rough-in distance</strong> is measured from the finished wall to the center of the closet flange (drain). This is NOT the toilet-to-wall gap — it's the drain centerline from the wall behind the toilet.</p>
+    </div>
+
+    <label>Existing / Planned Rough-In (inches)</label>
+    <input type="number" id="t-ri" value="12" min="10" max="14" step="0.5">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">Standard: 12". Older FL homes may have 10" or 14". Measure from wall to drain center.</p>
+
+    <label>Wall Thickness (inches) — if measuring to stud, add this</label>
+    <input type="number" id="t-wt" value="0" min="0" max="6" step="0.25">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">Leave 0 if measuring to finished wall face. Add 0.5" for tile, 4" for typical stud wall.</p>
+
+    <button class="btn btn-primary" onclick="calcToilet()">Check My Toilet Rough-In</button>
+
+    <div class="result-box" id="toilet-result">
+      <div style="font-size:.85rem;font-weight:700;color:#22C55E;margin-bottom:6px">Toilet Rough-In Results</div>
+      <div class="metrics-grid" id="toilet-metrics"></div>
+      <div id="toilet-recs"></div>
+    </div>
+
+    <div class="toilet-diagram" style="margin-top:14px">
+      <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <!-- Wall -->
+        <rect x="10" y="10" width="8" height="160" fill="#1E293B" rx="2"/>
+        <text x="14" y="8" fill="#94A3B8" font-size="7" text-anchor="middle">WALL</text>
+        <!-- Toilet tank -->
+        <rect x="20" y="40" width="60" height="45" rx="5" fill="#141929" stroke="#1E293B" stroke-width="1.5"/>
+        <!-- Toilet bowl -->
+        <ellipse cx="50" cy="120" rx="32" ry="40" fill="#141929" stroke="#1E293B" stroke-width="1.5"/>
+        <ellipse cx="50" cy="120" rx="22" ry="30" fill="#0A0E1A"/>
+        <!-- Flange center -->
+        <circle cx="50" cy="140" r="5" fill="#22C55E" opacity=".8"/>
+        <line x1="50" y1="140" x2="50" y2="175" stroke="#22C55E" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <!-- Dimension line -->
+        <line x1="10" y1="168" x2="50" y2="168" stroke="#F4B942" stroke-width="1.5" marker-end="url(#arrowg)"/>
+        <line x1="50" y1="168" x2="10" y2="168" stroke="#F4B942" stroke-width="1.5"/>
+        <defs><marker id="arrowg" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#F4B942" stroke-width="1"/></marker></defs>
+        <text x="30" y="178" fill="#F4B942" font-size="8" text-anchor="middle" font-weight="700">12" std</text>
+        <!-- Labels -->
+        <text x="50" y="36" fill="#94A3B8" font-size="7" text-anchor="middle">TANK</text>
+        <text x="110" y="80" fill="#E2E8F0" font-size="8" font-weight="700">Rough-In</text>
+        <text x="110" y="92" fill="#E2E8F0" font-size="8" font-weight="700">Distance</text>
+        <line x1="108" y1="95" x2="58" y2="140" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="50" y="145" fill="#22C55E" font-size="7" text-anchor="middle" font-weight="700">⊙ FLANGE</text>
+        <text x="50" y="155" fill="#22C55E" font-size="7" text-anchor="middle">CENTER</text>
+        <text x="160" y="80" fill="#94A3B8" font-size="7">Measure from</text>
+        <text x="160" y="90" fill="#94A3B8" font-size="7">finished wall</text>
+        <text x="160" y="100" fill="#94A3B8" font-size="7">to drain CL</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🚿 Shower Valve Rough-In Calculator</div>
+
+    <label>Application Type</label>
+    <div class="mode-toggle">
+      <div class="mode-btn active" id="sh-std-btn" onclick="setShowerMode('std')">Standard</div>
+      <div class="mode-btn" id="sh-ada-btn" onclick="setShowerMode('ada')">ADA / Accessibility</div>
+    </div>
+
+    <label>Shower Type</label>
+    <select id="sh-type" onchange="calcShower()">
+      <option value="tub">Tub/shower combo</option>
+      <option value="shower" selected>Walk-in shower (no tub)</option>
+      <option value="tub-only">Bathtub only</option>
+    </select>
+
+    <label>Finished Floor to Subfloor (inches) — tile thickness</label>
+    <input type="number" id="sh-tile" value="0.5" min="0" max="2" step="0.25" onchange="calcShower()">
+
+    <div class="result-box show" id="shower-result">
+      <div style="font-size:.85rem;font-weight:700;color:#22C55E;margin-bottom:6px">Shower Valve Heights (from finished floor)</div>
+      <div id="shower-dims"></div>
+      <div id="shower-ada-note"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: ALL FIXTURES -->
+<div id="tab-fixtures" class="panel">
+  <div class="card">
+    <div class="card-title">📋 All Fixture Rough-In Heights</div>
+
+    <div class="mode-toggle">
+      <div class="mode-btn active" id="fx-std-btn" onclick="setFixtureMode('std')">Standard</div>
+      <div class="mode-btn" id="fx-ada-btn" onclick="setFixtureMode('ada')">ADA / Accessibility</div>
+    </div>
+
+    <div id="fixture-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🚽 Toilet Rough-In Standards</div>
+    <table class="ri-table">
+      <thead><tr><th>Rough-In</th><th>Common In</th><th>Toilet Availability</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="gold">10"</td><td>Pre-1960s homes</td><td>Limited selection</td><td>Older FL plumbing</td></tr>
+        <tr><td class="green">12"</td><td>All eras</td><td>Full selection</td><td>Standard — widest choice</td></tr>
+        <tr><td class="blue">14"</td><td>Some older FL</td><td>Good selection</td><td>Less common today</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-warn" style="margin-top:8px">⚠️ <strong>Before toilet replacement:</strong> Always measure your existing rough-in distance. A 12" toilet CANNOT be used with a 10" rough-in (it will hit the wall). A 10" toilet can sometimes be used with a 12" rough-in using an offset flange — call your plumber first.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Supply and Drain Quick Reference</div>
+    <table class="ri-table">
+      <thead><tr><th>Fixture</th><th>Cold Supply</th><th>Hot Supply</th><th>Drain CL</th></tr></thead>
+      <tbody>
+        <tr><td>Toilet</td><td>6–8" from floor, left</td><td>N/A</td><td>12" from wall (std)</td></tr>
+        <tr><td>Lav sink</td><td>20" from floor, 4" R of CL</td><td>20" from floor, 4" L of CL</td><td>18–20" from floor</td></tr>
+        <tr><td>Kitchen sink</td><td>Under sink box</td><td>Under sink box</td><td>15–17" from floor</td></tr>
+        <tr><td>Shower</td><td>Valve center</td><td>Valve center</td><td>2" trap, floor level</td></tr>
+        <tr><td>Tub/shower</td><td>28–32" from floor</td><td>28–32" from floor</td><td>6" from end wall</td></tr>
+        <tr><td>Dishwasher</td><td>Under sink</td><td>N/A</td><td>Air gap at sink</td></tr>
+        <tr><td>Washing machine</td><td>48" from floor, L</td><td>48" from floor, R</td><td>34–36" standpipe ht</td></tr>
+        <tr><td>Water heater</td><td>Cold: right side</td><td>Hot: left side</td><td>Floor drain nearby</td></tr>
+        <tr><td>Hose bib</td><td>24" from grade (exterior)</td><td>N/A</td><td>N/A</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FL Plumbing & Accessibility Code</div>
+
+    <div class="section-title">FPC Key Rough-In References</div>
+    <div class="info-block">
+      <p><strong>FPC 405.3.1 — Toilet location:</strong> Toilet shall be located a minimum of 15" from its centerline to any side wall, partition, or cabinet. This applies to BOTH sides. For ADA: minimum 18" from one side (transfer side).</p>
+      <p style="margin-top:6px"><strong>FPC 405.3.2 — Toilet clearance:</strong> Minimum 21" clearance in front of toilet (measured to any obstacle). ADA requires 60" minimum turning radius or 30"×48" clear floor space.</p>
+      <p style="margin-top:6px"><strong>FPC 412.2 — Shower receptors:</strong> Shower floor shall slope uniformly to drain at 1/4" per foot minimum. Curb height 2" minimum. Threshold maximum 1/2" for accessibility compliance.</p>
+      <p style="margin-top:6px"><strong>FPC 424.6 — Grab bar blocking:</strong> FL requires blocking or solid backing in shower/tub areas of new residential construction to allow future grab bar installation (FBC 11-4.23.4). 2×8 blocking required between studs.</p>
+      <p style="margin-top:6px"><strong>FPC 603.2 — Water heater location:</strong> Gas WH in garage requires 18" minimum elevation of ignition source above garage floor. Electric WH may be floor-mounted. Drip pan required for WH in conditioned space or above finished area.</p>
+    </div>
+
+    <div class="section-title">ADA (ADA-ABA Guidelines / FBC Ch. 11)</div>
+    <div class="info-block">
+      <p><strong>FL Building Code Chapter 11</strong> adopts the ADA Standards for Accessible Design for all new commercial construction and some residential. Key fixture requirements:</p>
+      <p style="margin-top:6px"><strong>Lavatories (FBC 1109.2):</strong> Rim height max 34"; knee clearance min 27" high × 30" wide × 19" deep; clear floor space 30"×48" in front; supply/drain insulated or covered to prevent burns.</p>
+      <p style="margin-top:6px"><strong>Water closets (FBC 1109.4):</strong> Height 17"–19" to top of seat; 60" clear floor space side approach OR 66"×56" for front approach; flush control on open side.</p>
+      <p style="margin-top:6px"><strong>Shower stalls (FBC 1109.6):</strong> 36"×36" for transfer shower or 30"×60" for roll-in shower; seat required for transfer-type; controls between 15"–48" AFF; hand shower on 60" minimum hose.</p>
+      <p style="margin-top:6px"><strong>Bathtubs (FBC 1109.5):</strong> Foot controls at 60" AFF; head controls at 60" AFF max 15" from foot wall; grab bars at 24" front, 12" back, side wall full length.</p>
+    </div>
+
+    <div class="section-title">Rough-In Compliance Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Toilet centerline ≥15" from side walls on both sides <span class="check-sub">FPC 405.3.1 — minimum clearance from any wall, partition, or obstacle; ADA: 18" transfer side</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Minimum 21" clear in front of toilet (30" ADA) <span class="check-sub">FPC 405.3.2 — measured from toilet front to any obstruction; ADA requires 30"×48" clear floor space</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Shower floor slopes ¼" per foot minimum to drain <span class="check-sub">FPC 412.2 — uniform slope required; tile setter must maintain slope; test with water before tile grout</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Grab bar blocking installed in tub/shower walls <span class="check-sub">FBC 11-4.23.4 — 2×8 blocking between studs at 33"–36" AFF required in FL new residential construction</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Water heater drip pan installed where applicable <span class="check-sub">FPC 501.6 — required when WH is in conditioned space or above finished ceilings; drain line to approved location</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Lavatory center-of-drain 16"–18" from side wall <span class="check-sub">FPC 405.4 — minimum 15" from side obstacles; standard 18" from wall to drain center; verify with fixture spec sheet</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Shower valve anti-scald protection (ASSE 1016 / 1070) <span class="check-sub">FPC 412.7 — pressure-balance or thermostatic valve required; max 120°F delivered to shower; verify lever handle direction</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Supply stub-outs match fixture specification sheet <span class="check-sub">Always verify supply spacing (typically 8" cold-to-hot on center) against actual fixture spec sheet before rough-in</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">All rough-in inspected before walls closed <span class="check-sub">FL requires plumbing rough-in inspection before wall coverings are installed; inspector checks all stub-out heights, drain locations</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 9 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Request Rough-In Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Polk</option><option>Seminole</option>
+      <option>Other</option>
+    </select>
+
+    <label>Service Type</label>
+    <select id="q-service">
+      <option>Bathroom plumbing rough-in (new construction)</option>
+      <option>Toilet replacement — rough-in verification</option>
+      <option>Shower valve replacement</option>
+      <option>ADA bathroom conversion</option>
+      <option>Sink / lavatory replacement</option>
+      <option>Water heater rough-in</option>
+      <option>Full bathroom remodel rough-in</option>
+      <option>Inspection prep — rough-in verification</option>
+    </select>
+
+    <label>Construction Type</label>
+    <select id="q-ctype">
+      <option>Existing home — renovation</option>
+      <option>New construction</option>
+      <option>ADA / accessibility upgrade</option>
+      <option>Commercial / multi-family</option>
+    </select>
+
+    <label>Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="Describe your project, current rough-in issues, or ADA requirements..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Estimate</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | FL Licensed Plumbing Contractor | CPC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🔧</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+florida fixture rough in height calculator, toilet rough in distance florida, standard rough in heights florida, ADA rough in heights florida, ADA plumbing florida, shower valve height florida, plumbing rough in dimensions florida, toilet rough in 10 12 14 florida, sink rough in height florida, FPC 405 toilet clearance, FPC 412 shower florida, ADA bathroom florida code, lavatory rough in height florida, kitchen sink rough in florida, bathtub rough in florida, water heater rough in florida, shower rough in heights florida, fixture supply heights florida, washing machine rough in florida, grab bar blocking florida, FBC chapter 11 accessibility florida, plumbing rough in inspection florida, toilet replacement rough in florida, offset flange florida, hose bib height florida, bathroom remodel rough in florida, ADA conversion florida, ADA toilet seat height florida, plumbing rough in contractor florida
+Toilet rough in distance standard dimensions: measure from finished wall behind toilet to center of drain flange; standard 12 inches; older homes may be 10 or 14 inches; do not measure to back of toilet; measure to floor drain center; 12 inch rough in most common allows widest toilet selection; for tile add tile thickness to rough in measurement before ordering toilet
+ADA fixture heights Florida reference: toilet seat height 17 to 19 inches top of seat not including seat; lavatory rim max 34 inches; soap dispensers and controls max 48 inches forward reach max 44 inches side reach; shower controls 15 to 48 inches AFF; knee clearance under lavatory 27 inches height 30 inches width 19 inches depth; accessible parking for people with disabilities is under ADA not plumbing code
+Standard plumbing supply stub out heights from finished floor: toilet cold supply 6 to 8 inches left side of toilet; lavatory cold supply 20 to 22 inches 4 inches right of drain center; lavatory hot supply 20 to 22 inches 4 inches left of drain center; kitchen cold supply 20 inches right side; kitchen hot supply 20 inches left side; washing machine hot 48 inches right; washing machine cold 48 inches left; shower valve center 48 to 52 inches standard
+Shower valve rough in heights standard: center of valve body 48 inches from finished floor standard residential; 28 inches ADA accessible; showerhead 80 inches AFF standard; 72 to 78 inches for rain head; diverter 52 inches; tub spout 6 to 8 inches AFF from tub deck; separate tub filler 8 to 12 inches from tub rim; hand shower minimum 48 inches AFF with 60 inch hose ADA
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// Fixture data: [name, emoji, std_description, {...dims}]
+const FIXTURES=[
+  {name:'Toilet',emoji:'🚽',
+   std:{seat:'14–15" (to seat top)',cfl:'12" (std rough-in)',side:'15" min CL each side',front:'21" min clearance',supply:'6–8" from floor, left side'},
+   ada:{seat:'17–19" (ADA seat height)',cfl:'12" rough-in (same)',side:'18" transfer side, 12" non-transfer',front:'30"×48" clear space',supply:'Same position, insulated'},
+   note:'Always measure existing rough-in before toilet replacement. 12" is standard but some FL homes have 10" or 14".'},
+  {name:'Lavatory (Bathroom Sink)',emoji:'🪣',
+   std:{rim:'30–32" from floor (vessel higher)',drain:'18–20" from floor center',side:'16–18" from side wall to drain CL',cold:'20" from floor, 4" right of drain',hot:'20" from floor, 4" left of drain'},
+   ada:{rim:'Max 34" to rim top',drain:'Same position',side:'Min 15" from side wall',cold:'Same position, insulate drain',hot:'Knee clearance: 27"H × 30"W × 19"D'},
+   note:'Vessel sinks add 5–8" to standard rim height. Verify with vessel + vanity spec sheet.'},
+  {name:'Kitchen Sink',emoji:'🍳',
+   std:{rim:'35–36" from floor (standard counter)',drain:'15–17" from floor center',cold:'20" rough-in under cabinet',hot:'20" rough-in under cabinet',drain2:'2" drain, 3.5" trap arm'},
+   ada:{rim:'Max 34" to basin rim',drain:'Max 6.5" depth accessible basin',cold:'Same — insulate drain',hot:'Knee clearance under sink 27"×30"×19"',notes:'Dishwasher air gap at 36" max'},
+   note:'Undermount and farmhouse sinks may require adjustment to counter height for ADA compliance.'},
+  {name:'Walk-In Shower',emoji:'🚿',
+   std:{valve:'48–52" from finished floor',head:'72–78" from floor',hand:'48–60" (if separate)',drain:'Centered, floor level',size:'Minimum 30"×30" FL code'},
+   ada:{valve:'Max 48" from floor (reach range)',head:'Hand shower 48–69" adjustable',hand:'60" minimum hose, 1 spray min',drain:'Same',size:'36"×36" transfer or 30"×60" roll-in'},
+   note:'FL FPC 412.7 requires ASSE 1016 pressure-balance or thermostatic mixing valve — protects from scalding.'},
+  {name:'Tub / Shower Combo',emoji:'🛁',
+   std:{valve:'28–32" from tub floor',spout:'6–8" from tub floor',head:'72–76" from bathroom floor',side_supply:'Hot left, cold right 8" OC'},
+   ada:{valve:'28–48" from floor (inside tub)',spout:'6–9" from tub floor',head:'Max 48" from floor for seated use',grab:'Horizontal at 33–36" each side',seat:'Folding wall seat 17–19" AFF'},
+   note:'Tub deck height is typically 14–18". Valve height measured from bathroom floor, not tub floor. Grab bar blocking required in FL new construction.'},
+  {name:'Bathtub (Soaker)',emoji:'🛁',
+   std:{filler:'8–12" above tub rim',overflow:'14–18" from tub floor',drain:'2" drain, 6" from end wall',hot:'Left side supply',cold:'Right side supply'},
+   ada:{filler:'Offset filler or deck-mounted',access:'Grab bar at tub rim height',seat:'12" from head wall, 15–19" AFF',controls:'At foot of tub, max 60" AFF',tub:'17–19" rim height recommended'},
+   note:'Standard freestanding tub rough-in: 2" drain 6" from end wall; supply valve at tub side wall 12" from floor.'},
+  {name:'Washing Machine',emoji:'🫧',
+   std:{cold:'48" from floor, left of box',hot:'48" from floor, right of box',drain:'34–36" standpipe height',box:'Recessed box at 42" center',outlet:'20A GFCI, 18" from floor'},
+   ada:{cold:'Same',hot:'Same',drain:'Same height',notes:'Front-load preferred for ADA',access:'Controls at 15–48" AFF'},
+   note:'FL requires GFCI-protected outlet for washing machine. Standpipe height 18–30" above trap to prevent siphoning (FPC 804.1).'},
+  {name:'Water Heater',emoji:'🌡️',
+   std:{cold:'Right side (looking at WH)',hot:'Left side (looking at WH)',tp:'4th connection down right side',drain:'Floor drain or pan with drain line',height:'Varies — see unit spec sheet'},
+   ada:{notes:'Standard connections apply',access:'Controls within reach range',clearance:'Minimum 18" in front for service'},
+   note:'FL requires gas WH in garages to have ignition source elevated 18" minimum from floor. All WH require earthquake strapping if within seismic zone (not typical FL).'},
+  {name:'Hose Bib (Exterior)',emoji:'🌿',
+   std:{height:'18–24" above grade',backing:'1/2" threaded outlet, 3/4" supply',vacuum:'Vacuum breaker required (FPC 608)',clearance:'6" from grade to outlet'},
+   ada:{height:'15–48" for accessible outdoor',vacuum:'Same requirement',handle:'Lever handle required ADA'},
+   note:'FL requires vacuum breaker (backflow preventer) on all hose bibs — cross-connection control per FPC 608.16. Freeze protection generally not needed in south FL.'},
+];
+
+let currentMode='std';
+let showerMode='std';
+
+function renderFixtures(){
+  const mode=currentMode;
+  let html='';
+  FIXTURES.forEach((f,i)=>{
+    const dims=f[mode]||f.std;
+    const firstVal=Object.values(dims)[0];
+    html+=`<div class="fixture-card" id="fx-${i}" onclick="toggleFx(${i})">
+      <div class="fixture-header">
+        <div class="fixture-name">${esc(f.emoji)} ${esc(f.name)}</div>
+        <div class="fixture-std">${esc(firstVal)}</div>
+      </div>
+      <div class="fixture-detail">`;
+    Object.entries(dims).forEach(([k,v])=>{
+      html+=`<div class="dim-row"><span class="dk">${esc(k)}</span><span class="dv ${mode==='ada'?'blue':'green'}">${esc(v)}</span></div>`;
+    });
+    html+=`<div style="margin-top:8px;font-size:.7rem;color:#94A3B8">${esc(f.note)}</div>
+      </div></div>`;
+  });
+  document.getElementById('fixture-list').innerHTML=html;
+}
+
+function toggleFx(i){
+  const el=document.getElementById('fx-'+i);
+  el.classList.toggle('expanded');
+}
+
+function setFixtureMode(m){
+  currentMode=m;
+  document.getElementById('fx-std-btn').classList.toggle('active',m==='std');
+  document.getElementById('fx-ada-btn').classList.toggle('active',m==='ada');
+  renderFixtures();
+}
+
+function setShowerMode(m){
+  showerMode=m;
+  document.getElementById('sh-std-btn').classList.toggle('active',m==='std');
+  document.getElementById('sh-ada-btn').classList.toggle('active',m==='ada');
+  calcShower();
+}
+
+function calcToilet(){
+  const ri=parseFloat(document.getElementById('t-ri').value)||12;
+  const wt=parseFloat(document.getElementById('t-wt').value)||0;
+  const actualRI=ri-wt;
+  const standard=12;
+  const diff=actualRI-standard;
+  let cls,msg;
+  if(Math.abs(diff)<0.5){cls='green';msg='✅ Standard 12" rough-in — widest toilet selection available. Almost every toilet model will fit.';}
+  else if(actualRI<=10.5){cls='warn';msg='⚠️ 10" rough-in detected. You need a toilet specifically designed for 10" rough-in or an offset flange to convert to 12". Limited toilet selection.';}
+  else if(actualRI<=11.5){cls='blue';msg='💡 11" rough-in — borderline. A standard 12" toilet MAY work with tank touching wall slightly. Measure carefully. Consider an adjustable-flange conversion.';}
+  else if(actualRI>=13.5){cls='blue';msg='💡 14" rough-in. You can use a standard 12" toilet — there will be a gap at the wall. Use a toilet supply line cover or escutcheon to finish the look.';}
+  else{cls='green';msg='✅ Close to standard — standard 12" toilet will fit properly.';}
+
+  const metrics=[
+    {val:ri+'"',lbl:'Measured RI',cls:'info',sub:'From wall to drain'},
+    {val:wt>0?actualRI+'"':'12" std',lbl:wt>0?'Actual RI':'Standard',cls:wt>0?'green':'gold',sub:wt>0?'After wall deduction':'Reference'},
+    {val:diff>0?'+'+diff.toFixed(1)+'"':diff.toFixed(1)+'"',lbl:'Vs Standard',cls:Math.abs(diff)<0.5?'green':'warn',sub:'From 12" standard'},
+    {val:actualRI>=11.5&&actualRI<=12.5?'Any':'Check','lbl':'Toilet Fit',cls:actualRI>=11.5&&actualRI<=12.5?'green':'warn',sub:actualRI>=11.5&&actualRI<=12.5?'All 12" models':'Verify RI match'},
+  ];
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('toilet-metrics').innerHTML=mHtml;
+  document.getElementById('toilet-recs').innerHTML=`<div class="alert alert-${cls==='green'?'green':cls==='warn'?'warn':'blue'}" style="margin-top:8px">${msg}</div>`;
+  document.getElementById('toilet-result').classList.add('show');
+}
+
+function calcShower(){
+  const type=document.getElementById('sh-type').value;
+  const tile=parseFloat(document.getElementById('sh-tile').value)||0;
+  const ada=showerMode==='ada';
+  let html='';
+
+  const dims={
+    shower:{
+      valve:ada?{v:28,lbl:'Valve center (ADA)',note:'28" AFF for seated reach'}:{v:48,lbl:'Valve center (std)',note:'48" standard walk-in shower'},
+      head:ada?{v:72,lbl:'Showerhead AFF',note:'72" allows seated use; 69" min for ADA hand shower'}:{v:78,lbl:'Showerhead AFF',note:'72–78" standard range'},
+      hand:ada?{v:48,lbl:'Hand shower control',note:'On 60"+ hose, adjustable 48–72"'}:{v:60,lbl:'Hand shower (if used)',note:'48–60" typical'},
+    },
+    tub:{
+      valve:{v:ada?28:30,lbl:'Valve center AFF',note:ada?'28" inside tub ADA':'28–32" from bathroom floor'},
+      spout:{v:6,lbl:'Tub spout from tub floor',note:'6–8" above tub rim floor'},
+      head:{v:76,lbl:'Showerhead AFF',note:'72–76" from bathroom floor'},
+      seat:ada?{v:17,lbl:'Fold-down seat height',note:'17–19" from tub floor ADA'}:null,
+    },
+    'tub-only':{
+      filler:{v:12,lbl:'Wall-mount filler AFF',note:'8–12" above tub rim'},
+      overflow:{v:16,lbl:'Overflow plate AFF',note:'14–18" from tub floor'},
+      hot:{v:0,lbl:'Left supply (hot)',note:'Left supply when facing tub'},
+      cold:{v:0,lbl:'Right supply (cold)',note:'Right supply when facing tub'},
+    }
+  };
+
+  const d=dims[type]||dims.shower;
+  Object.entries(d).forEach(([k,obj])=>{
+    if(!obj)return;
+    const adj=tile>0?` (add ${tile}" for tile = ${(obj.v+tile).toFixed(2)}" from subfloor)`:' (from finished floor)';
+    html+=`<div class="dim-row" style="margin:5px 0">
+      <span class="dk">${esc(obj.lbl)}</span>
+      <span class="dv ${ada?'blue':'green'}">${obj.v>0?obj.v+'"':'-'}</span>
+    </div>
+    <div style="font-size:.67rem;color:#94A3B8;padding-left:4px;margin-bottom:4px">${esc(obj.note)}${obj.v>0?esc(adj):''}</div>`;
+  });
+  document.getElementById('shower-dims').innerHTML=html;
+  const adaNote=ada?`<div class="alert alert-blue" style="margin-top:8px">ℹ️ <strong>ADA showers:</strong> 36"×36" transfer shower or 30"×60" roll-in shower required. Folding seat and grab bars required. Controls between 15"–48" AFF. ASSE 1070 thermostatic valve recommended for burn prevention.</div>`:'';
+  document.getElementById('shower-ada-note').innerHTML=adaNote;
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['calc','fixtures','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// Initialize
+renderFixtures();
+calcShower();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+<!-- fl-plumbing-seo: fixture rough-in height calculator florida ADA plumbing heights toilet rough-in 10 12 14 inches shower valve height FPC 405 clearance lavatory sink rough-in ADA FBC chapter 11 accessibility grab bar blocking toilet replacement florida -->
+
+</div>
+</body>
+</html>

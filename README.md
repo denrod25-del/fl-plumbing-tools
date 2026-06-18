@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**149 interactive cost calculators** for Florida homeowners.
+**152 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -38,6 +38,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Faucet Fixture Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/faucet-fixture/fl_faucet_fixture.html)
 - [FL Fire Sprinkler Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fire-sprinkler/fl_fire_sprinkler.html)
 - [FL Fixture Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fixture-cost/fl_fixture_cost.html)
+- [FL Fixture Rough In Heights Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fixture-rough-in-heights/fl_fixture_rough_in_heights.html)
 - [FL Flood Zone Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/flood-zone-plumbing/fl_flood_zone_plumbing.html)
 - [FL Floor Drain Install Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/floor-drain-install/fl_floor_drain_install.html)
 - [FL Food Truck Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/food-truck-plumbing/fl_food_truck_plumbing.html)
@@ -84,6 +85,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Permit Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/permit-guide/fl_plumbing_permit_guide.html)
 - [FL Pipe Burst Freeze Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-burst-freeze/fl_pipe_burst_freeze.html)
 - [FL Pipe Identification Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-identification/fl_pipe_identification.html)
+- [FL Pipe Insulation Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-insulation-calc/fl_pipe_insulation_calc.html)
 - [FL Pipe Life Expectancy Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-life-expectancy/fl_pipe_life_expectancy.html)
 - [FL Pipe Lining Vs Bursting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-lining-vs-bursting/fl_pipe_repair_comparison.html)
 - [FL Pipe Material Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-material-guide/fl_pipe_material_guide.html)
@@ -123,6 +125,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Slab Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-repair/fl_slab_repair.html)
 - [FL Solar Hpwh Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/solar-hpwh/fl_solar_hpwh.html)
 - [FL Stormwater Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/stormwater-drain/fl_stormwater_drain.html)
+- [FL Sump Pump Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sump-pump-sizing/fl_sump_pump_sizing.html)
 - [FL Supply Pressure Loss Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/supply-pressure-loss/fl_supply_pressure_loss.html)
 - [FL Tankless Error Codes Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-error-codes/fl_tankless_error_codes.html)
 - [FL Tankless Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-sizing/fl_tankless_water_heater.html)

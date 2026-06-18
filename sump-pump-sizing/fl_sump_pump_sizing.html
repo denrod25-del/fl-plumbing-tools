@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Sump Pump & Pit Sizing Calculator | Flood Zone | Backup Pump | Florida</title>
+<meta name="description" content="Size your Florida sump pump and pit correctly — calculate GPH from pit dimensions and infiltration rate, HP selection, backup pump options, and FL FEMA flood zone reference for all 67 counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#06B6D4;color:#0A0E1A;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#06B6D4;border-bottom-color:#06B6D4}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#06B6D4;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#06B6D4}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#06B6D4;color:#0A0E1A}
+.btn-primary:hover{background:#0891b2}
+.result-box{background:#141929;border:1px solid #06B6D4;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.2rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.68rem;margin-top:2px}
+.metric.cyan .mv{color:#06B6D4}
+.metric.pass .mv{color:#22C55E}
+.metric.fail .mv{color:#EF4444}
+.metric.warn .mv{color:#F97316}
+.metric.info .mv{color:#00B4FF}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-cyan{background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.4);color:#06B6D4}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.pipe-table{width:100%;border-collapse:collapse;margin-top:8px}
+.pipe-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:5px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.pipe-table td{font-size:.72rem;color:#E2E8F0;padding:6px 8px;border-bottom:1px solid #0F1629}
+.pipe-table tr:hover td{background:#141929}
+.pipe-table .rec td{color:#22C55E;font-weight:700}
+.pump-card{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:12px;margin-top:8px}
+.pump-card.recommended{border-color:#06B6D4}
+.pump-card h4{font-size:.78rem;font-weight:700;color:#06B6D4;margin-bottom:6px}
+.pump-spec{display:flex;justify-content:space-between;margin:3px 0;font-size:.72rem}
+.pump-spec .pk{color:#94A3B8}.pump-spec .pv{color:#E2E8F0;font-weight:600}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#06B6D4;border-color:#06B6D4}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#0A0E1A;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#06B6D4;transition:width .4s}
+.flood-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.68rem;font-weight:700;margin:4px 2px}
+.fz-a{background:rgba(239,68,68,.2);color:#EF4444;border:1px solid #EF4444}
+.fz-ae{background:rgba(239,68,68,.2);color:#EF4444;border:1px solid #EF4444}
+.fz-x{background:rgba(34,197,94,.2);color:#22C55E;border:1px solid #22C55E}
+.fz-b{background:rgba(249,115,22,.2);color:#F97316;border:1px solid #F97316}
+.pit-diagram{background:#141929;border-radius:10px;padding:16px;margin-top:10px;text-align:center}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#06B6D4}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>💧 FL Sump Pump & Pit Sizing Calculator</h1>
+  <p>Calculate GPH requirements, pump HP, pit dimensions, and backup options for Florida flood conditions</p>
+  <span class="badge">FL FLOOD ZONE READY</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('pump')">Pump Sizing</div>
+  <div class="tab" onclick="showTab('pit')">Pit Designer</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: PUMP SIZING -->
+<div id="tab-pump" class="panel active">
+  <div class="card">
+    <div class="card-title">⚙️ Sump Pump GPH & HP Calculator</div>
+
+    <label>FL County</label>
+    <select id="p-county">
+      <option value="miami-dade">Miami-Dade (Zone AE — high flood risk)</option>
+      <option value="broward">Broward (Zone AE / X)</option>
+      <option value="palm-beach">Palm Beach (Zone AE / X)</option>
+      <option value="hillsborough" selected>Hillsborough (Zone AE / X mixed)</option>
+      <option value="orange">Orange (Zone X — low-moderate)</option>
+      <option value="pinellas">Pinellas (Zone AE — coastal)</option>
+      <option value="duval">Duval (Zone AE / X)</option>
+      <option value="lee">Lee (Zone AE — coastal)</option>
+      <option value="sarasota">Sarasota (Zone AE / X)</option>
+      <option value="collier">Collier (Zone AE)</option>
+      <option value="alachua">Alachua (Zone X)</option>
+      <option value="leon">Leon (Zone X)</option>
+      <option value="other">Other FL County</option>
+    </select>
+
+    <label>Pit Diameter (inches)</label>
+    <select id="p-pitdia">
+      <option value="18">18" (standard residential)</option>
+      <option value="24" selected>24" (most common FL)</option>
+      <option value="30">30" (high-flow)</option>
+      <option value="36">36" (commercial)</option>
+    </select>
+
+    <label>Pit Depth (inches below activation level)</label>
+    <input type="number" id="p-pitdep" value="24" min="12" max="60">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">Depth between pump-off and pump-on float switch levels.</p>
+
+    <label>Water Table / Soil Condition</label>
+    <select id="p-soil">
+      <option value="low">Low infiltration — clay/rock (1–3 gal/min)</option>
+      <option value="med" selected>Moderate — sandy loam (3–8 gal/min)</option>
+      <option value="high">High — FL coastal sand (8–15 gal/min)</option>
+      <option value="vhigh">Very high — water table near surface (15–25 gal/min)</option>
+    </select>
+
+    <label>Total Discharge Head (ft)</label>
+    <input type="number" id="p-head" value="12" min="5" max="40">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">Vertical rise from pit bottom to discharge point + pipe friction (add 1 ft per 10 ft of horizontal run).</p>
+
+    <label>Discharge Pipe Size</label>
+    <select id="p-pipe">
+      <option value="1.25">1¼" (small residential)</option>
+      <option value="1.5" selected>1½" (standard residential)</option>
+      <option value="2">2" (high-flow / commercial)</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcPump()">Size My Sump Pump</button>
+
+    <div class="result-box" id="pump-result">
+      <div style="font-size:.85rem;font-weight:700;color:#06B6D4;margin-bottom:6px">Pump Sizing Results</div>
+      <div class="metrics-grid" id="pump-metrics"></div>
+      <div id="pump-recs"></div>
+      <div id="backup-recs"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔋 Backup Pump Options (FL Critical)</div>
+    <div class="info-block">
+      <p><strong>Why backup pumps matter in FL:</strong> Power outages are common during FL hurricanes and storms — exactly when flooding is worst. A backup pump keeps your home protected when the primary fails or is overwhelmed.</p>
+    </div>
+    <table class="pipe-table" style="margin-top:8px">
+      <thead><tr><th>Type</th><th>GPH Capacity</th><th>Power Source</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td>Battery backup</td><td>1,000–2,000 GPH</td><td>12V battery</td><td>Power outages up to 12 hrs</td></tr>
+        <tr class="rec"><td>Water-powered</td><td>1,320–2,000 GPH</td><td>Municipal water</td><td>No battery maintenance</td></tr>
+        <tr><td>Generator + primary</td><td>Same as primary</td><td>Generator</td><td>Extended outages</td></tr>
+        <tr><td>Dual-pump system</td><td>2× primary GPH</td><td>AC power</td><td>High-flow + redundancy</td></tr>
+        <tr><td>Combination unit</td><td>Primary + battery</td><td>AC + 12V</td><td>All-in-one solution</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-warn" style="margin-top:10px">⚠️ <strong>FL Hurricane Warning:</strong> Water-powered backup pumps require municipal water pressure to operate. During extended flooding events, water pressure may drop. Battery backup recommended as primary backup for FL coastal counties.</div>
+  </div>
+</div>
+
+<!-- TAB 2: PIT DESIGNER -->
+<div id="tab-pit" class="panel">
+  <div class="card">
+    <div class="card-title">🕳️ Sump Pit Design Tool</div>
+
+    <label>Pit Shape</label>
+    <select id="pit-shape" onchange="updatePitDiagram()">
+      <option value="round">Round (most common)</option>
+      <option value="square">Square / rectangular</option>
+    </select>
+
+    <div class="row2">
+      <div>
+        <label id="pit-dim1-lbl">Diameter (inches)</label>
+        <input type="number" id="pit-dim1" value="24" min="12" max="60" onchange="calcPitVolume()">
+      </div>
+      <div>
+        <label id="pit-dim2-lbl">Total Depth (inches)</label>
+        <input type="number" id="pit-dim2" value="36" min="12" max="96" onchange="calcPitVolume()">
+      </div>
+    </div>
+
+    <div id="sq-only" style="display:none">
+      <label>Width (inches)</label>
+      <input type="number" id="pit-width" value="24" min="12" max="60" onchange="calcPitVolume()">
+    </div>
+
+    <label>Pump-On Float Height (inches from bottom)</label>
+    <input type="number" id="pit-on" value="12" min="4" max="30" onchange="calcPitVolume()">
+
+    <label>Pump-Off Float Height (inches from bottom)</label>
+    <input type="number" id="pit-off" value="4" min="2" max="20" onchange="calcPitVolume()">
+
+    <div class="result-box show" id="pit-result">
+      <div style="font-size:.85rem;font-weight:700;color:#06B6D4;margin-bottom:6px">Pit Volume Results</div>
+      <div class="metrics-grid" id="pit-metrics"></div>
+      <div id="pit-notes"></div>
+    </div>
+
+    <div class="pit-diagram">
+      <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" width="100%" id="pit-svg">
+        <!-- Pit walls -->
+        <rect x="50" y="20" width="100" height="160" fill="none" stroke="#1E293B" stroke-width="2" rx="4"/>
+        <rect x="52" y="22" width="96" height="156" fill="#0A0E1A" rx="3"/>
+        <!-- Water level -->
+        <rect x="52" y="100" width="96" height="78" fill="rgba(6,182,212,0.15)" rx="0 0 3 3"/>
+        <!-- Pump-on line -->
+        <line x1="45" y1="100" x2="155" y2="100" stroke="#F97316" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="160" y="104" fill="#F97316" font-size="8">ON</text>
+        <!-- Pump-off line -->
+        <line x1="45" y1="155" x2="155" y2="155" stroke="#22C55E" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="160" y="159" fill="#22C55E" font-size="8">OFF</text>
+        <!-- Pump body -->
+        <rect x="82" y="150" width="36" height="24" fill="#06B6D4" rx="4" opacity=".7"/>
+        <text x="100" y="165" fill="#0A0E1A" font-size="7" text-anchor="middle" font-weight="700">PUMP</text>
+        <!-- Discharge pipe -->
+        <line x1="118" y1="155" x2="148" y2="120" stroke="#94A3B8" stroke-width="3"/>
+        <text x="105" y="40" fill="#94A3B8" font-size="8" text-anchor="middle">Discharge →</text>
+        <!-- Labels -->
+        <text x="100" y="14" fill="#E2E8F0" font-size="9" text-anchor="middle" font-weight="700">SUMP PIT CROSS-SECTION</text>
+        <text x="27" y="104" fill="#F97316" font-size="7" text-anchor="middle">Pump</text>
+        <text x="27" y="113" fill="#F97316" font-size="7" text-anchor="middle">On</text>
+        <text x="27" y="159" fill="#22C55E" font-size="7" text-anchor="middle">Pump</text>
+        <text x="27" y="168" fill="#22C55E" font-size="7" text-anchor="middle">Off</text>
+        <!-- Dimension arrow -->
+        <line x1="165" y1="22" x2="165" y2="178" stroke="#94A3B8" stroke-width="1" marker-end="url(#arr)"/>
+        <text x="175" y="100" fill="#94A3B8" font-size="7" text-anchor="middle">Total</text>
+        <text x="175" y="110" fill="#94A3B8" font-size="7" text-anchor="middle">Depth</text>
+      </svg>
+      <div style="font-size:.67rem;color:#94A3B8;margin-top:6px">Pump cycles between ON and OFF float levels — working volume is the key sizing parameter.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌊 FL FEMA Flood Zone Reference</div>
+    <div class="info-block">
+      <p><strong>Understanding FL FEMA flood zones:</strong></p>
+    </div>
+    <div style="margin-top:10px">
+      <div style="margin-bottom:8px"><span class="flood-badge fz-a">Zone A</span> <span style="font-size:.73rem">High-risk — 1% annual chance flood. No Base Flood Elevation (BFE). Sump pump strongly recommended.</span></div>
+      <div style="margin-bottom:8px"><span class="flood-badge fz-ae">Zone AE</span> <span style="font-size:.73rem">High-risk with BFE determined. Flood insurance required for federally-backed mortgages. Dual-pump system recommended.</span></div>
+      <div style="margin-bottom:8px"><span class="flood-badge fz-b">Zone X (shaded)</span> <span style="font-size:.73rem">Moderate risk — 0.2% annual chance. Sump pump recommended for finished basements.</span></div>
+      <div style="margin-bottom:8px"><span class="flood-badge fz-x">Zone X (unshaded)</span> <span style="font-size:.73rem">Low risk. Sump pump optional but beneficial in FL sandy soil conditions.</span></div>
+    </div>
+    <div class="alert alert-cyan" style="margin-top:8px">💡 Check your FL property's flood zone at <strong>msc.fema.gov/portal/search</strong> using your address. Most coastal FL counties include significant Zone AE areas.</div>
+
+    <div class="section-title">FL County Flood Risk Snapshot</div>
+    <table class="pipe-table">
+      <thead><tr><th>County</th><th>Primary Zone</th><th>Pump Rec</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Miami-Dade</td><td>AE dominant</td><td>Dual pump</td><td>HVHZ + coastal</td></tr>
+        <tr><td>Broward</td><td>AE / X mixed</td><td>Primary + backup</td><td>Inland lower risk</td></tr>
+        <tr><td>Pinellas</td><td>AE coastal</td><td>Dual pump</td><td>Peninsula — high risk</td></tr>
+        <tr><td>Lee / Collier</td><td>AE dominant</td><td>Dual pump</td><td>Ian 2022 impact area</td></tr>
+        <tr><td>Orange / Osceola</td><td>X moderate</td><td>Single + battery</td><td>Inland, lower risk</td></tr>
+        <tr><td>Alachua / Leon</td><td>X / AE</td><td>Single pump</td><td>North FL, freeze risk too</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FL Sump Pump Code Reference</div>
+
+    <div class="section-title">FPC Chapter 10 — Traps and Interceptors</div>
+    <div class="info-block">
+      <p><strong>FPC 1002.1 — Sump pump discharge:</strong> Sump pump discharge shall not connect to the sanitary sewer system unless through an approved sewage ejector with trapped inlet. Surface water and groundwater shall be discharged to approved storm drainage or day-lighting location.</p>
+      <p style="margin-top:6px"><strong>FPC 1101.2 — Subsoil drainage:</strong> Where a building is built on ground that is below the established flood level or where subsoil water table is a problem, a sump pump system shall be provided for the sub-floor drainage.</p>
+      <p style="margin-top:6px"><strong>FL Building Code 1804.4 — Foundation drainage:</strong> Drainage tile or perforated pipe around foundations shall be connected to sump pit. Filter fabric required around drain tile. Minimum 6" of gravel cover.</p>
+    </div>
+
+    <div class="section-title">Sump Pump Installation Requirements</div>
+    <div class="info-block">
+      <p><strong>Discharge location:</strong> Must drain to approved location — storm sewer, swale, street gutter, or daylight. Never to sanitary sewer (FPC 1002.1). Discharge must be 10 ft minimum from property line and 6 ft from any window or door opening.</p>
+      <p style="margin-top:6px"><strong>Check valve:</strong> Required on discharge line (FPC 1101.8) — prevents backflow when pump shuts off. Install within 12" of pump outlet. Ball-type or swing-type check valves approved.</p>
+      <p style="margin-top:6px"><strong>Discharge pipe:</strong> Min 1¼" (residential); properly supported every 4 ft horizontal, 8 ft vertical. PVC Schedule 40 or 80 pipe required. Do not use flexible corrugated discharge hose as permanent installation.</p>
+      <p style="margin-top:6px"><strong>GFCI protection:</strong> NEC 680.71 — all sump pump receptacles within 6 ft of pit shall be GFCI-protected. Dedicated 20A circuit recommended. Pump should not share circuit with other loads.</p>
+    </div>
+
+    <div class="section-title">Sump Pump Compliance Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Check valve installed on discharge line within 12" of pump outlet <span class="check-sub">FPC 1101.8 — prevents backflow; ball or swing check valve; verify function annually</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Discharge routes to approved location (not sanitary sewer) <span class="check-sub">FPC 1002.1 — storm drain, swale, or daylight; 10 ft from property line; 6 ft from openings</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Dedicated GFCI-protected electrical circuit for pump <span class="check-sub">NEC 680.71 — GFCI required within 6 ft of pit; dedicated 20A circuit recommended; no extension cords</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Backup pump installed (battery or water-powered) <span class="check-sub">Not required by code but strongly recommended for FL flood-prone areas — power outages common during storms</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Pit covered with lid (prevents odors and debris entry) <span class="check-sub">FPC 1101.7 — sump pit shall be covered; airtight cover recommended in finished areas to prevent radon intrusion</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Foundation drain tile or perforated pipe connects to pit <span class="check-sub">FBC 1804.4 — perimeter drain required around foundations in high water table areas; filter fabric and gravel required</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Pump alarm installed for high-water condition <span class="check-sub">Not code required but strongly recommended — audio or app-connected alarm notifies when water rises above normal pump-on level</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Annual pump test and maintenance performed <span class="check-sub">Pour water into pit to trigger pump; check float, discharge, and check valve; clean intake screen; test backup battery if applicable</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 8 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a Sump Pump Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Polk</option><option>Seminole</option>
+      <option>Other</option>
+    </select>
+
+    <label>Service Type</label>
+    <select id="q-service">
+      <option>New sump pump installation</option>
+      <option>Sump pump replacement</option>
+      <option>Backup pump installation</option>
+      <option>Pit excavation and liner</option>
+      <option>Discharge line re-route</option>
+      <option>Sump pump not working</option>
+      <option>Flooding / water intrusion diagnosis</option>
+      <option>Full sump system with alarm</option>
+    </select>
+
+    <label>Current Situation</label>
+    <select id="q-sit">
+      <option>No sump pump — experiencing water intrusion</option>
+      <option>Existing pump not keeping up</option>
+      <option>Pump failed during storm</option>
+      <option>New construction planning</option>
+      <option>Flood zone — insurance upgrade</option>
+    </select>
+
+    <label>Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="Describe your flooding issue, pit size, or other details..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Consultation</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | FL Licensed Plumbing Contractor | CPC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 💧</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+florida sump pump sizing calculator, sump pump GPH florida, sump pump HP sizing florida, sump pit dimensions florida, sump pump pit design florida, backup sump pump florida, battery backup sump pump florida, water powered backup sump pump florida, florida flood zone sump pump, FEMA flood zone florida sump, Zone AE sump pump florida, sump pump installation florida, sump pump discharge florida code, FPC 1002.1 sump pump, check valve sump pump florida, GFCI sump pump florida, sump pump permit florida, foundation drainage florida, perimeter drain sump pit florida, FBC 1804.4 foundation drain, sump pump replacement florida, sump pump not working florida, water intrusion florida, high water table florida sump, hurricane flooding sump pump florida, sump pump alarm florida, sump pit liner florida, dual sump pump system florida, ejector pump vs sump pump florida, sump pump 1/3 HP 1/2 HP florida
+Sump pump sizing formula: required GPH equals pit working volume in gallons times pump cycles per hour; working volume equals cross section area times float differential height times 7.48; typical cycling 3 to 6 times per hour; for 24 inch diameter pit with 12 inch differential working volume equals about 23.6 gallons; at 6 cycles per hour required GPH equals 141; add 25 percent safety factor; round up to next standard pump size
+Pump HP vs GPH reference at 10 foot head: 1/3 HP pump 1500 to 2000 GPH; 1/2 HP pump 2000 to 3000 GPH; 3/4 HP pump 3000 to 4500 GPH; 1 HP pump 4000 to 6000 GPH; higher head reduces GPH by approximately 10 percent per foot above rated head
+Florida soil infiltration rates for sump pump sizing: clay soil 0.01 to 0.1 inches per hour low infiltration; sandy loam 0.5 to 2 inches per hour moderate; coastal Florida sand 2 to 6 inches per hour high; saturated sand near water table can allow 15 to 25 gallons per minute infiltration during heavy rain
+Popular sump pump brands florida: Zoeller M53 1/3 HP cast iron workhorse; Wayne CDU980E 3/4 HP cast iron; Liberty Pumps 1/2 HP high efficiency; Basement Watchdog battery backup; Wayne WSS30VN combination primary plus backup; Zoeller 507 combination unit; Glentronics BWSP water powered backup
+FL counties with highest flood risk requiring robust sump systems: Monroe Keys extreme flood risk; Collier Lee Charlotte hurricane storm surge; Pinellas coastal AE zone; Miami-Dade coastal AE throughout; Broward eastern portions AE; Volusia Flagler coastal; Brevard barrier island flood risk
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// Infiltration rates GPM [min, max, typical]
+const INFIL={low:[1,3,2],med:[3,8,5.5],high:[8,15,11],vhigh:[15,25,20]};
+
+// Head derating — GPH reduction per foot above 10ft
+function pumpGPH(hp, head){
+  const base={0.33:1750,0.5:2500,0.75:3600,1.0:5000};
+  const b=base[hp]||2500;
+  return Math.max(200, b - (head-10)*80);
+}
+
+function calcPump(){
+  const dia=parseInt(document.getElementById('p-pitdia').value)||24;
+  const dep=parseFloat(document.getElementById('p-pitdep').value)||24;
+  const soilKey=document.getElementById('p-soil').value;
+  const head=parseFloat(document.getElementById('p-head').value)||12;
+
+  const infil=INFIL[soilKey]||INFIL.med;
+  const inflowGPM=infil[2];
+  const inflowGPH=inflowGPM*60;
+
+  // Pit working volume (gallons)
+  const rIn=dia/2;
+  const volCuIn=Math.PI*rIn*rIn*dep;
+  const volGal=volCuIn/231;
+
+  // Cycles per hour (assume 6 for sizing)
+  const cycles=6;
+  const reqGPH=Math.ceil(inflowGPH*1.25); // 25% safety factor
+
+  // HP selection
+  const hpOptions=[0.33,0.5,0.75,1.0];
+  const recHP=hpOptions.find(h=>pumpGPH(h,head)>=reqGPH)||1.0;
+  const actGPH=Math.round(pumpGPH(recHP,head));
+
+  const metrics=[
+    {val:inflowGPH.toFixed(0)+' GPH',lbl:'Est. Inflow',cls:'cyan',sub:'At typical conditions'},
+    {val:reqGPH+' GPH',lbl:'Required Pump GPH',cls:'pass',sub:'With 25% safety factor'},
+    {val:recHP+' HP',lbl:'Recommended HP',cls:'cyan',sub:'At '+head+' ft head'},
+    {val:actGPH+' GPH',lbl:'Pump Capacity',cls:'pass',sub:'At rated head'}
+  ];
+
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('pump-metrics').innerHTML=mHtml;
+
+  const pumps=[
+    {name:'Zoeller M53',hp:0.33,gph:1750,notes:'Cast iron — workhorse for moderate FL conditions'},
+    {name:'Wayne CDU790',hp:0.5,gph:2390,notes:'Cast iron, top-suction; quiet operation'},
+    {name:'Liberty 257',hp:0.5,gph:2800,notes:'Automatic, cast iron, wide float range'},
+    {name:'Zoeller 90',hp:0.5,gph:2700,notes:'Professional-grade; popular FL plumbers\' choice'},
+    {name:'Wayne CDU980E',hp:0.75,gph:3960,notes:'Cast iron; handles FL coastal high-flow'},
+    {name:'Liberty 280',hp:1.0,gph:5040,notes:'High-capacity; Zone AE / severe flood areas'},
+  ];
+  const bestPumps=pumps.filter(p=>p.hp===recHP);
+  if(!bestPumps.length)bestPumps.push(pumps[pumps.length-1]);
+
+  let recsHtml='<div style="margin-top:10px"><div style="font-size:.78rem;font-weight:700;color:#94A3B8;margin-bottom:6px">RECOMMENDED PUMPS</div>';
+  bestPumps.forEach(p=>{
+    recsHtml+=`<div class="pump-card recommended"><h4>${esc(p.name)} — ${p.hp} HP ⭐</h4>
+    <div class="pump-spec"><span class="pk">Rated GPH (10 ft head)</span><span class="pv">${p.gph.toLocaleString()} GPH</span></div>
+    <div class="pump-spec"><span class="pk">Your load coverage</span><span class="pv">${Math.round(p.gph/reqGPH*100)}% capacity margin</span></div>
+    <div class="pump-spec"><span class="pk">Notes</span><span class="pv">${esc(p.notes)}</span></div></div>`;
+  });
+  recsHtml+='</div>';
+  document.getElementById('pump-recs').innerHTML=recsHtml;
+
+  // Backup recommendation
+  const county=document.getElementById('p-county').value;
+  const highFlood=['miami-dade','pinellas','lee','collier'].includes(county);
+  const backupHtml=`<div class="alert ${highFlood?'alert-warn':'alert-cyan'}" style="margin-top:10px">
+    ${highFlood?'⚠️ <strong>High flood-risk county detected:</strong> Dual-pump system or primary + battery backup strongly recommended. Zone AE areas should have minimum 8-hour backup capacity.':'💡 <strong>Backup pump recommended:</strong> Battery backup (Basement Watchdog BW4000 or Wayne WSS30VN combination unit) provides protection during FL storm power outages.'}
+  </div>`;
+  document.getElementById('backup-recs').innerHTML=backupHtml;
+  document.getElementById('pump-result').classList.add('show');
+}
+
+function calcPitVolume(){
+  const shape=document.getElementById('pit-shape').value;
+  const d1=parseFloat(document.getElementById('pit-dim1').value)||24;
+  const d2=parseFloat(document.getElementById('pit-dim2').value)||36;
+  const on=parseFloat(document.getElementById('pit-on').value)||12;
+  const off=parseFloat(document.getElementById('pit-off').value)||4;
+
+  let areaIn2;
+  if(shape==='round'){
+    areaIn2=Math.PI*(d1/2)*(d1/2);
+  } else {
+    const w=parseFloat(document.getElementById('pit-width').value)||24;
+    areaIn2=d1*w;
+  }
+
+  const totalVolGal=(areaIn2*d2)/231;
+  const workingVolGal=(areaIn2*(on-off))/231;
+  const workingPct=Math.round(workingVolGal/totalVolGal*100);
+
+  const metrics=[
+    {val:totalVolGal.toFixed(1)+' gal',lbl:'Total Pit Volume',cls:'cyan',sub:'All usable space'},
+    {val:workingVolGal.toFixed(1)+' gal',lbl:'Working Volume',cls:'pass',sub:'Between ON/OFF floats'},
+    {val:workingPct+'%',lbl:'Working %',cls:workingPct>=25?'pass':'warn',sub:'Of total pit volume'},
+    {val:Math.round(areaIn2)+' in²',lbl:'Cross-Section',cls:'info',sub:'Bottom area'}
+  ];
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('pit-metrics').innerHTML=mHtml;
+  document.getElementById('pit-notes').innerHTML=workingPct<25?'<div class="alert alert-warn" style="margin-top:8px">⚠️ Working volume is less than 25% of total pit — increase float differential or pit size for better pump cycling.</div>':'<div class="alert alert-ok" style="margin-top:8px">✅ Working volume is adequate. Pump will cycle efficiently between ON and OFF float positions.</div>';
+  document.getElementById('pit-result').classList.add('show');
+}
+
+function updatePitDiagram(){
+  const shape=document.getElementById('pit-shape').value;
+  document.getElementById('sq-only').style.display=shape==='square'?'block':'none';
+  document.getElementById('pit-dim1-lbl').textContent=shape==='round'?'Diameter (inches)':'Length (inches)';
+  document.getElementById('pit-dim2-lbl').textContent='Total Depth (inches)';
+  calcPitVolume();
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['pump','pit','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// Initialize
+calcPitVolume();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+<!-- fl-plumbing-seo: sump pump sizing calculator florida GPH HP pit diameter infiltration rate backup pump battery water-powered FEMA flood zone AE Zone-X FL statute FPC 1002.1 FPC 1101 sump pit volume check valve GFCI sump pump discharge florida plumbing -->
+
+</div>
+</body>
+</html>
