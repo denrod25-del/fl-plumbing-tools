@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Tankless Water Heater Sizing Calculator | BTU GPM Florida Groundwater</title>
+<meta name="description" content="Size a tankless water heater for Florida homes. Calculate peak GPM demand, BTU input, and temperature rise from FL's 60–76°F groundwater. Gas vs electric comparison, hard water scale warning, and FL plumbing code requirements.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#22C55E;color:#0A0E1A;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#22C55E;border-bottom-color:#22C55E}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#22C55E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input:focus{border-color:#22C55E}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#22C55E;color:#0A0E1A}
+.btn-primary:hover{background:#16a34a}
+.result-box{background:#141929;border:1px solid #22C55E;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.05rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric.green .mv{color:#22C55E}
+.metric.blue .mv{color:#00B4FF}
+.metric.gold .mv{color:#F4B942}
+.metric.orange .mv{color:#F97316}
+.metric.red .mv{color:#EF4444}
+.metric.teal .mv{color:#14B8A6}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.alert-gold{background:rgba(244,185,66,.12);border:1px solid rgba(244,185,66,.4);color:#F4B942}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.tw-table{width:100%;border-collapse:collapse;margin-top:8px}
+.tw-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:6px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.tw-table td{font-size:.72rem;color:#E2E8F0;padding:7px 8px;border-bottom:1px solid #0F1629}
+.tw-table tr:hover td{background:#141929}
+.tw-table .tgreen{color:#22C55E;font-weight:700}
+.tw-table .tgold{color:#F4B942;font-weight:700}
+.tw-table .tred{color:#EF4444;font-weight:700}
+.tw-table .tblue{color:#00B4FF;font-weight:700}
+.fixture-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#141929;border-radius:8px;margin:5px 0;border:1px solid #1E293B}
+.fx-icon{font-size:1.1rem;width:22px;text-align:center;flex-shrink:0}
+.fx-label{font-size:.73rem;color:#E2E8F0;flex:1;min-width:0}
+.fx-gpm{font-size:.67rem;color:#94A3B8;width:62px;text-align:right;flex-shrink:0}
+.fx-qty{width:48px;flex-shrink:0}
+.fx-qty input{width:100%;background:#0F1629;border:1px solid #1E293B;border-radius:6px;color:#E2E8F0;font-size:.8rem;padding:5px 6px;outline:none;text-align:center;-moz-appearance:textfield}
+.fx-qty input:focus{border-color:#22C55E}
+.fx-qty input::-webkit-outer-spin-button,.fx-qty input::-webkit-inner-spin-button{-webkit-appearance:none}
+.size-banner{background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(34,197,94,.05));border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:14px;margin-top:12px;text-align:center}
+.size-main{font-size:1.4rem;font-weight:800;color:#22C55E}
+.unit-card{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:12px;margin:7px 0}
+.unit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.unit-name{font-size:.78rem;font-weight:700;color:#E2E8F0}
+.unit-price{font-size:.82rem;font-weight:800;color:#22C55E}
+.unit-detail{font-size:.68rem;color:#94A3B8;line-height:1.5}
+.code-item{display:flex;align-items:flex-start;gap:10px;padding:9px;border-radius:8px;margin:5px 0;background:#141929}
+.code-icon{font-size:.9rem;flex-shrink:0;margin-top:1px}
+.code-text{font-size:.73rem;color:#E2E8F0;line-height:1.5}
+.code-ref{font-size:.65rem;color:#22C55E;margin-top:2px;display:block}
+.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form textarea:focus{border-color:#22C55E}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#22C55E;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🔥 FL Tankless Water Heater Sizing</h1>
+  <p>Calculate peak GPM demand, BTU input, and temperature rise using Florida's 60–76°F groundwater temperatures. Size gas or electric tankless units correctly for FL's unique conditions</p>
+  <span class="badge">FL GROUNDWATER 60–76°F</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('gpm',this)">Flow Rate</div>
+  <div class="tab" onclick="showTab('size',this)">Unit Sizing</div>
+  <div class="tab" onclick="showTab('fl',this)">FL Guide</div>
+  <div class="tab" onclick="showTab('quote',this)">Quote</div>
+</div>
+
+<!-- TAB 1: FLOW RATE -->
+<div id="tab-gpm" class="panel active">
+  <div class="card">
+    <div class="card-title">🚿 Peak GPM Demand Calculator</div>
+    <p style="font-size:.72rem;color:#94A3B8;margin-bottom:12px">Enter the quantity of each hot-water fixture. Peak demand = simultaneous use (e.g., 2 showers + dishwasher running at once).</p>
+
+    <div class="fixture-row">
+      <span class="fx-icon">🚿</span>
+      <span class="fx-label">Standard Shower (2.0 GPM)</span>
+      <span class="fx-gpm">2.0 ea</span>
+      <div class="fx-qty"><input type="number" id="fx-shower" value="1" min="0" max="6" oninput="calcGPM()"></div>
+    </div>
+    <div class="fixture-row">
+      <span class="fx-icon">🌧️</span>
+      <span class="fx-label">Rainfall Shower Head (3.0 GPM)</span>
+      <span class="fx-gpm">3.0 ea</span>
+      <div class="fx-qty"><input type="number" id="fx-rain" value="0" min="0" max="4" oninput="calcGPM()"></div>
+    </div>
+    <div class="fixture-row">
+      <span class="fx-icon">🛁</span>
+      <span class="fx-label">Garden / Soaking Tub Fill</span>
+      <span class="fx-gpm">4.0 ea</span>
+      <div class="fx-qty"><input type="number" id="fx-tub" value="0" min="0" max="3" oninput="calcGPM()"></div>
+    </div>
+    <div class="fixture-row">
+      <span class="fx-icon">🍽️</span>
+      <span class="fx-label">Kitchen Faucet (1.8 GPM)</span>
+      <span class="fx-gpm">1.8 ea</span>
+      <div class="fx-qty"><input type="number" id="fx-kitchen" value="1" min="0" max="3" oninput="calcGPM()"></div>
+    </div>
+    <div class="fixture-row">
+      <span class="fx-icon">🪥</span>
+      <span class="fx-label">Bathroom Faucet (1.0 GPM)</span>
+      <span class="fx-gpm">1.0 ea</span>
+      <div class="fx-qty"><input type="number" id="fx-bath" value="2" min="0" max="8" oninput="calcGPM()"></div>
+    </div>
+    <div class="fixture-row">
+      <span class="fx-icon">🥗</span>
+      <span class="fx-label">Dishwasher (0.7 GPM)</span>
+      <span class="fx-gpm">0.7 ea</span>
+      <div class="fx-qty"><input type="number" id="fx-dish" value="1" min="0" max="2" oninput="calcGPM()"></div>
+    </div>
+    <div class="fixture-row">
+      <span class="fx-icon">👕</span>
+      <span class="fx-label">Clothes Washer (2.0 GPM)</span>
+      <span class="fx-gpm">2.0 ea</span>
+      <div class="fx-qty"><input type="number" id="fx-wash" value="0" min="0" max="3" oninput="calcGPM()"></div>
+    </div>
+    <div class="fixture-row">
+      <span class="fx-icon">🪣</span>
+      <span class="fx-label">Utility / Mop Sink (1.5 GPM)</span>
+      <span class="fx-gpm">1.5 ea</span>
+      <div class="fx-qty"><input type="number" id="fx-util" value="0" min="0" max="3" oninput="calcGPM()"></div>
+    </div>
+
+    <div class="result-box show" id="gpm-result">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:.7rem;color:#94A3B8">All fixtures simultaneous</div>
+          <div id="gpm-total" style="font-size:1.5rem;font-weight:800;color:#22C55E">4.5 GPM</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:.7rem;color:#94A3B8">Realistic peak (75%)</div>
+          <div id="gpm-peak" style="font-size:1.5rem;font-weight:800;color:#F4B942">3.4 GPM</div>
+        </div>
+      </div>
+      <div id="gpm-msg" class="alert alert-ok" style="margin-top:10px">Adjust fixture quantities above — results update automatically.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💡 Sizing Philosophy: Simultaneous Use</div>
+    <div class="info-block">
+      <p><strong>Low (1–3 GPM):</strong> 1 shower + kitchen faucet. Studio, condo, or 1BR apartment.</p>
+      <p style="margin-top:6px"><strong>Moderate (3–5 GPM):</strong> 2 showers + dishwasher. Standard FL 3BR/2BA home — most common sizing range.</p>
+      <p style="margin-top:6px"><strong>High (5–8 GPM):</strong> 2+ showers + tub fill + dishwasher. Larger home, master bath with rainfall head.</p>
+      <p style="margin-top:6px"><strong>Very High (&gt;8 GPM):</strong> Multiple showers + heavy commercial use. Two units or a commercial-grade system.</p>
+      <p style="margin-top:8px"><strong>FL tip:</strong> Clothes washers rarely run on hot in Florida's warm climate — most FL residents use cold wash year-round. Don't oversize for the washer unless it's specifically used for hot cycles.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: UNIT SIZING -->
+<div id="tab-size" class="panel">
+  <div class="card">
+    <div class="card-title">📊 BTU / kW Unit Sizing Calculator</div>
+
+    <label>FL Region (Sets Groundwater Temperature)</label>
+    <select id="sz-region" onchange="calcSize()">
+      <option value="76">South FL — Miami-Dade, Broward, Palm Beach (76°F GW)</option>
+      <option value="75">Southwest FL — Collier, Lee, Charlotte (75°F GW)</option>
+      <option value="72" selected>Central FL — Hillsborough, Pinellas, Orange (72°F GW)</option>
+      <option value="70">Space Coast — Brevard, Volusia, Seminole (70°F GW)</option>
+      <option value="67">Northeast FL — Duval, St. Johns, Clay (67°F GW)</option>
+      <option value="63">North Central — Alachua, Marion, Leon (63°F GW)</option>
+      <option value="60">Panhandle — Escambia, Bay, Okaloosa (60°F GW)</option>
+    </select>
+
+    <label>Desired Hot Water Output Temperature</label>
+    <select id="sz-output" onchange="calcSize()">
+      <option value="105">105°F — Low / Eco (sensitive skin)</option>
+      <option value="110" selected>110°F — Standard (most FL homes)</option>
+      <option value="115">115°F — High demand</option>
+      <option value="120">120°F — Maximum (FL code max for residential)</option>
+    </select>
+
+    <label>Fuel Type</label>
+    <select id="sz-fuel" onchange="calcSize()">
+      <option value="gas">Natural Gas</option>
+      <option value="propane">LP / Propane</option>
+      <option value="electric">Electric</option>
+    </select>
+
+    <label>Peak GPM (from Flow Rate tab, or enter manually)</label>
+    <input type="number" id="sz-gpm" value="3.4" min="0.5" max="20" step="0.1" oninput="calcSize()">
+
+    <button class="btn btn-primary" onclick="calcSize()">Calculate Size</button>
+
+    <div class="result-box show" id="size-result">
+      <div id="size-banner" class="size-banner">
+        <div id="size-main-val" class="size-main">Calculating…</div>
+        <div style="font-size:.72rem;color:#94A3B8;margin-top:4px">Required output capacity</div>
+      </div>
+      <div class="metrics-grid" style="margin-top:12px">
+        <div class="metric green"><div class="mv" id="sz-delta">—</div><div class="ml">Temp Rise (°F)</div></div>
+        <div class="metric blue"><div class="mv" id="sz-btu-out">—</div><div class="ml">BTU/hr Output</div></div>
+        <div class="metric gold"><div class="mv" id="sz-btu-in">—</div><div class="ml">BTU/hr Input</div></div>
+        <div class="metric orange"><div class="mv" id="sz-kw">—</div><div class="ml">kW Equiv.</div></div>
+      </div>
+      <div id="size-rec" class="alert alert-ok" style="margin-top:12px"></div>
+      <div class="section-title" style="margin-top:14px">Matching Units</div>
+      <div id="unit-cards"></div>
+      <div id="install-cost" class="alert alert-blue" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌡️ FL Groundwater Temperature Advantage</div>
+    <div class="info-block">
+      <p><strong>Why FL is ideal for tankless:</strong> Florida's warm groundwater (60–76°F year-round) means far less temperature rise than cold-climate states (40–50°F groundwater). A unit rated for 5 GPM in Minnesota may handle 8+ GPM in South FL at the same BTU input.</p>
+      <p style="margin-top:8px"><strong>No seasonal penalty:</strong> Unlike northern states where groundwater drops to 40°F in winter and forces oversizing, FL groundwater stays nearly constant year-round. The unit you size for summer is the unit you need in January.</p>
+    </div>
+    <table class="tw-table" style="margin-top:10px">
+      <thead><tr><th>FL Region</th><th>Groundwater</th><th>ΔT to 110°F</th><th>vs. Northern ΔT</th></tr></thead>
+      <tbody>
+        <tr><td>South FL</td><td class="tgreen">76°F</td><td>34°F</td><td class="tgreen">48% less BTU</td></tr>
+        <tr><td>SW FL</td><td class="tgreen">75°F</td><td>35°F</td><td class="tgreen">46% less BTU</td></tr>
+        <tr><td>Central FL</td><td class="tblue">72°F</td><td>38°F</td><td class="tblue">40% less BTU</td></tr>
+        <tr><td>Space Coast</td><td class="tblue">70°F</td><td>40°F</td><td class="tblue">36% less BTU</td></tr>
+        <tr><td>NE Florida</td><td>67°F</td><td>43°F</td><td>31% less BTU</td></tr>
+        <tr><td>N Central FL</td><td>63°F</td><td>47°F</td><td>24% less BTU</td></tr>
+        <tr><td>Panhandle</td><td>60°F</td><td>50°F</td><td>20% less BTU</td></tr>
+        <tr style="opacity:.5"><td>Northern US</td><td>40°F</td><td>70°F</td><td>Baseline</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 3: FL GUIDE -->
+<div id="tab-fl" class="panel">
+  <div class="card">
+    <div class="card-title">⚠️ #1 FL Issue: Hard Water Scale Buildup</div>
+    <div class="alert alert-warn">Florida's hard water (6–22 GPG) is the leading cause of premature tankless water heater failure in FL. Without treatment, scale can reduce heat exchanger efficiency 20–40% per year and void manufacturer warranties in 2–3 years.</div>
+    <div class="info-block" style="margin-top:10px">
+      <p><strong>Why tankless units are vulnerable:</strong> The heat exchanger in a tankless unit has narrow channels (some under 1/16" wide) that concentrate mineral deposits. Unlike a tank water heater where scale sinks to the bottom, in tankless units it coats the heat exchanger directly — the highest-heat area. At 15+ GPG, visible scale can build within 6–12 months.</p>
+      <p style="margin-top:8px"><strong>Scale protection options (FL-specific):</strong></p>
+      <p style="margin-top:6px">• <strong>Annual descaling flush (minimum):</strong> $125–$250/year service call. White vinegar or citric acid flush circulated through the heat exchanger. Required in most FL counties to maintain warranty.</p>
+      <p style="margin-top:4px">• <strong>Polyphosphate scale inhibitor filter:</strong> $75–$200 installed, $40–$80 cartridge every 6 months. Low cost, reduces (doesn't eliminate) scale. Good for moderate hardness (&lt;14 GPG).</p>
+      <p style="margin-top:4px">• <strong>Electronic/magnetic scale inhibitor:</strong> $200–$500 installed. No salt, no waste water. Effective for hardness under 16 GPG. Reduces crystal size but doesn't eliminate minerals.</p>
+      <p style="margin-top:4px">• <strong>Water softener (best protection):</strong> $800–$2,500 installed. Eliminates scale entirely via ion exchange. Required by Navien, Noritz, and some Rinnai models to maintain warranty in FL. See our Water Softener Sizing tool for FL-specific sizing.</p>
+    </div>
+    <table class="tw-table" style="margin-top:12px">
+      <thead><tr><th>FL County</th><th>Hardness</th><th>Scale Risk</th><th>Recommendation</th></tr></thead>
+      <tbody>
+        <tr><td>Collier</td><td class="tred">22 GPG</td><td class="tred">Extreme</td><td>Softener required</td></tr>
+        <tr><td>Lee</td><td class="tred">20 GPG</td><td class="tred">Extreme</td><td>Softener required</td></tr>
+        <tr><td>Miami-Dade</td><td class="tred">19 GPG</td><td class="tred">Very High</td><td>Softener required</td></tr>
+        <tr><td>Broward</td><td class="tred">17 GPG</td><td class="tred">Very High</td><td>Softener required</td></tr>
+        <tr><td>Palm Beach</td><td class="tgold">15 GPG</td><td class="tgold">High</td><td>Softener recommended</td></tr>
+        <tr><td>Sarasota</td><td class="tgold">14 GPG</td><td class="tgold">High</td><td>Softener recommended</td></tr>
+        <tr><td>Hillsborough</td><td class="tgold">13 GPG</td><td class="tgold">High</td><td>Scale inhibitor minimum</td></tr>
+        <tr><td>Orange / Orlando</td><td>8 GPG</td><td class="tblue">Moderate</td><td>Annual descale</td></tr>
+        <tr><td>Brevard</td><td>10 GPG</td><td class="tblue">Moderate</td><td>Scale inhibitor or descale</td></tr>
+        <tr><td>Duval</td><td>6 GPG</td><td class="tgreen">Low</td><td>Annual descale only</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 FL Code &amp; Permit Requirements</div>
+    <div class="code-item">
+      <span class="code-icon">📗</span>
+      <div class="code-text">Gas tankless units must use <strong>sealed combustion (direct vent) or power vent</strong>. Open-combustion gas appliances require combustion air provisions rarely available in FL airtight homes.
+        <span class="code-ref">2023 FBC § 501.7 / NFPA 54 Ch. 10</span>
+      </div>
+    </div>
+    <div class="code-item">
+      <span class="code-icon">📗</span>
+      <div class="code-text"><strong>Permit required</strong> for all water heater replacements in FL, regardless of fuel type. Homeowner permit available in most counties for single-family residential — ask us about permit-pull service.
+        <span class="code-ref">FL Statute 489.103(7)(a)</span>
+      </div>
+    </div>
+    <div class="code-item">
+      <span class="code-icon">📗</span>
+      <div class="code-text">Gas water heaters must meet minimum <strong>0.82 Energy Factor</strong>. Condensing tankless units (0.94–0.98 EF) exceed this significantly — qualifying for FPL / Duke Energy rebates in FL.
+        <span class="code-ref">FL Energy Code § R404.1</span>
+      </div>
+    </div>
+    <div class="code-item">
+      <span class="code-icon">📗</span>
+      <div class="code-text">CSST flexible gas pipe serving tankless units requires <strong>arc-fault bonding</strong> per 2023 FBC. Bonding wire must run to electrical ground panel within the same room.
+        <span class="code-ref">2023 FBC / NFPA 54 § 7.13</span>
+      </div>
+    </div>
+    <div class="code-item">
+      <span class="code-icon">📗</span>
+      <div class="code-text">T&amp;P relief valve discharge pipe must terminate <strong>within 6" of floor</strong> or to outside. Condensing units produce acidic condensate — drain must comply with FPC neutralization requirements.
+        <span class="code-ref">FPC § 504.6</span>
+      </div>
+    </div>
+    <div class="code-item">
+      <span class="code-icon">📗</span>
+      <div class="code-text">Electric tankless units (24–36 kW) require <strong>dedicated 240V circuits</strong> — 100A to 150A. Confirm main panel capacity (most FL homes have 150A or 200A service) before purchasing.
+        <span class="code-ref">NEC 422.11 / FBC Electrical</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Gas vs. Electric in Florida</div>
+    <table class="tw-table">
+      <thead><tr><th>Factor</th><th>Gas Tankless</th><th>Electric Tankless</th></tr></thead>
+      <tbody>
+        <tr><td>Unit cost</td><td>$600–$1,800</td><td>$250–$700</td></tr>
+        <tr><td>FL install cost</td><td>$800–$2,200</td><td>$400–$1,200</td></tr>
+        <tr><td>FL annual energy cost</td><td class="tgreen">~$220–$350/yr</td><td class="tred">~$400–$650/yr</td></tr>
+        <tr><td>Max flow rate</td><td class="tgreen">4–11 GPM</td><td>2–4 GPM</td></tr>
+        <tr><td>Hurricane outage</td><td class="tgreen">Works (battery pilot)</td><td class="tred">No hot water</td></tr>
+        <tr><td>Scale sensitivity</td><td>Moderate</td><td class="tred">Higher (element coils)</td></tr>
+        <tr><td>Lifespan</td><td class="tgreen">20–25 years</td><td>10–15 years</td></tr>
+        <tr><td>Best for</td><td class="tgreen">Whole-house</td><td>Point-of-use / supplement</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-ok" style="margin-top:10px">Gas tankless pays back the higher install cost in 3–5 years vs. electric in FL, assuming FPL average rates of $0.14–$0.16/kWh and natural gas at ~$1.20/therm.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💰 FL Installation Cost Reference (2024–2025)</div>
+    <table class="tw-table">
+      <thead><tr><th>Item</th><th>Low</th><th>High</th></tr></thead>
+      <tbody>
+        <tr><td>Gas tankless unit (condensing)</td><td>$900</td><td>$1,800</td></tr>
+        <tr><td>Gas installation labor (FL)</td><td>$800</td><td>$2,200</td></tr>
+        <tr><td>Gas supply line upgrade</td><td>$400</td><td>$1,500</td></tr>
+        <tr><td>Electric tankless unit</td><td>$250</td><td>$700</td></tr>
+        <tr><td>Electric installation (FL)</td><td>$400</td><td>$1,200</td></tr>
+        <tr><td>Panel upgrade (if needed)</td><td>$1,200</td><td>$3,500</td></tr>
+        <tr><td>Water softener (recommended FL)</td><td>$800</td><td>$2,500</td></tr>
+        <tr><td>Scale inhibitor filter</td><td>$150</td><td>$400</td></tr>
+        <tr><td>FL permit (typical)</td><td>$75</td><td>$350</td></tr>
+        <tr><td>Annual descaling service</td><td>$125</td><td>$250</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card">
+    <div class="card-title">📞 Free Tankless Water Heater Quote</div>
+    <div class="alert alert-ok" style="margin-bottom:14px">All installations include FL permit, water hardness test, scale-protection recommendation, and 1-year labor warranty.</div>
+    <div class="quote-form">
+      <label>Your Name</label>
+      <input type="text" id="q-name" placeholder="John Smith">
+      <label>Phone Number</label>
+      <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      <label>City / County</label>
+      <input type="text" id="q-city" placeholder="Palm Beach Gardens, Palm Beach County">
+      <label>Current Water Heater Type</label>
+      <select id="q-current">
+        <option>Tank gas (40–50 gal)</option>
+        <option>Tank electric (40–50 gal)</option>
+        <option>Existing tankless — upgrade</option>
+        <option>New construction / no heater yet</option>
+        <option>Other</option>
+      </select>
+      <label>Fuel Preference</label>
+      <select id="q-fuel">
+        <option>Natural gas (preferred)</option>
+        <option>LP / Propane</option>
+        <option>Electric</option>
+        <option>Not sure — advise me</option>
+      </select>
+      <label>Number of Bathrooms</label>
+      <select id="q-baths">
+        <option>1 bath</option>
+        <option>1.5 bath</option>
+        <option>2 baths</option>
+        <option selected>2.5 baths</option>
+        <option>3 baths</option>
+        <option>3.5+ baths</option>
+      </select>
+      <label>Additional Notes (optional)</label>
+      <textarea id="q-notes" rows="3" placeholder="Hard water problems, low pressure, timing, specific brands..."></textarea>
+      <button class="btn btn-primary" onclick="submitQuote()">Request Free Quote</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">✅ Why Choose Us</div>
+    <div class="code-item"><span class="code-icon">✅</span><div class="code-text">FL-licensed plumbing contractor (CPC) — every job fully permitted</div></div>
+    <div class="code-item"><span class="code-icon">✅</span><div class="code-text">Free water hardness test with every quote — we protect your investment</div></div>
+    <div class="code-item"><span class="code-icon">✅</span><div class="code-text">All major brands: Rinnai, Navien, Noritz, Rheem, Bradford White</div></div>
+    <div class="code-item"><span class="code-icon">✅</span><div class="code-text">Gas line sizing and upgrade included — one company, one call</div></div>
+    <div class="code-item"><span class="code-icon">✅</span><div class="code-text">Annual descaling service plan — protects manufacturer warranty</div></div>
+    <div class="code-item"><span class="code-icon">✅</span><div class="code-text">Same-day service available throughout South and Central FL</div></div>
+  </div>
+</div>
+
+</div><!-- /container -->
+<div class="toast" id="toast">We'll call you within 2 hours! ☎️</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+const FX_DATA = [
+  {id:'fx-shower', gpm:2.0},
+  {id:'fx-rain',   gpm:3.0},
+  {id:'fx-tub',    gpm:4.0},
+  {id:'fx-kitchen',gpm:1.8},
+  {id:'fx-bath',   gpm:1.0},
+  {id:'fx-dish',   gpm:0.7},
+  {id:'fx-wash',   gpm:2.0},
+  {id:'fx-util',   gpm:1.5},
+];
+
+function calcGPM() {
+  let total = 0;
+  FX_DATA.forEach(function(f) {
+    const qty = Math.max(0, parseFloat(document.getElementById(f.id).value) || 0);
+    total += qty * f.gpm;
+  });
+  const peak = total * 0.75;
+  document.getElementById('gpm-total').textContent = total.toFixed(1) + ' GPM';
+  document.getElementById('gpm-peak').textContent = peak.toFixed(1) + ' GPM';
+  const msg = document.getElementById('gpm-msg');
+  let cls = 'alert-ok', txt = '';
+  if (total <= 0) {
+    cls = 'alert-warn'; txt = 'Enter at least one fixture to see your demand.';
+  } else if (peak < 2) {
+    txt = '✅ Low demand (' + peak.toFixed(1) + ' GPM). A compact 110–130K BTU gas unit or 18–24 kW electric handles your needs easily.';
+  } else if (peak < 4) {
+    txt = '⚡ Moderate demand (' + peak.toFixed(1) + ' GPM). A mid-size 140–180K BTU gas unit is ideal. Most common FL home scenario.';
+  } else if (peak < 7) {
+    cls = 'alert-warn'; txt = '🔥 High demand (' + peak.toFixed(1) + ' GPM). A 180–200K BTU condensing unit is required. Consider adding a recirculation pump for comfort.';
+  } else {
+    cls = 'alert-red'; txt = '⚠️ Very high demand (' + peak.toFixed(1) + ' GPM). Two units in parallel or a commercial-grade unit may be needed. Request a custom sizing quote.';
+  }
+  msg.className = 'alert ' + cls;
+  msg.textContent = txt;
+  const szEl = document.getElementById('sz-gpm');
+  if (szEl) szEl.value = peak.toFixed(1);
+  calcSize();
+}
+
+const GAS_UNITS = [
+  {name:'Rinnai RL75eN',    btu:180000, gpmFL:8.0, type:'Non-Condensing',   ef:'0.82', price:'$700–$1,000'},
+  {name:'Rinnai RU130iN',   btu:130000, gpmFL:5.7, type:'Non-Condensing',   ef:'0.82', price:'$800–$1,100'},
+  {name:'Noritz NRC98DV',   btu:180000, gpmFL:8.0, type:'Non-Condensing',   ef:'0.84', price:'$900–$1,200'},
+  {name:'Navien NPE-180A2', btu:180000, gpmFL:8.4, type:'Condensing 0.97',  ef:'0.97', price:'$1,100–$1,500'},
+  {name:'Navien NPE-240A2', btu:199900, gpmFL:9.0, type:'Condensing 0.97',  ef:'0.97', price:'$1,200–$1,700'},
+  {name:'Rheem RTGH-95XLN', btu:199900, gpmFL:9.5, type:'Condensing 0.96',  ef:'0.96', price:'$950–$1,400'},
+  {name:'Rinnai RU199iN',   btu:199000, gpmFL:11.1,type:'Condensing 0.96',  ef:'0.96', price:'$1,100–$1,600'},
+];
+
+const PROPANE_UNITS = [
+  {name:'Rinnai RL75eP',    btu:180000, gpmFL:8.0, type:'Non-Cond. LP',     ef:'0.82', price:'$750–$1,050'},
+  {name:'Navien NPE-180A2 LP', btu:180000, gpmFL:8.4, type:'Condensing LP', ef:'0.97', price:'$1,150–$1,600'},
+  {name:'Noritz NRC98DVLP', btu:180000, gpmFL:8.0, type:'Non-Cond. LP',     ef:'0.84', price:'$950–$1,300'},
+  {name:'Rinnai RU199iP',   btu:199000, gpmFL:11.1,type:'Condensing LP',    ef:'0.96', price:'$1,150–$1,650'},
+];
+
+const ELEC_UNITS = [
+  {name:'Stiebel Eltron Tempra 20 Plus', kw:20, gpmFL:2.4, type:'240V / 83A', price:'$380–$520'},
+  {name:'Stiebel Eltron Tempra 24 Plus', kw:24, gpmFL:2.8, type:'240V / 100A', price:'$450–$620'},
+  {name:'Stiebel Eltron Tempra 29 Plus', kw:29, gpmFL:3.4, type:'240V / 125A', price:'$550–$750'},
+  {name:'Stiebel Eltron Tempra 36 Plus', kw:36, gpmFL:4.2, type:'240V / 150A', price:'$650–$900'},
+  {name:'Rheem RTEX-24',                 kw:24, gpmFL:2.8, type:'240V / 100A', price:'$350–$520'},
+  {name:'Rheem RTEX-36',                 kw:36, gpmFL:4.2, type:'240V / 150A', price:'$450–$680'},
+];
+
+function calcSize() {
+  const region = parseFloat(document.getElementById('sz-region').value) || 72;
+  const output = parseFloat(document.getElementById('sz-output').value) || 110;
+  const fuel = document.getElementById('sz-fuel').value;
+  const gpm = Math.max(0.1, parseFloat(document.getElementById('sz-gpm').value) || 3.4);
+
+  const deltaT = output - region;
+  const btuOut = gpm * 500 * deltaT;
+  const btuInStd = btuOut / 0.82;
+  const kw = btuOut / 3412;
+
+  document.getElementById('sz-delta').textContent = deltaT + '°F';
+  document.getElementById('sz-btu-out').textContent = (btuOut/1000).toFixed(0) + 'K';
+  document.getElementById('sz-btu-in').textContent = (btuInStd/1000).toFixed(0) + 'K';
+  document.getElementById('sz-kw').textContent = kw.toFixed(1);
+
+  let sizeLabel = '';
+  if (fuel === 'electric') {
+    if (kw < 18) sizeLabel = 'Point-of-use electric (< 18 kW)';
+    else if (kw < 25) sizeLabel = 'Compact electric (18–24 kW)';
+    else if (kw < 32) sizeLabel = 'Mid-size electric (24–32 kW)';
+    else if (kw < 40) sizeLabel = 'Large electric (32–40 kW)';
+    else sizeLabel = 'Multiple units needed (> 40 kW)';
+  } else {
+    if (btuOut < 80000)  sizeLabel = 'Compact (< 110K BTU)';
+    else if (btuOut < 140000) sizeLabel = 'Standard (110–140K BTU)';
+    else if (btuOut < 170000) sizeLabel = 'Mid-size (140–170K BTU)';
+    else if (btuOut < 200000) sizeLabel = 'Large (170–200K BTU)';
+    else sizeLabel = 'Extra-Large or Two Units Needed';
+  }
+  document.getElementById('size-main-val').textContent = sizeLabel;
+
+  const rec = document.getElementById('size-rec');
+  let recTxt = '', recCls = 'alert-ok';
+  if (fuel === 'electric') {
+    if (kw <= 24) {
+      recTxt = '✅ A 24 kW electric unit meets your FL demand (ΔT = ' + deltaT + '°F, ' + gpm.toFixed(1) + ' GPM). Requires 240V/100A dedicated circuit.';
+    } else if (kw <= 36) {
+      recTxt = '⚡ A ' + Math.ceil(kw/1)*1 + ' kW unit required. Needs 240V/' + (kw <= 29 ? '125A' : '150A') + ' — verify panel capacity first.';
+      recCls = 'alert-warn';
+    } else {
+      recTxt = '⚠️ ' + kw.toFixed(1) + ' kW demand exceeds standard electric units. Consider gas tankless or two electric units in parallel.';
+      recCls = 'alert-red';
+    }
+  } else {
+    if (btuInStd <= 130000) {
+      recTxt = '✅ A standard 110–130K BTU non-condensing gas unit meets your FL demand. A condensing unit improves efficiency to 0.96+ EF.';
+    } else if (btuInStd <= 200000) {
+      recTxt = '✅ A 140–200K BTU condensing gas unit is the right choice. Condensing models meet FL Energy Code and often qualify for utility rebates.';
+    } else {
+      recTxt = '⚠️ Required BTU (' + (btuInStd/1000).toFixed(0) + 'K) exceeds single-unit capacity. Two units in parallel may be needed. Request a custom sizing consultation.';
+      recCls = 'alert-red';
+    }
+  }
+  rec.className = 'alert ' + recCls;
+  rec.textContent = recTxt;
+
+  const cards = document.getElementById('unit-cards');
+  const units = fuel === 'electric' ? ELEC_UNITS : (fuel === 'propane' ? PROPANE_UNITS : GAS_UNITS);
+  let html = '';
+  let shown = 0;
+  units.forEach(function(u) {
+    if (shown >= 3) return;
+    let fits = false;
+    if (fuel === 'electric') {
+      fits = u.kw >= kw * 0.85;
+    } else {
+      fits = u.btu >= btuInStd * 0.85;
+    }
+    if (fits) {
+      shown++;
+      const cap = fuel === 'electric' ? (u.kw + ' kW · ' + u.gpmFL + ' GPM @ FL groundwater') : ((u.btu/1000).toFixed(0) + 'K BTU · ' + u.gpmFL + ' GPM @ 72°F GW');
+      html += '<div class="unit-card"><div class="unit-head"><span class="unit-name">' + esc(u.name) + '</span><span class="unit-price">' + esc(u.price) + '</span></div><div class="unit-detail">' + esc(u.type) + ' · EF ' + esc(u.ef || '—') + ' · ' + esc(cap) + '</div></div>';
+    }
+  });
+  if (!html) {
+    html = '<div class="info-block"><p>Demand exceeds standard unit capacity — contact us for custom sizing and multi-unit configuration.</p></div>';
+  }
+  cards.innerHTML = html;
+
+  const ic = document.getElementById('install-cost');
+  if (fuel === 'electric') {
+    ic.textContent = 'Estimated FL install: $1,200–$2,500 all-in (unit + labor + permit). Panel upgrade (if needed): add $1,200–$3,500.';
+  } else {
+    ic.textContent = 'Estimated FL install: $3,000–$6,500 all-in (unit + labor + permit + scale protection). Gas line upgrade if needed: add $400–$1,500.';
+  }
+}
+
+function submitQuote() {
+  const name = document.getElementById('q-name').value.trim();
+  const phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 3500);
+}
+
+calcGPM();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+<!-- fl-plumbing-seo: tankless water heater sizing florida gpm btu groundwater temperature rise gas electric navien rinnai noritz scale hard water florida plumbing code fbc 501 -->
+
+</div>
+</body>
+</html>

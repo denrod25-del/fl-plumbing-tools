@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Florida Backflow Preventer Cost Calculator | FL Plumbing Tools</title>
+<meta name="description" content="Calculate backflow preventer installation costs for Florida. AVB, PVB, DC, RPZ device types. FL DEP FAC 62-555.360 annual testing requirements. Miami-Dade, Broward, Palm Beach, Hillsborough county regulations.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:12px}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#F4B942;line-height:1.2}
+header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.75rem;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:500;line-height:1.2}
+.tab.active{background:#F4B942;color:#0A0E1A;font-weight:700}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:14px}
+.card-gold{background:#141929;border:1px solid rgba(244,185,66,.25)}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:4px;font-weight:500}
+select,input{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:0.95rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#F4B942}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.result-box{background:#141929;border:1px solid rgba(244,185,66,.3);border-radius:10px;padding:14px;margin-bottom:10px}
+.result-label{font-size:0.75rem;color:#94A3B8;margin-bottom:2px}
+.result-val{font-size:1.4rem;font-weight:700;color:#F4B942}
+.result-sub{font-size:0.75rem;color:#94A3B8;margin-top:2px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.result-item{background:#0A0E1A;border-radius:8px;padding:10px}
+.result-item .label{font-size:0.7rem;color:#94A3B8}
+.result-item .val{font-size:1.05rem;font-weight:700;color:#F4B942}
+.btn{width:100%;padding:13px;background:#F4B942;color:#0A0E1A;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn:hover{opacity:.9}
+h2{font-size:1rem;font-weight:700;color:#F4B942;margin-bottom:10px}
+h3{font-size:0.9rem;font-weight:700;color:#E2E8F0;margin-bottom:6px}
+.badge{display:inline-block;padding:3px 8px;border-radius:5px;font-size:0.7rem;font-weight:700}
+.badge-gold{background:rgba(244,185,66,.15);color:#F4B942;border:1px solid rgba(244,185,66,.3)}
+.badge-red{background:rgba(239,68,68,.15);color:#EF4444;border:1px solid rgba(239,68,68,.3)}
+.badge-green{background:rgba(34,197,94,.15);color:#22C55E;border:1px solid rgba(34,197,94,.3)}
+.badge-blue{background:rgba(0,180,255,.15);color:#00B4FF;border:1px solid rgba(0,180,255,.3)}
+.device-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:12px;border-left:3px solid #F4B942}
+.device-card.pvb{border-left-color:#22C55E}
+.device-card.dc{border-left-color:#00B4FF}
+.device-card.rpz{border-left-color:#EF4444}
+.device-title{font-weight:700;font-size:0.95rem;color:#E2E8F0;margin-bottom:4px}
+.device-sub{font-size:0.75rem;color:#94A3B8;margin-bottom:8px}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.mini-item{background:#0A0E1A;border-radius:6px;padding:8px}
+.mini-label{font-size:0.65rem;color:#94A3B8}
+.mini-val{font-size:0.85rem;font-weight:600;color:#E2E8F0}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th{background:#0A0E1A;padding:8px 10px;text-align:left;font-size:0.72rem;color:#94A3B8;font-weight:600}
+td{padding:8px 10px;border-top:1px solid #1E293B;font-size:0.8rem}
+td:first-child{color:#E2E8F0;font-weight:500}
+td:not(:first-child){color:#F4B942;font-weight:600}
+.alert{border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:0.82rem;line-height:1.5}
+.alert-gold{background:rgba(244,185,66,.1);border:1px solid rgba(244,185,66,.3);color:#E2E8F0}
+.alert-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#E2E8F0}
+.alert-green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#E2E8F0}
+.code-ref{font-family:monospace;font-size:0.75rem;background:#0A0E1A;padding:2px 6px;border-radius:4px;color:#F4B942}
+.tip{font-size:0.78rem;color:#94A3B8;margin-top:8px;line-height:1.5}
+.section-title{font-size:0.75rem;font-weight:700;color:#F4B942;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E293B;font-size:0.82rem}
+.info-row:last-child{border-bottom:none}
+.info-key{color:#94A3B8;flex-shrink:0;margin-right:8px}
+.info-val{color:#E2E8F0;font-weight:500;text-align:right}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:0.9rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.pros,.cons{border-radius:6px;padding:8px 10px}
+.pros{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2)}
+.cons{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2)}
+.pros-title{font-size:0.65rem;font-weight:700;color:#22C55E;margin-bottom:4px}
+.cons-title{font-size:0.65rem;font-weight:700;color:#EF4444;margin-bottom:4px}
+.pros li,.cons li{font-size:0.72rem;color:#94A3B8;list-style:none;padding:2px 0}
+.county-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E293B;font-size:0.8rem}
+.county-row:last-child{border-bottom:none}
+.enforcement-badge{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:4px}
+.enf-high{background:rgba(239,68,68,.15);color:#EF4444}
+.enf-med{background:rgba(244,185,66,.15);color:#F4B942}
+.enf-std{background:rgba(148,163,184,.15);color:#94A3B8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>⚠️ Florida Backflow Preventer<br>Cost Calculator</h1>
+    <p>AVB · PVB · Double Check · RPZ &mdash; FL DEP annual testing requirements</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calc',this)">Cost Calc</button>
+    <button class="tab" onclick="showTab('devices',this)">Devices</button>
+    <button class="tab" onclick="showTab('fl',this)">FL Rules</button>
+    <button class="tab" onclick="showTab('quote',this)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: COST CALCULATOR -->
+  <div id="calc" class="panel active">
+    <div class="card">
+      <h2>Backflow Preventer Cost Estimator</h2>
+      <div style="margin-bottom:12px">
+        <label>Device Type</label>
+        <select id="device-type" onchange="calcCost()">
+          <option value="avb">AVB &mdash; Atmospheric Vacuum Breaker</option>
+          <option value="pvb">PVB &mdash; Pressure Vacuum Breaker</option>
+          <option value="dc">DC &mdash; Double Check Valve Assembly</option>
+          <option value="rpz" selected>RPZ &mdash; Reduced Pressure Zone</option>
+        </select>
+      </div>
+      <div class="row2" style="margin-bottom:12px">
+        <div>
+          <label>Pipe Size</label>
+          <select id="pipe-size" onchange="calcCost()">
+            <option value="0.75">3/4 inch</option>
+            <option value="1" selected>1 inch</option>
+            <option value="1.5">1-1/2 inch</option>
+            <option value="2">2 inch</option>
+            <option value="3">3 inch</option>
+            <option value="4">4 inch</option>
+          </select>
+        </div>
+        <div>
+          <label>Application</label>
+          <select id="application" onchange="calcCost()">
+            <option value="irrigation" selected>Irrigation</option>
+            <option value="potable">Potable Water</option>
+            <option value="pool">Pool / Spa</option>
+            <option value="fire">Fire Suppression</option>
+            <option value="industrial">Industrial / Chemical</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>County</label>
+        <select id="county" onchange="calcCost()">
+          <option value="miami">Miami-Dade</option>
+          <option value="broward" selected>Broward</option>
+          <option value="palm">Palm Beach</option>
+          <option value="hillsborough">Hillsborough</option>
+          <option value="sarasota">Sarasota</option>
+          <option value="pinellas">Pinellas</option>
+          <option value="orange">Orange</option>
+          <option value="collier">Collier</option>
+          <option value="lee">Lee</option>
+          <option value="duval">Duval</option>
+          <option value="other">Other FL County</option>
+        </select>
+      </div>
+      <button class="btn" onclick="calcCost()">Calculate Costs</button>
+    </div>
+
+    <div id="results" class="card card-gold" style="display:none">
+      <div class="result-box">
+        <div class="result-label">Estimated Total Project Cost</div>
+        <div class="result-val" id="total-cost">--</div>
+        <div class="result-sub" id="total-sub">device + installation + permit</div>
+      </div>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">Device Cost</div>
+          <div class="val" id="r-device">--</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Installation</div>
+          <div class="val" id="r-install">--</div>
+        </div>
+        <div class="result-item">
+          <div class="label">FL Permit</div>
+          <div class="val" id="r-permit">--</div>
+        </div>
+        <div class="result-item">
+          <div class="label">Annual Testing</div>
+          <div class="val" id="r-test">--</div>
+        </div>
+      </div>
+      <div id="device-note" class="alert alert-gold" style="margin-top:12px;display:none"></div>
+      <div id="compliance-note" class="alert alert-red" style="margin-top:8px;display:none"></div>
+    </div>
+
+    <div class="card">
+      <h2>Quick Size Reference</h2>
+      <table>
+        <tr><th>Pipe Size</th><th>RPZ Range</th><th>DC Range</th><th>PVB Range</th></tr>
+        <tr><td>3/4"</td><td>$650&ndash;$1,100</td><td>$350&ndash;$650</td><td>$250&ndash;$450</td></tr>
+        <tr><td>1"</td><td>$750&ndash;$1,300</td><td>$425&ndash;$750</td><td>$300&ndash;$550</td></tr>
+        <tr><td>1-1/2"</td><td>$1,100&ndash;$2,000</td><td>$700&ndash;$1,200</td><td>$500&ndash;$900</td></tr>
+        <tr><td>2"</td><td>$1,500&ndash;$2,800</td><td>$900&ndash;$1,600</td><td>$700&ndash;$1,250</td></tr>
+        <tr><td>3"</td><td>$3,200&ndash;$5,500</td><td>$2,000&ndash;$3,500</td><td>$1,500&ndash;$2,800</td></tr>
+        <tr><td>4"</td><td>$5,500&ndash;$9,500</td><td>$3,500&ndash;$6,000</td><td>$2,500&ndash;$4,500</td></tr>
+      </table>
+      <p class="tip">Prices above are device-only. Add $350&ndash;$650 labor for residential, $600&ndash;$1,200 for commercial installations.</p>
+    </div>
+
+    <div class="card">
+      <h2>Installation Cost Breakdown</h2>
+      <div class="info-row"><span class="info-key">Residential (1" RPZ)</span><span class="info-val">$1,100&ndash;$2,100 all-in</span></div>
+      <div class="info-row"><span class="info-key">Commercial (2" RPZ)</span><span class="info-val">$2,500&ndash;$5,500 all-in</span></div>
+      <div class="info-row"><span class="info-key">Irrigation PVB (3/4")</span><span class="info-val">$650&ndash;$1,200 all-in</span></div>
+      <div class="info-row"><span class="info-key">Fire Suppression DC (2")</span><span class="info-val">$1,800&ndash;$3,800 all-in</span></div>
+      <div class="info-row"><span class="info-key">Enclosure / Cage</span><span class="info-val">Add $150&ndash;$350</span></div>
+      <div class="info-row"><span class="info-key">Backflow Repair / Rebuild</span><span class="info-val">$85&ndash;$350</span></div>
+      <div class="info-row"><span class="info-key">Annual Test (per assembly)</span><span class="info-val">$65&ndash;$125</span></div>
+      <p class="tip">All installations require FL-licensed contractor (CFC or C-14 license). Permits must be pulled for new installations.</p>
+    </div>
+  </div>
+
+  <!-- TAB 2: DEVICE TYPES -->
+  <div id="devices" class="panel">
+    <div class="device-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div class="device-title">AVB &mdash; Atmospheric Vacuum Breaker</div>
+        <span class="badge badge-green">Lowest Cost</span>
+      </div>
+      <div class="device-sub">Simplest and least expensive backflow device for non-health hazards</div>
+      <div class="info-row"><span class="info-key">Hazard Level</span><span class="info-val">Low (non-health hazard only)</span></div>
+      <div class="info-row"><span class="info-key">Device Cost (3/4"&ndash;1")</span><span class="info-val">$35&ndash;$85</span></div>
+      <div class="info-row"><span class="info-key">How It Works</span><span class="info-val">Air gap created when pressure drops</span></div>
+      <div class="info-row"><span class="info-key">FL Annual Test Required?</span><span class="info-val" style="color:#22C55E">No (non-testable)</span></div>
+      <div class="info-row"><span class="info-key">Backpressure Protection?</span><span class="info-val" style="color:#EF4444">No</span></div>
+      <div class="info-row"><span class="info-key">FL DEP Classification</span><span class="info-val">Non-health hazard only</span></div>
+      <div class="info-row"><span class="info-key">Must Remain Open</span><span class="info-val">6"+ above grade / flood level</span></div>
+      <div class="info-row"><span class="info-key">ASSE Standard</span><span class="info-val">ASSE 1001</span></div>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Pros</div>
+          <li>Lowest cost option</li>
+          <li>No annual testing</li>
+          <li>Simple install</li>
+          <li>Good for hose bibbs</li>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Cons</div>
+          <li>Must stay 6" above grade</li>
+          <li>No backpressure protection</li>
+          <li>Non-testable</li>
+          <li>Very limited applications</li>
+        </div>
+      </div>
+      <p class="tip">Common FL use: individual hose connection points, mop sinks, frostless sill cocks. NOT approved for irrigation systems with fertilizer injection or any continuously pressurized line downstream. Cannot be used for health-hazard cross-connections.</p>
+    </div>
+
+    <div class="device-card pvb">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div class="device-title">PVB &mdash; Pressure Vacuum Breaker</div>
+        <span class="badge badge-green">Most Common FL Irrigation</span>
+      </div>
+      <div class="device-sub">Standard FL irrigation backflow preventer statewide</div>
+      <div class="info-row"><span class="info-key">Hazard Level</span><span class="info-val">Moderate (health hazard OK)</span></div>
+      <div class="info-row"><span class="info-key">Device Cost (3/4"&ndash;1")</span><span class="info-val">$250&ndash;$550</span></div>
+      <div class="info-row"><span class="info-key">How It Works</span><span class="info-val">Spring-loaded poppet + air inlet</span></div>
+      <div class="info-row"><span class="info-key">FL Annual Test Required?</span><span class="info-val" style="color:#F4B942">Yes &mdash; FAC 62-555.360</span></div>
+      <div class="info-row"><span class="info-key">Backpressure Protection?</span><span class="info-val" style="color:#EF4444">No</span></div>
+      <div class="info-row"><span class="info-key">Installation Height</span><span class="info-val">12"+ above highest head</span></div>
+      <div class="info-row"><span class="info-key">Can Be Buried?</span><span class="info-val" style="color:#EF4444">No &mdash; must remain accessible</span></div>
+      <div class="info-row"><span class="info-key">ASSE Standard</span><span class="info-val">ASSE 1020</span></div>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Pros</div>
+          <li>FL irrigation approved</li>
+          <li>Testable &amp; rebuildable</li>
+          <li>Lower cost than RPZ</li>
+          <li>Statewide standard</li>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Cons</div>
+          <li>Annual testing required</li>
+          <li>Cannot be buried</li>
+          <li>No backpressure protection</li>
+          <li>Height install restriction</li>
+        </div>
+      </div>
+      <p class="tip">FL Standard: PVB is the most widely installed irrigation backflow device in Florida. Must be mounted 12 inches above the highest irrigation head. Annual testing by a certified backflow tester is required under FAC 62-555.360. Brands: Febco 765, Watts 800M4QT, Wilkins 720A.</p>
+    </div>
+
+    <div class="device-card dc">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div class="device-title">DC &mdash; Double Check Valve Assembly</div>
+        <span class="badge badge-blue">Mid-High Range</span>
+      </div>
+      <div class="device-sub">Two independent check valves &mdash; approved for fire suppression</div>
+      <div class="info-row"><span class="info-key">Hazard Level</span><span class="info-val">Moderate (non-health hazard)</span></div>
+      <div class="info-row"><span class="info-key">Device Cost (3/4"&ndash;2")</span><span class="info-val">$350&ndash;$1,600</span></div>
+      <div class="info-row"><span class="info-key">How It Works</span><span class="info-val">Two spring-loaded check valves</span></div>
+      <div class="info-row"><span class="info-key">FL Annual Test Required?</span><span class="info-val" style="color:#F4B942">Yes &mdash; FAC 62-555.360</span></div>
+      <div class="info-row"><span class="info-key">Backpressure Protection?</span><span class="info-val" style="color:#22C55E">Yes</span></div>
+      <div class="info-row"><span class="info-key">Can Be Buried?</span><span class="info-val" style="color:#22C55E">Yes (in approved vault)</span></div>
+      <div class="info-row"><span class="info-key">Fire Sprinkler OK?</span><span class="info-val" style="color:#22C55E">Yes (NFPA 13)</span></div>
+      <div class="info-row"><span class="info-key">ASSE Standard</span><span class="info-val">ASSE 1015</span></div>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Pros</div>
+          <li>Backpressure protection</li>
+          <li>Can be buried in vault</li>
+          <li>Lower cost than RPZ</li>
+          <li>Fire suppression approved</li>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Cons</div>
+          <li>Annual testing required</li>
+          <li>Not for high hazard</li>
+          <li>More maintenance</li>
+          <li>Less protection than RPZ</li>
+        </div>
+      </div>
+      <p class="tip">Common FL Commercial Use: Fire sprinkler systems (per NFPA 13), non-potable irrigation without chemical injection, commercial building water services. NOT approved for high-hazard connections (sewage pumps, chemical lines, medical facilities). Brands: Ames 2000SS, Watts 007, Febco 850.</p>
+    </div>
+
+    <div class="device-card rpz">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div class="device-title">RPZ &mdash; Reduced Pressure Zone</div>
+        <span class="badge badge-red">Highest Protection</span>
+      </div>
+      <div class="device-sub">Gold standard &mdash; required for all high-hazard connections</div>
+      <div class="info-row"><span class="info-key">Hazard Level</span><span class="info-val">High (health hazard)</span></div>
+      <div class="info-row"><span class="info-key">Device Cost (3/4"&ndash;4")</span><span class="info-val">$650&ndash;$9,500</span></div>
+      <div class="info-row"><span class="info-key">How It Works</span><span class="info-val">Two checks + differential relief valve</span></div>
+      <div class="info-row"><span class="info-key">FL Annual Test Required?</span><span class="info-val" style="color:#EF4444">Yes &mdash; FAC 62-555.360 (strict)</span></div>
+      <div class="info-row"><span class="info-key">Backpressure Protection?</span><span class="info-val" style="color:#22C55E">Yes (highest level)</span></div>
+      <div class="info-row"><span class="info-key">Can Be Submerged?</span><span class="info-val" style="color:#EF4444">Never &mdash; relief valve must drain free</span></div>
+      <div class="info-row"><span class="info-key">Fails How?</span><span class="info-val" style="color:#22C55E">Fails open (safe discharge)</span></div>
+      <div class="info-row"><span class="info-key">ASSE Standard</span><span class="info-val">ASSE 1013</span></div>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Pros</div>
+          <li>Maximum protection</li>
+          <li>Fails open (safe)</li>
+          <li>Required per FL DEP</li>
+          <li>Dual check + relief</li>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Cons</div>
+          <li>Most expensive</li>
+          <li>Cannot be submerged</li>
+          <li>Relief valve may discharge</li>
+          <li>Annual testing strict</li>
+        </div>
+      </div>
+      <p class="tip">FL Required For: Irrigation systems with fertilizer or chemical injection, reclaimed water connections (FS 373.185), food service, medical/dental, mortuaries, car washes, swimming pools with chemical feed, cooling towers. Miami-Dade MDWASD requires RPZ for all new commercial connections. Brands: Watts 909, Febco 860, Ames 4000SS, Wilkins 375.</p>
+    </div>
+  </div>
+
+  <!-- TAB 3: FL REQUIREMENTS -->
+  <div id="fl" class="panel">
+    <div class="card">
+      <h2>Florida Backflow Prevention Law</h2>
+      <div class="alert alert-gold">
+        <strong>FAC 62-555.360</strong> mandates annual testing of all testable backflow prevention assemblies connected to public water systems. Non-compliance can result in water service interruption by your utility.
+      </div>
+
+      <div class="section-title">Governing Codes &amp; Standards</div>
+      <div class="info-row">
+        <span class="info-key"><span class="code-ref">FAC 62-555.360</span></span>
+        <span class="info-val">Annual testing mandate (FL DEP)</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key"><span class="code-ref">FPC &sect;608</span></span>
+        <span class="info-val">FL Plumbing Code backflow section</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key"><span class="code-ref">FBC &sect;604.8</span></span>
+        <span class="info-val">Cross-connection control</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key"><span class="code-ref">FS 373.185</span></span>
+        <span class="info-val">Reclaimed water requirements</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key"><span class="code-ref">FAC 62-610</span></span>
+        <span class="info-val">Reuse of reclaimed water</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key"><span class="code-ref">ASSE 1013/1015/1020</span></span>
+        <span class="info-val">RPZ / DC / PVB device standards</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key"><span class="code-ref">AWWA M14</span></span>
+        <span class="info-val">Cross-connection control manual</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Annual Testing Requirements</h2>
+      <div class="info-row"><span class="info-key">Who Must Test</span><span class="info-val">All testable BFPs on public water</span></div>
+      <div class="info-row"><span class="info-key">Testing Frequency</span><span class="info-val">Annually (every 12 months)</span></div>
+      <div class="info-row"><span class="info-key">Who Can Perform Test</span><span class="info-val">FL-certified backflow tester</span></div>
+      <div class="info-row"><span class="info-key">Tester Certification</span><span class="info-val">AWWA / ASSE 5110 required</span></div>
+      <div class="info-row"><span class="info-key">Test Report Filing</span><span class="info-val">Submitted to local water utility</span></div>
+      <div class="info-row"><span class="info-key">Non-Compliance Penalty</span><span class="info-val" style="color:#EF4444">Water service disconnection</span></div>
+      <div class="info-row"><span class="info-key">Typical Testing Fee</span><span class="info-val">$65&ndash;$125 per assembly</span></div>
+      <div class="info-row"><span class="info-key">AVB (non-testable) Required?</span><span class="info-val" style="color:#22C55E">No annual test needed</span></div>
+      <div class="info-row"><span class="info-key">New Install Test</span><span class="info-val">Required before water service restored</span></div>
+    </div>
+
+    <div class="card">
+      <h2>County Enforcement Levels</h2>
+      <div class="county-row">
+        <span>Miami-Dade (MDWASD)</span>
+        <span class="enforcement-badge enf-high">STRICT</span>
+      </div>
+      <div class="county-row">
+        <span>Broward County Utilities</span>
+        <span class="enforcement-badge enf-high">STRICT</span>
+      </div>
+      <div class="county-row">
+        <span>Palm Beach County</span>
+        <span class="enforcement-badge enf-high">STRICT</span>
+      </div>
+      <div class="county-row">
+        <span>Hillsborough / Tampa Bay Water</span>
+        <span class="enforcement-badge enf-high">STRICT</span>
+      </div>
+      <div class="county-row">
+        <span>Sarasota County Utilities</span>
+        <span class="enforcement-badge enf-high">STRICT</span>
+      </div>
+      <div class="county-row">
+        <span>Pinellas County</span>
+        <span class="enforcement-badge enf-med">ACTIVE</span>
+      </div>
+      <div class="county-row">
+        <span>Orange County (Orlando)</span>
+        <span class="enforcement-badge enf-med">ACTIVE</span>
+      </div>
+      <div class="county-row">
+        <span>Collier County</span>
+        <span class="enforcement-badge enf-med">ACTIVE</span>
+      </div>
+      <div class="county-row">
+        <span>Lee County</span>
+        <span class="enforcement-badge enf-med">ACTIVE</span>
+      </div>
+      <div class="county-row">
+        <span>Duval (Jacksonville)</span>
+        <span class="enforcement-badge enf-std">STANDARD</span>
+      </div>
+      <div class="county-row">
+        <span>Alachua (Gainesville RU)</span>
+        <span class="enforcement-badge enf-std">STANDARD</span>
+      </div>
+      <div class="county-row">
+        <span>Other FL Counties</span>
+        <span class="enforcement-badge enf-std">VARIES</span>
+      </div>
+      <p class="tip">Miami-Dade's MDWASD requires RPZ assemblies for ALL new commercial cross-connections. Broward and Palm Beach utilities send annual notices and enforce water shutoffs for non-compliance. Sarasota has expanded its cross-connection control program for all commercial accounts.</p>
+    </div>
+
+    <div class="card">
+      <h2>FL Irrigation Backflow Requirements</h2>
+      <div class="info-row"><span class="info-key">Standard Irrigation System</span><span class="info-val">PVB minimum</span></div>
+      <div class="info-row"><span class="info-key">Irrigation + Chemical Injection</span><span class="info-val">RPZ required</span></div>
+      <div class="info-row"><span class="info-key">Reclaimed Water Irrigation</span><span class="info-val">RPZ required (FS 373.185)</span></div>
+      <div class="info-row"><span class="info-key">Pool Fill Line w/ Chemical Feed</span><span class="info-val">RPZ required</span></div>
+      <div class="info-row"><span class="info-key">Hose Bib (outdoor spigot)</span><span class="info-val">AVB or vacuum breaker cap</span></div>
+      <div class="info-row"><span class="info-key">PVB Installation Height</span><span class="info-val">12"+ above highest sprinkler</span></div>
+      <div class="info-row"><span class="info-key">FL Statute Reference</span><span class="info-val">FS 373.185, FAC 62-610</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Annual Testing Fees by County</h2>
+      <table>
+        <tr><th>County / Utility</th><th>Typical Test Fee</th><th>Enforcement</th></tr>
+        <tr><td>Miami-Dade (MDWASD)</td><td>$80&ndash;$125</td><td style="color:#EF4444">Strict</td></tr>
+        <tr><td>Broward</td><td>$65&ndash;$100</td><td style="color:#EF4444">Strict</td></tr>
+        <tr><td>Palm Beach</td><td>$65&ndash;$100</td><td style="color:#EF4444">Strict</td></tr>
+        <tr><td>Hillsborough / Tampa</td><td>$75&ndash;$115</td><td style="color:#EF4444">Strict</td></tr>
+        <tr><td>Sarasota</td><td>$65&ndash;$95</td><td style="color:#EF4444">Strict</td></tr>
+        <tr><td>Pinellas</td><td>$65&ndash;$90</td><td style="color:#F4B942">Active</td></tr>
+        <tr><td>Orange</td><td>$70&ndash;$100</td><td style="color:#F4B942">Active</td></tr>
+        <tr><td>Collier</td><td>$65&ndash;$90</td><td style="color:#F4B942">Active</td></tr>
+        <tr><td>Other FL Counties</td><td>$60&ndash;$90</td><td style="color:#94A3B8">Varies</td></tr>
+      </table>
+      <p class="tip">Fees are for testing only. Failed assemblies requiring repair or rebuild: additional $85&ndash;$350 for parts and labor. A licensed FL plumber handles complete testing, repair, and utility report filing.</p>
+    </div>
+
+    <div class="card">
+      <h2>Common FL Violations &amp; Penalties</h2>
+      <div class="alert alert-red" style="margin-bottom:10px">
+        <strong>Water Service Disconnection:</strong> Utilities may terminate water service for failure to test. Miami-Dade MDWASD has among the most aggressive enforcement programs in the state.
+      </div>
+      <div class="info-row"><span class="info-key">Failure to Test Annually</span><span class="info-val" style="color:#EF4444">Water shut-off notice</span></div>
+      <div class="info-row"><span class="info-key">Unlicensed Installation</span><span class="info-val" style="color:#EF4444">Up to $5,000 fine (FS 489)</span></div>
+      <div class="info-row"><span class="info-key">Wrong Device Type</span><span class="info-val" style="color:#EF4444">Permit rejection, re-installation</span></div>
+      <div class="info-row"><span class="info-key">No Permit Pulled</span><span class="info-val" style="color:#EF4444">Stop-work order, double permit fee</span></div>
+      <div class="info-row"><span class="info-key">Failed Test Not Repaired</span><span class="info-val" style="color:#F4B942">30-day cure period typical</span></div>
+      <div class="info-row"><span class="info-key">Reclaimed Water Violation</span><span class="info-val" style="color:#EF4444">FL DEP enforcement action</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: QUOTE -->
+  <div id="quote" class="panel">
+    <div class="card card-gold">
+      <h2>Get a Free Backflow Quote</h2>
+      <p style="color:#94A3B8;font-size:0.85rem;margin-bottom:16px">New installation, annual testing, permit filing &mdash; FL-licensed plumbers serving all South Florida counties.</p>
+      <div style="margin-bottom:12px">
+        <label>Your Name</label>
+        <input type="text" id="q-name" placeholder="First &amp; Last Name">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Phone Number</label>
+        <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Service Needed</label>
+        <select id="q-service">
+          <option>New backflow preventer installation</option>
+          <option>Annual backflow testing (FAC 62-555.360)</option>
+          <option>Backflow assembly repair / rebuild</option>
+          <option>Upgrade existing device (PVB to RPZ)</option>
+          <option>Permit filing assistance</option>
+          <option>Reclaimed water system connection</option>
+          <option>Not sure &mdash; need assessment</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px">
+        <label>County</label>
+        <select id="q-county">
+          <option>Miami-Dade</option>
+          <option>Broward</option>
+          <option>Palm Beach</option>
+          <option>Hillsborough</option>
+          <option>Sarasota</option>
+          <option>Pinellas</option>
+          <option>Orange</option>
+          <option>Collier</option>
+          <option>Lee</option>
+          <option>Other FL County</option>
+        </select>
+      </div>
+      <button class="btn" onclick="submitQuote()">Request Free Quote</button>
+    </div>
+
+    <div class="card">
+      <h2>Why Use a FL-Licensed Backflow Specialist?</h2>
+      <div class="info-row"><span class="info-key">FL License Required?</span><span class="info-val">Yes &mdash; CFC or C-14 plumbing</span></div>
+      <div class="info-row"><span class="info-key">Backflow Tester Cert</span><span class="info-val">AWWA / ASSE 5110 certified</span></div>
+      <div class="info-row"><span class="info-key">Permit Pulled?</span><span class="info-val">Yes &mdash; we file for you</span></div>
+      <div class="info-row"><span class="info-key">Utility Report Filed?</span><span class="info-val">Yes &mdash; we submit test reports</span></div>
+      <div class="info-row"><span class="info-key">Service Area</span><span class="info-val">All SE &amp; SW FL counties</span></div>
+      <div class="info-row"><span class="info-key">Response Time</span><span class="info-val">Same day / next day</span></div>
+      <div class="info-row"><span class="info-key">Phone</span><span class="info-val">(561) 555-PIPE</span></div>
+    </div>
+
+    <div class="card">
+      <h2>What Our Service Includes</h2>
+      <div class="alert alert-green">
+        <strong>Full-Service Backflow Program:</strong> We handle installation, annual testing, utility report filing, and repairs for residential and commercial clients across South Florida.
+      </div>
+      <div class="info-row"><span class="info-key">Site Assessment</span><span class="info-val">Identify correct device type</span></div>
+      <div class="info-row"><span class="info-key">Permit Application</span><span class="info-val">Filed same day as install</span></div>
+      <div class="info-row"><span class="info-key">Installation</span><span class="info-val">Certified FL plumber</span></div>
+      <div class="info-row"><span class="info-key">Initial Test</span><span class="info-val">Before restoring water service</span></div>
+      <div class="info-row"><span class="info-key">Test Report</span><span class="info-val">Submitted to your utility</span></div>
+      <div class="info-row"><span class="info-key">Annual Reminder</span><span class="info-val">We call you before due date</span></div>
+      <div class="info-row"><span class="info-key">Repair / Rebuild</span><span class="info-val">Same visit if possible</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+};
+
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+var DEVICE_COSTS = {
+  avb: { lo: 35,  hi: 85,   iLo: 150, iHi: 350, name: 'Atmospheric Vacuum Breaker', testable: false },
+  pvb: { lo: 250, hi: 550,  iLo: 350, iHi: 650, name: 'Pressure Vacuum Breaker',    testable: true  },
+  dc:  { lo: 350, hi: 1600, iLo: 400, iHi: 750, name: 'Double Check Valve Assembly', testable: true  },
+  rpz: { lo: 650, hi: 9500, iLo: 500, iHi: 1200,name: 'Reduced Pressure Zone',       testable: true  }
+};
+
+var SIZE_MULT = {
+  '0.75': 1.0,
+  '1':    1.15,
+  '1.5':  1.6,
+  '2':    2.1,
+  '3':    3.5,
+  '4':    5.2
+};
+
+var PERMIT_COSTS = {
+  miami:        { lo: 150, hi: 450 },
+  broward:      { lo: 125, hi: 375 },
+  palm:         { lo: 125, hi: 350 },
+  hillsborough: { lo: 125, hi: 350 },
+  sarasota:     { lo: 100, hi: 300 },
+  pinellas:     { lo: 100, hi: 275 },
+  orange:       { lo: 100, hi: 300 },
+  collier:      { lo: 100, hi: 275 },
+  lee:          { lo: 90,  hi: 250 },
+  duval:        { lo: 75,  hi: 225 },
+  other:        { lo: 75,  hi: 250 }
+};
+
+var DEVICE_NOTES = {
+  avb: 'AVB Note: Atmospheric Vacuum Breakers are only appropriate for low-hazard, non-health-hazard applications. They cannot be used for irrigation systems with fertilizer injection or any continuously pressurized downstream line. Cannot be used for health-hazard cross-connections.',
+  pvb: 'PVB is Florida\'s most common irrigation backflow device. Annual testing is required under FAC 62-555.360. Must be mounted 12 inches above the highest sprinkler head. Not suitable for chemical injection applications.',
+  dc:  'Double Check Valve Assembly is approved for moderate-hazard applications including fire suppression and non-chemical irrigation. Annual testing required under FAC 62-555.360. Can be installed in an approved vault below grade.',
+  rpz: 'RPZ is required for high-hazard connections including chemical injection systems, reclaimed water connections, medical facilities, and commercial properties in Miami-Dade. Annual testing strictly enforced by FL DEP and local utilities.'
+};
+
+function fmtCur(lo, hi) {
+  return '$' + lo.toLocaleString() + '–$' + hi.toLocaleString();
+}
+
+function calcCost() {
+  var dtype  = document.getElementById('device-type').value;
+  var psize  = document.getElementById('pipe-size').value;
+  var app    = document.getElementById('application').value;
+  var county = document.getElementById('county').value;
+
+  var d  = DEVICE_COSTS[dtype];
+  var sm = SIZE_MULT[psize] || 1.0;
+  var pc = PERMIT_COSTS[county] || PERMIT_COSTS['other'];
+
+  var devLo  = Math.round(d.lo  * sm);
+  var devHi  = Math.round(d.hi  * sm);
+  var instLo = Math.round(d.iLo * sm);
+  var instHi = Math.round(d.iHi * sm);
+
+  var am = 1.0;
+  if (app === 'industrial') { am = 1.35; }
+  else if (app === 'fire')  { am = 1.20; }
+  else if (app === 'pool')  { am = 1.10; }
+  instLo = Math.round(instLo * am);
+  instHi = Math.round(instHi * am);
+
+  var totLo = devLo + instLo + pc.lo;
+  var totHi = devHi + instHi + pc.hi;
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('total-cost').textContent = fmtCur(totLo, totHi);
+  document.getElementById('total-sub').textContent  = 'device + installation + permit (' + county + ' county)';
+  document.getElementById('r-device').textContent   = fmtCur(devLo, devHi);
+  document.getElementById('r-install').textContent  = fmtCur(instLo, instHi);
+  document.getElementById('r-permit').textContent   = fmtCur(pc.lo, pc.hi);
+  document.getElementById('r-test').textContent     = d.testable ? '$65–$125/yr' : 'Not required';
+
+  var dn = document.getElementById('device-note');
+  dn.textContent   = DEVICE_NOTES[dtype];
+  dn.style.display = 'block';
+
+  var cn = document.getElementById('compliance-note');
+  cn.style.display = 'none';
+  cn.textContent   = '';
+
+  var warn = '';
+  if ((app === 'pool' || app === 'industrial') && (dtype === 'avb' || dtype === 'pvb')) {
+    warn = 'Compliance Warning: For pool/spa and industrial/chemical applications, FL DEP and local utilities typically require an RPZ assembly. A PVB or AVB may not satisfy code requirements for this application type.';
+  } else if (county === 'miami' && dtype !== 'rpz' && (app === 'potable' || app === 'industrial' || app === 'pool')) {
+    warn = 'Miami-Dade Alert: MDWASD requires RPZ assemblies for all new commercial cross-connections. Verify requirements with your local utility before selecting a lower-grade device for this application.';
+  }
+  if (warn) {
+    cn.textContent   = warn;
+    cn.style.display = 'block';
+  }
+}
+
+function submitQuote() {
+  var name  = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) {
+    alert('Please enter your name and phone number.');
+    return;
+  }
+  var toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 3500);
+}
+
+calcCost();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+<!-- fl-plumbing-seo: backflow preventer florida testing rpz double check pvb irrigation fl dep 62-555 annual testing backflow assembly replacement florida plumbing -->
+
+</div>
+</body>
+</html>
