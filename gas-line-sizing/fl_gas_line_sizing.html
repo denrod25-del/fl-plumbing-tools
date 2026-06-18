@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Gas Line Sizing Calculator | Natural Gas & LP Pipe | NFPA 54 | FPC Chapter 5 | Florida</title>
+<meta name="description" content="Size natural gas and propane (LP) supply lines for Florida homes. Calculate BTU demand from appliances, size black iron or CSST pipe per NFPA 54, and check FPC Chapter 5 and Florida Building Code 2023 CSST bonding compliance for all 67 FL counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#00B4FF;color:#0A0E1A;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#00B4FF;border-bottom-color:#00B4FF}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#00B4FF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#00B4FF}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#00B4FF;color:#0A0E1A}
+.btn-primary:hover{background:#0099dd}
+.btn-sm{padding:6px 12px;border-radius:7px;border:1px solid #00B4FF;background:transparent;color:#00B4FF;font-size:.72rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn-sm:hover{background:#00B4FF;color:#0A0E1A}
+.btn-red{padding:5px 10px;border-radius:6px;border:1px solid #EF4444;background:transparent;color:#EF4444;font-size:.68rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn-red:hover{background:#EF4444;color:#fff}
+.result-box{background:#141929;border:1px solid #00B4FF;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metrics-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.05rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.65rem;margin-top:2px}
+.metric.blue .mv{color:#00B4FF}
+.metric.green .mv{color:#22C55E}
+.metric.red .mv{color:#EF4444}
+.metric.gold .mv{color:#F4B942}
+.metric.cyan .mv{color:#06B6D4}
+.metric.orange .mv{color:#F97316}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.alert-gold{background:rgba(244,185,66,.12);border:1px solid rgba(244,185,66,.4);color:#F4B942}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.gas-table{width:100%;border-collapse:collapse;margin-top:8px}
+.gas-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:6px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.gas-table td{font-size:.72rem;color:#E2E8F0;padding:7px 8px;border-bottom:1px solid #0F1629}
+.gas-table tr:hover td{background:#141929}
+.gas-table .ok td{color:#22C55E}
+.gas-table .fail td:not(.pipe-size){color:#EF4444}
+.gas-table .pipe-size{color:#00B4FF;font-weight:700}
+.gas-table .rec-row td{font-weight:700}
+.gas-table .rec-row td.pipe-size{color:#22C55E}
+.appliance-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#141929;border-radius:8px;margin:5px 0;border:1px solid #1E293B}
+.app-left{display:flex;align-items:center;gap:8px}
+.app-icon{font-size:1.1rem}
+.app-name{font-size:.75rem;font-weight:600;color:#E2E8F0}
+.app-btu{font-size:.65rem;color:#94A3B8}
+.app-right{display:flex;align-items:center;gap:8px}
+.app-qty{font-size:.75rem;font-weight:700;color:#00B4FF;min-width:20px;text-align:center}
+.qty-btn{width:24px;height:24px;background:#0F1629;border:1px solid #1E293B;border-radius:4px;color:#E2E8F0;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.qty-btn:hover{border-color:#00B4FF;color:#00B4FF}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#00B4FF;border-color:#00B4FF}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#0A0E1A;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#00B4FF;transition:width .4s}
+.demand-bar-wrap{background:#141929;border-radius:10px;padding:14px;margin-top:10px}
+.bar-label{display:flex;justify-content:space-between;font-size:.68rem;color:#94A3B8;margin-bottom:3px}
+.bar-track{height:14px;background:#0A0E1A;border-radius:4px;overflow:hidden;margin-bottom:8px}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#00B4FF}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#00B4FF;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.add-row{display:flex;gap:8px;margin-top:10px;align-items:flex-end}
+.add-row select{flex:1}
+.total-banner{background:linear-gradient(135deg,rgba(0,180,255,.15),rgba(0,180,255,.05));border:1px solid rgba(0,180,255,.3);border-radius:10px;padding:14px;margin-top:12px;text-align:center}
+.total-btu{font-size:1.5rem;font-weight:800;color:#00B4FF}
+.total-cfh{font-size:.85rem;color:#94A3B8;margin-top:4px}
+.pipe-rec-box{background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.35);border-radius:10px;padding:14px;margin-top:12px}
+.pipe-rec-size{font-size:1.3rem;font-weight:800;color:#22C55E}
+.pipe-rec-label{font-size:.72rem;color:#94A3B8;margin-top:3px}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🔥 FL Gas Line Sizing Calculator</h1>
+  <p>Size natural gas and LP supply lines for Florida homes. Calculate BTU demand, apply the Spitzglass formula, and check FPC Chapter 5 and NFPA 54 compliance</p>
+  <span class="badge">NFPA 54 / FPC CH. 5</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('demand')">BTU Demand</div>
+  <div class="tab" onclick="showTab('pipe')">Pipe Sizing</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: BTU DEMAND -->
+<div id="tab-demand" class="panel active">
+  <div class="card">
+    <div class="card-title">🔥 Appliance BTU Demand Builder</div>
+    <div class="row2">
+      <div>
+        <label>Gas Type</label>
+        <select id="gas-type" onchange="updateGasType()">
+          <option value="ng">Natural Gas (utility)</option>
+          <option value="lp">LP / Propane (tank)</option>
+        </select>
+      </div>
+      <div>
+        <label>Diversity Factor</label>
+        <select id="diversity">
+          <option value="1.0">1.0 — No diversity</option>
+          <option value="0.85" selected>0.85 — Typical residential</option>
+          <option value="0.75">0.75 — Large home (5+ appl.)</option>
+          <option value="0.65">0.65 — Commercial/Mixed</option>
+        </select>
+      </div>
+    </div>
+    <div class="add-row">
+      <div style="flex:1">
+        <label>Add Appliance</label>
+        <select id="appl-select">
+          <option value="range">Gas Range — 65,000 BTU/hr</option>
+          <option value="oven">Built-in Oven — 25,000 BTU/hr</option>
+          <option value="wh-tank">Tank Water Heater — 40,000 BTU/hr</option>
+          <option value="wh-tankless">Tankless Water Heater — 199,000 BTU/hr</option>
+          <option value="dryer">Gas Dryer — 22,000 BTU/hr</option>
+          <option value="pool-heater">Pool / Spa Heater — 400,000 BTU/hr</option>
+          <option value="fireplace">Gas Fireplace Insert — 55,000 BTU/hr</option>
+          <option value="generator">Standby Generator — 300,000 BTU/hr</option>
+          <option value="bbq">Outdoor BBQ Grill — 60,000 BTU/hr</option>
+          <option value="patio-heat">Patio Heater — 50,000 BTU/hr</option>
+          <option value="outdoor-ktc">Outdoor Kitchen — 90,000 BTU/hr</option>
+          <option value="log-set">Gas Log Set — 35,000 BTU/hr</option>
+          <option value="booster">Garage Unit Heater — 80,000 BTU/hr</option>
+          <option value="custom">Custom Appliance...</option>
+        </select>
+      </div>
+      <button class="btn-sm" onclick="addAppliance()" style="flex-shrink:0;padding:9px 14px">+ Add</button>
+    </div>
+    <div id="custom-btu-wrap" style="display:none;margin-top:8px">
+      <label>Custom BTU/hr</label>
+      <input type="number" id="custom-btu" placeholder="e.g. 75000" min="1000" max="2000000">
+    </div>
+  </div>
+
+  <div id="appliance-list" style="margin-top:0"></div>
+
+  <div class="total-banner" id="total-banner" style="display:none">
+    <div style="font-size:.7rem;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Total Demand (with Diversity Factor)</div>
+    <div class="total-btu" id="total-btu-val">0</div>
+    <div style="font-size:.75rem;color:#94A3B8;margin-top:2px">BTU / hr</div>
+    <div class="total-cfh" id="total-cfh-val">≈ 0 CFH</div>
+    <div id="diversity-note" style="font-size:.67rem;color:#94A3B8;margin-top:4px"></div>
+  </div>
+
+  <div class="card" id="demand-breakdown" style="display:none">
+    <div class="card-title">📊 Demand Breakdown</div>
+    <div id="demand-bars"></div>
+    <div class="alert alert-blue" style="margin-top:12px" id="demand-advice"></div>
+  </div>
+</div>
+
+<!-- TAB 2: PIPE SIZING -->
+<div id="tab-pipe" class="panel">
+  <div class="card">
+    <div class="card-title">📐 Spitzglass Pipe Sizing Calculator</div>
+    <div class="info-block" style="margin-bottom:12px">
+      <p><strong>Formula:</strong> Q = 3.87 × d<sup>2.5</sup> × √(ΔH / (S × L)) / √(1 + 3.6/d + 0.03d) where Q = CFH, d = pipe ID (in.), ΔH = pressure drop (in. WC), S = specific gravity, L = equivalent length (ft). Source: NFPA 54 Annex B.</p>
+    </div>
+
+    <label>Gas Type</label>
+    <select id="p-gas-type">
+      <option value="ng">Natural Gas (S = 0.60)</option>
+      <option value="lp">LP / Propane (S = 1.52)</option>
+    </select>
+
+    <label>Required Flow Rate</label>
+    <div class="row2">
+      <div>
+        <input type="number" id="p-btu" placeholder="BTU/hr" min="1000" max="5000000" oninput="syncBtuCfh('btu')">
+      </div>
+      <div>
+        <input type="number" id="p-cfh" placeholder="CFH" min="1" max="5000" oninput="syncBtuCfh('cfh')">
+      </div>
+    </div>
+
+    <label>Pipe Material</label>
+    <select id="p-material">
+      <option value="black-iron">Schedule 40 Black Iron (most common)</option>
+      <option value="csst">CSST — Corrugated Stainless Steel Tubing</option>
+      <option value="copper">Copper (LP only — not for natural gas)</option>
+      <option value="pe">Polyethylene (underground service only)</option>
+    </select>
+
+    <div class="row2">
+      <div>
+        <label>Total Equiv. Length (ft)</label>
+        <input type="number" id="p-length" value="50" min="5" max="500" placeholder="50">
+      </div>
+      <div>
+        <label>System Pressure</label>
+        <select id="p-pressure">
+          <option value="0.5">Low — 0.5 in. WC</option>
+          <option value="1.0">Medium-Low — 1.0 in. WC</option>
+          <option value="2.0">Medium — 2.0 in. WC</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="calcPipeSize()">Calculate Pipe Size</button>
+  </div>
+
+  <div class="result-box" id="pipe-result">
+    <div style="font-size:.7rem;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Pipe Sizing Results — All Sizes</div>
+    <div class="pipe-rec-box" id="pipe-rec-box">
+      <div style="font-size:.7rem;color:#94A3B8">Minimum Recommended Size</div>
+      <div class="pipe-rec-size" id="pipe-rec-size">—</div>
+      <div class="pipe-rec-label" id="pipe-rec-label">—</div>
+    </div>
+    <div class="section-title" style="margin-top:14px">Capacity vs. Demand by Pipe Size</div>
+    <table class="gas-table">
+      <thead><tr><th>Nominal</th><th>ID (in.)</th><th>Capacity (CFH)</th><th>Required</th><th>Status</th></tr></thead>
+      <tbody id="pipe-table-body"></tbody>
+    </table>
+    <div class="alert alert-blue" id="pipe-notes" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📏 Equivalent Length Guide</div>
+    <p style="font-size:.73rem;color:#94A3B8;line-height:1.6;margin-bottom:8px">Add fitting equivalent lengths to pipe run for accurate sizing. Common fittings (black iron):</p>
+    <table class="gas-table">
+      <thead><tr><th>Fitting Type</th><th>½"</th><th>¾"</th><th>1"</th><th>1¼"</th><th>1½"</th><th>2"</th></tr></thead>
+      <tbody>
+        <tr><td>90° Elbow</td><td>1.6</td><td>2.0</td><td>2.7</td><td>3.5</td><td>4.3</td><td>5.4</td></tr>
+        <tr><td>45° Elbow</td><td>0.8</td><td>1.0</td><td>1.4</td><td>1.8</td><td>2.1</td><td>2.6</td></tr>
+        <tr><td>Tee (branch)</td><td>4.0</td><td>5.0</td><td>6.7</td><td>8.0</td><td>10.0</td><td>13.0</td></tr>
+        <tr><td>Tee (run)</td><td>0.5</td><td>0.6</td><td>0.9</td><td>1.1</td><td>1.4</td><td>1.7</td></tr>
+        <tr><td>Ball Valve</td><td>0.3</td><td>0.4</td><td>0.5</td><td>0.6</td><td>0.8</td><td>1.0</td></tr>
+        <tr><td>Union</td><td>0.5</td><td>0.7</td><td>1.0</td><td>1.3</td><td>1.5</td><td>2.0</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-gold" style="margin-top:10px">
+      <strong>FL Rule of Thumb:</strong> Add 20–30% to measured pipe length to account for fittings when exact count is unknown. For CSST, consult manufacturer's sizing tables as flex tubing has different equivalent length factors.
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FL Gas Code Compliance Checklist</div>
+    <p style="font-size:.73rem;color:#94A3B8;margin-bottom:12px">Florida 2023 Building Code (FBC), Florida Plumbing Code (FPC), NFPA 54 (NG) and NFPA 58 (LP). Tap each item to mark complete.</p>
+    <div id="gas-checklist"></div>
+    <div class="score-bar" style="margin-top:12px">
+      <div class="score-fill" id="gas-score-fill" style="width:0%"></div>
+    </div>
+    <div style="text-align:center;font-size:.72rem;color:#94A3B8;margin-top:6px" id="gas-score-text">0 of 10 items complete</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ CSST Bonding & Grounding — FL Critical</div>
+    <div class="alert alert-red" style="margin-bottom:12px">
+      <strong>⚠️ Florida Requirement:</strong> The 2014 Florida Building Code adopted NFPA 54-2012 which mandates arc-fault bonding for ALL CSST installations. This applies to new installations AND any service work that disturbs existing CSST. Unbonded CSST in Florida is a code violation and fire hazard.
+    </div>
+    <div class="info-block">
+      <p><strong>CSST Bonding Requirements (FBC 2023 / NFPA 54-2012):</strong></p>
+      <p>• CSST must be bonded to the electrical grounding system at every point where it transitions from underground to above-grade and at each appliance connection point.</p>
+      <p>• Bonding conductor: minimum 6 AWG copper, run to nearest electrical panel grounding electrode conductor.</p>
+      <p>• Arc-flash protection CSST (yellow-jacketed brands: TracPipe CounterStrike, Gastite FlashShield) still requires bonding per FBC 2023.</p>
+      <p>• <strong>Inspection tip:</strong> FL inspectors cite CSST bonding violations frequently. Verify continuity with a clamp meter before closing walls.</p>
+    </div>
+    <div class="info-block" style="margin-top:8px">
+      <p><strong>CSST vs. Black Iron — When to Use Each in Florida:</strong></p>
+      <p>• <strong>CSST advantages:</strong> Easier routing, fewer fittings (leak points), flexible for earthquake/settlement movement, faster install.</p>
+      <p>• <strong>CSST limitations:</strong> Requires bonding, cannot be used in certain concealed fire-rated assemblies without specific listing, higher material cost.</p>
+      <p>• <strong>Black iron advantages:</strong> No bonding surcharge, time-tested, lower material cost for straight runs, preferred for underground-to-above-grade transitions.</p>
+      <p>• <strong>Florida practice:</strong> Black iron from meter to first tee, CSST for branch runs to individual appliances — combines the strengths of both.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌀 Hurricane & Storm Preparedness</div>
+    <div class="info-block">
+      <p><strong>FL Building Code — Gas Meter Protection:</strong> In wind zones (most of FL south of Orlando), gas meters must be protected from wind-borne debris per FBC Section 2408. LP tanks must be anchored per NFPA 58 Section 6.4 and FL statute 527.</p>
+    </div>
+    <div class="info-block" style="margin-top:8px">
+      <p><strong>Automatic Gas Shutoff:</strong> FL homeowners in high-risk hurricane zones should install an automatic seismic/excess-flow gas shutoff valve (CSST-compatible types available). Not code-required but highly recommended by FL insurers.</p>
+    </div>
+    <div class="info-block" style="margin-top:8px">
+      <p><strong>Post-Storm Relight Protocol:</strong> After any hurricane or significant storm event, gas should be shut off at the meter, lines pressure-tested, and appliances inspected for debris blockage before relighting. Many FL utilities (FPL/FGT/TECO) require this as a condition of their service agreements.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📐 FPC Chapter 5 & NFPA 54 Reference</div>
+    <table class="gas-table">
+      <thead><tr><th>Code Section</th><th>Topic</th><th>FL Requirement</th></tr></thead>
+      <tbody>
+        <tr><td><strong>FPC 501.1</strong></td><td>Scope</td><td>All gas piping in FL structures must comply with FPC Ch. 5 or FBC fuel gas provisions</td></tr>
+        <tr><td><strong>FPC 503.1</strong></td><td>Pipe material</td><td>Black iron, galvanized, CSST (listed), copper (LP only), HDPE (underground)</td></tr>
+        <tr><td><strong>FPC 504.1</strong></td><td>Pipe sizing</td><td>NFPA 54 Annex B tables; Spitzglass formula acceptable for engineering calcs</td></tr>
+        <tr><td><strong>FPC 505.1</strong></td><td>Pressure test</td><td>Test at 1½× operating pressure, min 3 PSI for medium pressure; hold 15 minutes</td></tr>
+        <tr><td><strong>FPC 506.2</strong></td><td>Concealed piping</td><td>No threaded unions in concealed spaces; welded or continuous CSST preferred</td></tr>
+        <tr><td><strong>FPC 507.3</strong></td><td>Sediment trap</td><td>Required within 3 ft of each appliance connection (drip leg)</td></tr>
+        <tr><td><strong>FPC 508.1</strong></td><td>Shutoff valves</td><td>Required within 6 ft of each appliance; accessible without tools</td></tr>
+        <tr><td><strong>FPC 510.1</strong></td><td>Underground</td><td>Min 12" cover (18" under driveways); cathodic protection on steel; HDPE/PE marking</td></tr>
+        <tr><td><strong>NFPA 54 7.13</strong></td><td>CSST bonding</td><td>Mandatory in FL — 6 AWG copper to grounding electrode, all CSST installations</td></tr>
+        <tr><td><strong>NFPA 58 6.4</strong></td><td>LP tank anchor</td><td>Tanks ≥125 gal must be anchored; FL hurricane exposure = mandatory</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔌 LP vs. Natural Gas — FL Considerations</div>
+    <table class="gas-table">
+      <thead><tr><th>Factor</th><th>Natural Gas</th><th>LP / Propane</th></tr></thead>
+      <tbody>
+        <tr><td>Available in FL</td><td>Urban/suburban corridors (FPL Gas, TECO, Peoples Gas)</td><td>Statewide — rural areas, islands, no utility gas</td></tr>
+        <tr><td>BTU per CF</td><td>~1,020 BTU/CF</td><td>~2,516 BTU/CF</td></tr>
+        <tr><td>Specific gravity</td><td>0.60 (lighter than air)</td><td>1.52 (heavier than air — collects in low areas)</td></tr>
+        <tr><td>Pipe sizing</td><td>Larger pipe for same BTU (lower BTU/CF)</td><td>Smaller pipe for same BTU (higher BTU/CF)</td></tr>
+        <tr><td>Pool heater use</td><td>Preferred — continuous supply</td><td>Monitor tank level; interruptions possible</td></tr>
+        <tr><td>Generator use</td><td>Unlimited runtime</td><td>Tank sizing critical for multi-day hurricane use</td></tr>
+        <tr><td>FL code note</td><td>FPC Ch. 5 + NFPA 54</td><td>FPC Ch. 5 + NFPA 58; LP-specific venting req'd</td></tr>
+        <tr><td>Hurricane resilience</td><td>Utility may shut off post-storm</td><td>On-site supply — independent of utility grid</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card">
+    <div class="card-title">📞 Get a Free Gas Line Quote</div>
+    <p style="font-size:.75rem;color:#94A3B8;margin-bottom:14px">Licensed FL master plumber and gas contractor. New gas line runs, CSST bonding upgrades, generator connections, pool heater gas supply — permitted and inspected.</p>
+    <div class="quote-form">
+      <label>Name</label>
+      <input type="text" id="q-name" placeholder="Your name">
+      <label>Phone</label>
+      <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      <label>FL County</label>
+      <select id="q-county">
+        <option value="">— Select County —</option>
+        <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+        <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+        <option>Duval</option><option>Lee</option><option>Collier</option>
+        <option>Sarasota</option><option>Volusia</option><option>Brevard</option>
+        <option>Polk</option><option>Manatee</option><option>Pasco</option>
+        <option>Seminole</option><option>St. Lucie</option><option>Martin</option>
+        <option>Indian River</option><option>Flagler</option><option>St. Johns</option>
+        <option>Alachua</option><option>Leon</option><option>Escambia</option>
+        <option>Other</option>
+      </select>
+      <label>Gas Type</label>
+      <select id="q-gastype">
+        <option value="">— Select —</option>
+        <option>Natural Gas — New run</option>
+        <option>Natural Gas — Extend existing</option>
+        <option>LP / Propane — New system</option>
+        <option>LP / Propane — Extend existing</option>
+        <option>CSST Bonding / Retrofit</option>
+        <option>Generator gas connection</option>
+        <option>Pool heater gas line</option>
+        <option>Outdoor kitchen gas line</option>
+        <option>Not sure — needs evaluation</option>
+      </select>
+      <label>Appliances / Details</label>
+      <textarea id="q-notes" rows="3" placeholder="List appliances to connect, home size, current setup, any concerns..."></textarea>
+      <button class="btn btn-primary" onclick="submitQuote()">Request Free Quote</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">⚙️ Why Choose a Licensed FL Gas Contractor?</div>
+    <div class="info-block">
+      <p>In Florida, gas piping work requires a <strong>licensed plumbing contractor</strong> (CFC license) or a <strong>gas contractor license</strong> (CGC). DIY gas work without permits is a Class 2 misdemeanor under FL Stat. 489. All gas systems require a post-installation pressure test, leak check, and municipal or county inspection before use.</p>
+    </div>
+    <div class="info-block" style="margin-top:8px">
+      <p><strong>CSST Bonding Retrofits:</strong> Many FL homes built before 2014 have unbonded CSST. This is a serious fire hazard — a nearby lightning strike can arc through unbonded CSST and cause a gas fire. Bonding retrofits typically cost $200–$450 and take 2–4 hours. Ask about our free CSST inspection with any gas service call.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🔥</div>
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+const GAS_PROPS = {
+  ng: {name:'Natural Gas', hv:1020, sg:0.60},
+  lp: {name:'LP / Propane', hv:2516, sg:1.52}
+};
+
+const APPL_DB = {
+  'range':       {label:'Gas Range',           btu:65000,  icon:'🍳'},
+  'oven':        {label:'Built-in Oven',        btu:25000,  icon:'🔥'},
+  'wh-tank':     {label:'Tank Water Heater',    btu:40000,  icon:'🚿'},
+  'wh-tankless': {label:'Tankless Water Heater',btu:199000, icon:'💧'},
+  'dryer':       {label:'Gas Dryer',            btu:22000,  icon:'🌀'},
+  'pool-heater': {label:'Pool / Spa Heater',    btu:400000, icon:'🏊'},
+  'fireplace':   {label:'Gas Fireplace',        btu:55000,  icon:'🔥'},
+  'generator':   {label:'Standby Generator',   btu:300000, icon:'⚡'},
+  'bbq':         {label:'Outdoor BBQ',          btu:60000,  icon:'🍖'},
+  'patio-heat':  {label:'Patio Heater',         btu:50000,  icon:'☀️'},
+  'outdoor-ktc': {label:'Outdoor Kitchen',      btu:90000,  icon:'👨‍🍳'},
+  'log-set':     {label:'Gas Log Set',          btu:35000,  icon:'🪵'},
+  'booster':     {label:'Unit Heater',          btu:80000,  icon:'🌡️'},
+  'custom':      {label:'Custom Appliance',     btu:0,      icon:'⚙️'}
+};
+
+const PIPE_IDS = {
+  'black-iron': [{nom:'½"',id:0.622},{nom:'¾"',id:0.824},{nom:'1"',id:1.049},{nom:'1¼"',id:1.380},{nom:'1½"',id:1.610},{nom:'2"',id:2.067},{nom:'2½"',id:2.469},{nom:'3"',id:3.068}],
+  'csst':       [{nom:'⅜"',id:0.390},{nom:'½"',id:0.493},{nom:'¾"',id:0.680},{nom:'1"',id:0.860},{nom:'1¼"',id:1.130},{nom:'1½"',id:1.406}],
+  'copper':     [{nom:'½"',id:0.545},{nom:'¾"',id:0.785},{nom:'1"',id:1.025},{nom:'1¼"',id:1.265}],
+  'pe':         [{nom:'½"',id:0.622},{nom:'¾"',id:0.824},{nom:'1"',id:1.049},{nom:'1¼"',id:1.380},{nom:'1½"',id:1.610},{nom:'2"',id:2.067}]
+};
+
+let appliances = [];
+
+function showTab(t) {
+  document.querySelectorAll('.tab,.panel').forEach(el => el.classList.remove('active'));
+  document.querySelector(`[onclick="showTab('${t}')"]`).classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+}
+
+function updateGasType() {
+  const gt = document.getElementById('gas-type').value;
+  document.getElementById('p-gas-type').value = gt;
+  renderAppliances();
+}
+
+function addAppliance() {
+  const sel = document.getElementById('appl-select').value;
+  const customBtu = parseInt(document.getElementById('custom-btu').value) || 0;
+  const app = {...APPL_DB[sel]};
+  if (sel === 'custom') {
+    if (!customBtu || customBtu < 1000) {
+      alert('Enter a custom BTU/hr value first.');
+      return;
+    }
+    app.btu = customBtu;
+    app.label = 'Custom Appliance';
+  }
+  const existing = appliances.find(a => a.key === sel && sel !== 'custom');
+  if (existing) { existing.qty++; } else { appliances.push({key:sel, ...app, qty:1}); }
+  document.getElementById('custom-btu').value = '';
+  renderAppliances();
+}
+
+function changeQty(idx, d) {
+  appliances[idx].qty = Math.max(0, appliances[idx].qty + d);
+  if (appliances[idx].qty === 0) appliances.splice(idx, 1);
+  renderAppliances();
+}
+
+function renderAppliances() {
+  const gt = document.getElementById('gas-type').value;
+  const gs = GAS_PROPS[gt];
+  const list = document.getElementById('appliance-list');
+  if (!appliances.length) { list.innerHTML = ''; document.getElementById('total-banner').style.display='none'; document.getElementById('demand-breakdown').style.display='none'; return; }
+  let html = '';
+  let rawTotal = 0;
+  appliances.forEach((a, i) => {
+    const btuLine = a.btu * a.qty;
+    rawTotal += btuLine;
+    html += `<div class="appliance-row"><div class="app-left"><span class="app-icon">${esc(a.icon)}</span><div><div class="app-name">${esc(a.label)}</div><div class="app-btu">${(a.btu).toLocaleString()} BTU/hr each</div></div></div><div class="app-right"><button class="qty-btn" onclick="changeQty(${i},-1)">−</button><span class="app-qty">${a.qty}</span><button class="qty-btn" onclick="changeQty(${i},1)">+</button><span style="font-size:.72rem;color:#00B4FF;font-weight:700;min-width:70px;text-align:right">${(btuLine).toLocaleString()}<br><span style="color:#94A3B8;font-weight:400">BTU/hr</span></span></div></div>`;
+  });
+  list.innerHTML = html;
+  const div = parseFloat(document.getElementById('diversity').value);
+  const adjTotal = Math.round(rawTotal * div);
+  const cfh = Math.round(adjTotal / gs.hv);
+  document.getElementById('total-btu-val').textContent = adjTotal.toLocaleString();
+  document.getElementById('total-cfh-val').textContent = `≈ ${cfh} CFH (${gs.name})`;
+  document.getElementById('diversity-note').textContent = `Raw total: ${rawTotal.toLocaleString()} BTU/hr × ${div} diversity = ${adjTotal.toLocaleString()} BTU/hr design demand`;
+  document.getElementById('total-banner').style.display = 'block';
+  renderDemandBars(rawTotal, cfh, gs);
+}
+
+function renderDemandBars(rawTotal, cfh, gs) {
+  const breakdown = document.getElementById('demand-breakdown');
+  const barsEl = document.getElementById('demand-bars');
+  breakdown.style.display = 'block';
+  let html = '';
+  appliances.forEach(a => {
+    const pct = rawTotal > 0 ? Math.min(100, Math.round((a.btu * a.qty / rawTotal) * 100)) : 0;
+    const cfhA = Math.round(a.btu * a.qty / gs.hv);
+    html += `<div class="bar-label"><span>${esc(a.icon)} ${esc(a.label)} ×${a.qty}</span><span style="color:#00B4FF">${cfhA} CFH</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:#00B4FF"></div></div>`;
+  });
+  barsEl.innerHTML = html;
+  let advice = '';
+  if (cfh > 500) advice = '⚠️ High demand system (pool heater/generator). Verify utility meter capacity with your gas provider — may require meter upgrade.';
+  else if (cfh > 200) advice = '✅ Medium-high demand. Verify meter inlet pressure under simultaneous operation. 1" or larger supply line likely needed from meter.';
+  else advice = '✅ Moderate demand. Typical residential service adequate. Verify with your gas utility for meter sizing.';
+  document.getElementById('demand-advice').textContent = advice;
+}
+
+function syncBtuCfh(from) {
+  const gt = document.getElementById('p-gas-type').value;
+  const gs = GAS_PROPS[gt];
+  if (from === 'btu') {
+    const btu = parseFloat(document.getElementById('p-btu').value) || 0;
+    document.getElementById('p-cfh').value = btu > 0 ? Math.round(btu / gs.hv) : '';
+  } else {
+    const cfhVal = parseFloat(document.getElementById('p-cfh').value) || 0;
+    document.getElementById('p-btu').value = cfhVal > 0 ? Math.round(cfhVal * gs.hv) : '';
+  }
+}
+
+function spitzglass(d, L, dH, S) {
+  if (L <= 0 || d <= 0) return 0;
+  const denom = Math.sqrt(1 + 3.6/d + 0.03*d);
+  return (3.87 * Math.pow(d, 2.5) * Math.sqrt(dH / (S * L))) / denom;
+}
+
+function calcPipeSize() {
+  const gt = document.getElementById('p-gas-type').value;
+  const gs = GAS_PROPS[gt];
+  const cfhRequired = parseFloat(document.getElementById('p-cfh').value) || 0;
+  const L = parseFloat(document.getElementById('p-length').value) || 50;
+  const dH = parseFloat(document.getElementById('p-pressure').value) || 0.5;
+  const mat = document.getElementById('p-material').value;
+  if (!cfhRequired || cfhRequired <= 0) { alert('Enter BTU/hr or CFH demand first.'); return; }
+  if (mat === 'copper' && gt === 'ng') { alert('Copper pipe is NOT approved for natural gas in Florida (NFPA 54). Select black iron or CSST.'); return; }
+  const sizes = PIPE_IDS[mat];
+  let tbody = '';
+  let minRec = null;
+  sizes.forEach(pipe => {
+    const cap = spitzglass(pipe.id, L, dH, gs.sg);
+    const ok = cap >= cfhRequired;
+    const pct = Math.min(200, Math.round((cap / cfhRequired) * 100));
+    if (ok && !minRec) minRec = pipe;
+    const statusIcon = ok ? '✅ OK' : '❌ Under';
+    const cls = ok ? 'ok' : '';
+    tbody += `<tr class="${cls}"><td class="pipe-size">${esc(pipe.nom)}</td><td>${pipe.id}"</td><td>${Math.round(cap)}</td><td>${Math.round(cfhRequired)}</td><td>${statusIcon}</td></tr>`;
+  });
+  document.getElementById('pipe-table-body').innerHTML = tbody;
+  if (minRec) {
+    document.getElementById('pipe-rec-size').textContent = minRec.nom + ' ' + mat.replace('-',' ');
+    document.getElementById('pipe-rec-label').textContent = `ID: ${minRec.id}" — Capacity: ${Math.round(spitzglass(minRec.id, L, dH, gs.sg))} CFH vs. ${Math.round(cfhRequired)} CFH required`;
+  } else {
+    document.getElementById('pipe-rec-size').textContent = '> 3" required';
+    document.getElementById('pipe-rec-size').style.color = '#EF4444';
+    document.getElementById('pipe-rec-label').textContent = 'Demand exceeds max table size. Consult licensed gas contractor.';
+  }
+  let notes = '';
+  if (mat === 'csst') notes = '⚡ CSST requires bonding to electrical ground system per FL 2023 Building Code. Include bonding in contract scope.';
+  else if (mat === 'pe') notes = '🌿 Polyethylene pipe is for underground runs only. Must transition to black iron or CSST at grade (min 6" above slab).';
+  else if (mat === 'copper') notes = '⚠️ Copper pipe approved for LP only (not natural gas) per NFPA 54 and FL code.';
+  else notes = '🔩 Black iron: use Teflon tape rated for gas (yellow tape) on all threaded joints. PTFE pipe dope also acceptable.';
+  document.getElementById('pipe-notes').textContent = notes;
+  document.getElementById('pipe-result').classList.add('show');
+}
+
+const GAS_CHECKLIST = [
+  {text:'Pipe material listed per FPC 503.1',sub:'Black iron, CSST (listed), copper (LP only), or HDPE (underground)'},
+  {text:'Pipe sized per NFPA 54 Annex B or Spitzglass formula',sub:'FPC 504.1 — verify at design demand with diversity factor'},
+  {text:'Shutoff valve at each appliance',sub:'FPC 508.1 — within 6 ft, accessible without tools'},
+  {text:'Sediment trap (drip leg) installed at each appliance',sub:'FPC 507.3 — within 3 ft of appliance connection'},
+  {text:'CSST properly bonded to electrical ground',sub:'FBC 2023 / NFPA 54 Section 7.13 — 6 AWG copper minimum, mandatory in FL'},
+  {text:'All concealed joints are welded or CSST (no threaded unions)',sub:'FPC 506.2 — no threaded unions in walls, floors, or ceilings'},
+  {text:'Underground piping at minimum depth with cathodic protection',sub:'FPC 510.1 — 12" cover min (18" under driveways); sleeve through concrete'},
+  {text:'Gas meter protected from wind-borne debris',sub:'FBC 2408 — required in FL wind zones; LP tanks anchored per NFPA 58 6.4'},
+  {text:'Pressure test completed at 1.5× operating pressure (min 3 PSI)',sub:'FPC 505.1 — hold 15 minutes; document test before cover or concealment'},
+  {text:'Permit obtained and final inspection scheduled',sub:'FL Stat. 489 — gas work requires licensed contractor + permit; DIY = Class 2 misdemeanor'},
+];
+
+function initChecklist() {
+  const el = document.getElementById('gas-checklist');
+  let html = '';
+  GAS_CHECKLIST.forEach((item, i) => {
+    html += `<div class="checklist-item" onclick="toggleCheck(${i})"><div class="check-box" id="chk-${i}"></div><div class="check-text">${esc(item.text)}<span class="check-sub">${esc(item.sub)}</span></div></div>`;
+  });
+  el.innerHTML = html;
+}
+
+function toggleCheck(i) {
+  const box = document.getElementById('chk-'+i);
+  box.classList.toggle('checked');
+  const checked = document.querySelectorAll('.check-box.checked').length;
+  const total = GAS_CHECKLIST.length;
+  document.getElementById('gas-score-fill').style.width = Math.round(checked/total*100)+'%';
+  document.getElementById('gas-score-text').textContent = `${checked} of ${total} items complete`;
+}
+
+document.getElementById('appl-select').addEventListener('change', function() {
+  document.getElementById('custom-btu-wrap').style.display = this.value === 'custom' ? 'block' : 'none';
+});
+
+function submitQuote() {
+  const name = document.getElementById('q-name').value.trim();
+  const phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+initChecklist();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n<!-- fl-plumbing-seo: gas line sizing florida spitzglass pipe sizing nfpa 54 fpc chapter 5 natural gas lp propane csst black iron florida plumbing code gas appliance btu calculator -->\n
+</div>
+</body>
+</html>
