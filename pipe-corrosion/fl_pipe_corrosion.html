@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Pipe Corrosion Risk Calculator | Florida Plumbing</title>
+<meta name="description" content="Calculate pipe corrosion risk for Florida homes. pH levels, chloramines, galvanic corrosion at dissimilar metal joints, and pinhole leak predictor by FL county water chemistry.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:16px}
+.wrap{max-width:480px;margin:0 auto}
+h1{font-size:1.35rem;font-weight:700;color:#EF4444;margin-bottom:4px;line-height:1.2}
+.sub{font-size:.8rem;color:#94A3B8;margin-bottom:16px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab-btn{flex:1;min-width:90px;padding:8px 4px;background:#0F1629;border:1px solid #1E2A45;border-radius:8px;color:#94A3B8;font-size:.72rem;font-weight:600;cursor:pointer;transition:.2s;text-align:center}
+.tab-btn.active{background:#EF4444;color:#fff;border-color:#EF4444}
+.tab{display:none}.tab.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2A45;border-radius:12px;padding:16px;margin-bottom:12px}
+.card-title{font-size:.85rem;font-weight:700;color:#EF4444;margin-bottom:10px}
+label{display:block;font-size:.78rem;color:#94A3B8;margin-bottom:4px;font-weight:600}
+select,input{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;font-size:.85rem;margin-bottom:12px;-webkit-appearance:none}
+select:focus,input:focus{outline:none;border-color:#EF4444}
+.btn{width:100%;padding:13px;background:#EF4444;color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:4px}
+.btn:active{opacity:.85}
+.result-box{border-radius:10px;padding:14px;margin-top:12px;display:none}
+.result-box.show{display:block}
+.risk-high{background:rgba(239,68,68,.15);border:1px solid #EF4444}
+.risk-med{background:rgba(244,185,66,.15);border:1px solid #F4B942}
+.risk-low{background:rgba(34,197,94,.15);border:1px solid #22C55E}
+.risk-label{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.risk-label.high{color:#EF4444}
+.risk-label.med{color:#F4B942}
+.risk-label.low{color:#22C55E}
+.risk-detail{font-size:.8rem;color:#E2E8F0;line-height:1.5;margin-bottom:6px}
+.rec-box{background:#141929;border-radius:8px;padding:10px;margin-top:8px;font-size:.78rem;color:#94A3B8;line-height:1.5}
+.rec-box strong{color:#EF4444}
+.mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.mat-card{background:#141929;border:1px solid #1E2A45;border-radius:10px;padding:12px}
+.mat-name{font-size:.82rem;font-weight:700;margin-bottom:4px;color:#E2E8F0}
+.mat-risk{font-size:.7rem;margin-bottom:6px;font-weight:700}
+.mat-risk.high{color:#EF4444}
+.mat-risk.med{color:#F4B942}
+.mat-risk.low{color:#22C55E}
+.mat-risk.vlow{color:#14B8A6}
+.mat-body{font-size:.72rem;color:#94A3B8;line-height:1.45}
+table{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:8px}
+thead th{background:#141929;padding:7px 6px;text-align:left;font-weight:700;color:#94A3B8;font-size:.68rem;text-transform:uppercase;letter-spacing:.03em}
+tbody tr{border-bottom:1px solid #1E2A45}
+tbody tr:last-child{border-bottom:none}
+tbody td{padding:7px 6px;color:#E2E8F0}
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.65rem;font-weight:700}
+.badge-high{background:rgba(239,68,68,.2);color:#EF4444}
+.badge-med{background:rgba(244,185,66,.2);color:#F4B942}
+.badge-low{background:rgba(34,197,94,.2);color:#22C55E}
+.gal-pair{background:#141929;border-radius:8px;padding:10px;margin-bottom:8px;border-left:4px solid #EF4444}
+.gal-pair.warn{border-left-color:#F4B942}
+.gal-pair.ok{border-left-color:#22C55E}
+.gal-title{font-size:.8rem;font-weight:700;margin-bottom:3px;color:#E2E8F0}
+.gal-body{font-size:.72rem;color:#94A3B8;line-height:1.4}
+.form-row{margin-bottom:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#EF4444;color:#fff;padding:12px 24px;border-radius:30px;font-weight:700;font-size:.85rem;display:none;z-index:999;white-space:nowrap}
+.phone-link{display:block;text-align:center;margin-top:10px;color:#EF4444;font-weight:700;font-size:.9rem;text-decoration:none}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1E2A45;font-size:.78rem;gap:8px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#94A3B8;flex:1}
+.info-val{color:#E2E8F0;font-weight:600;text-align:right;flex:1}
+.section-hd{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#EF4444;margin:14px 0 8px}
+.tip-box{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px;font-size:.75rem;color:#E2E8F0;line-height:1.55;margin-bottom:10px}
+.tip-box strong{color:#EF4444}
+.step-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1E2A45;align-items:flex-start}
+.step-row:last-child{border-bottom:none}
+.step-num{background:#EF4444;color:#fff;font-size:.65rem;font-weight:800;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:.77rem;color:#E2E8F0;line-height:1.45}
+.step-body strong{color:#EF4444}
+.highlight-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.4);border-radius:10px;padding:12px;margin-bottom:10px;text-align:center}
+.highlight-num{font-size:1.6rem;font-weight:800;color:#EF4444}
+.highlight-label{font-size:.75rem;color:#94A3B8}
+.hl-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>FL Pipe Corrosion Risk Calculator</h1>
+  <p class="sub">pH · Chloramines · Galvanic Joints · County Water Chemistry</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('risk',this)">Corrosion Risk</button>
+    <button class="tab-btn" onclick="showTab('material',this)">By Material</button>
+    <button class="tab-btn" onclick="showTab('county',this)">FL Chemistry</button>
+    <button class="tab-btn" onclick="showTab('quote',this)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: Corrosion Risk Calculator -->
+  <div id="risk" class="tab active">
+    <div class="hl-grid">
+      <div class="highlight-box">
+        <div class="highlight-num">2.6M</div>
+        <div class="highlight-label">FL homes with copper supply lines</div>
+      </div>
+      <div class="highlight-box">
+        <div class="highlight-num">15–25yr</div>
+        <div class="highlight-label">Average copper lifespan in S. FL</div>
+      </div>
+      <div class="highlight-box">
+        <div class="highlight-num">73%</div>
+        <div class="highlight-label">FL utilities using chloramines</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pipe Corrosion Risk Calculator</div>
+      <label>FL County</label>
+      <select id="calc-county">
+        <option value="">— Select county —</option>
+        <option value="miami-dade">Miami-Dade</option>
+        <option value="broward">Broward</option>
+        <option value="palm-beach">Palm Beach</option>
+        <option value="lee">Lee</option>
+        <option value="collier">Collier</option>
+        <option value="sarasota">Sarasota</option>
+        <option value="manatee">Manatee</option>
+        <option value="hillsborough">Hillsborough (Tampa)</option>
+        <option value="pinellas">Pinellas (St. Pete)</option>
+        <option value="orange">Orange (Orlando)</option>
+        <option value="seminole">Seminole</option>
+        <option value="polk">Polk</option>
+        <option value="brevard">Brevard</option>
+        <option value="volusia">Volusia (Daytona)</option>
+        <option value="duval">Duval (Jacksonville)</option>
+        <option value="alachua">Alachua (Gainesville)</option>
+        <option value="leon">Leon (Tallahassee)</option>
+        <option value="monroe">Monroe (Keys)</option>
+      </select>
+
+      <label>Primary Pipe Material</label>
+      <select id="calc-material">
+        <option value="">— Select material —</option>
+        <option value="copper-type-l">Copper — Type L (most common)</option>
+        <option value="copper-type-m">Copper — Type M (thinner wall)</option>
+        <option value="galvanized">Galvanized Steel</option>
+        <option value="cpvc">CPVC (Chlorinated PVC)</option>
+        <option value="pex">PEX (cross-linked polyethylene)</option>
+        <option value="pvc-sch40">PVC Schedule 40</option>
+        <option value="cast-iron">Cast Iron (drain lines)</option>
+        <option value="orangeburg">Orangeburg (old homes)</option>
+      </select>
+
+      <label>Water Source</label>
+      <select id="calc-source">
+        <option value="">— Select —</option>
+        <option value="municipal">Municipal / City water</option>
+        <option value="well">Private well (untreated)</option>
+        <option value="well-treated">Private well (softened/treated)</option>
+      </select>
+
+      <label>Water Softener?</label>
+      <select id="calc-softener">
+        <option value="no">No softener</option>
+        <option value="yes">Yes — salt-based ion exchange</option>
+        <option value="carbon">Carbon filter only</option>
+      </select>
+
+      <label>Disinfectant Type (if known)</label>
+      <select id="calc-disinfect">
+        <option value="unknown">Unknown / not sure</option>
+        <option value="chloramine">Chloramines (most South FL cities)</option>
+        <option value="chlorine">Free chlorine (some North FL utilities)</option>
+      </select>
+
+      <label>Home Built (approx year)</label>
+      <select id="calc-age">
+        <option value="">— Select —</option>
+        <option value="pre1960">Before 1960</option>
+        <option value="1960-1980">1960 – 1980</option>
+        <option value="1980-2000">1980 – 2000</option>
+        <option value="2000-2015">2000 – 2015</option>
+        <option value="post2015">After 2015</option>
+      </select>
+
+      <button class="btn" onclick="calcRisk()">Calculate Corrosion Risk →</button>
+
+      <div id="risk-result" class="result-box">
+        <div id="risk-label-txt" class="risk-label"></div>
+        <div id="risk-detail-txt" class="risk-detail"></div>
+        <div id="risk-rec" class="rec-box"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">What Drives Pipe Corrosion in Florida?</div>
+      <div class="tip-box"><strong>Chloramines + warm water</strong> are the leading cause of copper pinhole leaks in South Florida. Unlike free chlorine, chloramines penetrate the protective oxide layer on copper at higher water heater temperatures (120–140°F), causing pitting corrosion from the inside out. Homes built 1985–2005 with copper Type M supply lines in chloramine-treated water are at highest risk.</div>
+      <div class="info-row"><span class="info-label">Aggressive water pH</span><span class="info-val">&lt; 7.0 (acidic)</span></div>
+      <div class="info-row"><span class="info-label">Protective water pH</span><span class="info-val">7.5 – 8.5 (slightly alkaline)</span></div>
+      <div class="info-row"><span class="info-label">Chloramine effect on copper</span><span class="info-val">Pitting accelerates at &gt;120°F</span></div>
+      <div class="info-row"><span class="info-label">Galvanic at Cu-galvanized joints</span><span class="info-val">Requires dielectric union</span></div>
+      <div class="info-row"><span class="info-label">Salt softener side effect</span><span class="info-val">Lowers TDS → increases corrosivity</span></div>
+      <div class="info-row"><span class="info-label">Well water H₂S / sulfur</span><span class="info-val">Accelerates galvanized &amp; copper</span></div>
+      <div class="info-row"><span class="info-label">FL heat acceleration factor</span><span class="info-val">Slab temps 80–95°F year-round</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Early Warning Signs of Pipe Corrosion</div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><strong>Blue-green stains</strong> in sinks, tubs, or around supply stops — a hallmark of copper oxidation leaching into water. Sign of early-stage pitting corrosion.</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><strong>Pinhole drips or damp drywall</strong> — the first visible symptom of interior pitting. Often in hot water lines first, especially at bends and under slabs.</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><strong>Metallic taste or rusty color</strong> — indicates pipe interior is shedding material. Rusty = galvanized failure; metallic = copper corrosion; yellow/brown = iron.</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><strong>Sudden drop in water pressure</strong> — galvanized pipe interior rust builds up, reducing diameter over years. Common in pre-1975 Florida homes.</div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><strong>White calcium deposits on valve bodies</strong> — indicates hard water scale; scale can protect copper but accelerates galvanic corrosion at dissimilar metal joints.</div></div>
+      <div class="step-row"><div class="step-num">6</div><div class="step-body"><strong>Higher-than-normal water bills</strong> — slow slab leak or multiple pinhole leaks running undetected. A 1/8-inch pinhole can leak 250+ gallons per day.</div></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: By Material -->
+  <div id="material" class="tab">
+    <div class="card">
+      <div class="card-title">Pipe Material Corrosion Guide — Florida</div>
+      <div class="mat-grid">
+        <div class="mat-card">
+          <div class="mat-name">Copper Type L</div>
+          <div class="mat-risk high">FL Risk: Medium-High</div>
+          <div class="mat-body">Standard in homes 1960–2010. South FL chloramines + hot water create pinhole leaks at 15–25 yr mark. Type L lasts longer than Type M due to thicker walls. Watch hot water lines first — heater outlet and long horizontal runs.</div>
+        </div>
+        <div class="mat-card">
+          <div class="mat-name">Copper Type M</div>
+          <div class="mat-risk high">FL Risk: High</div>
+          <div class="mat-body">Thinner-wall copper common in 1990s–2000s construction. Fails faster than Type L in chloramine water. Pitting starts at 10–18 yrs in South FL. Frequent in Miami-Dade and Broward condos and townhomes.</div>
+        </div>
+        <div class="mat-card">
+          <div class="mat-name">Galvanized Steel</div>
+          <div class="mat-risk high">FL Risk: Very High</div>
+          <div class="mat-body">Pre-1975 homes. Zinc coating fails in FL's acidic ground water and chloramines. Interior rust narrows flow by 50–80% over 40 years. External rust at joints. Repipe if any galvanized remains in supply lines.</div>
+        </div>
+        <div class="mat-card">
+          <div class="mat-name">PEX</div>
+          <div class="mat-risk vlow">FL Risk: Very Low</div>
+          <div class="mat-body">Best choice for FL. Flexible, won't pit from chloramines, resists scale buildup. Brass fittings can dezincify in very aggressive water — use poly fittings where available. Post-2010 gold standard. PEX-A (Uponor) is premium grade.</div>
+        </div>
+        <div class="mat-card">
+          <div class="mat-name">CPVC</div>
+          <div class="mat-risk med">FL Risk: Medium</div>
+          <div class="mat-body">Common 1975–1995. Resists chloramines well but becomes brittle in FL UV/heat at slab penetrations and crawl space. Joints can crack if struck. Orange discoloration signals aging. Check elbow fittings carefully.</div>
+        </div>
+        <div class="mat-card">
+          <div class="mat-name">PVC Sch 40</div>
+          <div class="mat-risk low">FL Risk: Low</div>
+          <div class="mat-body">Drain / waste / vent only in FL. Resistant to most water chemistry. UV degrades exposed PVC — shield or paint above grade. Not rated for hot water supply. DWV lines can last 70+ years with minimal corrosion.</div>
+        </div>
+        <div class="mat-card">
+          <div class="mat-name">Cast Iron (Drain)</div>
+          <div class="mat-risk med">FL Risk: Medium</div>
+          <div class="mat-body">Drain lines in pre-1975 homes. FL's warm humidity + hydrogen sulfide from organic waste causes interior crown corrosion (gas attacks the top of horizontal runs). Slow failure over decades — annual visual inspection recommended.</div>
+        </div>
+        <div class="mat-card">
+          <div class="mat-name">Orangeburg Pipe</div>
+          <div class="mat-risk high">FL Risk: Extreme</div>
+          <div class="mat-body">Tar-paper composite found in pre-1960 sewer lines. Deforms, collapses, and causes sewage backup. Should have been replaced decades ago. No repair options — full sewer line replacement required. Video inspection needed ASAP.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Galvanic Corrosion — Dissimilar Metal Joints</div>
+      <p style="font-size:.75rem;color:#94A3B8;margin-bottom:10px">Galvanic corrosion occurs when two dissimilar metals contact each other in the presence of water. The more "active" (anodic) metal corrodes sacrificially. FL's warm, conductive water accelerates galvanic attack dramatically.</p>
+      <div class="section-hd">High-Risk Metal Combinations</div>
+      <div class="gal-pair">
+        <div class="gal-title">Copper + Galvanized Steel ← Most Common FL Failure</div>
+        <div class="gal-body">Copper is cathode (noble); galvanized is anode (active). Galvanized corrodes rapidly at joint. Dielectric union required. Found at water meter, main shutoff, and old addition tie-ins. Pre-1975 homes almost always have this combination somewhere.</div>
+      </div>
+      <div class="gal-pair">
+        <div class="gal-title">Copper + Aluminum (pool / irrigation)</div>
+        <div class="gal-body">Aluminum is very anodic vs. copper. Corrodes quickly at outdoor pool equipment bonding and irrigation system connections. Common source of pinhole failure at irrigation manifolds. Isolate with plastic transition fittings.</div>
+      </div>
+      <div class="gal-pair warn">
+        <div class="gal-title">Copper + Lead-Free Brass (dezincification)</div>
+        <div class="gal-body">Post-2014 "lead-free" brass (low zinc) is more resistant but can still dezincify in soft or chloraminated water. Affects ball valves, faucet bodies, supply stops, and hose bibs. Signs: pink/grayish valve body, valve becomes hard to turn, visible pitting.</div>
+      </div>
+      <div class="gal-pair ok">
+        <div class="gal-title">PEX + Brass Fittings (low risk)</div>
+        <div class="gal-body">PEX tubing itself doesn't corrode. Brass crimp or clamp fittings are compatible. Dezincification risk at fittings in very aggressive water — use lead-free brass (ASTM B626) or polymer fittings where possible. Overall: lowest galvanic risk of any common FL pipe system.</div>
+      </div>
+
+      <div class="section-hd">FL Plumbing Code — Dielectric Union Requirement</div>
+      <div class="tip-box"><strong>Florida Plumbing Code (FPC Section 605.15)</strong> requires dielectric isolation wherever copper pipe connects to galvanized, black iron, or aluminum. This includes water heater connections (both supply and return), meter risers, and any gas-to-water supply transitions. A missing dielectric union is a code violation and a corrosion accelerator. Typical install cost: $150–$300 per joint.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pipe Replacement Cost Guide — Florida</div>
+      <div class="info-row"><span class="info-label">Spot repair — single pinhole</span><span class="info-val">$350 – $700</span></div>
+      <div class="info-row"><span class="info-label">PEX repipe — 2 bed / 1 bath</span><span class="info-val">$3,000 – $4,500</span></div>
+      <div class="info-row"><span class="info-label">PEX repipe — 3 bed / 2 bath</span><span class="info-val">$4,500 – $6,500</span></div>
+      <div class="info-row"><span class="info-label">PEX repipe — 4+ bed home</span><span class="info-val">$6,500 – $9,500+</span></div>
+      <div class="info-row"><span class="info-label">Epoxy pipe lining (in-place)</span><span class="info-val">$4 – $8 per linear foot</span></div>
+      <div class="info-row"><span class="info-label">Galvanized to copper spot section</span><span class="info-val">$500 – $1,200</span></div>
+      <div class="info-row"><span class="info-label">Dielectric union (per joint)</span><span class="info-val">$150 – $300</span></div>
+      <div class="info-row"><span class="info-label">Cast iron drain line reline</span><span class="info-val">$80 – $250 per foot</span></div>
+      <div class="info-row"><span class="info-label">Sewer line (Orangeburg) replace</span><span class="info-val">$4,000 – $12,000</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FL County Water Chemistry -->
+  <div id="county" class="tab">
+    <div class="card">
+      <div class="card-title">FL County Water Chemistry Reference</div>
+      <p style="font-size:.75rem;color:#94A3B8;margin-bottom:10px">pH &gt; 7.5 is protective (alkaline, scaling tendency). pH &lt; 7.0 is corrosive. Chloramines cause greater long-term copper damage than free chlorine. Data from FL utilities and FDEP consumer confidence reports.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>County / Utility</th>
+            <th>Avg pH</th>
+            <th>Disinfectant</th>
+            <th>Cu Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Miami-Dade (WASD)</td><td>7.8–8.2</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Broward Co. Water</td><td>7.9–8.1</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Palm Beach Co. Water</td><td>7.8–8.0</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Collier County</td><td>7.8–8.2</td><td>Free Chlorine</td><td><span class="badge badge-low">Low</span></td></tr>
+          <tr><td>Lee County Water</td><td>7.7–8.0</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Sarasota Co. Water</td><td>7.9–8.2</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Manatee Co. Utilities</td><td>7.8–8.1</td><td>Mixed</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Hillsborough (Tampa Bay Water)</td><td>7.7–7.9</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Pinellas Co. Water</td><td>7.5–7.8</td><td>Chloramines</td><td><span class="badge badge-med">Med-Hi</span></td></tr>
+          <tr><td>Orange Co. / City of Orlando</td><td>7.8–8.2</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Seminole County</td><td>7.7–8.0</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Polk County Water</td><td>7.6–7.9</td><td>Chloramines</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Brevard Co. Water</td><td>7.6–7.9</td><td>Free Chlorine</td><td><span class="badge badge-low">Low</span></td></tr>
+          <tr><td>Volusia Co. Water</td><td>7.5–7.8</td><td>Free Chlorine</td><td><span class="badge badge-low">Low</span></td></tr>
+          <tr><td>Duval (JEA Jacksonville)</td><td>6.8–7.5</td><td>Free Chlorine</td><td><span class="badge badge-high">High</span></td></tr>
+          <tr><td>Alachua (GRU Gainesville)</td><td>6.9–7.4</td><td>Free Chlorine</td><td><span class="badge badge-high">High</span></td></tr>
+          <tr><td>Leon (City of Tallahassee)</td><td>7.2–7.6</td><td>Chloramines</td><td><span class="badge badge-med">Med-Hi</span></td></tr>
+          <tr><td>Monroe Co. (Florida Keys)</td><td>7.8–8.1</td><td>Chloramines + UV</td><td><span class="badge badge-med">Med</span></td></tr>
+          <tr><td>Private Well (FL statewide avg)</td><td>5.5–7.5</td><td>None / H₂S</td><td><span class="badge badge-high">High</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Chloramine vs Free Chlorine — Impact on Copper</div>
+      <div class="tip-box"><strong>Why chloramines are harder on copper:</strong> Chloramines (monochloramine NH₂Cl) are more stable than free chlorine and persist longer at elevated water temperatures. At water heater temperatures (120–140°F), chloramine accelerates dezincification of brass fittings and pitting corrosion inside copper supply lines. South FL utilities switched to chloramines in the 2000s–2010s to reduce disinfection byproducts (trihalomethanes / haloacetic acids). The trade-off: copper supply lines corrode 25–40% faster under chloramine treatment, particularly in the first 10 feet of hot water piping from the water heater.</div>
+      <div class="info-row"><span class="info-label">Major chloramine utilities in FL</span><span class="info-val">Miami-Dade, Broward, Palm Beach, Tampa Bay Water, Orlando, Lee, Sarasota</span></div>
+      <div class="info-row"><span class="info-label">Major free-chlorine utilities in FL</span><span class="info-val">Collier, Brevard, Volusia, Alachua (GRU), JEA Jacksonville</span></div>
+      <div class="info-row"><span class="info-label">Safest WH temperature vs chloramine</span><span class="info-val">≤ 120°F reduces pitting rate</span></div>
+      <div class="info-row"><span class="info-label">Point-of-entry treatment option</span><span class="info-val">Catalytic carbon filter (removes chloramines)</span></div>
+      <div class="info-row"><span class="info-label">Best long-term solution</span><span class="info-val">PEX repipe — immune to chloramine attack</span></div>
+
+      <div class="section-hd">Langelier Saturation Index (LSI) Explained</div>
+      <p style="font-size:.75rem;color:#94A3B8;line-height:1.5">The LSI measures water's tendency to precipitate or dissolve calcium carbonate. Positive LSI = scale-forming (protects copper with mineral coating). Negative LSI = corrosive (dissolves minerals and attacks metals). South FL's hard water typically has a positive LSI (+0.5 to +1.5), which partially protects copper — but chloramine neutralizes this protection at elevated temperatures. North FL's softer, more acidic water has a negative LSI (-0.3 to -0.8), making it highly corrosive to copper even without chloramines.</p>
+
+      <div class="section-hd">Well Water Corrosion in Florida</div>
+      <div class="tip-box"><strong>Private wells</strong> in FL range from mildly alkaline (deep Floridan Aquifer: pH 7.5–8.0) to highly acidic (shallow surficial wells: pH 5.5–6.5). Hydrogen sulfide (H₂S), common in FL well water, creates sulfuric acid conditions inside pipes. H₂S concentrations as low as 0.1 mg/L will turn copper black and begin pitting within 2–5 years. A simple $35 water test reveals pH, H₂S, hardness, and iron content — essential for any FL well-water home before choosing pipe material for a repipe.</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Free Quote -->
+  <div id="quote" class="tab">
+    <div class="card">
+      <div class="card-title">Free Corrosion Assessment &amp; Repipe Quote</div>
+      <p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Serving all of Florida • Licensed CFC Plumber • We'll call within 2 hours</p>
+      <div class="form-row">
+        <label>Your Name</label>
+        <input type="text" id="q-name" placeholder="First &amp; Last Name">
+      </div>
+      <div class="form-row">
+        <label>Phone Number</label>
+        <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      </div>
+      <div class="form-row">
+        <label>City / Zip Code</label>
+        <input type="text" id="q-city" placeholder="City or ZIP">
+      </div>
+      <div class="form-row">
+        <label>Home Year Built</label>
+        <input type="text" id="q-year" placeholder="e.g. 1987">
+      </div>
+      <div class="form-row">
+        <label>Primary concern</label>
+        <select id="q-concern">
+          <option value="">— Select —</option>
+          <option>Pinhole leaks in copper supply lines</option>
+          <option>Discolored or metallic-tasting water</option>
+          <option>Low water pressure (possible galvanized)</option>
+          <option>Pre-purchase pipe inspection</option>
+          <option>Full repipe estimate (copper → PEX)</option>
+          <option>Galvanic corrosion at meter / shutoff</option>
+          <option>Sewer line camera inspection</option>
+          <option>Other corrosion concern</option>
+        </select>
+      </div>
+      <button class="btn" onclick="submitQuote()">Request Free Assessment →</button>
+      <a href="tel:5615557473" class="phone-link">📞 (561) 555-PIPE — Call Now</a>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Why Get a Professional Corrosion Assessment?</div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><strong>Catch pinholes before they become slab leaks.</strong> A single pinhole under the slab can cause $15,000–$40,000 in slab repair, mold remediation, and flooring damage if left undetected.</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><strong>FL homeowners insurance requires disclosure.</strong> Many FL insurers now require pipe material and age disclosure at renewal. Galvanized or polybutylene pipes can result in policy cancellation.</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><strong>Repiping before sale adds value.</strong> A completed PEX repipe with permit adds $5,000–$15,000 in buyer confidence and eliminates a major inspection red flag.</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><strong>PEX repipe pays for itself.</strong> Eliminating ongoing pinhole repair calls ($400–$700 each), slab leak risk, and water damage claims typically recovers the repipe cost in 3–5 years for at-risk copper systems.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">FL Plumbing License Verification</div>
+      <p style="font-size:.78rem;color:#94A3B8;line-height:1.5">All pipe replacement work in Florida requires a licensed plumbing contractor. Repipes require a permit. Verify any plumber at <strong>myfloridalicense.com/wl11.asp</strong> before signing a contract. Look for a CFC (Certified Plumbing Contractor) license. Unlicensed repipe work voids insurance claims and creates title issues at resale.</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+var COUNTY_DATA = {
+  'miami-dade':{ph:'7.8–8.2',dis:'chloramine',risk:0.70,note:'Hard Biscayne aquifer water buffers pH but chloramines attack copper at water heater temperatures. Homes built 1985–2005 with copper Type M are at highest risk.'},
+  'broward':{ph:'7.9–8.1',dis:'chloramine',risk:0.68,note:'Similar to Miami-Dade. Chloramine-treated water. Copper Type M homes from the 1990s show elevated pinhole leak rates in hot water lines.'},
+  'palm-beach':{ph:'7.8–8.0',dis:'chloramine',risk:0.65,note:'Hard water slightly protective but chloramines still cause pinhole leaks in copper Type M piping at the 15–20 year mark.'},
+  'lee':{ph:'7.7–8.0',dis:'chloramine',risk:0.70,note:'Lee County Water treats with chloramines. Warm climate and high average water temperatures accelerate chloramine attack on copper supply lines.'},
+  'collier':{ph:'7.8–8.2',dis:'free-chlorine',risk:0.38,note:'Uses free chlorine — significantly lower copper corrosion risk than chloramine-treated counties in South FL.'},
+  'sarasota':{ph:'7.9–8.2',dis:'chloramine',risk:0.65,note:'Sarasota utilities on chloramines. Hard water partially protective. 1975–2000 copper homes at moderate risk; recommend inspection at 20 years.'},
+  'manatee':{ph:'7.8–8.1',dis:'chloramine',risk:0.65,note:'Manatee County utilities use mixed disinfection. Moderate copper corrosion risk; copper homes from early 1990s approaching their expected service life.'},
+  'hillsborough':{ph:'7.7–7.9',dis:'chloramine',risk:0.75,note:'Tampa Bay Water uses chloramines. Slightly lower pH than South FL increases corrosivity. 1980–2005 copper Type L and M homes have elevated pinhole risk.'},
+  'pinellas':{ph:'7.5–7.8',dis:'chloramine',risk:0.82,note:'Lower average pH combined with chloramine treatment results in above-average copper corrosion risk. St. Petersburg has documented copper pinhole cluster complaints.'},
+  'orange':{ph:'7.8–8.2',dis:'chloramine',risk:0.70,note:'OUC and other Orlando-area utilities use chloramines. 1990s copper Type M construction at moderate-to-high risk as pipes approach 25–30 years.'},
+  'seminole':{ph:'7.7–8.0',dis:'chloramine',risk:0.70,note:'Seminole County Water on chloramines. Similar risk profile to Orange County. Inspect copper homes built 1985–2005.'},
+  'polk':{ph:'7.6–7.9',dis:'chloramine',risk:0.72,note:'Polk County Water chloramine-treated. Well water in rural Polk can be acidic — essential to test if not on municipal supply before choosing repipe material.'},
+  'brevard':{ph:'7.6–7.9',dis:'free-chlorine',risk:0.42,note:'Uses free chlorine — lower copper attack rate than South FL chloramine utilities. Moderate pH. Copper homes remain at standard corrosion risk.'},
+  'volusia':{ph:'7.5–7.8',dis:'free-chlorine',risk:0.48,note:'Volusia on free chlorine. Moderate pH range. Lower corrosion risk than most FL counties. Daytona-area homes on good footing for copper longevity.'},
+  'duval':{ph:'6.8–7.5',dis:'free-chlorine',risk:0.90,note:'JEA Jacksonville water is notably softer and more acidic (pH can reach 6.8). High copper corrosion risk even without chloramines. Oldest Jacksonville homes show significant galvanized and copper failure rates.'},
+  'alachua':{ph:'6.9–7.4',dis:'free-chlorine',risk:0.87,note:'GRU Gainesville water is more acidic and aggressive than South FL. Copper homes built 1960–1990 show significant corrosion. Galvanized pipes should be replaced immediately.'},
+  'leon':{ph:'7.2–7.6',dis:'chloramine',risk:0.78,note:'City of Tallahassee uses chloramines. Moderate pH with chloramine treatment results in above-average copper corrosion risk for a North FL city.'},
+  'monroe':{ph:'7.8–8.1',dis:'chloramine',risk:0.72,note:'Florida Keys water on chloramines plus UV. Salt air environment dramatically accelerates exterior corrosion on all outdoor plumbing, fittings, hose bibs, and outdoor fixtures.'}
+};
+
+var MAT_RISK = {'copper-type-l':0.60,'copper-type-m':0.85,'galvanized':1.0,'cpvc':0.28,'pex':0.08,'pvc-sch40':0.12,'cast-iron':0.55,'orangeburg':1.0};
+var AGE_RISK = {'pre1960':1.0,'1960-1980':0.85,'1980-2000':0.72,'2000-2015':0.42,'post2015':0.18};
+var SOURCE_RISK = {'municipal':1.0,'well':1.32,'well-treated':0.68};
+var SOFTENER_RISK = {'no':1.0,'yes':1.18,'carbon':1.0};
+var DIS_RISK = {'unknown':1.0,'chloramine':1.22,'chlorine':0.82};
+
+function calcRisk() {
+  var county = document.getElementById('calc-county').value;
+  var material = document.getElementById('calc-material').value;
+  var source = document.getElementById('calc-source').value;
+  var softener = document.getElementById('calc-softener').value;
+  var dis = document.getElementById('calc-disinfect').value;
+  var age = document.getElementById('calc-age').value;
+  if (!county || !material || !source || !age) {
+    alert('Please select county, pipe material, water source, and home age.');
+    return;
+  }
+  var cd = COUNTY_DATA[county];
+  var score = cd.risk * MAT_RISK[material] * AGE_RISK[age] * SOURCE_RISK[source] * SOFTENER_RISK[softener] * DIS_RISK[dis];
+  var box = document.getElementById('risk-result');
+  var lbl = document.getElementById('risk-label-txt');
+  var det = document.getElementById('risk-detail-txt');
+  var rec = document.getElementById('risk-rec');
+  box.className = 'result-box show';
+  var matNames = {'copper-type-l':'Copper Type L','copper-type-m':'Copper Type M','galvanized':'Galvanized Steel','cpvc':'CPVC','pex':'PEX','pvc-sch40':'PVC Schedule 40','cast-iron':'Cast Iron (drain)','orangeburg':'Orangeburg'};
+  var mat = esc(matNames[material]);
+  var cty = esc(county.split('-').map(function(w){return w.charAt(0).toUpperCase()+w.slice(1);}).join('-'));
+  if (score >= 0.60) {
+    box.classList.add('risk-high');
+    box.classList.remove('risk-med','risk-low');
+    lbl.textContent = '🔴 HIGH CORROSION RISK';
+    lbl.className = 'risk-label high';
+    det.innerHTML = 'Your <strong>' + mat + '</strong> pipes in ' + cty + ' County show <strong>HIGH</strong> corrosion risk. ' + esc(cd.note) + ' Hot water lines and under-slab runs are most vulnerable. Professional assessment recommended within 60 days.';
+    rec.innerHTML = '<strong>Recommended actions:</strong> Pressure test for hidden pinholes · Video slab line inspection · PEX repipe estimate · Check dielectric unions at all dissimilar metal connections · Water quality lab test';
+  } else if (score >= 0.30) {
+    box.classList.add('risk-med');
+    box.classList.remove('risk-high','risk-low');
+    lbl.textContent = '🟡 MODERATE CORROSION RISK';
+    lbl.className = 'risk-label med';
+    det.innerHTML = 'Your <strong>' + mat + '</strong> pipes in ' + cty + ' County show <strong>MODERATE</strong> corrosion risk. ' + esc(cd.note) + ' Annual maintenance and monitoring recommended. Watch hot water lines and supply stops.';
+    rec.innerHTML = '<strong>Recommended actions:</strong> Annual water heater flush · Inspect supply stops under sinks (early corrosion indicator) · Water quality test for pH &amp; chloramines · Dielectric unions at mixed-metal joints · Repipe planning if approaching 25 years';
+  } else {
+    box.classList.add('risk-low');
+    box.classList.remove('risk-high','risk-med');
+    lbl.textContent = '🟢 LOW CORROSION RISK';
+    lbl.className = 'risk-label low';
+    det.innerHTML = 'Your <strong>' + mat + '</strong> pipes in ' + cty + ' County show <strong>LOW</strong> corrosion risk. ' + esc(cd.note) + ' Standard maintenance is sufficient. Continue routine annual water heater flush.';
+    rec.innerHTML = '<strong>Recommended actions:</strong> Annual water heater flush · Visual inspection of accessible fittings every 2 years · Water quality test if appearance or taste changes';
+  }
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';}, 3500);
+}
+</script>
+
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+<!-- fl-plumbing-seo: florida pipe corrosion risk chloramine copper pinhole leak galvanic corrosion dissimilar metal dielectric union FL water chemistry pH county miami-dade broward copper repipe PEX pipe material florida plumbing corrosion assessment galvanized steel cpvc orangeburg pipe florida langelier saturation index LSI chloramine copper attack water heater temperature pipe material guide florida -->
+
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**169 interactive cost calculators** for Florida homeowners.
+**172 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -91,6 +91,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Permit Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/permit-guide/fl_permit_guide.html)
 - [FL Permit Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/permit-guide/fl_plumbing_permit_guide.html)
 - [FL Pipe Burst Freeze Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-burst-freeze/fl_pipe_burst_freeze.html)
+- [FL Pipe Corrosion Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-corrosion/fl_pipe_corrosion.html)
 - [FL Pipe Identification Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-identification/fl_pipe_identification.html)
 - [FL Pipe Insulation Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-insulation-calc/fl_pipe_insulation_calc.html)
 - [FL Pipe Life Expectancy Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-life-expectancy/fl_pipe_life_expectancy.html)
@@ -118,6 +119,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Running Toilet Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/running-toilet/fl_running_toilet.html)
 - [FL Rv Dock Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rv-dock-plumbing/fl_rv_dock_plumbing.html)
 - [FL Septic Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-guide/fl_septic_guide.html)
+- [FL Septic Pumping Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-pumping-calc/fl_septic_pumping_calc.html)
 - [FL Septic System Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-system/fl_septic_system.html)
 - [FL Septic To Sewer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-to-sewer/fl_septic_to_sewer.html)
 - [FL Septic Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic/fl_septic.html)
@@ -152,6 +154,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Tub To Shower Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tub-to-shower/fl_tub_to_shower.html)
 - [FL Utility Locating Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/utility-locating/fl_utility_locating.html)
 - [FL Vacation Rental Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/vacation-rental-plumbing/fl_vacation_rental_plumbing.html)
+- [FL Warranty Claim Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/warranty-claim-guide/fl_warranty_claim_guide.html)
 - [FL Water Bill Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-bill/fl_water_bill.html)
 - [FL Water Conservation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-conservation/fl_water_conservation.html)
 - [FL Water Damage Claim Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-damage-claim/fl_water_damage_claim.html)

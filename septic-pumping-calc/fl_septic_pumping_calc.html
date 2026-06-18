@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Septic Tank Pumping Interval Calculator | Florida Plumbing</title>
+<meta name="description" content="Florida septic tank pumping frequency calculator. Tank size, household size, county regulations, FL DOH requirements, septic health warning signs, and county pumping cost guide.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:16px}
+.wrap{max-width:480px;margin:0 auto}
+h1{font-size:1.35rem;font-weight:700;color:#14B8A6;margin-bottom:4px;line-height:1.2}
+.sub{font-size:.8rem;color:#94A3B8;margin-bottom:16px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab-btn{flex:1;min-width:90px;padding:8px 4px;background:#0F1629;border:1px solid #1E2A45;border-radius:8px;color:#94A3B8;font-size:.72rem;font-weight:600;cursor:pointer;transition:.2s;text-align:center}
+.tab-btn.active{background:#14B8A6;color:#fff;border-color:#14B8A6}
+.tab{display:none}.tab.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2A45;border-radius:12px;padding:16px;margin-bottom:12px}
+.card-title{font-size:.85rem;font-weight:700;color:#14B8A6;margin-bottom:10px}
+label{display:block;font-size:.78rem;color:#94A3B8;margin-bottom:4px;font-weight:600}
+select,input{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;font-size:.85rem;margin-bottom:12px;-webkit-appearance:none}
+select:focus,input:focus{outline:none;border-color:#14B8A6}
+.btn{width:100%;padding:13px;background:#14B8A6;color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:4px}
+.btn:active{opacity:.85}
+.result-box{border-radius:10px;padding:14px;margin-top:12px;display:none}
+.result-box.show{display:block}
+.res-overdue{background:rgba(239,68,68,.15);border:1px solid #EF4444}
+.res-due-soon{background:rgba(244,185,66,.15);border:1px solid #F4B942}
+.res-ok{background:rgba(20,184,166,.15);border:1px solid #14B8A6}
+.res-label{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.res-label.overdue{color:#EF4444}
+.res-label.due-soon{color:#F4B942}
+.res-label.ok{color:#14B8A6}
+.res-detail{font-size:.8rem;color:#E2E8F0;line-height:1.55;margin-bottom:6px}
+.res-rec{background:#141929;border-radius:8px;padding:10px;font-size:.77rem;color:#94A3B8;line-height:1.5}
+.res-rec strong{color:#14B8A6}
+table{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:8px}
+thead th{background:#141929;padding:7px 6px;text-align:left;font-weight:700;color:#94A3B8;font-size:.68rem;text-transform:uppercase;letter-spacing:.03em}
+tbody tr{border-bottom:1px solid #1E2A45}
+tbody tr:last-child{border-bottom:none}
+tbody td{padding:7px 6px;color:#E2E8F0;vertical-align:top}
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.65rem;font-weight:700}
+.badge-req{background:rgba(239,68,68,.2);color:#EF4444}
+.badge-rec{background:rgba(244,185,66,.2);color:#F4B942}
+.badge-std{background:rgba(20,184,166,.2);color:#14B8A6}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #1E2A45;font-size:.78rem;gap:8px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#94A3B8;flex:1}
+.info-val{color:#E2E8F0;font-weight:600;text-align:right;flex:1}
+.warning-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1E2A45;align-items:flex-start}
+.warning-item:last-child{border-bottom:none}
+.warn-icon{font-size:.9rem;flex-shrink:0;margin-top:2px}
+.warn-body{font-size:.77rem;color:#E2E8F0;line-height:1.45}
+.warn-body strong{color:#14B8A6}
+.step-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #1E2A45;align-items:flex-start}
+.step-row:last-child{border-bottom:none}
+.step-num{background:#14B8A6;color:#fff;font-size:.65rem;font-weight:800;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:.77rem;color:#E2E8F0;line-height:1.45}
+.step-body strong{color:#14B8A6}
+.tip-box{background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.3);border-radius:8px;padding:10px;font-size:.75rem;color:#E2E8F0;line-height:1.55;margin-bottom:10px}
+.tip-box strong{color:#14B8A6}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#14B8A6;color:#fff;padding:12px 24px;border-radius:30px;font-weight:700;font-size:.85rem;display:none;z-index:999;white-space:nowrap}
+.phone-link{display:block;text-align:center;margin-top:10px;color:#14B8A6;font-weight:700;font-size:.9rem;text-decoration:none}
+.section-hd{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#14B8A6;margin:14px 0 8px}
+.form-row{margin-bottom:12px}
+.hl-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.highlight-box{background:#0F1629;border:1px solid #1E2A45;border-radius:10px;padding:12px;text-align:center}
+.highlight-num{font-size:1.4rem;font-weight:800;color:#14B8A6}
+.highlight-label{font-size:.68rem;color:#94A3B8;line-height:1.3;margin-top:2px}
+.lookup-table-wrap{overflow-x:auto}
+.county-req{font-size:.7rem;color:#94A3B8;font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>FL Septic Pumping Interval Calculator</h1>
+  <p class="sub">How often should you pump? Tank size · Household · FL County Rules</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('calc',this)">Pump Interval</button>
+    <button class="tab-btn" onclick="showTab('county',this)">County Rules</button>
+    <button class="tab-btn" onclick="showTab('signs',this)">Warning Signs</button>
+    <button class="tab-btn" onclick="showTab('quote',this)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: Pump Interval Calculator -->
+  <div id="calc" class="tab active">
+    <div class="hl-grid">
+      <div class="highlight-box">
+        <div class="highlight-num">2.6M</div>
+        <div class="highlight-label">FL septic systems — most in the US</div>
+      </div>
+      <div class="highlight-box">
+        <div class="highlight-num">3–5yr</div>
+        <div class="highlight-label">Recommended FL pump interval</div>
+      </div>
+      <div class="highlight-box">
+        <div class="highlight-num">$20K+</div>
+        <div class="highlight-label">Average drainfield replacement cost</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Septic Pumping Frequency Calculator</div>
+      <label>Tank Capacity (gallons)</label>
+      <select id="tank-size">
+        <option value="">— Select tank size —</option>
+        <option value="750">750 gallons (pre-1972 older homes)</option>
+        <option value="900">900 gallons</option>
+        <option value="1000">1,000 gallons (most common)</option>
+        <option value="1250">1,250 gallons</option>
+        <option value="1500">1,500 gallons</option>
+        <option value="2000">2,000 gallons (large home)</option>
+        <option value="2500">2,500 gallons</option>
+      </select>
+
+      <label>Number of People in Household</label>
+      <select id="household">
+        <option value="">— Select household size —</option>
+        <option value="1">1 person</option>
+        <option value="2">2 people</option>
+        <option value="3">3 people</option>
+        <option value="4">4 people</option>
+        <option value="5">5 people</option>
+        <option value="6">6 people</option>
+        <option value="7">7+ people</option>
+      </select>
+
+      <label>Garbage Disposal Installed?</label>
+      <select id="disposal">
+        <option value="no">No garbage disposal</option>
+        <option value="yes">Yes — I use it regularly</option>
+        <option value="rarely">Yes — I use it rarely</option>
+      </select>
+
+      <label>Septic-Safe Toilet Paper?</label>
+      <select id="tp">
+        <option value="yes">Yes — use septic-safe / single-ply</option>
+        <option value="no">No — regular multi-ply or thick brands</option>
+      </select>
+
+      <label>Any of these in household?</label>
+      <select id="extras">
+        <option value="none">None of the below</option>
+        <option value="softener">Water softener (backwash goes to tank)</option>
+        <option value="home-biz">Home-based business / frequent guests</option>
+        <option value="both">Both softener and frequent guests</option>
+      </select>
+
+      <label>Last Pumped (approximate year)</label>
+      <select id="last-pumped">
+        <option value="">— Select —</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>
+        <option value="2017">2017</option>
+        <option value="2016">2016</option>
+        <option value="2015-earlier">2015 or earlier</option>
+        <option value="never">Never pumped / don't know</option>
+      </select>
+
+      <button class="btn" onclick="calcInterval()">Calculate Pump Interval →</button>
+
+      <div id="calc-result" class="result-box">
+        <div id="calc-label" class="res-label"></div>
+        <div id="calc-detail" class="res-detail"></div>
+        <div id="calc-rec" class="res-rec"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">FL Septic Pump Interval Reference Table</div>
+      <p style="font-size:.75rem;color:#94A3B8;margin-bottom:8px">Based on EPA recommended pumping frequency guidelines. Garbage disposal and water softener use reduce intervals significantly.</p>
+      <table>
+        <thead>
+          <tr><th>Tank Size</th><th>2 People</th><th>4 People</th><th>6 People</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>750 gal</td><td>2.5 yr</td><td>1.5 yr</td><td>1 yr</td></tr>
+          <tr><td>1,000 gal</td><td>5 yr</td><td>3 yr</td><td>2 yr</td></tr>
+          <tr><td>1,250 gal</td><td>7 yr</td><td>4 yr</td><td>2.5 yr</td></tr>
+          <tr><td>1,500 gal</td><td>9 yr</td><td>5 yr</td><td>3.5 yr</td></tr>
+          <tr><td>2,000 gal</td><td>12 yr</td><td>7 yr</td><td>5 yr</td></tr>
+          <tr><td>2,500 gal</td><td>15 yr</td><td>9 yr</td><td>6 yr</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:.7rem;color:#94A3B8;margin-top:8px">⚠ Add garbage disposal: subtract 20–30% from interval. Add water softener backwash: subtract 15–20%. FL regulations may require shorter intervals regardless of calculations — see County Rules tab.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">What Happens During a Septic Pump-Out?</div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-body"><strong>Locate and uncover access lids.</strong> Technician locates tank lids (usually 2 on modern two-compartment tanks). Homeowner should know lid location — mark it! Lid access fee applies if buried or landscaped over.</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-body"><strong>Measure sludge and scum layers.</strong> Before pumping, a licensed inspector measures sludge depth (bottom layer) and scum depth (floating top layer). FL recommends pumping when total accumulation exceeds 1/3 of tank liquid depth.</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-body"><strong>Full pump-out.</strong> The entire tank contents — liquid, sludge, and scum — are vacuumed into the pump truck. Never accept a partial pump-out unless you're getting a mid-cycle check and the tech documents sludge levels. Partial pump-outs hide tank problems.</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-body"><strong>Inspect baffles and inlet/outlet tees.</strong> A quality pump-out includes inspecting the inlet baffle (prevents scum from flowing to drainfield) and outlet baffle (holds back solids). Missing or damaged baffles cause early drainfield failure. Cost to replace: $150–$350.</div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-body"><strong>Inspect for cracks, root intrusion, and lid condition.</strong> Tank body should have no visible cracks or root penetration. Concrete lids can spall and crumble — inspection catches failing lids before they create safety hazards (septic tank collapses are rare but deadly).</div></div>
+      <div class="step-row"><div class="step-num">6</div><div class="step-body"><strong>Receive written service report.</strong> Always get a written report documenting tank size, sludge/scum measurements, baffle condition, and any concerns. This report is your maintenance record for county compliance and future warranty or real estate purposes.</div></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: County Regulations -->
+  <div id="county" class="tab">
+    <div class="card">
+      <div class="card-title">FL County Septic Pumping Regulations</div>
+      <div class="tip-box"><strong>Florida has 2.6 million onsite sewage treatment systems</strong> — more than any other state. FL law (FS 381.0065) requires the FL Department of Health (DOH) to permit and regulate all septic systems. Individual counties may impose stricter requirements than state minimums, especially near water bodies and in environmentally sensitive areas.</div>
+      <table>
+        <thead>
+          <tr><th>County</th><th>Mandatory Pump Frequency</th><th>Inspection Required</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Miami-Dade</td><td>Every 3 years (mandatory)</td><td>Yes — WASD inspection</td></tr>
+          <tr><td>Broward</td><td>Every 3 years</td><td>Yes</td></tr>
+          <tr><td>Palm Beach</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Monroe (Keys)</td><td>Every 3 years (FKAA zone)</td><td>Yes — FKAA strict enforcement</td></tr>
+          <tr><td>Collier</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Lee</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Sarasota</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Hillsborough</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Pinellas</td><td>Every 3 years (enforceable)</td><td>Yes</td></tr>
+          <tr><td>Orange</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Seminole</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Volusia</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Brevard</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Duval (Jacksonville)</td><td>Every 3 years (recommended)</td><td>COJ inspections ongoing</td></tr>
+          <tr><td>Alachua</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Leon</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Okaloosa / Santa Rosa</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Manatee</td><td>Every 5 years (state minimum)</td><td>At time of pump-out</td></tr>
+          <tr><td>Indian River</td><td>Every 3 years (lagoon protection)</td><td>Yes</td></tr>
+          <tr><td>St. Lucie</td><td>Every 3 years (lagoon protection)</td><td>Yes</td></tr>
+          <tr><td>Martin</td><td>Every 3 years (lagoon protection)</td><td>Yes</td></tr>
+        </tbody>
+      </table>
+      <p class="county-req" style="margin-top:8px">Data reflects current county regulations as of 2026. Verify current requirements with your FL county health department. Indian River Lagoon counties have stricter rules due to nutrient pollution from failing septic systems.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">FL DOH — Statewide Septic Requirements</div>
+      <div class="info-row"><span class="info-label">Governing state law</span><span class="info-val">FS 381.0065 (OSTDS rules)</span></div>
+      <div class="info-row"><span class="info-label">State minimum pump frequency</span><span class="info-val">Every 5 years (effective 2023)</span></div>
+      <div class="info-row"><span class="info-label">Inspection at pump-out</span><span class="info-val">Required statewide since 2023</span></div>
+      <div class="info-row"><span class="info-label">Service provider license</span><span class="info-val">HSMV-licensed septic contractor</span></div>
+      <div class="info-row"><span class="info-label">Service report required</span><span class="info-val">Yes — must be filed with county DOH</span></div>
+      <div class="info-row"><span class="info-label">Septic-to-sewer connection order</span><span class="info-val">Required in some urban expansion zones</span></div>
+      <div class="info-row"><span class="info-label">Drainfield setback from water body</span><span class="info-val">Varies by county; min 75 ft (canals)</span></div>
+      <div class="info-row"><span class="info-label">Real estate disclosure requirement</span><span class="info-val">Seller must disclose septic system</span></div>
+
+      <div class="section-hd">Indian River Lagoon Protection Zone</div>
+      <div class="tip-box"><strong>Indian River, St. Lucie, and Martin counties</strong> have mandatory 3-year pump-out requirements tied to the Indian River Lagoon protection program. Failing septic systems are estimated to contribute 50–60% of the nutrient pollution entering the lagoon. Non-compliant homeowners face fines and mandatory connection to available sewer if within 500 feet of a sewer line. Contact your county health department to check compliance status if you live within one mile of the lagoon system.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Septic Pump-Out Cost Guide — Florida</div>
+      <table>
+        <thead>
+          <tr><th>Region</th><th>1,000 gal tank</th><th>1,500 gal tank</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>South FL (Miami-Dade, Broward)</td><td>$350–$500</td><td>$450–$650</td><td>Higher regulatory compliance cost</td></tr>
+          <tr><td>Palm Beach / Treasure Coast</td><td>$300–$450</td><td>$400–$575</td><td>Lagoon zone surcharges may apply</td></tr>
+          <tr><td>SW FL (Lee, Collier, Sarasota)</td><td>$275–$425</td><td>$375–$525</td><td>Rural areas may be higher</td></tr>
+          <tr><td>Tampa Bay (Hillsborough, Pinellas)</td><td>$275–$400</td><td>$350–$500</td><td>Competitive market, multiple providers</td></tr>
+          <tr><td>Central FL (Orange, Seminole, Polk)</td><td>$250–$375</td><td>$325–$475</td><td>Competitive urban market</td></tr>
+          <tr><td>North FL (Duval, Alachua, Leon)</td><td>$225–$350</td><td>$300–$425</td><td>Generally lower cost region</td></tr>
+          <tr><td>FL Keys (Monroe)</td><td>$450–$700</td><td>$600–$900</td><td>Remote access + FKAA requirements</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:.7rem;color:#94A3B8;margin-top:8px">Additional charges: Lid locating/digging ($75–$150) · Emergency service (1.5–2× standard rate) · Drainfield inspection add-on ($75–$200) · Minor baffle repair ($150–$350) · Filter cleaning ($50–$100)</p>
+    </div>
+  </div>
+
+  <!-- TAB 3: Warning Signs -->
+  <div id="signs" class="tab">
+    <div class="card">
+      <div class="card-title">Septic System Warning Signs — Act Immediately</div>
+
+      <div class="section-hd">🔴 Emergency Signs — Call Today</div>
+      <div class="warning-item"><span class="warn-icon">🚨</span><div class="warn-body"><strong>Sewage backup into drains or toilets</strong> — black or gray water backing up into lowest fixtures (floor drain, first-floor shower). Tank is full or drainfield has failed. Do not use any plumbing until assessed.</div></div>
+      <div class="warning-item"><span class="warn-icon">🚨</span><div class="warn-body"><strong>Sewage odor inside the home</strong> — strong sulfur or sewer gas smell indoors indicates a full tank, blocked outlet baffle, or vent stack problem. Can also indicate gas buildup — ventilate and call immediately.</div></div>
+      <div class="warning-item"><span class="warn-icon">🚨</span><div class="warn-body"><strong>Standing water or sewage odor over drainfield area</strong> — saturated drainfield with surface effluent pooling is a health hazard and environmental violation in FL. Restrict access to the area and call for an emergency assessment.</div></div>
+
+      <div class="section-hd">🟡 Early Warning Signs — Schedule Soon</div>
+      <div class="warning-item"><span class="warn-icon">⚠️</span><div class="warn-body"><strong>Slow drains throughout the house</strong> — when multiple fixtures drain slowly simultaneously (not just one sink or toilet), the issue is typically downstream: full tank or partial drainfield failure, not a simple clog.</div></div>
+      <div class="warning-item"><span class="warn-icon">⚠️</span><div class="warn-body"><strong>Unusually lush or green grass over drainfield</strong> — the effluent acts as a liquid fertilizer. A distinctly greener, faster-growing patch directly above the drainfield lines is a classic early indicator of effluent surfacing below ground, especially after rains.</div></div>
+      <div class="warning-item"><span class="warn-icon">⚠️</span><div class="warn-body"><strong>Gurgling sounds from drains or toilets</strong> — air displacement from a nearly-full tank or restricted outlet pipe creates gurgling as water drains. Worst after heavy use (laundry day, guests). Often the first audible warning sign.</div></div>
+      <div class="warning-item"><span class="warn-icon">⚠️</span><div class="warn-body"><strong>Sewer odor outdoors near tank or drainfield</strong> — faint sewage smell outside near the tank lid or over the drainfield lines, especially on warm days, indicates venting issues or early effluent breakthrough.</div></div>
+      <div class="warning-item"><span class="warn-icon">⚠️</span><div class="warn-body"><strong>High nitrates in nearby well water</strong> — if you have a well and septic system on the same property, annual nitrate testing of the well is recommended. Rising nitrate levels can indicate drainfield failure and effluent migration toward your water supply.</div></div>
+
+      <div class="section-hd">🟢 Good Maintenance Practices</div>
+      <div class="warning-item"><span class="warn-icon">✅</span><div class="warn-body"><strong>Pump on schedule</strong> — the single most cost-effective maintenance action. Pumping every 3–5 years prevents sludge accumulation from overflowing the outlet baffle into the drainfield — the most expensive failure mode ($15,000–$30,000 drainfield replacement).</div></div>
+      <div class="warning-item"><span class="warn-icon">✅</span><div class="warn-body"><strong>Know your tank lid location</strong> — mark both access lids with landscaping markers. Buried lids add $75–$150 to every pump-out and delay emergency access. Riser kits ($200–$400 installed) bring lids to grade for easy access.</div></div>
+      <div class="warning-item"><span class="warn-icon">✅</span><div class="warn-body"><strong>Use septic-safe products</strong> — septic-safe toilet paper, avoid bleach in large quantities, no "flushable" wipes (they don't break down), no grease or coffee grounds in drains. These reduce scum buildup and extend pump intervals.</div></div>
+      <div class="warning-item"><span class="warn-icon">✅</span><div class="warn-body"><strong>Protect the drainfield</strong> — no parking, planting trees, or building over the drainfield. FL's fast-growing ficus, citrus, and palm roots invade drainfield lines. Keep the area clear and accessible. Don't divert roof downspouts over the drainfield.</div></div>
+      <div class="warning-item"><span class="warn-icon">✅</span><div class="warn-body"><strong>Conserve water on pump day</strong> — spread laundry across the week (avoid 3+ loads in one day), fix leaky toilets (a running toilet adds 200+ gallons/day), and install low-flow fixtures. Hydraulic overload is a leading cause of FL drainfield saturation.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">FL Septic System Components Explained</div>
+      <div class="info-row"><span class="info-label">Septic tank</span><span class="info-val">Receives, separates, and stores solids from wastewater; 1,000–2,000 gal typical FL home</span></div>
+      <div class="info-row"><span class="info-label">Inlet baffle</span><span class="info-val">Prevents incoming flow from disturbing sludge; reduces scum passage forward</span></div>
+      <div class="info-row"><span class="info-label">Outlet baffle / filter</span><span class="info-val">Holds back solids from reaching drainfield — most critical component to inspect</span></div>
+      <div class="info-row"><span class="info-label">Distribution box (D-box)</span><span class="info-val">Splits effluent flow evenly to drainfield trenches; clogging causes uneven loading</span></div>
+      <div class="info-row"><span class="info-label">Drainfield (leach field)</span><span class="info-val">Perforated pipes in gravel trenches; effluent is absorbed and filtered by FL soil</span></div>
+      <div class="info-row"><span class="info-label">FL-specific: mound system</span><span class="info-val">Used where water table is high (coastal, low-lying FL); elevated above natural grade</span></div>
+      <div class="info-row"><span class="info-label">FL-specific: drip irrigation</span><span class="info-val">Advanced treatment alternative common in FL areas with high seasonal water tables</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Free Quote -->
+  <div id="quote" class="tab">
+    <div class="card">
+      <div class="card-title">Free Septic Service Quote</div>
+      <p style="font-size:.8rem;color:#94A3B8;margin-bottom:14px">Licensed FL Septic Contractor · Permitted Service · We'll call within 2 hours</p>
+      <div class="form-row">
+        <label>Your Name</label>
+        <input type="text" id="q-name" placeholder="First &amp; Last Name">
+      </div>
+      <div class="form-row">
+        <label>Phone Number</label>
+        <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      </div>
+      <div class="form-row">
+        <label>Property Address / Zip Code</label>
+        <input type="text" id="q-city" placeholder="Street or ZIP Code">
+      </div>
+      <div class="form-row">
+        <label>Tank size (if known)</label>
+        <select id="q-tank">
+          <option value="">— Select or unknown —</option>
+          <option>750 gallons</option>
+          <option>1,000 gallons</option>
+          <option>1,250 gallons</option>
+          <option>1,500 gallons</option>
+          <option>2,000+ gallons</option>
+          <option>Unknown</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Service needed</label>
+        <select id="q-service">
+          <option value="">— Select —</option>
+          <option>Routine pump-out (scheduled maintenance)</option>
+          <option>Emergency — sewage backup or odor</option>
+          <option>Pump-out + inspection (for real estate)</option>
+          <option>County compliance pump-out + report</option>
+          <option>Drainfield assessment / repair</option>
+          <option>Septic system inspection (home purchase)</option>
+          <option>Riser installation (bring lids to grade)</option>
+          <option>Baffle inspection and repair</option>
+        </select>
+      </div>
+      <button class="btn" onclick="submitQuote()">Request Free Quote →</button>
+      <a href="tel:5615557473" class="phone-link">📞 (561) 555-PIPE — Call Now</a>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Septic Repair &amp; Drainfield Cost Guide</div>
+      <div class="info-row"><span class="info-label">Routine pump-out (1,000 gal)</span><span class="info-val">$275 – $450</span></div>
+      <div class="info-row"><span class="info-label">Routine pump-out (1,500 gal)</span><span class="info-val">$375 – $525</span></div>
+      <div class="info-row"><span class="info-label">Emergency pump-out</span><span class="info-val">$450 – $750+</span></div>
+      <div class="info-row"><span class="info-label">Outlet baffle replacement</span><span class="info-val">$150 – $350</span></div>
+      <div class="info-row"><span class="info-label">Riser kit installation (both lids)</span><span class="info-val">$200 – $450</span></div>
+      <div class="info-row"><span class="info-label">D-box repair or replacement</span><span class="info-val">$400 – $900</span></div>
+      <div class="info-row"><span class="info-label">Drainfield rejuvenation (aeration)</span><span class="info-val">$1,500 – $5,000</span></div>
+      <div class="info-row"><span class="info-label">Drainfield replacement (partial)</span><span class="info-val">$5,000 – $12,000</span></div>
+      <div class="info-row"><span class="info-label">Full drainfield replacement</span><span class="info-val">$15,000 – $30,000+</span></div>
+      <div class="info-row"><span class="info-label">Septic-to-sewer connection (FL avg)</span><span class="info-val">$3,500 – $8,000</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Real Estate Disclosure — FL Sellers</div>
+      <p style="font-size:.78rem;color:#94A3B8;line-height:1.55">Florida law requires sellers to disclose known defects with the septic system. A pump-out inspection within 6 months of listing provides buyers confidence and may prevent a failed inspection from killing the deal. Request a written service report documenting tank condition, sludge/scum levels, baffle condition, and any recommended repairs. A clean pump-out report is worth $1,000–$3,000 in negotiating position at closing.</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+// EPA pumping frequency table: tank size → [persons 1, 2, 3, 4, 5, 6, 7+] in years
+var PUMP_TABLE = {
+  750:  [5.0, 2.6, 1.8, 1.3, 1.0, 0.8, 0.7],
+  900:  [6.5, 3.5, 2.4, 1.8, 1.4, 1.1, 0.9],
+  1000: [9.1, 4.9, 3.4, 2.6, 2.0, 1.7, 1.4],
+  1250: [12.4, 6.7, 4.7, 3.5, 2.8, 2.3, 1.9],
+  1500: [15.4, 8.4, 5.9, 4.5, 3.5, 2.9, 2.4],
+  2000: [20.0, 11.1, 7.9, 6.0, 4.8, 4.0, 3.3],
+  2500: [25.0, 13.9, 9.9, 7.5, 6.0, 5.0, 4.2]
+};
+
+var DISPOSAL_MOD = {no: 1.0, yes: 0.75, rarely: 0.92};
+var TP_MOD = {yes: 1.0, no: 0.88};
+var EXTRAS_MOD = {none: 1.0, softener: 0.82, 'home-biz': 0.78, both: 0.65};
+
+function calcInterval() {
+  var tankVal = document.getElementById('tank-size').value;
+  var hhVal = document.getElementById('household').value;
+  var disposal = document.getElementById('disposal').value;
+  var tp = document.getElementById('tp').value;
+  var extras = document.getElementById('extras').value;
+  var lastPumped = document.getElementById('last-pumped').value;
+  if (!tankVal || !hhVal) {
+    alert('Please select tank size and household size.');
+    return;
+  }
+  var tank = parseInt(tankVal);
+  var hh = parseInt(hhVal) > 7 ? 7 : parseInt(hhVal);
+  var hhIdx = hh - 1;
+  var baseYears = PUMP_TABLE[tank][hhIdx];
+  var adjYears = baseYears * DISPOSAL_MOD[disposal] * TP_MOD[tp] * EXTRAS_MOD[extras];
+  adjYears = Math.max(0.8, Math.round(adjYears * 10) / 10);
+
+  var now = 2026;
+  var lastYear = 0;
+  var yearsSincePump = -1;
+  if (lastPumped === 'never') {
+    lastYear = -1;
+  } else if (lastPumped === '2015-earlier') {
+    lastYear = 2015;
+    yearsSincePump = now - 2015;
+  } else if (lastPumped) {
+    lastYear = parseInt(lastPumped);
+    yearsSincePump = now - lastYear;
+  }
+
+  var box = document.getElementById('calc-result');
+  var lbl = document.getElementById('calc-label');
+  var det = document.getElementById('calc-detail');
+  var rec = document.getElementById('calc-rec');
+  box.className = 'result-box show';
+
+  var intervalText = adjYears.toFixed(1) + ' years (every ~' + Math.round(adjYears * 12) + ' months)';
+  var statusClass, statusLabel, detailText, recText;
+
+  if (lastPumped === 'never') {
+    statusClass = 'res-overdue';
+    statusLabel = 'overdue';
+    statusLabelText = '🔴 PUMP NOW — Never or Unknown Last Service';
+    detailText = 'Your recommended pump interval for a ' + tank + '-gallon tank with ' + hh + ' household member(s) is <strong>' + intervalText + '</strong>. Since the last pump date is unknown, immediate service is recommended. An overfull tank risks drainfield damage — the most expensive septic repair ($15,000–$30,000+).';
+    recText = '<strong>Action:</strong> Schedule pump-out as soon as possible. Request a full inspection with sludge/scum measurement and baffle condition report. Also ask about a service record for county compliance.';
+  } else if (yearsSincePump >= 0) {
+    var overageYears = yearsSincePump - adjYears;
+    if (overageYears > 0.5) {
+      statusClass = 'res-overdue';
+      statusLabel = 'overdue';
+      statusLabelText = '🔴 OVERDUE — Schedule Immediately';
+      detailText = 'Based on your inputs, your tank should be pumped every <strong>' + intervalText + '</strong>. Your last pump was approximately <strong>' + yearsSincePump.toFixed(0) + ' years ago</strong> — your tank is <strong>' + overageYears.toFixed(1) + ' years overdue</strong>. Sludge may be overflowing the outlet baffle and contaminating your drainfield.';
+      recText = '<strong>Action:</strong> Schedule pump-out immediately. Request a drainfield inspection and D-box check. Ask about drainfield aeration if soil absorption has been reduced by sludge contamination.';
+    } else if (overageYears > -0.75) {
+      statusClass = 'res-due-soon';
+      statusLabel = 'due-soon';
+      statusLabelText = '🟡 DUE SOON — Schedule Within 90 Days';
+      detailText = 'Your recommended pump interval is <strong>' + intervalText + '</strong>. Last pumped approximately <strong>' + yearsSincePump.toFixed(0) + ' years ago</strong> — you are approaching your next pump-out window. Schedule now before your tank reaches capacity.';
+      recText = '<strong>Action:</strong> Schedule pump-out within the next 60–90 days. Request a baffle inspection and service report for county compliance if due.';
+    } else {
+      statusClass = 'res-ok';
+      statusLabel = 'ok';
+      statusLabelText = '🟢 ON SCHEDULE — Pumped Recently';
+      var nextPump = lastYear + Math.round(adjYears);
+      detailText = 'Your recommended pump interval is <strong>' + intervalText + '</strong>. Last pumped approximately <strong>' + yearsSincePump.toFixed(0) + ' years ago</strong>. You\'re currently on schedule. Next recommended pump-out: approximately <strong>' + nextPump + '</strong>.';
+      recText = '<strong>Action:</strong> Continue on your current schedule. Set a calendar reminder for ' + nextPump + '. Avoid garbage disposal overuse and fix any running toilets to maintain your interval.';
+    }
+  } else {
+    statusClass = 'res-ok'; statusLabel = 'ok'; statusLabelText = '🟢 CALCULATED'; detailText = ''; recText = '';
+  }
+
+  box.classList.add(statusClass);
+  lbl.textContent = statusLabelText;
+  lbl.className = 'res-label ' + statusLabel;
+  det.innerHTML = detailText;
+  rec.innerHTML = recText;
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';}, 3500);
+}
+</script>
+
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+<!-- fl-plumbing-seo: florida septic tank pumping frequency how often pump septic FL county septic regulations miami-dade broward septic inspection required indian river lagoon septic compliance florida DOH septic rules drainfield failure signs septic backup florida septic pump cost septic tank size calculator septic warning signs florida septic maintenance -->
+
+</div>
+</body>
+</html>
