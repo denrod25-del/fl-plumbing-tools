@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**163 interactive cost calculators** for Florida homeowners.
+**166 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -9,6 +9,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 
 - [FL Ada Aging In Place Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/ada-aging-in-place/fl_ada_aging.html)
 - [FL Adu Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/adu-plumbing/fl_adu_plumbing.html)
+- [FL Anode Rod Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/anode-rod-guide/fl_anode_rod_guide.html)
 - [FL Backflow Compliance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow-compliance/fl_backflow_compliance.html)
 - [FL Backflow Preventer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow-preventer/fl_backflow_preventer.html)
 - [FL Backflow Prevention Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow-prevention/fl_backflow_prevention.html)
@@ -17,6 +18,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Bathroom Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-cost/fl_bathroom_cost.html)
 - [FL Bathroom Remodel Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-remodel-plumbing/fl_bathroom_remodel_plumbing.html)
 - [FL Bathroom Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-remodel/fl_bathroom_remodel.html)
+- [FL Bathroom Ventilation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-ventilation/fl_bathroom_ventilation.html)
 - [FL Bathtub Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathtub-replacement/fl_bathtub_replacement.html)
 - [FL Booster Pump Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/booster-pump/fl_booster_pump.html)
 - [FL Cast Iron Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/cast-iron-drain/fl_cast_iron_drain.html)
@@ -101,6 +103,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pool Heater Gas Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-heater-gas/fl_pool_heater_gas.html)
 - [FL Pool Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-leak/fl_pool_leak.html)
 - [FL Pool Pump Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-pump-sizing/fl_pool_pump_sizing.html)
+- [FL Presale Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/presale-inspection/fl_presale_inspection.html)
 - [FL Prv Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/prv-replacement/fl_prv_replacement.html)
 - [FL Radiant Floor Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/radiant-floor/fl_radiant_floor.html)
 - [FL Rainwater Harvesting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rainwater-harvesting/fl_rainwater_harvesting.html)

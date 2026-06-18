@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Florida Water Heater Anode Rod Replacement Calculator | Hard Water GPG Guide</title>
+<meta name="description" content="Calculate exact anode rod replacement interval for Florida water heaters. FL county hard water GPG levels, magnesium vs aluminum vs powered anode comparison, rotten egg smell fix, South Florida well water anode guide.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:12px}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#F97316;line-height:1.2}
+header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.75rem;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:500;line-height:1.2}
+.tab.active{background:#F97316;color:#fff;font-weight:700}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:14px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:4px;font-weight:500}
+select,input{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:0.95rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#F97316}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:13px;background:#F97316;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn:hover{opacity:.9}
+h2{font-size:1rem;font-weight:700;color:#F97316;margin-bottom:10px}
+.result-box{background:#141929;border:1px solid rgba(249,115,22,.3);border-radius:10px;padding:16px;margin-top:16px;display:none}
+.result-title{font-size:0.9rem;font-weight:700;color:#F97316;margin-bottom:12px}
+.big-num{font-size:2.8rem;font-weight:800;color:#F97316;line-height:1}
+.big-label{font-size:0.72rem;color:#94A3B8;margin-top:4px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}
+.stat-box{background:#0A0E1A;border-radius:8px;padding:10px;text-align:center}
+.stat-val{font-size:1.1rem;font-weight:700;color:#F97316}
+.stat-label{font-size:0.62rem;color:#94A3B8;margin-top:2px;line-height:1.3}
+.urgency-box{border-radius:8px;padding:12px 14px;margin-top:12px;font-size:0.82rem}
+.urgency-replace{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#EF4444}
+.urgency-soon{background:rgba(244,185,66,.1);border:1px solid rgba(244,185,66,.3);color:#F4B942}
+.urgency-ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#22C55E}
+.urgency-upgrade{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:#F97316}
+.modifier-grid{margin-top:14px}
+.modifier-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1E293B;font-size:0.8rem}
+.modifier-row:last-child{border-bottom:none}
+.mod-key{color:#94A3B8}
+.mod-val{font-weight:700;font-size:0.85rem}
+.mod-pos{color:#22C55E}
+.mod-neg{color:#EF4444}
+.mod-neu{color:#94A3B8}
+.section-title{font-size:0.75rem;font-weight:700;color:#F97316;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+.anode-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:12px}
+.anode-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.anode-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.anode-name{font-weight:700;color:#E2E8F0;font-size:0.95rem}
+.anode-lifespan{font-size:0.78rem;font-weight:700;color:#F97316}
+.anode-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E293B;font-size:0.78rem}
+.anode-row:last-child{border-bottom:none}
+.anode-key{color:#94A3B8}
+.anode-val{color:#E2E8F0;font-weight:500;text-align:right;max-width:55%}
+.check-item{display:flex;align-items:baseline;gap:6px;padding:4px 0;font-size:0.82rem}
+.check-icon{flex-shrink:0;font-size:0.9rem}
+.check-text{color:#E2E8F0}
+.check-sub{color:#94A3B8;font-size:0.75rem}
+.gpg-table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th{background:#0A0E1A;padding:8px 10px;text-align:left;font-size:0.72rem;color:#94A3B8;font-weight:600;white-space:nowrap}
+td{padding:7px 10px;border-top:1px solid #1E293B;font-size:0.8rem}
+td:first-child{color:#E2E8F0}
+td:not(:first-child){font-weight:600}
+.gpg-low{color:#22C55E}
+.gpg-med{color:#F4B942}
+.gpg-high{color:#F97316}
+.gpg-vhigh{color:#EF4444}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E293B;font-size:0.82rem}
+.info-row:last-child{border-bottom:none}
+.info-key{color:#94A3B8;flex-shrink:0;margin-right:8px}
+.info-val{color:#E2E8F0;font-weight:500;text-align:right}
+.alert{border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:0.82rem;line-height:1.5}
+.alert-orange{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:#E2E8F0}
+.alert-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#E2E8F0}
+.alert-gold{background:rgba(244,185,66,.1);border:1px solid rgba(244,185,66,.3);color:#E2E8F0}
+.alert-green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#E2E8F0}
+.tip{font-size:0.78rem;color:#94A3B8;margin-top:8px;line-height:1.5}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:0.7rem;font-weight:700;margin-left:6px}
+.badge-best{background:rgba(34,197,94,.2);color:#22C55E}
+.badge-caution{background:rgba(239,68,68,.2);color:#EF4444}
+.badge-good{background:rgba(249,115,22,.2);color:#F97316}
+.badge-premium{background:rgba(20,184,166,.2);color:#14B8A6}
+.egg-fix-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border-left:3px solid #F97316}
+.egg-step{font-weight:700;color:#F97316;font-size:0.85rem;margin-bottom:6px}
+.egg-detail{font-size:0.8rem;color:#94A3B8;line-height:1.5}
+.radio-group{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.radio-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;cursor:pointer;transition:all .2s}
+.radio-btn.active{border-color:#F97316;background:rgba(249,115,22,.1)}
+.radio-btn input[type=radio]{accent-color:#F97316;width:16px;height:16px}
+.radio-label{font-size:0.85rem;color:#E2E8F0}
+.radio-sub{font-size:0.72rem;color:#94A3B8;margin-top:1px}
+textarea{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:0.9rem;outline:none;min-height:80px;resize:vertical}
+textarea:focus{border-color:#F97316}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#F97316;color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:0.9rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.progress-bar-wrap{background:#0A0E1A;border-radius:8px;height:10px;margin-top:10px;overflow:hidden}
+.progress-bar{height:10px;border-radius:8px;transition:width .5s}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🔩 Florida Water Heater<br>Anode Rod Guide &amp; Calculator</h1>
+    <p>Replacement interval calculator &bull; FL county hard water GPG &bull; Anode type comparison &bull; Rotten egg fix</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calc',this)">Replacement Calc</button>
+    <button class="tab" onclick="showTab('types',this)">Anode Types</button>
+    <button class="tab" onclick="showTab('water',this)">FL Hard Water</button>
+    <button class="tab" onclick="showTab('quote',this)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: REPLACEMENT CALC -->
+  <div id="calc" class="panel active">
+    <div class="card">
+      <h2>Anode Rod Replacement Calculator</h2>
+      <p style="font-size:0.82rem;color:#94A3B8;margin-bottom:14px">Florida's hard water dramatically shortens anode rod life. Enter your details for a personalized replacement interval — protecting your water heater from corrosion damage.</p>
+
+      <div style="margin-bottom:12px">
+        <label>FL County / Region</label>
+        <select id="county">
+          <option value="">-- Select your county --</option>
+          <option value="miami-dade">Miami-Dade County (14–17 GPG — Very Hard)</option>
+          <option value="broward">Broward County (12–15 GPG — Very Hard)</option>
+          <option value="palm-beach">Palm Beach County (13–16 GPG — Very Hard)</option>
+          <option value="lee">Lee County (12–16 GPG — Very Hard)</option>
+          <option value="collier">Collier County (15–20 GPG — Extremely Hard)</option>
+          <option value="sarasota">Sarasota County (8–12 GPG — Hard)</option>
+          <option value="manatee">Manatee County (8–11 GPG — Hard)</option>
+          <option value="hillsborough">Hillsborough County (5–8 GPG — Moderately Hard)</option>
+          <option value="pinellas">Pinellas County (4–7 GPG — Moderately Hard)</option>
+          <option value="orange">Orange County / Orlando (7–11 GPG — Hard)</option>
+          <option value="osceola">Osceola County (8–12 GPG — Hard)</option>
+          <option value="seminole">Seminole County (6–9 GPG — Hard)</option>
+          <option value="polk">Polk County (7–10 GPG — Hard)</option>
+          <option value="duval">Duval County / Jacksonville (3–6 GPG — Slightly Hard)</option>
+          <option value="nassau">Nassau County (3–5 GPG — Slightly Hard)</option>
+          <option value="alachua">Alachua County / Gainesville (4–7 GPG — Moderately Hard)</option>
+          <option value="marion">Marion County / Ocala (5–8 GPG — Moderately Hard)</option>
+          <option value="other">Other / I know my GPG level</option>
+        </select>
+      </div>
+
+      <div id="custom-gpg-row" style="display:none;margin-bottom:12px">
+        <label>Enter Water Hardness (GPG)</label>
+        <input type="number" id="custom-gpg" placeholder="e.g., 11" min="0" max="25" step="0.5">
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label>Tank Size</label>
+        <select id="tank-size">
+          <option value="40" selected>40-gallon (standard)</option>
+          <option value="50">50-gallon</option>
+          <option value="80">80-gallon</option>
+          <option value="100">100-gallon or larger</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label>Anode Rod Type Currently Installed</label>
+        <select id="anode-type">
+          <option value="magnesium">Magnesium anode (standard — most water heaters shipped with this)</option>
+          <option value="aluminum-zinc">Aluminum/Zinc anode (white/silver in color)</option>
+          <option value="powered">Powered / Impressed Current anode (no rod to replace)</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label>Water Source</label>
+        <select id="water-source">
+          <option value="municipal" selected>Municipal / City water</option>
+          <option value="well">Well water (private well)</option>
+          <option value="well-h2s">Well water — rotten egg smell (H₂S present)</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label>Water Softener Installed?</label>
+        <select id="softener">
+          <option value="none" selected>No water softener</option>
+          <option value="salt">Yes — salt-based ion exchange softener</option>
+          <option value="alt">Yes — salt-free / KDF / template-assisted crystallization</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label>Year Current Anode Was Last Replaced</label>
+        <select id="last-replaced">
+          <option value="new">Never / just installed / unknown</option>
+          <option value="2024">2024 (1 year ago)</option>
+          <option value="2023">2023 (2 years ago)</option>
+          <option value="2022">2022 (3 years ago)</option>
+          <option value="2021">2021 (4 years ago)</option>
+          <option value="2020">2020 (5 years ago)</option>
+          <option value="2019">2019 (6 years ago)</option>
+          <option value="2018">2018 (7+ years ago)</option>
+          <option value="old">Over 7 years ago / no record</option>
+        </select>
+      </div>
+
+      <button class="btn" onclick="calcAnode()">Calculate Replacement Interval</button>
+
+      <div class="result-box" id="anode-result">
+        <div class="result-title">🔩 Your Anode Rod Replacement Plan</div>
+
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <div class="big-num" id="res-years">--</div>
+          <div style="font-size:1rem;font-weight:700;color:#F97316" id="res-unit">years</div>
+        </div>
+        <div class="big-label" id="res-label">Recommended replacement interval for your conditions</div>
+
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="res-progress" style="width:0%;background:#F97316"></div>
+        </div>
+        <div style="font-size:0.7rem;color:#94A3B8;margin-top:4px" id="res-progress-label"></div>
+
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-val" id="res-gpg">--</div>
+            <div class="stat-label">Water Hardness (GPG)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="res-next-year">--</div>
+            <div class="stat-label">Replace By</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="res-cost">--</div>
+            <div class="stat-label">Replacement Cost</div>
+          </div>
+        </div>
+
+        <div class="urgency-box" id="res-urgency"></div>
+
+        <div class="section-title" style="margin-top:14px">How Your Interval Was Calculated</div>
+        <div class="modifier-grid" id="res-modifiers"></div>
+
+        <div class="section-title">Recommended Anode for Your Conditions</div>
+        <div class="alert alert-orange" id="res-rec-anode"></div>
+
+        <div class="tip" id="res-tip"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ANODE TYPES -->
+  <div id="types" class="panel">
+    <div class="card">
+      <h2>Anode Rod Types — Florida Comparison Guide</h2>
+      <p style="font-size:0.82rem;color:#94A3B8;margin-bottom:12px">Choosing the wrong anode rod type for FL water conditions is the #1 cause of premature water heater failure. FL water is chemically aggressive — anode selection matters far more than in other states.</p>
+    </div>
+
+    <!-- Magnesium -->
+    <div class="anode-card">
+      <div class="anode-header">
+        <div class="anode-icon" style="background:rgba(249,115,22,.15)">🪨</div>
+        <div>
+          <div class="anode-name">Magnesium Anode Rod <span class="badge badge-best">Best for FL Hard Water</span></div>
+          <div class="anode-lifespan">3–5 year lifespan in FL conditions</div>
+        </div>
+      </div>
+      <div class="anode-row"><span class="anode-key">How it works</span><span class="anode-val">Sacrificial — electrochemically corrodes instead of tank steel; dissolved mineral ions attack Mg anode, not tank</span></div>
+      <div class="anode-row"><span class="anode-key">FL hard water (4–12 GPG)</span><span class="anode-val" style="color:#22C55E">✅ Excellent — high galvanic potential protects tank effectively</span></div>
+      <div class="anode-row"><span class="anode-key">FL very hard water (13–20 GPG)</span><span class="anode-val" style="color:#F4B942">⚠️ Good — but inspections every 2–3 years. May deplete faster than rated</span></div>
+      <div class="anode-row"><span class="anode-key">Soft water / softened water</span><span class="anode-val" style="color:#EF4444">❌ NOT recommended — accelerated depletion in softened water (switch to Al/Zn)</span></div>
+      <div class="anode-row"><span class="anode-key">Well water with H₂S</span><span class="anode-val" style="color:#EF4444">❌ Makes rotten egg smell worse — H₂S bacteria thrive with Mg anode</span></div>
+      <div class="anode-row"><span class="anode-key">Cost</span><span class="anode-val">$15–$45 (rod only); $150–$350 installed in FL</span></div>
+      <div class="anode-row"><span class="anode-key">Identify by</span><span class="anode-val">Light grey, chalky white when depleted. Stamped "Mg" or "Magnesium"</span></div>
+      <div class="anode-row"><span class="anode-key">Factory installed?</span><span class="anode-val">Yes — most water heaters shipped with Mg anode as default</span></div>
+    </div>
+
+    <!-- Aluminum/Zinc -->
+    <div class="anode-card">
+      <div class="anode-header">
+        <div class="anode-icon" style="background:rgba(20,184,166,.15)">⚙️</div>
+        <div>
+          <div class="anode-name">Aluminum/Zinc Anode Rod <span class="badge badge-good">Best for Softened Water</span></div>
+          <div class="anode-lifespan">5–8 year lifespan in FL conditions</div>
+        </div>
+      </div>
+      <div class="anode-row"><span class="anode-key">How it works</span><span class="anode-val">Sacrificial — slower depletion rate than Mg. Zinc fraction (typically 6%) suppresses H₂S bacteria that cause rotten egg odor</span></div>
+      <div class="anode-row"><span class="anode-key">Softened water</span><span class="anode-val" style="color:#22C55E">✅ Recommended — softened water accelerates Mg but not Al anodes as severely</span></div>
+      <div class="anode-row"><span class="anode-key">Well water with H₂S</span><span class="anode-val" style="color:#22C55E">✅ First-line fix for rotten egg smell — Zn fraction neutralizes H₂S bacteria</span></div>
+      <div class="anode-row"><span class="anode-key">FL hard water (8–16 GPG)</span><span class="anode-val" style="color:#F4B942">⚠️ Adequate — less galvanic protection than Mg but longer lifespan in harsh water</span></div>
+      <div class="anode-row"><span class="anode-key">Very hard water (16+ GPG)</span><span class="anode-val" style="color:#F4B942">⚠️ Marginal — consider powered anode for Collier/Glades/Hendry counties</span></div>
+      <div class="anode-row"><span class="anode-key">Cost</span><span class="anode-val">$20–$55 (rod only); $175–$375 installed in FL</span></div>
+      <div class="anode-row"><span class="anode-key">Identify by</span><span class="anode-val">Bright silver/white when new. Stamped "Al/Zn", "Aluminum-Zinc", or "Alusite"</span></div>
+      <div class="anode-row"><span class="anode-key">Best brands in FL</span><span class="anode-val">Rheem SP11703B, A.O. Smith 9002476015, Camco 44036</span></div>
+    </div>
+
+    <!-- Powered -->
+    <div class="anode-card">
+      <div class="anode-header">
+        <div class="anode-icon" style="background:rgba(6,182,212,.15)">⚡</div>
+        <div>
+          <div class="anode-name">Powered / Impressed Current Anode <span class="badge badge-premium">No Replacement Needed</span></div>
+          <div class="anode-lifespan">15–20+ year lifespan (water heater lifetime)</div>
+        </div>
+      </div>
+      <div class="anode-row"><span class="anode-key">How it works</span><span class="anode-val">Titanium rod with low-voltage DC current (0.05–0.5A) — electrochemically protects tank without sacrificial depletion. Rod never depletes.</span></div>
+      <div class="anode-row"><span class="anode-key">Extremely hard water (15+ GPG)</span><span class="anode-val" style="color:#22C55E">✅ Best choice — constant impressed current outperforms Mg in Collier, Glades, Hendry counties</span></div>
+      <div class="anode-row"><span class="anode-key">Softened water</span><span class="anode-val" style="color:#22C55E">✅ Best choice — softened water is corrosive; powered anode provides consistent protection regardless</span></div>
+      <div class="anode-row"><span class="anode-key">Well water / all types</span><span class="anode-val" style="color:#22C55E">✅ Works in all water types — no chemical dependency on water composition</span></div>
+      <div class="anode-row"><span class="anode-key">Requirements</span><span class="anode-val">Needs 120V outlet within 6 ft of water heater. Draws ~2W — negligible electricity cost ($0.02/day)</span></div>
+      <div class="anode-row"><span class="anode-key">Cost</span><span class="anode-val">$70–$150 (unit); $250–$500 installed in FL (includes outlet if needed)</span></div>
+      <div class="anode-row"><span class="anode-key">Payback period</span><span class="anode-val">Replaces 3–4 sacrificial rod changes — pays back in 8–12 years vs. Mg replacements</span></div>
+      <div class="anode-row"><span class="anode-key">Best brands</span><span class="anode-val">Corro-Protec CP-R, Suburban 232767, Hague Corroprotec</span></div>
+    </div>
+
+    <div class="section-title">Rotten Egg Smell — Complete Fix Protocol</div>
+
+    <div class="egg-fix-card">
+      <div class="egg-step">Step 1 — Identify the Cause</div>
+      <div class="egg-detail">Rotten egg / sulfur odor from hot water = sulfate-reducing bacteria (SRB) reacting with the magnesium anode rod. This is extremely common in FL well water and moderately common with municipal water in certain FL counties. Cold water with sulfur smell = source water issue, not anode-related.</div>
+    </div>
+    <div class="egg-fix-card">
+      <div class="egg-step">Step 2 — Replace Magnesium Anode with Aluminum/Zinc</div>
+      <div class="egg-detail">Remove the factory-installed magnesium anode. Install an aluminum/zinc anode. The zinc fraction (6% by mass) creates a biostatic environment hostile to SRB bacteria. This alone resolves ~70% of rotten egg cases within 2–4 weeks after installation. Part cost: $25–$55. Installed by licensed FL plumber: $175–$350.</div>
+    </div>
+    <div class="egg-fix-card">
+      <div class="egg-step">Step 3 — Shock Chlorinate the Tank</div>
+      <div class="egg-detail">Flush all hot water. Add 1 cup (8 oz) of 5.25% household bleach to tank via anode rod port. Refill and let sit 4 hours without using hot water. Flush completely. This kills the SRB colony. Cost: under $5. Essential if smell is severe or has been present for more than 2 months.</div>
+    </div>
+    <div class="egg-fix-card">
+      <div class="egg-step">Step 4 — Raise Temperature to 140°F for 24 Hours</div>
+      <div class="egg-detail">SRB bacteria die above 122°F (50°C). Temporarily raise water heater thermostat to 140°F for 24 hours after shock chlorination. Use caution — 140°F water causes scalding. Install a thermostatic mixing valve (anti-scald valve) at tank outlet before doing this if young children or elderly residents are in the home. Restore to 120°F (FL standard) after treatment.</div>
+    </div>
+    <div class="egg-fix-card">
+      <div class="egg-step">Step 5 — Powered Anode (Permanent Solution)</div>
+      <div class="egg-detail">If odor returns after Steps 2–4, install a powered/impressed current anode (Corro-Protec). The constant DC current prevents bacterial colonization permanently. No ongoing maintenance required. Best long-term solution for FL well water with persistent H₂S odor. Installed cost $250–$450.</div>
+    </div>
+    <div class="egg-fix-card">
+      <div class="egg-step">Step 6 — Whole-House Sediment and Carbon Filter</div>
+      <div class="egg-detail">For persistent H₂S in both cold and hot water, the source is the well or supply line — not the water heater. Install a sediment pre-filter (5 micron) and carbon block filter at point of entry before the water heater. Cost: $300–$800 installed. Also reduces mineral scaling that depletes anode rods faster.</div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FL HARD WATER -->
+  <div id="water" class="panel">
+    <div class="card">
+      <h2>Florida County Water Hardness Reference</h2>
+      <p style="font-size:0.82rem;color:#94A3B8;margin-bottom:12px">Water hardness is measured in grains per gallon (GPG). Florida's groundwater aquifer system produces some of the hardest water in the southeastern US — hard water dramatically accelerates anode rod depletion and tank sediment buildup.</p>
+      <div class="alert alert-orange">⚠️ FL fact: The national average replacement interval for anode rods is 5 years. In South FL hard water conditions (13–20 GPG), the actual interval is 2–3 years for magnesium anodes.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-top:0">GPG Hardness Scale</div>
+      <table>
+        <tr><th>GPG Range</th><th>Classification</th><th>FL Counties</th><th>Anode Impact</th></tr>
+        <tr><td class="gpg-low">0–3 GPG</td><td class="gpg-low">Soft</td><td>Rare in FL (filtered/treated)</td><td class="gpg-low">Switch to Al/Zn — softened water corrodes Mg faster</td></tr>
+        <tr><td class="gpg-low">4–7 GPG</td><td class="gpg-low">Slightly Hard</td><td>Duval, Nassau, Alachua, Pinellas</td><td class="gpg-low">Standard replacement cycle. Mg or Al/Zn both fine.</td></tr>
+        <tr><td class="gpg-med">8–12 GPG</td><td class="gpg-med">Hard</td><td>Hillsborough, Orange, Sarasota, Osceola</td><td class="gpg-med">Inspect every 3 years. Hard water scales and depletes faster.</td></tr>
+        <tr><td class="gpg-high">13–16 GPG</td><td class="gpg-high">Very Hard</td><td>Miami-Dade, Broward, Palm Beach, Lee</td><td class="gpg-high">Replace every 2–3 years. Consider powered anode. Flush annually.</td></tr>
+        <tr><td class="gpg-vhigh">17–20+ GPG</td><td class="gpg-vhigh">Extremely Hard</td><td>Collier, Hendry, Glades, Monroe</td><td class="gpg-vhigh">Powered anode strongly recommended. Annual inspection mandatory.</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-top:0">FL County Water Hardness Detail</div>
+      <div class="gpg-table-wrap">
+        <table>
+          <tr><th>County / City</th><th>Avg GPG</th><th>Range</th><th>Classification</th></tr>
+          <tr><td>Collier (Naples)</td><td class="gpg-vhigh">17.5</td><td class="gpg-vhigh">15–20</td><td class="gpg-vhigh">Extremely Hard</td></tr>
+          <tr><td>Miami-Dade</td><td class="gpg-high">15.5</td><td class="gpg-high">14–17</td><td class="gpg-high">Very Hard</td></tr>
+          <tr><td>Lee (Fort Myers)</td><td class="gpg-high">14.0</td><td class="gpg-high">12–16</td><td class="gpg-high">Very Hard</td></tr>
+          <tr><td>Palm Beach</td><td class="gpg-high">14.5</td><td class="gpg-high">13–16</td><td class="gpg-high">Very Hard</td></tr>
+          <tr><td>Broward</td><td class="gpg-high">13.5</td><td class="gpg-high">12–15</td><td class="gpg-high">Very Hard</td></tr>
+          <tr><td>Monroe (Keys)</td><td class="gpg-high">14.0</td><td class="gpg-high">12–16</td><td class="gpg-high">Very Hard</td></tr>
+          <tr><td>Charlotte</td><td class="gpg-high">12.5</td><td class="gpg-high">10–15</td><td class="gpg-high">Very Hard</td></tr>
+          <tr><td>Sarasota</td><td class="gpg-med">10.0</td><td class="gpg-med">8–12</td><td class="gpg-med">Hard</td></tr>
+          <tr><td>Manatee</td><td class="gpg-med">9.5</td><td class="gpg-med">8–11</td><td class="gpg-med">Hard</td></tr>
+          <tr><td>Orange (Orlando)</td><td class="gpg-med">9.0</td><td class="gpg-med">7–11</td><td class="gpg-med">Hard</td></tr>
+          <tr><td>Osceola</td><td class="gpg-med">10.0</td><td class="gpg-med">8–12</td><td class="gpg-med">Hard</td></tr>
+          <tr><td>Seminole</td><td class="gpg-med">7.5</td><td class="gpg-med">6–9</td><td class="gpg-med">Hard</td></tr>
+          <tr><td>Polk (Lakeland)</td><td class="gpg-med">8.5</td><td class="gpg-med">7–10</td><td class="gpg-med">Hard</td></tr>
+          <tr><td>Hillsborough (Tampa)</td><td class="gpg-med">6.5</td><td class="gpg-med">5–8</td><td class="gpg-med">Hard</td></tr>
+          <tr><td>Marion (Ocala)</td><td class="gpg-med">6.5</td><td class="gpg-med">5–8</td><td class="gpg-med">Hard</td></tr>
+          <tr><td>Pinellas (St. Pete)</td><td class="gpg-low">5.5</td><td class="gpg-low">4–7</td><td class="gpg-low">Slightly Hard</td></tr>
+          <tr><td>Alachua (Gainesville)</td><td class="gpg-low">5.5</td><td class="gpg-low">4–7</td><td class="gpg-low">Slightly Hard</td></tr>
+          <tr><td>Duval (Jacksonville)</td><td class="gpg-low">4.5</td><td class="gpg-low">3–6</td><td class="gpg-low">Slightly Hard</td></tr>
+          <tr><td>Nassau</td><td class="gpg-low">4.0</td><td class="gpg-low">3–5</td><td class="gpg-low">Slightly Hard</td></tr>
+        </table>
+      </div>
+      <div class="tip">💡 GPG varies by neighborhood within counties, especially in areas with different aquifer depths. For exact readings, request your annual Consumer Confidence Report (CCR) from your municipal water utility, or purchase a $8–$15 water hardness test kit from a hardware store.</div>
+    </div>
+
+    <div class="card">
+      <h2>FL Hard Water Impact on Water Heater</h2>
+      <div class="info-row"><span class="info-key">Scale buildup rate (10 GPG water)</span><span class="info-val">≈ 1/16" per year in tank</span></div>
+      <div class="info-row"><span class="info-key">Scale buildup rate (15 GPG water)</span><span class="info-val">≈ 1/8" per year — 6× more than soft water</span></div>
+      <div class="info-row"><span class="info-key">Energy efficiency loss per 1/4" scale</span><span class="info-val">10–15% higher energy cost</span></div>
+      <div class="info-row"><span class="info-key">Sediment in tank bottom at 10+ GPG</span><span class="info-val">Popcorn/crackling sound during heating — scale calcifying</span></div>
+      <div class="info-row"><span class="info-key">Annual flushing benefit (10+ GPG)</span><span class="info-val">Removes 2–5 lbs sediment; extends water heater 3–5 years</span></div>
+      <div class="info-row"><span class="info-key">Water softener + anode change needed?</span><span class="info-val">Yes — switch from Mg to Al/Zn when softener installed</span></div>
+      <div class="info-row"><span class="info-key">Cost of ignoring anode in FL hard water</span><span class="info-val">$800–$2,000 early tank replacement (3–7 years early)</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Annual Maintenance Checklist — FL Water Heaters</h2>
+      <div class="check-item"><span class="check-icon">🔩</span><span><span class="check-text">Inspect anode rod</span><br><span class="check-sub">Remove and inspect; replace if &lt;½ inch diameter or heavily corroded</span></span></div>
+      <div class="check-item"><span class="check-icon">🚿</span><span><span class="check-text">Flush tank sediment</span><br><span class="check-sub">Connect hose to drain valve; flush until water runs clear. Critical in 10+ GPG counties.</span></span></div>
+      <div class="check-item"><span class="check-icon">⚡</span><span><span class="check-text">Test pressure relief valve (T&amp;P valve)</span><br><span class="check-sub">Lift test lever briefly; water should flow freely. Replace every 3–5 years in FL hard water.</span></span></div>
+      <div class="check-item"><span class="check-icon">🌡️</span><span><span class="check-text">Verify thermostat setting</span><br><span class="check-sub">120°F is FL recommended standard. Below 120°F allows SRB bacteria growth.</span></span></div>
+      <div class="check-item"><span class="check-icon">🔍</span><span><span class="check-text">Inspect for corrosion on fittings and connections</span><br><span class="check-sub">FL humidity + dissimilar metals = accelerated corrosion at nipples and flex connectors.</span></span></div>
+      <div class="check-item"><span class="check-icon">🔇</span><span><span class="check-text">Listen for popcorn/crackling sounds</span><br><span class="check-sub">Indicates sediment buildup on element or tank bottom — flush immediately.</span></span></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: QUOTE -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <h2>Get an Anode Rod Replacement Quote</h2>
+      <div class="alert alert-orange" style="margin-bottom:14px">🔩 Our licensed FL plumbers carry magnesium, aluminum/zinc, and powered anode rods in stock. Same-week service across South Florida. Properly inspected and warranted.</div>
+      <div style="margin-bottom:12px">
+        <label>Your Name</label>
+        <input type="text" id="q-name" placeholder="Full name">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Phone Number</label>
+        <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Property Address</label>
+        <input type="text" id="q-addr" placeholder="Street address, city, FL ZIP">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Service Requested</label>
+        <select id="q-service">
+          <option value="">-- Select service --</option>
+          <option value="anode-standard">Standard anode rod inspection and replacement</option>
+          <option value="anode-powered">Powered / impressed current anode installation</option>
+          <option value="egg-smell">Rotten egg smell fix (anode + shock chlorination)</option>
+          <option value="flush-anode">Tank flush + anode rod service combo</option>
+          <option value="full-maint">Full water heater maintenance (flush + anode + T&amp;P valve)</option>
+          <option value="consult">Water hardness consultation — which anode is right?</option>
+        </select>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Water Heater Brand and Age (if known)</label>
+        <input type="text" id="q-wh" placeholder="e.g., Rheem 40-gal, ~8 years old">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Water Source</label>
+        <select id="q-source">
+          <option value="municipal">Municipal / City water</option>
+          <option value="well">Private well</option>
+          <option value="unsure">Not sure</option>
+        </select>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Additional Notes</label>
+        <textarea id="q-notes" placeholder="Describe any issues — rotten egg smell, rumbling noises, discolored water, previous anode history..."></textarea>
+      </div>
+      <button class="btn" onclick="submitQuote()">Request Anode Rod Quote</button>
+    </div>
+
+    <div class="card">
+      <h2>Anode Rod Service Cost Guide</h2>
+      <table>
+        <tr><th>Service</th><th>Typical FL Cost</th></tr>
+        <tr><td>Anode rod inspection only</td><td>$75–$125</td></tr>
+        <tr><td>Magnesium anode replacement</td><td>$150–$300</td></tr>
+        <tr><td>Aluminum/Zinc anode replacement</td><td>$175–$325</td></tr>
+        <tr><td>Powered anode installation</td><td>$275–$500</td></tr>
+        <tr><td>Tank flush + anode combo</td><td>$200–$400</td></tr>
+        <tr><td>Rotten egg fix (full protocol)</td><td>$250–$475</td></tr>
+        <tr><td>Full water heater maintenance</td><td>$275–$525</td></tr>
+        <tr><td>T&amp;P pressure relief valve replacement</td><td>$100–$225</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Service Area &amp; Availability</h2>
+      <div class="info-row"><span class="info-key">Coverage</span><span class="info-val">Miami-Dade, Broward, Palm Beach, Martin</span></div>
+      <div class="info-row"><span class="info-key">Scheduling</span><span class="info-val">Same-week appointments available</span></div>
+      <div class="info-row"><span class="info-key">Anode brands stocked</span><span class="info-val">Rheem, A.O. Smith, Camco, Corro-Protec</span></div>
+      <div class="info-row"><span class="info-key">License</span><span class="info-val">FL State Certified CFC Plumber</span></div>
+      <div class="info-row"><span class="info-key">Warranty</span><span class="info-val">Parts and labor warranted</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+var COUNTY_GPG = {
+  'miami-dade':15.5,'broward':13.5,'palm-beach':14.5,'lee':14.0,'collier':17.5,
+  'sarasota':10.0,'manatee':9.5,'hillsborough':6.5,'pinellas':5.5,
+  'orange':9.0,'osceola':10.0,'seminole':7.5,'polk':8.5,
+  'duval':4.5,'nassau':4.0,'alachua':5.5,'marion':6.5,'other':null
+};
+
+document.getElementById('county').addEventListener('change', function() {
+  var isOther = this.value === 'other';
+  document.getElementById('custom-gpg-row').style.display = isOther ? 'block' : 'none';
+});
+
+function calcAnode() {
+  var county = document.getElementById('county').value;
+  if (!county) { alert('Please select your FL county.'); return; }
+  var gpg;
+  if (county === 'other') {
+    gpg = parseFloat(document.getElementById('custom-gpg').value);
+    if (!gpg || gpg < 0) { alert('Please enter your water hardness in GPG.'); return; }
+  } else {
+    gpg = COUNTY_GPG[county];
+  }
+  var tankSize = parseInt(document.getElementById('tank-size').value);
+  var anodeType = document.getElementById('anode-type').value;
+  var waterSource = document.getElementById('water-source').value;
+  var softener = document.getElementById('softener').value;
+  var lastReplaced = document.getElementById('last-replaced').value;
+
+  // Base interval by anode type
+  var baseInterval;
+  var costRange;
+  if (anodeType === 'magnesium') { baseInterval = 5; costRange = '$150–$300'; }
+  else if (anodeType === 'aluminum-zinc') { baseInterval = 6.5; costRange = '$175–$325'; }
+  else { baseInterval = 20; costRange = 'N/A (no replacement)'; }
+
+  var modifiers = [];
+  var total = baseInterval;
+
+  // Water hardness modifier
+  var hardMod = 0;
+  if (gpg <= 3) { hardMod = 2; modifiers.push({label:'Soft water (≤3 GPG)',val:'+2 yrs',cls:'mod-pos',note:'Low mineral content — slower depletion. But switch Mg → Al/Zn in soft water.'}); }
+  else if (gpg <= 7) { hardMod = 0; modifiers.push({label:'Slightly hard water (4–7 GPG)',val:'No change',cls:'mod-neu',note:'Near-national-average hardness. Standard interval applies.'}); }
+  else if (gpg <= 12) { hardMod = -1.5; modifiers.push({label:'Hard water (8–12 GPG)',val:'−1.5 yrs',cls:'mod-neg',note:'FL typical — mineral scaling and anode depletion accelerated vs. soft water.'}); }
+  else if (gpg <= 18) { hardMod = -2.5; modifiers.push({label:'Very hard water (13–18 GPG)',val:'−2.5 yrs',cls:'mod-neg',note:'S. FL hard water depletes Mg anodes 40–60% faster than national average.'}); }
+  else { hardMod = -3.5; modifiers.push({label:'Extremely hard water (19+ GPG)',val:'−3.5 yrs',cls:'mod-neg',note:'Collier/Monroe level — anode depletion can occur in 18–24 months for Mg. Powered anode recommended.'}); }
+  total += hardMod;
+
+  // Softener modifier
+  if (softener === 'salt') {
+    total += 2;
+    modifiers.push({label:'Salt-based water softener',val:'+2 yrs',cls:'mod-pos',note:'Reduced mineral content extends anode life. However: switch from Mg to Al/Zn — softened water accelerates Mg depletion disproportionately.'});
+  } else if (softener === 'alt') {
+    total += 0.5;
+    modifiers.push({label:'Salt-free softener/conditioner',val:'+0.5 yrs',cls:'mod-pos',note:'Partial hardness reduction. Less impact than ion exchange but still reduces scaling.'});
+  }
+
+  // Well water / H2S modifier
+  if (waterSource === 'well') {
+    total -= 1.5;
+    modifiers.push({label:'Well water (private well)',val:'−1.5 yrs',cls:'mod-neg',note:'Well water in FL often contains more dissolved minerals, organics, and bacteria than municipal water. More aggressive to anodes.'});
+  } else if (waterSource === 'well-h2s') {
+    total -= 2;
+    modifiers.push({label:'Well water with H₂S (rotten egg smell)',val:'−2 yrs',cls:'mod-neg',note:'H₂S-producing bacteria interact with Mg anode, rapidly depleting it. Switch to Al/Zn or powered anode immediately.'});
+  }
+
+  // Tank size modifier
+  if (tankSize === 50) { total -= 0.5; modifiers.push({label:'50-gallon tank',val:'−0.5 yrs',cls:'mod-neg',note:'Larger tank volume means more water to condition and greater mineral load on single anode. Many 50-gal tanks have dual anodes — verify.'}); }
+  else if (tankSize === 80) { total -= 1; modifiers.push({label:'80-gallon tank',val:'−1 yr',cls:'mod-neg',note:'Large tank — check for dual-anode configuration. If only one anode, it depletes faster covering more tank volume.'}); }
+  else if (tankSize === 100) { total -= 1.5; modifiers.push({label:'100+ gallon tank',val:'−1.5 yrs',cls:'mod-neg',note:'Commercial-size tank. Verify all anode ports are populated. Powered anode strongly recommended for tanks this size in FL.'}); }
+
+  if (anodeType === 'powered') {
+    total = 20;
+    modifiers = [{label:'Powered/Impressed Current Anode',val:'No replacement',cls:'mod-pos',note:'Titanium rod never depletes. Protects tank for its full service life regardless of water hardness.'}];
+  }
+
+  total = Math.max(1, Math.round(total * 10) / 10);
+
+  // Years since last replacement
+  var currentYear = 2025;
+  var yearsOld = 0;
+  if (lastReplaced === 'new') { yearsOld = 0; }
+  else if (lastReplaced === 'old') { yearsOld = 8; }
+  else { yearsOld = currentYear - parseInt(lastReplaced); }
+
+  var nextYear = Math.max(currentYear, Math.ceil(currentYear - yearsOld + total));
+  var pct = anodeType === 'powered' ? 5 : Math.min(100, Math.round((yearsOld / total) * 100));
+  var progressColor = pct < 50 ? '#22C55E' : pct < 75 ? '#F4B942' : '#EF4444';
+
+  document.getElementById('res-years').textContent = anodeType === 'powered' ? '20+' : total;
+  document.getElementById('res-unit').textContent = 'years';
+  document.getElementById('res-label').textContent = 'Recommended replacement interval for ' + Math.round(gpg) + ' GPG ' + (county === 'other' ? '' : county.replace(/-/g,' ') + ' County ') + 'water';
+  document.getElementById('res-gpg').textContent = Math.round(gpg) + ' GPG';
+  document.getElementById('res-next-year').textContent = anodeType === 'powered' ? 'N/A' : nextYear;
+  document.getElementById('res-cost').textContent = costRange;
+  document.getElementById('res-progress').style.width = pct + '%';
+  document.getElementById('res-progress').style.background = progressColor;
+  document.getElementById('res-progress-label').textContent = pct + '% of estimated anode life used (based on last replacement date)';
+
+  var urgEl = document.getElementById('res-urgency');
+  if (anodeType === 'powered') {
+    urgEl.className = 'urgency-box urgency-ok';
+    urgEl.textContent = '✓ Powered anode: no replacement needed. Annual electrical connection check recommended.';
+  } else if (yearsOld >= total) {
+    urgEl.className = 'urgency-box urgency-replace';
+    urgEl.textContent = '🚨 REPLACE NOW — Anode has exceeded estimated service life by ' + Math.round(yearsOld - total) + ' year(s). Tank may be corroding unprotected. Schedule immediately.';
+  } else if (yearsOld >= total * 0.75) {
+    urgEl.className = 'urgency-box urgency-soon';
+    urgEl.textContent = '⚠️ Replace within 6–12 months — Anode is in final 25% of service life. Schedule inspection soon to avoid tank damage.';
+  } else if (yearsOld === 0) {
+    urgEl.className = 'urgency-box urgency-ok';
+    urgEl.textContent = '✓ Recently replaced — schedule your next anode inspection for ' + (currentYear + Math.floor(total * 0.75)) + '.';
+  } else {
+    urgEl.className = 'urgency-box urgency-ok';
+    urgEl.textContent = '✓ Anode appears within service life. Next recommended inspection: ' + (currentYear + Math.ceil(total - yearsOld)) + '.';
+  }
+
+  var modsHtml = '';
+  modifiers.forEach(function(m) {
+    modsHtml += '<div class="modifier-row"><span class="mod-key">' + esc(m.label) + '</span><span class="mod-val ' + m.cls + '">' + esc(m.val) + '</span></div>';
+  });
+  document.getElementById('res-modifiers').innerHTML = modsHtml;
+
+  var recAnode = '';
+  if (anodeType === 'powered') {
+    recAnode = '✅ You have the best option — powered anode provides lifetime tank protection in all FL water types.';
+  } else if (waterSource === 'well-h2s') {
+    recAnode = '🔄 Switch to Aluminum/Zinc anode — the Zn fraction suppresses H₂S-producing bacteria causing rotten egg odor. Also schedule shock chlorination service.';
+  } else if (softener === 'salt' && anodeType === 'magnesium') {
+    recAnode = '🔄 Switch to Aluminum/Zinc anode — you have a salt softener which makes water more corrosive to magnesium anodes specifically. Al/Zn is the correct choice for softened water.';
+  } else if (gpg >= 15) {
+    recAnode = '⚡ Consider upgrading to a Powered Anode Rod (Corro-Protec) — your extremely hard water depletes sacrificial anodes quickly. A powered anode never depletes and is the most cost-effective long-term choice for ' + Math.round(gpg) + ' GPG water.';
+  } else if (gpg >= 10 && anodeType === 'magnesium') {
+    recAnode = '✅ Current magnesium anode is appropriate for your ' + Math.round(gpg) + ' GPG water. Replace at the calculated interval. Consider powered anode at your next replacement to eliminate future service needs.';
+  } else {
+    recAnode = '✅ Current anode type is appropriate for your water conditions. Maintain the calculated replacement schedule.';
+  }
+  document.getElementById('res-rec-anode').textContent = recAnode;
+  document.getElementById('res-tip').textContent = '💡 FL tip: Always flush tank sediment when replacing the anode rod. In hard water areas, 2–5 lbs of calcium/magnesium scale accumulates per year on the tank bottom, reducing efficiency and masking early corrosion.';
+  document.getElementById('anode-result').style.display = 'block';
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+<!-- fl-plumbing-seo: florida water heater anode rod replacement calculator magnesium aluminum zinc powered anode florida hard water GPG rotten egg smell sulfur fix anode rod interval florida -->
+
+</div>
+</body>
+</html>

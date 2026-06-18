@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Florida Bathroom Ventilation &amp; Mold Prevention Calculator | FBC Exhaust Fan CFM Guide</title>
+<meta name="description" content="Calculate required CFM exhaust fan size for Florida bathrooms. FBC Mechanical R303.3 code compliance. FL mold timeline without ventilation, humidity targets, and mold prevention guide for South Florida climate.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:12px}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#14B8A6;line-height:1.2}
+header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.75rem;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:500;line-height:1.2}
+.tab.active{background:#14B8A6;color:#fff;font-weight:700}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:14px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:4px;font-weight:500}
+select,input{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:0.95rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#14B8A6}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:13px;background:#14B8A6;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn:hover{opacity:.9}
+h2{font-size:1rem;font-weight:700;color:#14B8A6;margin-bottom:10px}
+.result-box{background:#141929;border:1px solid rgba(20,184,166,.3);border-radius:10px;padding:16px;margin-top:16px;display:none}
+.result-title{font-size:0.9rem;font-weight:700;color:#14B8A6;margin-bottom:12px}
+.big-num{font-size:2.4rem;font-weight:800;color:#14B8A6;line-height:1}
+.big-label{font-size:0.72rem;color:#94A3B8;margin-top:4px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.stat-box{background:#0A0E1A;border-radius:8px;padding:10px;text-align:center}
+.stat-val{font-size:1.2rem;font-weight:700;color:#14B8A6}
+.stat-label{font-size:0.65rem;color:#94A3B8;margin-top:2px;line-height:1.3}
+.cfm-rating{border-radius:8px;padding:10px 14px;margin-top:12px;font-size:0.82rem}
+.rating-pass{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#22C55E}
+.rating-warn{background:rgba(244,185,66,.1);border:1px solid rgba(244,185,66,.3);color:#F4B942}
+.rating-fail{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#EF4444}
+.fan-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border-left:3px solid #14B8A6}
+.fan-name{font-weight:700;color:#E2E8F0;font-size:0.9rem;margin-bottom:4px}
+.fan-cfm{font-size:0.8rem;color:#14B8A6;font-weight:700;margin-bottom:6px}
+.fan-detail{font-size:0.8rem;color:#94A3B8;line-height:1.5}
+.alert{border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:0.82rem;line-height:1.5}
+.alert-teal{background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.3);color:#E2E8F0}
+.alert-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#E2E8F0}
+.alert-gold{background:rgba(244,185,66,.1);border:1px solid rgba(244,185,66,.3);color:#E2E8F0}
+.alert-green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#E2E8F0}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E293B;font-size:0.82rem}
+.info-row:last-child{border-bottom:none}
+.info-key{color:#94A3B8;flex-shrink:0;margin-right:8px}
+.info-val{color:#E2E8F0;font-weight:500;text-align:right}
+.section-title{font-size:0.75rem;font-weight:700;color:#14B8A6;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th{background:#0A0E1A;padding:8px 10px;text-align:left;font-size:0.72rem;color:#94A3B8;font-weight:600}
+td{padding:8px 10px;border-top:1px solid #1E293B;font-size:0.8rem}
+td:first-child{color:#E2E8F0}
+td:not(:first-child){color:#14B8A6;font-weight:600}
+.mold-timeline{margin-top:10px}
+.mold-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #1E293B}
+.mold-row:last-child{border-bottom:none}
+.mold-day{font-size:0.8rem;font-weight:700;color:#14B8A6;width:64px;flex-shrink:0;padding-top:1px}
+.mold-bar-wrap{flex:1}
+.mold-bar{height:10px;border-radius:5px;margin-bottom:4px}
+.mold-desc{font-size:0.75rem;color:#94A3B8;line-height:1.4}
+.code-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px}
+.code-ref{font-family:monospace;font-size:0.75rem;background:#0A0E1A;padding:2px 6px;border-radius:4px;color:#14B8A6;display:inline-block;margin-bottom:6px}
+.code-title{font-weight:700;color:#E2E8F0;font-size:0.88rem;margin-bottom:6px}
+.code-body{font-size:0.8rem;color:#94A3B8;line-height:1.5}
+.tip{font-size:0.78rem;color:#94A3B8;margin-top:8px;line-height:1.5}
+.humidity-bar-wrap{background:#0A0E1A;border-radius:8px;padding:10px;margin:10px 0}
+.hum-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.hum-label{font-size:0.7rem;color:#94A3B8;width:80px;flex-shrink:0}
+.hum-bar{height:14px;border-radius:6px;position:relative}
+.hum-val{font-size:0.7rem;font-weight:700;width:60px;text-align:right;flex-shrink:0}
+.prevent-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #14B8A6}
+.prevent-title{font-weight:700;color:#E2E8F0;font-size:0.88rem;margin-bottom:6px}
+.prevent-body{font-size:0.8rem;color:#94A3B8;line-height:1.5}
+.method-toggle{display:flex;gap:4px;background:#141929;border-radius:8px;padding:3px;margin-bottom:14px}
+.method-btn{flex:1;padding:7px 8px;border:none;background:transparent;color:#94A3B8;font-size:0.78rem;border-radius:6px;cursor:pointer;font-weight:500;transition:all .2s}
+.method-btn.active{background:#14B8A6;color:#fff;font-weight:700}
+.method-panel{display:none}.method-panel.active{display:block}
+textarea{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:0.9rem;outline:none;min-height:80px;resize:vertical}
+textarea:focus{border-color:#14B8A6}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#14B8A6;color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:0.9rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🌬️ Florida Bathroom Ventilation<br>&amp; Mold Prevention Calculator</h1>
+    <p>CFM fan sizing &bull; FBC Mechanical R303.3 compliance &bull; FL mold timeline &bull; Humidity targets</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calc',this)">CFM Calculator</button>
+    <button class="tab" onclick="showTab('code',this)">FL Code</button>
+    <button class="tab" onclick="showTab('mold',this)">Mold Prevention</button>
+    <button class="tab" onclick="showTab('quote',this)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: CFM CALCULATOR -->
+  <div id="calc" class="panel active">
+    <div class="card">
+      <h2>Bathroom Exhaust Fan CFM Calculator</h2>
+
+      <div class="method-toggle">
+        <button class="method-btn active" onclick="switchMethod('area',this)">By Room Size</button>
+        <button class="method-btn" onclick="switchMethod('fixture',this)">By Fixture Count</button>
+      </div>
+
+      <!-- METHOD A: Area -->
+      <div id="method-area" class="method-panel active">
+        <div class="row2" style="margin-bottom:12px">
+          <div>
+            <label>Room Length (feet)</label>
+            <input type="number" id="room-len" placeholder="10" min="4" max="30" value="">
+          </div>
+          <div>
+            <label>Room Width (feet)</label>
+            <input type="number" id="room-wid" placeholder="8" min="4" max="25" value="">
+          </div>
+        </div>
+        <div style="margin-bottom:12px">
+          <label>Ceiling Height</label>
+          <select id="ceiling-ht">
+            <option value="8">Standard (8 ft)</option>
+            <option value="9">9 ft ceilings</option>
+            <option value="10">10 ft ceilings</option>
+            <option value="12">12 ft or vaulted</option>
+          </select>
+        </div>
+        <div style="margin-bottom:12px">
+          <label>Bathroom Type</label>
+          <select id="bath-type">
+            <option value="half">Half bath (toilet only)</option>
+            <option value="full" selected>Full bath (toilet + tub/shower)</option>
+            <option value="master">Master bath (large, steam possible)</option>
+            <option value="steam">Shower room / steam shower</option>
+          </select>
+        </div>
+        <div style="margin-bottom:12px">
+          <label>FL Climate Zone</label>
+          <select id="fl-zone">
+            <option value="1.2" selected>Zone 1 — S. FL: Miami-Dade, Broward, Monroe (most humid)</option>
+            <option value="1.15">Zone 1 — Palm Beach, Lee, Collier, Charlotte</option>
+            <option value="1.1">Zone 2 — Tampa Bay: Hillsborough, Pinellas, Sarasota</option>
+            <option value="1.05">Zone 2 — Orlando metro: Orange, Osceola, Seminole</option>
+            <option value="1.0">Zone 2/3 — N. FL: Alachua, Marion, Putnam, Duval</option>
+          </select>
+        </div>
+        <button class="btn" onclick="calcCFM_area()">Calculate Required CFM</button>
+      </div>
+
+      <!-- METHOD B: Fixtures -->
+      <div id="method-fixture" class="method-panel">
+        <div class="alert alert-teal" style="margin-bottom:14px">HVI fixture-count method per ASHRAE 62.2: 50 CFM per toilet, 50 CFM per tub, 50 CFM per shower, 100 CFM per bathtub/shower combo.</div>
+        <div style="margin-bottom:10px">
+          <label>Number of Toilets</label>
+          <select id="fx-toilet">
+            <option value="1" selected>1 toilet</option>
+            <option value="2">2 toilets</option>
+          </select>
+        </div>
+        <div class="row2" style="margin-bottom:10px">
+          <div>
+            <label>Showers (walk-in)</label>
+            <select id="fx-shower">
+              <option value="0">None</option>
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
+          <div>
+            <label>Bathtubs</label>
+            <select id="fx-tub">
+              <option value="0" selected>None</option>
+              <option value="1">1</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:12px">
+          <label>Shower/Tub Combos</label>
+          <select id="fx-combo">
+            <option value="0" selected>None</option>
+            <option value="1">1 combo unit</option>
+          </select>
+        </div>
+        <div style="margin-bottom:12px">
+          <label>FL Climate Zone</label>
+          <select id="fx-zone">
+            <option value="1.2" selected>Zone 1 — S. FL (Miami-Dade, Broward, Monroe)</option>
+            <option value="1.15">Zone 1 — Palm Beach, Lee, Collier</option>
+            <option value="1.1">Zone 2 — Tampa Bay (Hillsborough, Pinellas)</option>
+            <option value="1.05">Zone 2 — Orlando metro</option>
+            <option value="1.0">Zone 2/3 — N. FL (Alachua, Duval, Marion)</option>
+          </select>
+        </div>
+        <button class="btn" onclick="calcCFM_fixture()">Calculate Required CFM</button>
+      </div>
+
+      <!-- RESULT BOX -->
+      <div class="result-box" id="cfm-result">
+        <div class="result-title">Recommended Exhaust Fan CFM</div>
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <div class="big-num" id="res-cfm">--</div>
+          <div style="font-size:1rem;font-weight:700;color:#14B8A6">CFM</div>
+        </div>
+        <div class="big-label" id="res-method-label">Based on room area calculation</div>
+
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-val" id="res-sqft">--</div>
+            <div class="stat-label">Sq Ft Bath Area</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="res-ach">--</div>
+            <div class="stat-label">Air Changes/Hour</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="res-min-cfm">--</div>
+            <div class="stat-label">FBC Code Min CFM</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="res-sone">--</div>
+            <div class="stat-label">Max Sone Rating</div>
+          </div>
+        </div>
+
+        <div class="cfm-rating" id="res-rating"></div>
+
+        <div class="section-title" style="margin-top:14px">Recommended Fan Options</div>
+        <div id="res-fans"></div>
+
+        <div class="tip" id="res-tip"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: FL CODE -->
+  <div id="code" class="panel">
+    <div class="card">
+      <h2>Florida Building Code — Ventilation Requirements</h2>
+      <p style="font-size:0.82rem;color:#94A3B8;margin-bottom:12px">Florida's 7th Edition FBC (2020) includes specific bathroom ventilation requirements tailored to Florida's hot-humid climate.</p>
+    </div>
+
+    <div class="code-card">
+      <div class="code-ref">FBC Mechanical R303.3</div>
+      <div class="code-title">Bathroom Ventilation — The Primary Florida Code Section</div>
+      <div class="code-body">Every bathroom and toilet room shall be provided with aggregate glazing area in windows of not less than 3 square feet, one-half of which shall be openable; OR shall be provided with a mechanical ventilation system capable of providing 50 CFM for intermittent operation or 20 CFM for continuous operation, exhausted directly to the exterior of the building.<br><br><strong>FL-specific note:</strong> Most FL bathrooms with A/C are built without operable windows by choice for energy efficiency. In these cases, mechanical ventilation is mandatory — not optional. A bathroom without both an operable window AND an exhaust fan is a code violation under FBC R303.3.</div>
+    </div>
+
+    <div class="code-card">
+      <div class="code-ref">ASHRAE 62.2-2016</div>
+      <div class="code-title">Residential Ventilation Standard (Referenced by FBC)</div>
+      <div class="code-body">ASHRAE 62.2 is the residential ventilation standard referenced by the Florida Building Code. For bathrooms, it specifies: intermittent exhaust = 50 CFM; continuous exhaust = 20 CFM. For large bathrooms over 100 sq ft, the standard recommends 1 CFM per sq ft minimum. ASHRAE 62.2 also addresses whole-building ventilation to prevent the "stack effect" of just exhausting bathroom air without a make-up air strategy.</div>
+    </div>
+
+    <div class="code-card">
+      <div class="code-ref">FBC Energy §R403.6</div>
+      <div class="code-title">Mechanical Ventilation Energy Requirements</div>
+      <div class="code-body">Florida Energy Code §R403.6 requires that bathroom exhaust fans installed in new construction after 2014 must be capable of providing a minimum airflow rate of 50 CFM (or be part of a whole-building ventilation strategy). Fans must also be controlled by a timer or occupancy sensor in new FL construction under the 2020 FBC — a simple run-on timer switch satisfies this requirement.</div>
+    </div>
+
+    <div class="code-card">
+      <div class="code-ref">FBC Mechanical §506.3</div>
+      <div class="code-title">Exhaust Fan Duct Installation</div>
+      <div class="code-body">FL code requires bathroom exhaust fans to duct to the exterior of the building. Termination into an attic, crawl space, or interior ceiling plenum is strictly prohibited. Duct must terminate through soffit (with damper), roof cap, or exterior wall. Maximum duct length: 25 ft with rigid metal; add 2.5 ft per 90° elbow. FL inspectors check attic ductwork termination on new construction inspections.</div>
+    </div>
+
+    <div class="code-card">
+      <div class="code-ref">IECC C403.7 / Florida Equivalents</div>
+      <div class="code-title">Sone Rating Recommendations for FL Homes</div>
+      <div class="code-body">While not strictly codified, FL building science best practice recommends maximum 1.0 sone for master baths and 1.5 sone for secondary baths to encourage consistent use. High-sone fans are avoided by occupants, defeating ventilation goals. Many FL counties and builders specify Energy Star certified fans, which must achieve at least 2.8 CFM/watt efficiency.</div>
+    </div>
+
+    <div class="section-title">Fan Installation Code Requirements</div>
+    <div class="card">
+      <table>
+        <tr><th>Requirement</th><th>FL Code Reference</th><th>Standard</th></tr>
+        <tr><td>Minimum CFM (intermittent)</td><td>FBC R303.3</td><td>50 CFM</td></tr>
+        <tr><td>Minimum CFM (continuous)</td><td>ASHRAE 62.2</td><td>20 CFM</td></tr>
+        <tr><td>Duct must terminate to exterior</td><td>FBC Mech §506.3</td><td>Mandatory</td></tr>
+        <tr><td>Backdraft damper on exterior termination</td><td>FBC Mech §506.3.2</td><td>Required</td></tr>
+        <tr><td>Max duct length (rigid)</td><td>FBC Mech §506.3</td><td>25 ft</td></tr>
+        <tr><td>Max duct length (flexible)</td><td>FBC Mech §506.3</td><td>Discouraged in FL heat</td></tr>
+        <tr><td>Permit required for new fan (FL)</td><td>Local jurisdiction</td><td>Varies; typically yes</td></tr>
+        <tr><td>Timer or occupancy control (new const.)</td><option></option><td>FBC Energy §R403.6</td><td>Required 2020+</td></tr>
+        <tr><td>GFCI protection for bathroom receptacles</td><td>NEC 210.8(A)(1)</td><td>Required</td></tr>
+      </table>
+    </div>
+
+    <div class="section-title">FL County Humidity Context</div>
+    <div class="card">
+      <p style="font-size:0.8rem;color:#94A3B8;margin-bottom:10px">Average outdoor relative humidity by county — why FL ventilation requirements are stricter than national averages.</p>
+      <table>
+        <tr><th>County / Region</th><th>Avg Summer RH</th><th>Dew Point</th><th>Mold Risk</th></tr>
+        <tr><td>Miami-Dade / Monroe</td><td>79%</td><td>74°F</td><td style="color:#EF4444;font-weight:700">Extreme</td></tr>
+        <tr><td>Broward</td><td>77%</td><td>73°F</td><td style="color:#EF4444;font-weight:700">Extreme</td></tr>
+        <tr><td>Palm Beach</td><td>76%</td><td>72°F</td><td style="color:#EF4444;font-weight:700">Very High</td></tr>
+        <tr><td>Lee / Collier / Charlotte</td><td>78%</td><td>73°F</td><td style="color:#EF4444;font-weight:700">Extreme</td></tr>
+        <tr><td>Hillsborough / Pinellas</td><td>74%</td><td>70°F</td><td style="color:#F4B942;font-weight:700">Very High</td></tr>
+        <tr><td>Orange / Osceola</td><td>73%</td><td>69°F</td><td style="color:#F4B942;font-weight:700">High</td></tr>
+        <tr><td>Sarasota / Manatee</td><td>75%</td><td>71°F</td><td style="color:#F4B942;font-weight:700">Very High</td></tr>
+        <tr><td>Duval / Nassau</td><td>70%</td><td>67°F</td><td style="color:#F4B942;font-weight:700">High</td></tr>
+        <tr><td>Alachua / Marion</td><td>68%</td><td>66°F</td><td style="color:#F4B942;font-weight:700">High</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: MOLD PREVENTION -->
+  <div id="mold" class="panel">
+    <div class="card">
+      <h2>Florida Mold Timeline Without Ventilation</h2>
+      <div class="alert alert-red">⚠️ In Florida's hot-humid climate, mold growth is dramatically faster than national averages. The standard 24–48 hour rule does not apply in South Florida summer conditions.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Mold Growth Timeline — S. Florida Summer (80°F+ / RH 75%+)</div>
+      <div class="mold-timeline">
+        <div class="mold-row">
+          <div class="mold-day">Hours 0–2</div>
+          <div class="mold-bar-wrap">
+            <div class="mold-bar" style="width:15%;background:#22C55E"></div>
+            <div class="mold-desc">Spores present on all surfaces — always. Shower creates ideal germination conditions: high RH, warm temperature, nutrient-rich soap scum and skin cells.</div>
+          </div>
+        </div>
+        <div class="mold-row">
+          <div class="mold-day">Hours 2–24</div>
+          <div class="mold-bar-wrap">
+            <div class="mold-bar" style="width:30%;background:#F4B942"></div>
+            <div class="mold-desc">Spore germination begins on wet surfaces if RH remains above 70%. Microscopic hyphal threads begin penetrating grout, caulk, and drywall paper. Not yet visible.</div>
+          </div>
+        </div>
+        <div class="mold-row">
+          <div class="mold-day">Day 1–3</div>
+          <div class="mold-bar-wrap">
+            <div class="mold-bar" style="width:45%;background:#F97316"></div>
+            <div class="mold-desc">Active mycelial growth. In FL summer heat (85–95°F in attic), this phase accelerates 2–3× compared to northern climates. First musty odor detectable in poorly ventilated bathrooms.</div>
+          </div>
+        </div>
+        <div class="mold-row">
+          <div class="mold-day">Day 4–7</div>
+          <div class="mold-bar-wrap">
+            <div class="mold-bar" style="width:65%;background:#EF4444"></div>
+            <div class="mold-desc">Visible mold colonies appear (black, grey, or orange-pink). FL's Stachybotrys (black mold) and Cladosporium are most common bathroom species. Grout lines and caulk are first visible sites.</div>
+          </div>
+        </div>
+        <div class="mold-row">
+          <div class="mold-day">Day 7–14</div>
+          <div class="mold-bar-wrap">
+            <div class="mold-bar" style="width:80%;background:#EF4444"></div>
+            <div class="mold-desc">Established colonies sporulate — releasing 1,000s of new spores per hour. Colonies penetrate into grout, caulk, and begin affecting drywall paper backing behind tile. Cleaning surface no longer eliminates the source.</div>
+          </div>
+        </div>
+        <div class="mold-row">
+          <div class="mold-day">Week 3–4</div>
+          <div class="mold-bar-wrap">
+            <div class="mold-bar" style="width:90%;background:#EF4444"></div>
+            <div class="mold-desc">Full colony established in substrate. Mold in wall cavity confirmed when visible from interior. Remediation required: $1,500–$8,000 depending on scope. Re-caulk alone will not fix subsurface mold in FL.</div>
+          </div>
+        </div>
+        <div class="mold-row">
+          <div class="mold-day">Month 2+</div>
+          <div class="mold-bar-wrap">
+            <div class="mold-bar" style="width:100%;background:#EF4444"></div>
+            <div class="mold-desc">Structural damage potential — FL wood framing affected by long-term moisture. Mold remediation + drywall replacement + tile re-installation: $3,500–$15,000. May require FL mold assessor certification under FS §468.8411.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">FL Indoor Humidity Targets</div>
+    <div class="card">
+      <p style="font-size:0.8rem;color:#94A3B8;margin-bottom:10px">In Florida, maintaining indoor RH at 50–60% is the #1 mold prevention strategy. Bathroom ventilation is a key part of this.</p>
+      <div class="humidity-bar-wrap">
+        <div class="hum-row">
+          <div class="hum-label" style="font-size:0.68rem">Below 30% RH</div>
+          <div style="flex:1;background:#0A0E1A;border-radius:6px;padding:2px">
+            <div class="hum-bar" style="width:20%;background:#06B6D4"></div>
+          </div>
+          <div class="hum-val" style="color:#06B6D4">Too Dry</div>
+        </div>
+        <div class="hum-row">
+          <div class="hum-label" style="font-size:0.68rem">30–50% RH</div>
+          <div style="flex:1;background:#0A0E1A;border-radius:6px;padding:2px">
+            <div class="hum-bar" style="width:45%;background:#22C55E"></div>
+          </div>
+          <div class="hum-val" style="color:#22C55E">Optimal</div>
+        </div>
+        <div class="hum-row">
+          <div class="hum-label" style="font-size:0.68rem">50–60% RH</div>
+          <div style="flex:1;background:#0A0E1A;border-radius:6px;padding:2px">
+            <div class="hum-bar" style="width:60%;background:#22C55E"></div>
+          </div>
+          <div class="hum-val" style="color:#22C55E">FL Target</div>
+        </div>
+        <div class="hum-row">
+          <div class="hum-label" style="font-size:0.68rem">60–70% RH</div>
+          <div style="flex:1;background:#0A0E1A;border-radius:6px;padding:2px">
+            <div class="hum-bar" style="width:70%;background:#F4B942"></div>
+          </div>
+          <div class="hum-val" style="color:#F4B942">Caution</div>
+        </div>
+        <div class="hum-row">
+          <div class="hum-label" style="font-size:0.68rem">Above 70% RH</div>
+          <div style="flex:1;background:#0A0E1A;border-radius:6px;padding:2px">
+            <div class="hum-bar" style="width:90%;background:#EF4444"></div>
+          </div>
+          <div class="hum-val" style="color:#EF4444">Mold Zone</div>
+        </div>
+      </div>
+      <div class="tip">💡 Tip: FL bathroom RH spikes to 90–100% during a shower. A properly sized exhaust fan should return the bathroom to baseline RH within 15–20 minutes after shower completion. Run fan for 15–20 minutes after showering for best results.</div>
+    </div>
+
+    <div class="section-title">FL Mold Prevention Strategy</div>
+
+    <div class="prevent-card">
+      <div class="prevent-title">1. Proper Exhaust Fan Sizing (See CFM Tab)</div>
+      <div class="prevent-body">Most FL bathroom fans are undersized. A 50 CFM fan in an 80 sq ft master bath is inadequate. Size to at least 1 CFM per sq ft. Use 150–200 CFM for master baths in S. FL. Quality fans by Panasonic WhisperCeiling, Broan, and Delta BreezSlim have actual tested CFM ratings — avoid cheap units that underperform rated specs.</div>
+    </div>
+    <div class="prevent-card">
+      <div class="prevent-title">2. Timer Switch or Humidity Sensor Control</div>
+      <div class="prevent-body">Standard wall switches lead to fan being turned off too early. A 20–30 minute countdown timer switch costs $15–$25 and ensures the fan runs long enough after showering. Humidity-sensing fans (Panasonic FV-11VH2, Broan QTXE110S) automatically run until RH drops to target — best option for FL bathrooms. Cost premium: $80–$150 over standard fans.</div>
+    </div>
+    <div class="prevent-card">
+      <div class="prevent-title">3. Proper Duct Termination — No Attic Dumping</div>
+      <div class="prevent-body">Bathroom ductwork terminating into FL attics is a code violation and a guaranteed mold problem — FL attics reach 140°F in summer, saturating the attic space with moisture that condenses on insulation and wood sheathing. Duct must terminate at exterior. Short, straight duct runs perform best. Insulate duct runs through unconditioned attics with R-4 or higher.</div>
+    </div>
+    <div class="prevent-card">
+      <div class="prevent-title">4. Whole-House Dehumidification in S. FL</div>
+      <div class="prevent-body">In Miami-Dade, Broward, and Monroe counties, bathroom exhaust fans alone are often insufficient to maintain 50–60% indoor RH during FL's wet season (June–September). A whole-house dehumidifier (Aprilaire, Ultra-Aire) installed in the air handler return maintains target RH year-round. Cost: $1,200–$2,500 installed. Pays back in reduced A/C load and mold remediation costs avoided.</div>
+    </div>
+    <div class="prevent-card">
+      <div class="prevent-title">5. Annual Caulk and Grout Inspection</div>
+      <div class="prevent-body">FL's thermal cycling (indoor 72°F vs. outdoor 95°F) causes caulk to expand and contract, opening gaps faster than in northern climates. Inspect and re-caulk showers and tub surrounds annually. Use 100% silicone sealant — not latex or latex-acrylic caulk, which deteriorates in FL humidity within 1–2 years. Cost: $30–$50 DIY or $200–$500 professional.</div>
+    </div>
+    <div class="prevent-card">
+      <div class="prevent-title">6. Mold-Resistant Building Materials (Renovation)</div>
+      <div class="prevent-body">When renovating FL bathrooms: use cement board (not standard greenboard drywall) behind tile; install vapor barrier behind cement board; use mold-resistant drywall (DensArmor, Mold Tough) for non-tiled surfaces. In S. FL, use modified thin-set mortar with polymer additives. Standard construction materials in non-FL-specific homes fail 40–60% faster in Zone 1 humidity.</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: QUOTE -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <h2>Get a Ventilation Inspection or Fan Installation Quote</h2>
+      <div class="alert alert-teal" style="margin-bottom:14px">✅ Our licensed FL plumbers and HVAC techs install exhaust fans, bathroom ventilation systems, and whole-house dehumidifiers. Properly permitted and inspected.</div>
+      <div style="margin-bottom:12px">
+        <label>Your Name</label>
+        <input type="text" id="q-name" placeholder="Full name">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Phone Number</label>
+        <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Property Address</label>
+        <input type="text" id="q-addr" placeholder="Street address, city, FL ZIP">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Service Needed</label>
+        <select id="q-service">
+          <option value="">-- Select service --</option>
+          <option value="fan-replace">Exhaust fan replacement (upgrade sizing)</option>
+          <option value="fan-install">New exhaust fan installation (no existing fan)</option>
+          <option value="duct-fix">Exhaust duct reroute (currently dumps into attic)</option>
+          <option value="humidity-sensor">Humidity-sensing fan installation</option>
+          <option value="whole-house-dehum">Whole-house dehumidifier installation</option>
+          <option value="mold-inspect">Mold inspection / ventilation audit</option>
+          <option value="vent-code">Ventilation permit and inspection (code compliance)</option>
+        </select>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Number of Bathrooms</label>
+        <select id="q-baths">
+          <option value="1">1 bathroom</option>
+          <option value="2" selected>2 bathrooms</option>
+          <option value="3">3 bathrooms</option>
+          <option value="4+">4 or more bathrooms</option>
+        </select>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Additional Notes</label>
+        <textarea id="q-notes" placeholder="Describe the issue — visible mold, fan not working, no fan present, attic duct concern..."></textarea>
+      </div>
+      <button class="btn" onclick="submitQuote()">Request Ventilation Quote</button>
+    </div>
+
+    <div class="card">
+      <h2>Service Area &amp; Response Time</h2>
+      <div class="info-row"><span class="info-key">Coverage area</span><span class="info-val">Miami-Dade, Broward, Palm Beach, Martin</span></div>
+      <div class="info-row"><span class="info-key">Scheduling</span><span class="info-val">Same-week appointments available</span></div>
+      <div class="info-row"><span class="info-key">Fan installation</span><span class="info-val">Typically 1–2 hours per bathroom</span></div>
+      <div class="info-row"><span class="info-key">Permits</span><span class="info-val">We handle all permit applications</span></div>
+      <div class="info-row"><span class="info-key">License</span><span class="info-val">FL State Certified CFC &amp; EC</span></div>
+      <div class="info-row"><span class="info-key">Brands stocked</span><span class="info-val">Panasonic, Broan, Nutone, Delta</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Fan Installation Cost Guide</h2>
+      <table>
+        <tr><th>Service</th><th>Typical Cost</th></tr>
+        <tr><td>Replace existing fan (same location)</td><td>$175–$350</td></tr>
+        <tr><td>New fan — interior wall mount</td><td>$250–$500</td></tr>
+        <tr><td>New fan — ceiling with attic access</td><td>$300–$600</td></tr>
+        <tr><td>Humidity-sensing fan installation</td><td>$350–$750</td></tr>
+        <tr><td>Duct reroute to exterior</td><td>$200–$600</td></tr>
+        <tr><td>Timer switch installation</td><td>$75–$150</td></tr>
+        <tr><td>Whole-house dehumidifier</td><td>$1,200–$2,800</td></tr>
+        <tr><td>Ventilation audit (4-point report)</td><td>$175–$325</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+var FAN_TIERS = [
+  {label:'Economy Fan (50–79 CFM)',cfmRange:[50,79],desc:'Nutone 696N, Broan 688. Minimum code-compliant. Adequate only for small half-baths under 45 sq ft in S. FL. Sone 3.0–4.0 — noisy, less likely to be used. Not recommended for FL master baths.'},
+  {label:'Mid-Range Fan (80–109 CFM)',cfmRange:[80,109],desc:'Broan-NuTone AEN110, Delta BreezSlim SLM110. Good for secondary full baths 60–90 sq ft. Sone 1.0–1.5 — quiet operation encourages consistent use. Energy Star rated options available.'},
+  {label:'High-Performance Fan (110–149 CFM)',cfmRange:[110,149],desc:'Panasonic FV-11VH2 (humidity-sensing), Delta BreezSignature SIG110H. Ideal for FL master baths 90–130 sq ft. Automatic humidity control. Sone 0.3–0.8. Strongly recommended for Zone 1 (Miami-Dade, Broward).'},
+  {label:'High-Capacity Fan (150–200 CFM)',cfmRange:[150,200],desc:'Panasonic FV-20VK2, Broan SPK200, Nutone QT300. Required for large master baths 130–180 sq ft in S. FL. Steam showers, spa tubs, or open-plan bath/closet configurations. Multi-speed options available.'},
+  {label:'Commercial-Grade (200+ CFM)',cfmRange:[200,400],desc:'Broan QTXE200, Fantech FR100, inline fans with exterior motor. For very large master bath suites, steam rooms, or whole-bathroom ventilation systems. Quieter inline fans recommended for large duct runs.'}
+];
+
+function switchMethod(method, btn) {
+  document.querySelectorAll('.method-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.method-panel').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('method-'+method).classList.add('active');
+  document.getElementById('cfm-result').style.display = 'none';
+}
+
+function calcCFM_area() {
+  var len = parseFloat(document.getElementById('room-len').value) || 0;
+  var wid = parseFloat(document.getElementById('room-wid').value) || 0;
+  var ht = parseFloat(document.getElementById('ceiling-ht').value);
+  var btype = document.getElementById('bath-type').value;
+  var zone = parseFloat(document.getElementById('fl-zone').value);
+  if (!len || !wid) { alert('Please enter room length and width.'); return; }
+  var sqft = len * wid;
+  var baseCFM = sqft * 1.1;
+  var btMult = {half:0.85,full:1.0,master:1.2,steam:1.5}[btype] || 1.0;
+  var htMult = ht > 8 ? 1 + (ht - 8) * 0.05 : 1.0;
+  var recommendedCFM = Math.ceil(baseCFM * btMult * htMult * zone / 5) * 5;
+  var volume = sqft * ht;
+  var ach = Math.round((recommendedCFM * 60) / volume);
+  showResult(recommendedCFM, sqft, ach, 50, 'Based on room area (' + Math.round(sqft) + ' sq ft) with FL humidity factor');
+}
+
+function calcCFM_fixture() {
+  var toilet = parseInt(document.getElementById('fx-toilet').value) || 0;
+  var shower = parseInt(document.getElementById('fx-shower').value) || 0;
+  var tub = parseInt(document.getElementById('fx-tub').value) || 0;
+  var combo = parseInt(document.getElementById('fx-combo').value) || 0;
+  var zone = parseFloat(document.getElementById('fx-zone').value);
+  var baseCFM = toilet * 50 + shower * 50 + tub * 50 + combo * 100;
+  var recommendedCFM = Math.ceil(baseCFM * zone / 5) * 5;
+  var sqft = Math.round(recommendedCFM / 1.1);
+  showResult(recommendedCFM, sqft, '--', 50, 'Based on fixture count (ASHRAE 62.2 method) with FL humidity factor');
+}
+
+function showResult(cfm, sqft, ach, minCFM, methodLabel) {
+  document.getElementById('res-cfm').textContent = cfm;
+  document.getElementById('res-sqft').textContent = Math.round(sqft);
+  document.getElementById('res-ach').textContent = ach === '--' ? '--' : ach + 'x/hr';
+  document.getElementById('res-min-cfm').textContent = minCFM + ' CFM';
+  document.getElementById('res-sone').textContent = cfm >= 110 ? '0.8' : cfm >= 80 ? '1.5' : '2.5';
+  document.getElementById('res-method-label').textContent = methodLabel;
+  var ratingEl = document.getElementById('res-rating');
+  if (cfm >= minCFM) {
+    ratingEl.className = 'cfm-rating rating-pass';
+    ratingEl.textContent = '✓ Meets FBC R303.3 minimum (50 CFM). Recommended fan is ' + cfm + ' CFM — sized for Florida\'s hot-humid climate, not just the code floor.';
+  } else {
+    ratingEl.className = 'cfm-rating rating-fail';
+    ratingEl.textContent = '✗ Below FBC R303.3 minimum (50 CFM). Existing fan may not meet code. Contact us for a compliant replacement.';
+  }
+  var fansEl = document.getElementById('res-fans');
+  var fansHtml = '';
+  FAN_TIERS.forEach(function(tier) {
+    if (cfm >= tier.cfmRange[0] && cfm <= tier.cfmRange[1]) {
+      fansHtml += '<div class="fan-card"><div class="fan-name">' + esc(tier.label) + '</div>';
+      fansHtml += '<div class="fan-cfm">Recommended range: ' + esc(tier.cfmRange[0] + '–' + tier.cfmRange[1]) + ' CFM</div>';
+      fansHtml += '<div class="fan-detail">' + esc(tier.desc) + '</div></div>';
+    }
+  });
+  if (!fansHtml) {
+    var bestTier = FAN_TIERS[FAN_TIERS.length - 1];
+    fansHtml = '<div class="fan-card"><div class="fan-name">' + esc(bestTier.label) + '</div><div class="fan-detail">' + esc(bestTier.desc) + '</div></div>';
+  }
+  fansEl.innerHTML = fansHtml;
+  document.getElementById('res-tip').textContent = '💡 FL tip: For Zone 1 (South FL), add a humidity-sensing fan controller or select a humidity-actuated fan model. This auto-runs the fan when bathroom RH exceeds 65%, preventing mold buildup between uses.';
+  document.getElementById('cfm-result').style.display = 'block';
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+<!-- fl-plumbing-seo: florida bathroom ventilation cfm calculator exhaust fan fbc mechanical r303.3 mold prevention florida humidity ashrae 62.2 bathroom fan cfm florida building code mold timeline -->
+
+</div>
+</body>
+</html>
