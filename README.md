@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**166 interactive cost calculators** for Florida homeowners.
+**169 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -29,6 +29,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Commercial Restroom Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-restroom-calc/fl_commercial_restroom_calc.html)
 - [FL Condo Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/condo-plumbing/fl_condo_plumbing.html)
 - [FL Construction Defect Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/construction-defect/fl_construction_defect.html)
+- [FL Diy Vs Licensed Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/diy-vs-licensed/fl_diy_vs_licensed.html)
 - [FL Drain Cleaning Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-cleaning-cost/fl_drain_cleaning_cost.html)
 - [FL Drain Cleaning Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-cleaning/fl_drain_cleaning.html)
 - [FL Drain Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-cost/fl_drain_cost.html)
@@ -121,6 +122,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Septic To Sewer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-to-sewer/fl_septic_to_sewer.html)
 - [FL Septic Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic/fl_septic.html)
 - [FL Sewage Ejector Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewage-ejector/fl_sewage_ejector.html)
+- [FL Sewer Camera Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-camera-inspection/fl_sewer_camera_inspection.html)
 - [FL Sewer Cleanout Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-cleanout-guide/fl_sewer_cleanout_guide.html)
 - [FL Sewer Drain Diagnosis Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-drain-diagnosis/fl_sewer_drain_diagnosis.html)
 - [FL Sewer Line Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-line-cost/fl_sewer_line_cost.html)
@@ -138,6 +140,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Stormwater Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/stormwater-drain/fl_stormwater_drain.html)
 - [FL Sump Pump Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sump-pump-sizing/fl_sump_pump_sizing.html)
 - [FL Supply Pressure Loss Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/supply-pressure-loss/fl_supply_pressure_loss.html)
+- [FL Tankless Descaling Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-descaling/fl_tankless_descaling.html)
 - [FL Tankless Error Codes Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-error-codes/fl_tankless_error_codes.html)
 - [FL Tankless Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-sizing/fl_tankless_sizing.html)
 - [FL Tankless Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-sizing/fl_tankless_water_heater.html)
