@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL DWV Drain Sizing & Slope Calculator | FPC Table 709.1 | Fixture Units</title>
+<meta name="description" content="Calculate Florida DWV drain sizing using FPC Table 709.1 fixture units, Table 710.1 horizontal drain capacity, trap arm max lengths, vent sizing, and slope drop for all 67 Florida counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#EF4444;color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#EF4444;border-bottom-color:#EF4444}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#EF4444;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#EF4444}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#EF4444;color:#fff}
+.btn-primary:hover{background:#dc2626}
+.btn-sm{padding:7px 14px;border-radius:8px;border:none;font-size:.75rem;font-weight:600;cursor:pointer;background:#141929;color:#EF4444;border:1px solid #EF4444;transition:.2s;margin-top:8px}
+.btn-sm:hover{background:#EF4444;color:#fff}
+.result-box{background:#141929;border:1px solid #EF4444;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.3rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.7rem;margin-top:2px}
+.metric.pass .mv{color:#22C55E}
+.metric.fail .mv{color:#EF4444}
+.metric.warn .mv{color:#F97316}
+.metric.info .mv{color:#00B4FF}
+.metric.red .mv{color:#EF4444}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.pipe-table{width:100%;border-collapse:collapse;margin-top:8px}
+.pipe-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:5px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.pipe-table td{font-size:.72rem;color:#E2E8F0;padding:6px 8px;border-bottom:1px solid #0F1629}
+.pipe-table tr:hover td{background:#141929}
+.pipe-table .rec td{color:#22C55E;font-weight:700}
+.pipe-table .warn td{color:#F97316}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#EF4444;border-color:#EF4444}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#fff;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#EF4444;transition:width .4s}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#EF4444}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.fixture-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #141929}
+.fixture-row:last-child{border-bottom:none}
+.fixture-name{font-size:.73rem;color:#E2E8F0}
+.fixture-sub{font-size:.65rem;color:#94A3B8}
+.stepper{display:flex;align-items:center;gap:8px}
+.step-btn{width:24px;height:24px;border:1px solid #1E293B;border-radius:6px;background:#0F1629;color:#E2E8F0;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.step-btn:hover{border-color:#EF4444;color:#EF4444}
+.step-val{font-size:.85rem;font-weight:700;color:#EF4444;min-width:22px;text-align:center}
+.dfu-total{background:#141929;border-radius:8px;padding:10px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.dfu-total span:first-child{font-size:.8rem;color:#94A3B8}
+.dfu-total span:last-child{font-size:1.1rem;font-weight:800;color:#EF4444}
+.slope-result{background:#141929;border-radius:8px;padding:12px;margin-top:10px}
+.slope-row{display:flex;justify-content:space-between;margin:4px 0;font-size:.78rem}
+.slope-row .sl{color:#94A3B8}
+.slope-row .sv{color:#E2E8F0;font-weight:600}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🔴 FL DWV Drain Sizing & Slope Calculator</h1>
+  <p>FPC Table 709.1 fixture units, horizontal drain sizing, trap arm limits, and slope drop</p>
+  <span class="badge">FPC 2023 COMPLIANT</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('drain')">Drain Sizing</div>
+  <div class="tab" onclick="showTab('slope')">Slope Calc</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: DRAIN SIZING -->
+<div id="tab-drain" class="panel active">
+  <div class="card">
+    <div class="card-title">🔢 Fixture Unit Counter (FPC Table 709.1)</div>
+    <p style="font-size:.72rem;color:#94A3B8;margin-bottom:10px">Count fixtures on this drain branch — DFU values auto-populate.</p>
+    <div id="fixture-list"></div>
+    <div class="dfu-total">
+      <span>Total Drain Fixture Units (DFU)</span>
+      <span id="total-dfu">0 DFU</span>
+    </div>
+    <button class="btn btn-primary" onclick="calcDrain()">Calculate Required Drain Size</button>
+    <div class="result-box" id="drain-result">
+      <div style="font-size:.85rem;font-weight:700;color:#EF4444;margin-bottom:6px">Drain Sizing Results</div>
+      <div class="metrics-grid" id="drain-metrics"></div>
+      <div id="drain-rec"></div>
+      <div id="drain-notes"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔍 Trap Arm Length Checker</div>
+    <div class="row2">
+      <div>
+        <label>Trap Size (inches)</label>
+        <select id="trap-size">
+          <option value="1.25">1¼"</option>
+          <option value="1.5" selected>1½"</option>
+          <option value="2">2"</option>
+          <option value="3">3"</option>
+          <option value="4">4"</option>
+        </select>
+      </div>
+      <div>
+        <label>Actual Arm Length (ft)</label>
+        <input type="number" id="trap-len" value="4" min="0.5" max="20" step="0.5">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="checkTrap()">Check Trap Arm</button>
+    <div class="result-box" id="trap-result">
+      <div id="trap-status"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📐 Drain Capacity Reference (FPC Table 710.1)</div>
+    <table class="pipe-table">
+      <thead><tr><th>Pipe Size</th><th>1/8" slope</th><th>1/4" slope</th><th>1/2" slope</th></tr></thead>
+      <tbody>
+        <tr><td>1½"</td><td>1 DFU</td><td>3 DFU</td><td>5 DFU</td></tr>
+        <tr><td>2"</td><td>8 DFU</td><td>14 DFU</td><td>21 DFU</td></tr>
+        <tr><td>2½"</td><td>24 DFU</td><td>42 DFU</td><td>—</td></tr>
+        <tr><td>3"</td><td>48 DFU</td><td>84 DFU</td><td>—</td></tr>
+        <tr><td>4"</td><td>144 DFU</td><td>250 DFU</td><td>—</td></tr>
+        <tr><td>5"</td><td>240 DFU</td><td>425 DFU</td><td>—</td></tr>
+        <tr><td>6"</td><td>400 DFU</td><td>700 DFU</td><td>—</td></tr>
+        <tr><td>8"</td><td>1,100 DFU</td><td>1,920 DFU</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 2: SLOPE CALC -->
+<div id="tab-slope" class="panel">
+  <div class="card">
+    <div class="card-title">📏 Drain Slope & Drop Calculator</div>
+
+    <label>Pipe Run Length (feet)</label>
+    <input type="number" id="slope-len" value="20" min="1" max="500">
+
+    <label>Drain Slope</label>
+    <select id="slope-rate">
+      <option value="0.0104">⅛" per foot (min for 3"+ pipe — FPC 704.1)</option>
+      <option value="0.0208" selected>¼" per foot (standard — FPC 704.1)</option>
+      <option value="0.03125">⁵⁄₁₆" per foot</option>
+      <option value="0.0417">½" per foot (small pipe / short runs)</option>
+    </select>
+
+    <label>Pipe Size</label>
+    <select id="slope-pipe">
+      <option value="1.5">1½" (min trap arm)</option>
+      <option value="2" selected>2"</option>
+      <option value="3">3"</option>
+      <option value="4">4"</option>
+      <option value="6">6"</option>
+    </select>
+
+    <label>FL County (for elevation/local notes)</label>
+    <select id="slope-county">
+      <option value="miami-dade">Miami-Dade</option><option value="broward">Broward</option>
+      <option value="palm-beach">Palm Beach</option><option value="hillsborough" selected>Hillsborough</option>
+      <option value="orange">Orange</option><option value="pinellas">Pinellas</option>
+      <option value="duval">Duval</option><option value="lee">Lee</option>
+      <option value="sarasota">Sarasota</option><option value="collier">Collier</option>
+      <option value="volusia">Volusia</option><option value="manatee">Manatee</option>
+      <option value="brevard">Brevard</option><option value="polk">Polk</option>
+      <option value="seminole">Seminole</option><option value="other">Other FL County</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcSlope()">Calculate Slope & Drop</button>
+
+    <div class="result-box" id="slope-result">
+      <div style="font-size:.85rem;font-weight:700;color:#EF4444;margin-bottom:8px">Slope Results</div>
+      <div class="metrics-grid" id="slope-metrics"></div>
+      <div id="slope-table"></div>
+      <div id="slope-notes"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💨 Vent Sizing Reference (FPC Table 916.1)</div>
+    <div class="info-block">
+      <p><strong>FPC 904.1:</strong> Every trap and trapped fixture shall be vented.</p>
+      <p style="margin-top:6px"><strong>FPC 906.1 — Vent pipe minimum size:</strong> Shall not be less than 1¼" and not less than ½ the diameter of the drain it serves.</p>
+      <p style="margin-top:6px"><strong>FPC 916.1 — Individual vent sizes:</strong></p>
+    </div>
+    <table class="pipe-table" style="margin-top:8px">
+      <thead><tr><th>Drain Size</th><th>Min Vent</th><th>Max DFU on Vent</th><th>Max Vent Length</th></tr></thead>
+      <tbody>
+        <tr><td>1¼" drain</td><td>1¼"</td><td>1 DFU</td><td>45 ft</td></tr>
+        <tr><td>1½" drain</td><td>1¼"</td><td>4 DFU</td><td>60 ft</td></tr>
+        <tr><td>2" drain</td><td>1½"</td><td>10 DFU</td><td>120 ft</td></tr>
+        <tr><td>3" drain</td><td>2"</td><td>30 DFU</td><td>180 ft</td></tr>
+        <tr><td>4" drain</td><td>3"</td><td>100 DFU</td><td>212 ft</td></tr>
+        <tr><td>5"+ drain</td><td>4"</td><td>300+ DFU</td><td>300 ft</td></tr>
+      </tbody>
+    </table>
+    <div class="info-block" style="margin-top:8px">
+      <p><strong>FPC 903.1 — FL roof vent termination:</strong> Vent shall extend min 6" above roof in FL. In Miami-Dade/Broward HVHZ, vent flashing must be product-approved per FL Building Code 1714.5.</p>
+      <p style="margin-top:6px"><strong>FPC 908 — Wet venting:</strong> Permitted in FL for single bathroom groups. 2" wet vent serves 1–3 fixtures; 3" wet vent serves up to 6 fixtures. Common in FL slab construction.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FPC DWV Code — Key Requirements</div>
+
+    <div class="section-title">FPC Chapter 7 — Sanitary Drainage</div>
+    <div class="info-block">
+      <p><strong>FPC 701.1 — Scope:</strong> DWV system shall convey sewage and liquid wastes to public sewer or approved private disposal system. FL requires FL-licensed plumbing contractor for all DWV work.</p>
+      <p style="margin-top:6px"><strong>FPC 704.1 — Slope:</strong> Horizontal drainage piping shall be run in practical alignment and a uniform slope of not less than ¼ unit vertical per foot (2%) for pipes 3" and smaller. Pipes 4" and larger may be sloped at ⅛" per foot minimum (1.04%).</p>
+      <p style="margin-top:6px"><strong>FPC 704.2 — Minimum size:</strong> No horizontal waste or soil pipe shall be smaller than the largest trap discharge it serves. Minimum 3" for water closets and urinals.</p>
+      <p style="margin-top:6px"><strong>FPC 704.3 — Change of direction:</strong> Horizontal-to-vertical changes shall use 45° wyes or combo fittings. No 90° sanitary tees in horizontal-to-horizontal runs. No double sanitary tees.</p>
+      <p style="margin-top:6px"><strong>FPC 707.1 — Prohibited fittings:</strong> Prohibited in DWV: running traps, double-hub fittings used backwards, bell-and-spigot on PVC without approved coupling, copper fittings with lead joints.</p>
+    </div>
+
+    <div class="section-title">FPC Chapter 9 — Vents</div>
+    <div class="info-block">
+      <p><strong>FPC 901.1 — Venting required:</strong> Every trap and trapped fixture shall be vented in accordance with this chapter.</p>
+      <p style="margin-top:6px"><strong>FPC 904.1 — Air admittance valves (AAV):</strong> Permitted in FL under FPC 918 for individual fixtures and branch vents. AAVs prohibited as the only vent on a drainage stack. Must be accessible and installed per ASSE 1051 (island fixtures) or ASSE 1049.</p>
+      <p style="margin-top:6px"><strong>FPC 909.2 — Trap arm lengths (max distance from trap to vent):</strong></p>
+    </div>
+    <table class="pipe-table" style="margin-top:6px">
+      <thead><tr><th>Trap Size</th><th>Max Trap Arm</th><th>Slope Required</th></tr></thead>
+      <tbody>
+        <tr><td>1¼"</td><td>2.5 ft</td><td>¼" per foot</td></tr>
+        <tr><td>1½"</td><td>3.5 ft</td><td>¼" per foot</td></tr>
+        <tr><td>2"</td><td>5.0 ft</td><td>¼" per foot</td></tr>
+        <tr><td>3"</td><td>6.0 ft</td><td>¼" per foot</td></tr>
+        <tr><td>4" and larger</td><td>10.0 ft</td><td>⅛" per foot</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">DWV Inspection Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">All horizontal drains sloped ¼" per foot (3" and smaller) <span class="check-sub">FPC 704.1 — ⅛" per foot minimum for 4"+ pipe; verify with string line and level</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">No prohibited fitting types in DWV system <span class="check-sub">FPC 704.3 — no 90° Ts on horizontal runs; use 45° wyes and combo fittings for direction changes</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Water closet drain minimum 3" diameter <span class="check-sub">FPC 704.2 — no WC shall drain into pipe smaller than 3"; all WCs require 3" minimum</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Trap arm lengths within FPC 909.2 maximum limits <span class="check-sub">1½" max 3.5 ft; 2" max 5 ft; 3" max 6 ft; 4"+ max 10 ft</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Every trap and fixture properly vented <span class="check-sub">FPC 901.1/904.1 — all fixtures vented; AAVs allowed per FPC 918 with access panel</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Vent pipe minimum ½ of drain diameter (min 1¼") <span class="check-sub">FPC 906.1 — vent can never be smaller than 1¼" or less than ½ the drain pipe size</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Cleanouts installed per FPC 708 — max 100 ft spacing <span class="check-sub">FPC 708.4 — cleanout required every 100 ft on horizontal runs; at each 90° change of direction</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">DWV pressure test (air or water) before covering <span class="check-sub">FPC 312.2 — 5-psi air test or 10-ft water head; FL inspectors typically require rough-in inspection before slab pour</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">FL plumbing permit pulled for all DWV work <span class="check-sub">FBC 105.1 — permit required for all new DWV installation and major alterations in FL</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 9 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a DWV Drain Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Polk</option><option>Seminole</option>
+      <option>Other</option>
+    </select>
+
+    <label>Project Type</label>
+    <select id="q-type">
+      <option>New construction DWV rough-in</option>
+      <option>Bathroom addition drain layout</option>
+      <option>Kitchen sink / dishwasher drain</option>
+      <option>Drain slope correction</option>
+      <option>Slow drain diagnosis</option>
+      <option>DWV inspection prep</option>
+      <option>Commercial DWV sizing</option>
+    </select>
+
+    <label>Fixture Count</label>
+    <input type="number" id="q-fix" placeholder="e.g. 6 fixtures">
+
+    <label>Notes / Additional Info</label>
+    <textarea id="q-notes" rows="3" placeholder="Describe your drain issue or project..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Consultation</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | Licensed FL Plumbing Contractor | FL Lic. #CFC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🔴</div>
+
+<!-- SEO keyword data -->
+<div style="display:none" aria-hidden="true" id="kw-data">
+florida DWV drain sizing calculator, FPC table 709.1 fixture units florida, drain fixture units florida plumbing code, horizontal drain sizing florida, FPC table 710.1 drain capacity, trap arm length florida, FPC 909.2 trap arm, drain slope calculator florida, 1/4 inch per foot slope florida, drain vent sizing florida, FPC chapter 7 sanitary drainage, fixture unit count florida plumbing, DWV pipe sizing florida, floor drain sizing florida, toilet drain size florida 3 inch, kitchen drain sizing florida, bathroom group drain florida, FPC 704.1 drain slope, wet venting florida, air admittance valve florida AAV, DWV rough-in florida slab, drain inspection florida, plumbing permit DWV florida, FPC chapter 9 vents florida, vent stack sizing florida, vent pipe minimum diameter florida
+FPC Table 709.1 fixture unit values: bathtub or shower 2 DFU; bathroom sink lavatory 1 DFU; bidet 1 DFU; clothes washer 2 DFU; dishwasher 2 DFU; floor drain 2 DFU; kitchen sink 2 DFU; laundry tub 2 DFU; mop sink service sink 3 DFU; toilet water closet flush tank 4 DFU; toilet water closet flush valve 6 DFU; urinal 4 DFU; drinking fountain 0.5 DFU; emergency floor drain 0 DFU
+FPC Table 710.1 horizontal drain capacity: 1.5 inch pipe at 1/8 slope 1 DFU at 1/4 slope 3 DFU; 2 inch pipe at 1/8 slope 8 DFU at 1/4 slope 14 DFU; 3 inch pipe at 1/8 slope 48 DFU at 1/4 slope 84 DFU; 4 inch pipe at 1/8 slope 144 DFU at 1/4 slope 250 DFU; 6 inch pipe at 1/8 slope 400 DFU at 1/4 slope 700 DFU
+FPC 909.2 trap arm max lengths: 1.25 inch trap max 2.5 feet; 1.5 inch trap max 3.5 feet; 2 inch trap max 5 feet; 3 inch trap max 6 feet; 4 inch trap max 10 feet; all at 1/4 inch per foot slope; trap arm is distance from trap weir to vent
+Florida DWV pipe materials approved FPC chapter 6: PVC DWV schedule 40 ASTM D2665; ABS DWV ASTM D2661; cast iron hub and spigot CISPI 301; cast iron hubless CISPI 301; copper DWV ASTM B306; galvanized steel ASTM A53 existing only; PEX not approved for DWV in florida; CPVC not approved for DWV in florida
+FL slab construction DWV: under-slab inspection required before pour in most FL counties; rough-in inspection separate from final inspection; Miami-Dade requires separate MEP inspections; no PVC exposed above ground unless UV-rated or protected; cleanout required at or near foundation per FPC 708.5
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// FPC Table 709.1 fixture units [name, DFU_drainage, trap_size_inches]
+const FIXTURES=[
+  ['Bathtub / Shower stall',2,1.5],
+  ['Bathroom lavatory / sink',1,1.25],
+  ['Bidet',1,1.5],
+  ['Clothes washer (domestic)',2,2],
+  ['Dishwasher (domestic)',2,1.5],
+  ['Floor drain (2" trap)',2,2],
+  ['Kitchen sink (single/double)',2,1.5],
+  ['Laundry tub / utility sink',2,1.5],
+  ['Mop / service sink',3,3],
+  ['Toilet — flush tank (4 DFU)',4,3],
+  ['Toilet — flush valve (6 DFU)',6,3],
+  ['Urinal — flush valve',4,2],
+  ['Drinking fountain',1,1.25],
+  ['Shower — gang (per head)',2,2],
+  ['Restaurant 3-comp sink',3,2],
+];
+
+let fixCounts=new Array(FIXTURES.length).fill(0);
+
+function buildFixtures(){
+  let h='';
+  FIXTURES.forEach((f,i)=>{
+    h+=`<div class="fixture-row"><div><div class="fixture-name">${esc(f[0])}</div><div class="fixture-sub">${f[1]} DFU | ${f[2]}" trap</div></div>
+    <div class="stepper">
+      <div class="step-btn" onclick="adjFix(${i},-1)">−</div>
+      <div class="step-val" id="fv-${i}">0</div>
+      <div class="step-btn" onclick="adjFix(${i},1)">+</div>
+    </div></div>`;
+  });
+  document.getElementById('fixture-list').innerHTML=h;
+}
+
+function adjFix(i,d){
+  fixCounts[i]=Math.max(0,fixCounts[i]+d);
+  document.getElementById('fv-'+i).textContent=fixCounts[i];
+  updateDFU();
+}
+
+function updateDFU(){
+  let total=0;
+  FIXTURES.forEach((f,i)=>total+=fixCounts[i]*f[1]);
+  document.getElementById('total-dfu').textContent=total+' DFU';
+  return total;
+}
+
+// FPC Table 710.1 [pipe_size_inches, max_dfu_at_1/8, max_dfu_at_1/4]
+const DRAIN_TABLE=[
+  [1.5,1,3],[2,8,14],[2.5,24,42],[3,48,84],[4,144,250],[5,240,425],[6,400,700],[8,1100,1920]
+];
+
+function calcDrain(){
+  const dfu=updateDFU();
+  if(dfu===0){alert('Add at least one fixture.');return;}
+
+  let rec14=null,rec18=null;
+  DRAIN_TABLE.forEach(row=>{
+    if(!rec14&&row[2]>=dfu)rec14=row;
+    if(!rec18&&row[1]>=dfu)rec18=row;
+  });
+
+  const metrics=[
+    {val:dfu,lbl:'Total DFU Load',cls:'red',sub:'FPC Table 709.1'},
+    {val:rec14?rec14[0]+'"':'8"+',lbl:'Min Size @ ¼"/ft',cls:'pass',sub:'Standard slope'},
+    {val:rec18?rec18[0]+'"':'8"+',lbl:'Min Size @ ⅛"/ft',cls:'info',sub:'Low slope option'},
+    {val:rec14?rec14[2]:'>1920',lbl:'Capacity (¼" slope)',cls:'info',sub:'DFU available'}
+  ];
+
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(String(m.val))}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('drain-metrics').innerHTML=mHtml;
+
+  let recHtml='';
+  if(rec14){
+    recHtml=`<div class="alert alert-ok" style="margin-top:10px">✅ Use minimum <strong>${rec14[0]}" pipe at ¼"/ft slope</strong> (${rec14[2]} DFU capacity) for this ${dfu} DFU load.</div>`;
+    if(rec14[0]>=3&&dfu<rec18[2]){
+      recHtml+=`<div class="alert alert-blue" style="margin-top:6px">ℹ️ Can also use <strong>${rec18[0]}" at ⅛"/ft slope</strong> if flat grade requires — capacity ${rec18[1]} DFU (FPC 704.1 permits for 4"+ pipe).</div>`;
+    }
+  }
+
+  document.getElementById('drain-rec').innerHTML=recHtml;
+  document.getElementById('drain-notes').innerHTML='<div style="font-size:.72rem;color:#94A3B8;margin-top:8px">Reference: FPC Table 709.1 (fixture units) and FPC Table 710.1 (horizontal drain capacity). Verify with FL licensed plumbing contractor before permit submission.</div>';
+  document.getElementById('drain-result').classList.add('show');
+}
+
+// TRAP ARM LIMITS [trap_size_inches, max_arm_ft]
+const TRAP_LIMITS=[[1.25,2.5],[1.5,3.5],[2,5],[3,6],[4,10]];
+
+function checkTrap(){
+  const sz=parseFloat(document.getElementById('trap-size').value);
+  const len=parseFloat(document.getElementById('trap-len').value);
+  const limit=TRAP_LIMITS.find(t=>t[0]===sz)||[sz,5];
+  const ok=len<=limit[1];
+  const margin=(limit[1]-len).toFixed(1);
+
+  let html='';
+  if(ok){
+    html=`<div class="alert alert-ok">✅ Trap arm OK — ${len} ft is within the ${limit[1]} ft maximum for ${sz}" trap (FPC 909.2). Margin: ${margin} ft remaining.</div>`;
+  } else {
+    html=`<div class="alert alert-red">🚨 Trap arm too long — ${len} ft exceeds the ${limit[1]} ft maximum for a ${sz}" trap (FPC 909.2). Excess: ${Math.abs(margin)} ft. Options: move vent closer, upsize trap/arm, or use AAV (FPC 918) if accessible location is available.</div>`;
+  }
+  document.getElementById('trap-status').innerHTML=html;
+  document.getElementById('trap-result').classList.add('show');
+}
+
+function calcSlope(){
+  const len=parseFloat(document.getElementById('slope-len').value)||20;
+  const rate=parseFloat(document.getElementById('slope-rate').value);
+  const pipe=document.getElementById('slope-pipe').value;
+
+  const totalDrop=len*rate*12; // inches
+  const totalDropFt=len*rate; // feet
+  const slopeLabel=rate===0.0104?'⅛" per foot':rate===0.0208?'¼" per foot':rate===0.03125?'⁵⁄₁₆" per foot':'½" per foot';
+
+  // Check code compliance
+  const minSlope=parseFloat(pipe)<=3?0.0208:0.0104;
+  const slopeOK=rate>=minSlope;
+
+  const metrics=[
+    {val:totalDrop.toFixed(2)+'"',lbl:'Total Drop',cls:'red',sub:`Over ${len} ft run`},
+    {val:totalDropFt.toFixed(3)+"'",lbl:'Drop in Feet',cls:'info',sub:'Same as above'},
+    {val:slopeLabel,lbl:'Slope Used',cls:slopeOK?'pass':'fail',sub:slopeOK?'FPC compliant':'Check FPC 704.1'},
+    {val:(rate*100).toFixed(2)+'%',lbl:'Grade (%)',cls:'info',sub:'Percent grade'}
+  ];
+
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('slope-metrics').innerHTML=mHtml;
+
+  // Multi-slope comparison
+  let tHtml='<div style="margin-top:10px"><div style="font-size:.78rem;font-weight:700;color:#94A3B8;margin-bottom:6px">ALL SLOPES — '+len+' FT RUN</div>';
+  [[0.0104,'⅛"/ft'],[0.0208,'¼"/ft'],[0.03125,'⁵⁄₁₆"/ft'],[0.0417,'½"/ft']].forEach(([r,lbl])=>{
+    const drop=(len*r*12).toFixed(2);
+    const active=r===rate;
+    tHtml+=`<div class="slope-row"><span class="sl">${lbl}</span><span class="sv" style="${active?'color:#EF4444':''}">${drop}" drop</span></div>`;
+  });
+  tHtml+='</div>';
+  document.getElementById('slope-table').innerHTML=tHtml;
+
+  let notesHtml='';
+  if(!slopeOK){
+    notesHtml=`<div class="alert alert-red" style="margin-top:8px">🚨 FPC 704.1: ${pipe}" pipe requires minimum ¼" per foot slope (${parseFloat(pipe)<=3?'pipe ≤3"':'see code'}). Current slope of ${slopeLabel} is insufficient.</div>`;
+  } else {
+    notesHtml=`<div class="alert alert-ok" style="margin-top:8px">✅ Slope compliant with FPC 704.1. Install pipe at ${slopeLabel}; total drop over ${len} ft = ${totalDrop.toFixed(2)}".</div>`;
+  }
+  document.getElementById('slope-notes').innerHTML=notesHtml;
+  document.getElementById('slope-result').classList.add('show');
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['drain','slope','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+buildFixtures();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+<!-- fl-plumbing-seo: dwv drain sizing calculator florida FPC table-709.1 fixture-units FPC table-710.1 horizontal-drain capacity slope 1/4-inch per-foot trap-arm FPC-909.2 vent-sizing wet-vent AAV slab-construction florida plumbing code DWV rough-in -->
+
+</div>
+</body>
+</html>

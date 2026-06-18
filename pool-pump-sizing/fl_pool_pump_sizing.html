@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Pool Pump & Circulation Calculator | DEP Turnover Rate | FL Pool Code</title>
+<meta name="description" content="Calculate Florida pool pump sizing using DEP turnover rate requirements, pool volume by shape, pump HP sizing via TDH, filter sizing, and variable-speed pump energy code for all 67 FL counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#F4B942;color:#0A0E1A;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#F4B942;border-bottom-color:#F4B942}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#F4B942;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#F4B942}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#F4B942;color:#0A0E1A}
+.btn-primary:hover{background:#e6ab35}
+.result-box{background:#141929;border:1px solid #F4B942;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.25rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.68rem;margin-top:2px}
+.metric.gold .mv{color:#F4B942}
+.metric.pass .mv{color:#22C55E}
+.metric.fail .mv{color:#EF4444}
+.metric.warn .mv{color:#F97316}
+.metric.info .mv{color:#00B4FF}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-gold{background:rgba(244,185,66,.12);border:1px solid rgba(244,185,66,.4);color:#F4B942}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.pipe-table{width:100%;border-collapse:collapse;margin-top:8px}
+.pipe-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:5px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.pipe-table td{font-size:.72rem;color:#E2E8F0;padding:6px 8px;border-bottom:1px solid #0F1629}
+.pipe-table tr:hover td{background:#141929}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#F4B942;border-color:#F4B942}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#0A0E1A;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#F4B942;transition:width .4s}
+.pump-card{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:12px;margin-top:8px}
+.pump-card h4{font-size:.78rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.pump-spec{display:flex;justify-content:space-between;margin:3px 0;font-size:.72rem}
+.pump-spec .pk{color:#94A3B8}.pump-spec .pv{color:#E2E8F0;font-weight:600}
+.recommended{border-color:#F4B942}
+.shape-diagram{background:#141929;border-radius:8px;padding:12px;text-align:center;margin-top:8px}
+.shape-diagram svg{display:block;margin:0 auto}
+.shape-label{font-size:.7rem;color:#94A3B8;margin-top:6px}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#F4B942}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.shape-btn-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.shape-btn{background:#141929;border:1px solid #1E293B;border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer;transition:.2s}
+.shape-btn:hover,.shape-btn.active{border-color:#F4B942;background:#1E293B}
+.shape-btn .sico{font-size:1.2rem}
+.shape-btn .slbl{font-size:.65rem;color:#94A3B8;margin-top:3px}
+.fields-rect,.fields-round,.fields-oval,.fields-l,.fields-kidney,.fields-irreg{display:none}
+.fields-rect.show,.fields-round.show,.fields-oval.show,.fields-l.show,.fields-kidney.show,.fields-irreg.show{display:block}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🌊 FL Pool Pump & Circulation Calculator</h1>
+  <p>Pool volume, DEP turnover rate, pump HP sizing via TDH, filter sizing, and FL energy code</p>
+  <span class="badge">FL DEP CHAPTER 64E-9 COMPLIANT</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('volume')">Pool Volume</div>
+  <div class="tab" onclick="showTab('pump')">Pump Sizing</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: POOL VOLUME & TURNOVER -->
+<div id="tab-volume" class="panel active">
+  <div class="card">
+    <div class="card-title">🏊 Pool Shape & Volume Calculator</div>
+    <div class="shape-btn-row">
+      <div class="shape-btn active" id="sb-rect" onclick="setShape('rect')"><div class="sico">▭</div><div class="slbl">Rectangle</div></div>
+      <div class="shape-btn" id="sb-round" onclick="setShape('round')"><div class="sico">●</div><div class="slbl">Round</div></div>
+      <div class="shape-btn" id="sb-oval" onclick="setShape('oval')"><div class="sico">⬮</div><div class="slbl">Oval</div></div>
+      <div class="shape-btn" id="sb-l" onclick="setShape('l')"><div class="sico">⌐</div><div class="slbl">L-Shape</div></div>
+      <div class="shape-btn" id="sb-kidney" onclick="setShape('kidney')"><div class="sico">☽</div><div class="slbl">Kidney</div></div>
+      <div class="shape-btn" id="sb-irreg" onclick="setShape('irreg')"><div class="sico">⬡</div><div class="slbl">Freeform</div></div>
+    </div>
+
+    <!-- Rectangle -->
+    <div class="fields-rect show" id="flds-rect">
+      <div class="row2">
+        <div><label>Length (ft)</label><input type="number" id="r-len" value="30" min="4" max="200"></div>
+        <div><label>Width (ft)</label><input type="number" id="r-wid" value="15" min="4" max="100"></div>
+      </div>
+      <div class="row2">
+        <div><label>Shallow Depth (ft)</label><input type="number" id="r-sd" value="3.5" min="1" max="8" step="0.5"></div>
+        <div><label>Deep Depth (ft)</label><input type="number" id="r-dd" value="6" min="1" max="16" step="0.5"></div>
+      </div>
+    </div>
+
+    <!-- Round -->
+    <div class="fields-round" id="flds-round">
+      <div class="row2">
+        <div><label>Diameter (ft)</label><input type="number" id="ro-dia" value="24" min="4" max="60"></div>
+        <div><label>Average Depth (ft)</label><input type="number" id="ro-dep" value="4" min="1" max="12" step="0.5"></div>
+      </div>
+    </div>
+
+    <!-- Oval -->
+    <div class="fields-oval" id="flds-oval">
+      <div class="row2">
+        <div><label>Length (ft)</label><input type="number" id="ov-len" value="30" min="4" max="100"></div>
+        <div><label>Width (ft)</label><input type="number" id="ov-wid" value="18" min="4" max="60"></div>
+      </div>
+      <div><label>Average Depth (ft)</label><input type="number" id="ov-dep" value="4.5" min="1" max="16" step="0.5"></div>
+    </div>
+
+    <!-- L-Shape -->
+    <div class="fields-l" id="flds-l">
+      <div class="row2">
+        <div><label>Section 1 Length (ft)</label><input type="number" id="l-l1" value="20" min="4" max="100"></div>
+        <div><label>Section 1 Width (ft)</label><input type="number" id="l-w1" value="12" min="4" max="60"></div>
+      </div>
+      <div class="row2">
+        <div><label>Section 2 Length (ft)</label><input type="number" id="l-l2" value="12" min="4" max="100"></div>
+        <div><label>Section 2 Width (ft)</label><input type="number" id="l-w2" value="10" min="4" max="60"></div>
+      </div>
+      <div><label>Average Depth (ft)</label><input type="number" id="l-dep" value="4.5" min="1" max="16" step="0.5"></div>
+    </div>
+
+    <!-- Kidney -->
+    <div class="fields-kidney" id="flds-kidney">
+      <div class="row2">
+        <div><label>Length (ft)</label><input type="number" id="k-len" value="28" min="4" max="100"></div>
+        <div><label>Max Width (ft)</label><input type="number" id="k-wid" value="14" min="4" max="60"></div>
+      </div>
+      <div><label>Average Depth (ft)</label><input type="number" id="k-dep" value="4.5" min="1" max="16" step="0.5"></div>
+    </div>
+
+    <!-- Freeform / Irregular -->
+    <div class="fields-irreg" id="flds-irreg">
+      <label>Surface Area (sq ft)</label>
+      <input type="number" id="irr-area" value="450" min="50" max="5000">
+      <label>Average Depth (ft)</label>
+      <input type="number" id="irr-dep" value="4.5" min="1" max="16" step="0.5">
+    </div>
+
+    <label style="margin-top:12px">Pool Type</label>
+    <select id="pool-type">
+      <option value="residential">Residential (private)</option>
+      <option value="semi-public">Semi-public (HOA, hotel ≤50 units)</option>
+      <option value="public">Public / commercial (FL DEP 64E-9)</option>
+    </select>
+
+    <label>FL County</label>
+    <select id="vol-county">
+      <option value="miami-dade">Miami-Dade</option><option value="broward">Broward</option>
+      <option value="palm-beach">Palm Beach</option><option value="hillsborough" selected>Hillsborough</option>
+      <option value="orange">Orange</option><option value="pinellas">Pinellas</option>
+      <option value="duval">Duval</option><option value="lee">Lee</option>
+      <option value="sarasota">Sarasota</option><option value="collier">Collier</option>
+      <option value="other">Other FL County</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcVolume()">Calculate Volume & Turnover</button>
+
+    <div class="result-box" id="vol-result">
+      <div style="font-size:.85rem;font-weight:700;color:#F4B942;margin-bottom:6px">Volume & Turnover Results</div>
+      <div class="metrics-grid" id="vol-metrics"></div>
+      <div id="vol-notes"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: PUMP SIZING -->
+<div id="tab-pump" class="panel">
+  <div class="card">
+    <div class="card-title">⚙️ Pump & Filter Sizing</div>
+
+    <label>Required Flow Rate (GPM)</label>
+    <input type="number" id="p-gpm" value="55" min="10" max="500">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:4px">Use Volume tab to calculate required GPM, or enter directly.</p>
+
+    <label>Total Dynamic Head (TDH) — ft</label>
+    <input type="number" id="p-tdh" value="50" min="10" max="150">
+
+    <div class="info-block" style="margin-top:8px;margin-bottom:0">
+      <p style="font-size:.7rem"><strong>TDH Quick Estimate:</strong> Typical residential = 40–60 ft. Commercial = 50–80 ft. Add 10 ft for each 100 ft of pipe run, 5 ft per 90° elbow, 10 ft for heater, 5 ft for filter, 15 ft for slide/waterfeature.</p>
+    </div>
+
+    <label>Filter Type</label>
+    <select id="p-filter">
+      <option value="sand">Sand filter</option>
+      <option value="de" selected>Diatomaceous earth (DE)</option>
+      <option value="cartridge">Cartridge filter</option>
+    </select>
+
+    <label>Pool Volume (gallons)</label>
+    <input type="number" id="p-vol" value="22500" min="1000" max="1000000">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:4px">From Volume tab result.</p>
+
+    <label>Pump Type</label>
+    <select id="p-pumptype">
+      <option value="vs" selected>Variable-speed (required in FL per F.A.C.)</option>
+      <option value="single">Single-speed (replacement only)</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcPump()">Size Pump & Filter</button>
+
+    <div class="result-box" id="pump-result">
+      <div style="font-size:.85rem;font-weight:700;color:#F4B942;margin-bottom:6px">Pump Sizing Results</div>
+      <div class="metrics-grid" id="pump-metrics"></div>
+      <div id="pump-recs"></div>
+      <div id="pump-filter-notes"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔌 Variable-Speed Pump Reference (FL Energy Code)</div>
+    <div class="info-block">
+      <p><strong>Florida Statute 553.909 / F.A.C. 61G15-30.003:</strong> Effective January 1, 2021, all new pool pump installations in FL for pools with ≥1 HP pump require variable-speed pumps (VSP). This applies to both residential and commercial pools.</p>
+      <p style="margin-top:6px"><strong>VSP energy savings:</strong> Running at 1,750 RPM instead of 3,450 RPM reduces energy use by up to 70% (affinity law: power ∝ RPM³). Typical savings: $600–$1,200/year for FL residential pools.</p>
+      <p style="margin-top:6px"><strong>Approved brands (FL market leaders):</strong></p>
+    </div>
+    <table class="pipe-table" style="margin-top:6px">
+      <thead><tr><th>Brand / Model</th><th>HP Range</th><th>Use Case</th><th>SVRS</th></tr></thead>
+      <tbody>
+        <tr><td>Pentair IntelliFlo3</td><td>0.5–3 HP</td><td>Residential</td><td>Built-in</td></tr>
+        <tr><td>Hayward EcoStar</td><td>0.85–1.85 HP</td><td>Residential</td><td>Available</td></tr>
+        <tr><td>Jandy VS FloPro</td><td>0.5–2.7 HP</td><td>Residential</td><td>Built-in</td></tr>
+        <tr><td>Pentair WhisperFlo VST</td><td>1–3 HP</td><td>Semi-public</td><td>Yes</td></tr>
+        <tr><td>Hayward MaxFlo VS</td><td>1–1.65 HP</td><td>Residential</td><td>Available</td></tr>
+        <tr><td>Sta-Rite IntelliPro VS+</td><td>2–3 HP</td><td>Commercial</td><td>Built-in</td></tr>
+      </tbody>
+    </table>
+    <div class="info-block" style="margin-top:8px">
+      <p><strong>SVRS (Safety Vacuum Release System):</strong> Required by VGB Act for all public pools and strongly recommended for residential. Shuts pump off if drain blockage is detected (anti-entrapment). Required for FL commercial pools under 64E-9.005.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FL Pool Code — Key Requirements</div>
+
+    <div class="section-title">FL DEP Chapter 64E-9 (Public Pools)</div>
+    <div class="info-block">
+      <p><strong>64E-9.005 — Turnover rates (public/semi-public pools):</strong></p>
+      <p>• Swimming pools: 6-hour turnover (residential / HOA)<br>
+      • Wading pools / splash pads: 1-hour turnover<br>
+      • Spa / hot tub: 30-minute turnover<br>
+      • Interactive water feature: 2-hour turnover<br>
+      • Therapy pools: 4-hour turnover</p>
+      <p style="margin-top:6px"><strong>64E-9.004 — Filtration:</strong> All public pools in FL require continuous filtration during hours of operation. Sand filter max rate: 3 GPM/sq ft. DE filter max rate: 2 GPM/sq ft. Cartridge filter max rate: 0.375 GPM/sq ft.</p>
+      <p style="margin-top:6px"><strong>64E-9.006 — Chemical treatment:</strong> Chlorine minimum 1.0 ppm (public), pH 7.2–7.8, cyanuric acid max 100 ppm. Saltwater chlorination allowed as of 2011 FL rule change.</p>
+    </div>
+
+    <div class="section-title">FL Building Code — Pool Plumbing</div>
+    <div class="info-block">
+      <p><strong>FBC 4.7.1 — Barrier requirements:</strong> All residential pools in FL require a 4-ft minimum pool barrier (fence, wall, or screen enclosure) per FBC Section 454. Most FL counties enforce the screen enclosure requirement via local ordinance.</p>
+      <p style="margin-top:6px"><strong>FBC 454.2.17.1 — Main drain:</strong> All pool main drains must have anti-entrapment drain covers compliant with ANSI/APSP-16. VGB-compliant covers required. Dual main drains (min 3 ft apart) or SVRS required per VGB Pool & Spa Safety Act.</p>
+      <p style="margin-top:6px"><strong>FL Statute 553.909 — Variable-speed pumps:</strong> All new pool pump installations ≥1 HP require variable-speed pump. Effective January 1, 2021. Applies statewide.</p>
+    </div>
+
+    <div class="section-title">Filter Sizing Reference</div>
+    <table class="pipe-table">
+      <thead><tr><th>Filter Type</th><th>Max Flow Rate</th><th>1,000 gal pool needs</th><th>Backwash</th></tr></thead>
+      <tbody>
+        <tr><td>Sand</td><td>3.0 GPM/sq ft</td><td>~0.3 sq ft/1k gal</td><td>Weekly</td></tr>
+        <tr><td>DE</td><td>2.0 GPM/sq ft</td><td>~0.5 sq ft/1k gal</td><td>Monthly</td></tr>
+        <tr><td>Cartridge</td><td>0.375 GPM/sq ft</td><td>~2.7 sq ft/1k gal</td><td>Never (clean)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Pool Permit Checklist (FL)</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">FL pool permit pulled from local building department <span class="check-sub">FBC 454 — permit required for all new pools, equipment replacements, and major renovations in FL</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Variable-speed pump specified (≥1 HP) <span class="check-sub">FL Statute 553.909 — VSP mandatory for all new/replacement pumps ≥1 HP statewide since Jan 2021</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Anti-entrapment drain covers (VGB-compliant) <span class="check-sub">FBC 454.2.17.1 — ANSI/APSP-16 covers + dual main drains or SVRS for all pools</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Pool barrier / screen enclosure compliant with FBC Section 454 <span class="check-sub">4-ft minimum barrier required; most FL counties require screen enclosure for permitted pools</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Turnover rate meets FL DEP 64E-9 requirements <span class="check-sub">Public/semi-public: 6-hour turnover for swimming pools; verify pump+filter can achieve required GPM</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Pool heater (if present) permits and gas piping sized <span class="check-sub">FL permits required for gas heater; pool heater adds ~10 ft TDH to system; gas sizing per NFPA 54</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Bonding and grounding per NEC 680 <span class="check-sub">All metal within 5 ft of pool water bonded; equipotential bonding grid for concrete pools; FL electrical inspection required</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Suction outlets separated ≥3 ft (or SVRS) <span class="check-sub">VGB Act — dual drains min 3 ft apart measured center-to-center; SVRS as alternative for single drain</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Saltwater / chlorinator system FL code compliant <span class="check-sub">Salt chlorinators allowed in FL since 2011; cyanuric acid max 100 ppm for public pools per 64E-9.006</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 9 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a Pool Plumbing Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Polk</option><option>Seminole</option>
+      <option>Other</option>
+    </select>
+
+    <label>Service Needed</label>
+    <select id="q-service">
+      <option>Variable-speed pump installation</option>
+      <option>New pool plumbing — full installation</option>
+      <option>Pool pump replacement</option>
+      <option>Filter sizing and installation</option>
+      <option>Pool heater connection</option>
+      <option>Salt chlorinator plumbing</option>
+      <option>Pool leak diagnosis</option>
+      <option>Main drain replacement (VGB compliance)</option>
+      <option>Pool renovation re-plumb</option>
+    </select>
+
+    <label>Pool Size (approx gallons or sq ft)</label>
+    <input type="text" id="q-size" placeholder="e.g. 20,000 gal or 15x30 ft">
+
+    <label>Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="Describe your pool project or current issue..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Consultation</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | FL Licensed Pool & Plumbing Contractor | CPC1234567 / CPC5678910</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🌊</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+florida pool pump sizing calculator, FL DEP 64E-9 turnover rate, pool volume calculator florida, pool gallons calculator shape, GPM pump sizing florida pool, total dynamic head pool pump florida, variable speed pool pump florida required, FL statute 553.909 variable speed pump, pool filter sizing florida, DE filter sand filter cartridge filter florida, anti-entrapment drain VGB pool florida, pool permit florida FBC 454, pool screen enclosure florida, pool bonding NEC 680 florida, pool heater gas sizing florida, salt chlorinator florida pool, saltwater pool florida, pool circulation florida, residential pool turnover 6 hours florida, commercial pool turnover florida DEP, pool pump HP sizing TDH method, pentair intelliflo florida pool, hayward ecostar florida, jandy VS FloPro florida, SVRS pool safety vacuum release florida, pool plumber florida licensed, dual main drain florida pool, pool construction permit florida counties, spa hot tub turnover 30 minute florida DEP
+Pool volume formulas: rectangle length x width x average depth x 7.48 gallons per cubic foot; round pi times radius squared times depth times 7.48; oval 0.7854 times length times width times depth times 7.48; kidney 0.85 times length times width times depth times 7.48; L-shape sum of two rectangles
+FL DEP 64E-9 turnover requirements: swimming pool 6 hours; wading pool 1 hour; spa hot tub 30 minutes; interactive water feature 2 hours; therapy pool 4 hours; turnover rate means full volume of water passes through filter
+Pool pump sizing method: required GPM equals pool volume in gallons divided by turnover hours divided by 60; TDH total dynamic head includes pipe friction static lift fitting losses filter resistance heater spa jets; pump BHP equals GPM times TDH divided by 3960 divided by efficiency; typical efficiency 0.65 to 0.80; select next standard HP above calculated BHP
+Filter sizing by type: sand filter max 3 GPM per square foot of filter area; DE diatomaceous earth filter max 2 GPM per square foot; cartridge filter max 0.375 GPM per square foot; minimum filter area equals required GPM divided by max filter rate
+Florida pool energy code: variable speed pump required for all new installs 1 HP and above since January 1 2021; affinity law power proportional to cube of speed ratio; 50 percent speed reduction equals 87.5 percent power reduction; typical VSP saves 600 to 1200 dollars per year in florida
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+let currentShape='rect';
+
+function setShape(s){
+  currentShape=s;
+  document.querySelectorAll('.shape-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sb-'+s).classList.add('active');
+  const flds=['rect','round','oval','l','kidney','irreg'];
+  flds.forEach(f=>{
+    const el=document.getElementById('flds-'+f);
+    if(el)el.classList.toggle('show',f===s);
+  });
+}
+
+function getVolGallons(){
+  const GAL_PER_CUFT=7.48;
+  const PI=Math.PI;
+  let vol=0;
+  if(currentShape==='rect'){
+    const len=parseFloat(document.getElementById('r-len').value)||30;
+    const wid=parseFloat(document.getElementById('r-wid').value)||15;
+    const sd=parseFloat(document.getElementById('r-sd').value)||3.5;
+    const dd=parseFloat(document.getElementById('r-dd').value)||6;
+    const avgDep=(sd+dd)/2;
+    vol=len*wid*avgDep*GAL_PER_CUFT;
+  } else if(currentShape==='round'){
+    const dia=parseFloat(document.getElementById('ro-dia').value)||24;
+    const dep=parseFloat(document.getElementById('ro-dep').value)||4;
+    vol=PI*(dia/2)*(dia/2)*dep*GAL_PER_CUFT;
+  } else if(currentShape==='oval'){
+    const len=parseFloat(document.getElementById('ov-len').value)||30;
+    const wid=parseFloat(document.getElementById('ov-wid').value)||18;
+    const dep=parseFloat(document.getElementById('ov-dep').value)||4.5;
+    vol=0.7854*len*wid*dep*GAL_PER_CUFT;
+  } else if(currentShape==='l'){
+    const l1=parseFloat(document.getElementById('l-l1').value)||20;
+    const w1=parseFloat(document.getElementById('l-w1').value)||12;
+    const l2=parseFloat(document.getElementById('l-l2').value)||12;
+    const w2=parseFloat(document.getElementById('l-w2').value)||10;
+    const dep=parseFloat(document.getElementById('l-dep').value)||4.5;
+    vol=(l1*w1+l2*w2)*dep*GAL_PER_CUFT;
+  } else if(currentShape==='kidney'){
+    const len=parseFloat(document.getElementById('k-len').value)||28;
+    const wid=parseFloat(document.getElementById('k-wid').value)||14;
+    const dep=parseFloat(document.getElementById('k-dep').value)||4.5;
+    vol=0.85*len*wid*dep*GAL_PER_CUFT; // kidney constant
+  } else if(currentShape==='irreg'){
+    const area=parseFloat(document.getElementById('irr-area').value)||450;
+    const dep=parseFloat(document.getElementById('irr-dep').value)||4.5;
+    vol=area*dep*GAL_PER_CUFT;
+  }
+  return Math.round(vol);
+}
+
+function calcVolume(){
+  const gal=getVolGallons();
+  const ptype=document.getElementById('pool-type').value;
+
+  // Turnover hours by type
+  const turnoverHrs=ptype==='public'?6:ptype==='semi-public'?6:8;
+  const reqGPM=gal/turnoverHrs/60;
+  const spaGPM=gal/0.5/60; // for reference
+
+  const metrics=[
+    {val:gal.toLocaleString(),lbl:'Pool Volume',cls:'gold',sub:'gallons'},
+    {val:reqGPM.toFixed(1),lbl:'Required GPM',cls:'pass',sub:`${turnoverHrs}-hr turnover`},
+    {val:turnoverHrs+' hrs',lbl:'Turnover Rate',cls:'info',sub:ptype==='public'?'FL DEP 64E-9':'Recommended'},
+    {val:Math.round(gal/turnoverHrs/60*60)+' gal/hr',lbl:'Flow Rate',cls:'gold',sub:'Per hour required'}
+  ];
+
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(String(m.val))}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('vol-metrics').innerHTML=mHtml;
+
+  let notesHtml=`<div class="alert alert-gold" style="margin-top:10px">🌊 ${gal.toLocaleString()} gallon pool requires <strong>${reqGPM.toFixed(1)} GPM minimum</strong> to achieve ${turnoverHrs}-hour turnover. Enter this GPM in the Pump Sizing tab.</div>`;
+
+  if(ptype!=='residential'){
+    notesHtml+=`<div class="alert alert-blue" style="margin-top:6px">📋 FL DEP 64E-9: Public/semi-public pools must achieve 6-hour turnover minimum. Your calculated ${reqGPM.toFixed(1)} GPM meets this requirement for a ${gal.toLocaleString()} gallon pool.</div>`;
+  }
+
+  // Pre-fill pump tab
+  document.getElementById('p-gpm').value=Math.ceil(reqGPM);
+  document.getElementById('p-vol').value=gal;
+
+  document.getElementById('vol-notes').innerHTML=notesHtml;
+  document.getElementById('vol-result').classList.add('show');
+}
+
+function calcPump(){
+  const gpm=parseFloat(document.getElementById('p-gpm').value)||55;
+  const tdh=parseFloat(document.getElementById('p-tdh').value)||50;
+  const filterType=document.getElementById('p-filter').value;
+  const poolVol=parseFloat(document.getElementById('p-vol').value)||22500;
+  const pumpType=document.getElementById('p-pumptype').value;
+
+  // Pump HP: BHP = GPM × TDH / (3960 × efficiency)
+  const eff=0.70;
+  const bhp=gpm*tdh/(3960*eff);
+  // Next standard HP
+  const stdHPs=[0.5,0.75,1.0,1.25,1.5,2.0,2.5,3.0,5.0];
+  const recHP=stdHPs.find(h=>h>=bhp)||5.0;
+
+  // Filter sizing
+  const maxRates={sand:3.0,de:2.0,cartridge:0.375};
+  const maxRate=maxRates[filterType];
+  const minFilterSqFt=gpm/maxRate;
+  const filterLabel={sand:'Sand',de:'DE (Diatomaceous Earth)',cartridge:'Cartridge'}[filterType];
+
+  const metrics=[
+    {val:bhp.toFixed(2)+' BHP',lbl:'Calc. Brake HP',cls:'gold',sub:'Min pump HP needed'},
+    {val:recHP+' HP',lbl:'Recommended HP',cls:'pass',sub:'Next standard size'},
+    {val:minFilterSqFt.toFixed(1)+' sq ft',lbl:'Min Filter Area',cls:'info',sub:filterLabel+' required'},
+    {val:gpm+' GPM',lbl:'Design Flow',cls:'gold',sub:'At '+tdh+' ft TDH'}
+  ];
+
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('pump-metrics').innerHTML=mHtml;
+
+  // Pump recommendations
+  let recsHtml='<div style="margin-top:10px"><div style="font-size:.78rem;font-weight:700;color:#94A3B8;margin-bottom:8px">RECOMMENDED PUMPS</div>';
+
+  const pumps=[
+    {name:'Pentair IntelliFlo3 VST',hp:'1.5–3 HP',gpmRange:'40–120 GPM',best:recHP>=1.5&&recHP<=3,notes:'Most popular FL residential VSP; built-in timer/scheduler'},
+    {name:'Hayward EcoStar VS',hp:'0.85–1.85 HP',gpmRange:'30–90 GPM',best:recHP<=1.85&&recHP>=0.85,notes:'Energy Star certified; quiet 8-speed operation'},
+    {name:'Jandy VS FloPro 1.5',hp:'1.5 HP',gpmRange:'30–100 GPM',best:recHP===1.5,notes:'Compact design; good for tight equipment pads'},
+    {name:'Pentair WhisperFlo VST 2HP',hp:'2 HP',gpmRange:'50–150 GPM',best:recHP===2.0,notes:'Commercial-grade; high flow for spa or waterfall'},
+    {name:'Sta-Rite IntelliPro VS+SVRS',hp:'3 HP',gpmRange:'75–200 GPM',best:recHP>=2.5,notes:'Built-in SVRS; ideal for commercial pools'},
+  ];
+
+  pumps.forEach(p=>{
+    const isBest=p.best;
+    recsHtml+=`<div class="pump-card ${isBest?'recommended':''}">
+      <h4>${esc(p.name)}${isBest?' ⭐':''}</h4>
+      <div class="pump-spec"><span class="pk">Horsepower</span><span class="pv">${esc(p.hp)}</span></div>
+      <div class="pump-spec"><span class="pk">Flow Range</span><span class="pv">${esc(p.gpmRange)}</span></div>
+      <div class="pump-spec"><span class="pk">Notes</span><span class="pv">${esc(p.notes)}</span></div>
+    </div>`;
+  });
+  recsHtml+='</div>';
+  document.getElementById('pump-recs').innerHTML=recsHtml;
+
+  // Filter notes
+  let filterHtml=`<div class="alert alert-blue" style="margin-top:10px">🔵 <strong>${filterLabel} filter</strong> minimum ${minFilterSqFt.toFixed(1)} sq ft (max rate: ${maxRate} GPM/sq ft). `;
+  if(filterType==='sand')filterHtml+='Recommend 25%–50% oversizing; sand filters are forgiving but need weekly backwash.';
+  else if(filterType==='de')filterHtml+='DE provides finest filtration (3–5 micron); inspect grids annually. FL coastal pools benefit from DE due to fine sand/dust loading.';
+  else filterHtml+='Cartridge filters need no backwash — clean every 3–6 months. Oversizing by 2x recommended for FL pools (heavy sunscreen/bather load).';
+  filterHtml+='</div>';
+
+  if(pumpType==='single'){
+    filterHtml+=`<div class="alert alert-warn" style="margin-top:8px">⚠️ FL Statute 553.909: Variable-speed pump required for all new installs ≥1 HP since Jan 1, 2021. Single-speed pumps are only permitted as like-for-like replacements and must be ≤1 HP. Consider upgrading to VSP for code compliance and energy savings.</div>`;
+  }
+
+  document.getElementById('pump-filter-notes').innerHTML=filterHtml;
+  document.getElementById('pump-result').classList.add('show');
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['volume','pump','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+<!-- fl-plumbing-seo: pool pump sizing calculator florida DEP 64E-9 turnover-rate pool-volume GPM TDH variable-speed-pump FL-statute-553.909 filter-sizing DE sand cartridge VGB anti-entrapment SVRS pool-permit florida -->
+
+</div>
+</body>
+</html>

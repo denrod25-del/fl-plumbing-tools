@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**146 interactive cost calculators** for Florida homeowners.
+**149 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -31,6 +31,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Drain Field Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-field/fl_drain_field.html)
 - [FL Drain Health Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-health/fl_drain_health.html)
 - [FL Drain Vent Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-vent/fl_drain_vent.html)
+- [FL Dwv Drain Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/dwv-drain-sizing/fl_dwv_drain_sizing.html)
 - [FL Emergency Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/emergency-plumbing/fl_emergency_plumbing.html)
 - [FL Expansion Tank Prv Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/expansion-tank-prv/fl_expansion_tank_prv.html)
 - [FL Expansion Tank Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/expansion-tank/fl_expansion_tank.html)
@@ -92,6 +93,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pool Equipment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-equipment/fl_pool_equipment.html)
 - [FL Pool Heater Gas Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-heater-gas/fl_pool_heater_gas.html)
 - [FL Pool Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-leak/fl_pool_leak.html)
+- [FL Pool Pump Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-pump-sizing/fl_pool_pump_sizing.html)
 - [FL Prv Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/prv-replacement/fl_prv_replacement.html)
 - [FL Radiant Floor Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/radiant-floor/fl_radiant_floor.html)
 - [FL Rainwater Harvesting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rainwater-harvesting/fl_rainwater_harvesting.html)
@@ -107,6 +109,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Septic To Sewer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-to-sewer/fl_septic_to_sewer.html)
 - [FL Septic Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic/fl_septic.html)
 - [FL Sewage Ejector Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewage-ejector/fl_sewage_ejector.html)
+- [FL Sewer Cleanout Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-cleanout-guide/fl_sewer_cleanout_guide.html)
 - [FL Sewer Drain Diagnosis Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-drain-diagnosis/fl_sewer_drain_diagnosis.html)
 - [FL Sewer Line Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-line-cost/fl_sewer_line_cost.html)
 - [FL Sewer Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-line/fl_sewer_line_guide.html)
