@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**140 interactive cost calculators** for Florida homeowners.
+**143 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -44,6 +44,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Gas Line Generator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-generator/fl_gas_line_generator.html)
 - [FL Gas Line Installation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-installation/fl_gas_line_installation.html)
 - [FL Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line/fl_gas_line.html)
+- [FL Gas Meter Demand Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-meter-demand/fl_gas_meter_demand.html)
 - [FL Gas Pressure Test Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-pressure-test/fl_gas_pressure_test.html)
 - [FL Gas Propane Electric Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-propane-electric/fl_gas_propane_electric.html)
 - [FL Gas Tankless Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-tankless-sizing/fl_gas_tankless_sizing.html)
@@ -51,6 +52,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Grease Interceptor Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/grease-interceptor-sizing/fl_grease_interceptor_sizing.html)
 - [FL Grease Trap Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/grease-trap/fl_grease_trap.html)
 - [FL Greywater Conservation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/greywater-conservation/fl_greywater_conservation.html)
+- [FL Grinder Pump Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/grinder-pump-guide/fl_grinder_pump_guide.html)
 - [FL Hard Water Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hard-water-cost/fl_hard_water_cost.html)
 - [FL Home Addition Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/home-addition-plumbing/fl_home_addition_plumbing.html)
 - [FL Home Buyer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/home-buyer/fl_home_buyer_plumbing.html)
@@ -68,6 +70,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Leak Detection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/leak-detection/fl_leak_detection.html)
 - [FL Main Water Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/main-water-line/fl_main_water_line.html)
 - [FL Maintenance Plan Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/maintenance-plan/fl_maintenance_plan.html)
+- [FL Master Shower Demand Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/master-shower-demand/fl_master_shower_demand.html)
 - [FL Medical Dental Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/medical-dental-plumbing/fl_medical_dental_plumbing.html)
 - [FL Mobile Home Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/mobile-home/fl_mobile_home.html)
 - [FL Multi Family Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/multi-family/fl_multi_family.html)

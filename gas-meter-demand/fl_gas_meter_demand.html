@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Natural Gas Meter Sizing & Demand Calculator | Florida Plumbing</title>
+<meta name="description" content="Calculate natural gas meter demand for Florida homes. Total BTU demand calculator, meter adequacy check, FPL Gas Peoples Gas TECO upgrade process, gas demand worksheet for pool heaters generators outdoor kitchens.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.hero{background:linear-gradient(135deg,#0A0E1A 0%,#0F1629 50%,#0A0E1A 100%);padding:24px 16px 16px;text-align:center;border-bottom:1px solid #1E2A45}
+.hero h1{font-size:1.4rem;font-weight:700;color:#F4B942;margin-bottom:6px;line-height:1.3}
+.hero p{font-size:0.85rem;color:#94A3B8;max-width:480px;margin:0 auto}
+.badge{display:inline-block;background:#F4B94222;color:#F4B942;border:1px solid #F4B94244;border-radius:4px;font-size:0.7rem;font-weight:600;padding:2px 8px;margin-bottom:8px;letter-spacing:.05em}
+.tabs{display:flex;background:#0F1629;border-bottom:1px solid #1E2A45;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{flex:1;min-width:80px;padding:12px 8px;text-align:center;font-size:0.75rem;font-weight:600;color:#94A3B8;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab.active{color:#F4B942;border-bottom-color:#F4B942;background:#F4B9420D}
+.tab:hover:not(.active){color:#E2E8F0;background:#1E2A4522}
+.panel{display:none;padding:16px;max-width:480px;margin:0 auto}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2A45;border-radius:10px;padding:14px;margin-bottom:14px}
+.card h3{font-size:0.85rem;font-weight:700;color:#F4B942;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+label{display:block;font-size:0.78rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=text],input[type=tel],input[type=number]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:6px;color:#E2E8F0;padding:9px 10px;font-size:0.82rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#F4B942}
+.btn{width:100%;background:#F4B942;color:#000;border:none;border-radius:8px;padding:12px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:12px;letter-spacing:.02em}
+.btn:hover{background:#E0A830}
+.result-box{background:#141929;border:1px solid #F4B94233;border-radius:8px;padding:14px;margin-top:12px;display:none}
+.result-box.show{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{background:#0F1629;border:1px solid #1E2A45;border-radius:8px;padding:10px;text-align:center}
+.metric-val{font-size:1.1rem;font-weight:700;color:#F4B942}
+.metric-lbl{font-size:0.7rem;color:#94A3B8;margin-top:2px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#94A3B8}
+.info-val{color:#E2E8F0;font-weight:600;text-align:right;max-width:65%}
+.alert{border-radius:8px;padding:10px 12px;font-size:0.78rem;margin-bottom:10px;border:1px solid}
+.alert-warn{background:#F4B94211;border-color:#F4B94244;color:#F4B942}
+.alert-info{background:#F4B94211;border-color:#F4B94244;color:#F4B942}
+.alert-red{background:#EF444411;border-color:#EF444433;color:#EF4444}
+.alert-green{background:#22C55E11;border-color:#22C55E33;color:#22C55E}
+.alert-blue{background:#00B4FF11;border-color:#00B4FF33;color:#00B4FF}
+.step-list{counter-reset:steps;margin-top:8px}
+.step-item{counter-increment:steps;display:flex;gap:10px;margin-bottom:10px;font-size:0.78rem}
+.step-item::before{content:counter(steps);background:#F4B942;color:#000;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;margin-top:1px}
+.step-text{color:#E2E8F0;line-height:1.5}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.check-item:last-child{border-bottom:none}
+.chk{width:16px;height:16px;border-radius:3px;border:2px solid #1E2A45;flex-shrink:0;cursor:pointer;margin-top:1px;background:#141929}
+.chk.checked{background:#F4B942;border-color:#F4B942}
+.divider{height:1px;background:#1E2A45;margin:12px 0}
+.phone-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#F4B9421A;border:1px solid #F4B94244;border-radius:8px;padding:12px;color:#F4B942;font-weight:700;font-size:0.88rem;cursor:pointer;margin-top:10px;text-decoration:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#000;font-weight:700;padding:12px 22px;border-radius:8px;font-size:0.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.county-wrap{position:relative}
+.county-wrap::after{content:'▼';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:0.65rem;pointer-events:none}
+.appl-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:6px;background:#141929;border:1px solid #1E2A45;border-radius:6px;padding:8px 10px}
+.appl-label{font-size:0.78rem;color:#E2E8F0}
+.appl-btu{font-size:0.72rem;color:#94A3B8}
+.appl-toggle{width:40px;height:22px;border-radius:11px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;background:#1E2A45}
+.appl-toggle.on{background:#F4B942}
+.appl-toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s}
+.appl-toggle.on::after{left:21px}
+.meter-table{width:100%;border-collapse:collapse;font-size:0.72rem;margin-top:8px}
+.meter-table th{background:#1E2A45;color:#94A3B8;padding:6px 8px;text-align:left;font-weight:600}
+.meter-table td{padding:6px 8px;border-bottom:1px solid #1E2A4533;color:#E2E8F0}
+.meter-table tr.highlight td{background:#F4B94211;color:#F4B942;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">⛽ FLORIDA GAS METER SIZING</div>
+  <h1>Natural Gas Meter Sizing & Demand Calculator</h1>
+  <p>Calculate total BTU demand, check meter adequacy, and learn the FL utility upgrade process for Peoples Gas, FPL Gas, and TECO</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('demand')">📊 Demand Calc</div>
+  <div class="tab" onclick="showTab('meter')">⛽ Meter Guide</div>
+  <div class="tab" onclick="showTab('code')">📋 FL Utilities</div>
+  <div class="tab" onclick="showTab('quote')">📞 Quote</div>
+</div>
+
+<!-- TAB 1: DEMAND CALCULATOR -->
+<div class="panel active" id="panel-demand">
+  <div class="card">
+    <h3>📊 Total Gas Demand Calculator</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:12px">Toggle on each gas appliance present or planned. We'll calculate your total demand and check your meter.</p>
+
+    <div style="font-size:0.72rem;color:#94A3B8;margin-bottom:8px;font-weight:600">EXISTING APPLIANCES</div>
+
+    <div class="appl-row" id="row-range">
+      <div><div class="appl-label">Gas range / cooktop</div><div class="appl-btu">65,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'range',65000)"></button>
+    </div>
+    <div class="appl-row" id="row-wh">
+      <div><div class="appl-label">Storage water heater</div><div class="appl-btu">40,000–50,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'wh',45000)"></button>
+    </div>
+    <div class="appl-row" id="row-furnace">
+      <div><div class="appl-label">Gas furnace / air handler</div><div class="appl-btu">80,000–120,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'furnace',100000)"></button>
+    </div>
+    <div class="appl-row" id="row-dryer">
+      <div><div class="appl-label">Gas dryer</div><div class="appl-btu">22,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'dryer',22000)"></button>
+    </div>
+    <div class="appl-row" id="row-log">
+      <div><div class="appl-label">Gas fireplace / log set</div><div class="appl-btu">40,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'log',40000)"></button>
+    </div>
+
+    <div style="font-size:0.72rem;color:#94A3B8;margin:10px 0 8px;font-weight:600">NEW / PLANNED APPLIANCES (FL ADDITIONS)</div>
+
+    <div class="appl-row" id="row-tankless">
+      <div><div class="appl-label">Tankless water heater</div><div class="appl-btu">150,000–199,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'tankless',199000)"></button>
+    </div>
+    <div class="appl-row" id="row-pool">
+      <div><div class="appl-label">Pool heater</div><div class="appl-btu">200,000–400,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'pool',250000)"></button>
+    </div>
+    <div class="appl-row" id="row-spa">
+      <div><div class="appl-label">Spa / hot tub heater (standalone)</div><div class="appl-btu">80,000–120,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'spa',100000)"></button>
+    </div>
+    <div class="appl-row" id="row-gen">
+      <div><div class="appl-label">Whole-home generator (gas)</div><div class="appl-btu">130,000–350,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'gen',200000)"></button>
+    </div>
+    <div class="appl-row" id="row-outk">
+      <div><div class="appl-label">Outdoor kitchen / grill burners</div><div class="appl-btu">60,000–120,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'outk',80000)"></button>
+    </div>
+    <div class="appl-row" id="row-wok">
+      <div><div class="appl-label">Commercial-style wok range</div><div class="appl-btu">150,000 BTU/hr</div></div>
+      <button class="appl-toggle" onclick="toggleAppl(this,'wok',150000)"></button>
+    </div>
+
+    <label>Current Meter Size (if known)</label>
+    <div class="county-wrap">
+      <select id="currentMeter">
+        <option value="0">Don't know</option>
+        <option value="175">Residential small — 175 CFH</option>
+        <option value="250">Residential standard — 250 CFH</option>
+        <option value="425">Residential large — 425 CFH</option>
+        <option value="800">Commercial small — 800 CFH</option>
+        <option value="1600">Commercial medium — 1,600 CFH</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="calcDemand()">Calculate Gas Demand</button>
+
+    <div class="result-box" id="demandResult">
+      <div class="grid2">
+        <div class="metric"><div class="metric-val" id="d-total">—</div><div class="metric-lbl">Total BTU/hr</div></div>
+        <div class="metric"><div class="metric-val" id="d-cfh">—</div><div class="metric-lbl">CFH Required</div></div>
+        <div class="metric"><div class="metric-val" id="d-meter">—</div><div class="metric-lbl">Meter Needed</div></div>
+        <div class="metric"><div class="metric-val" id="d-status">—</div><div class="metric-lbl">Meter Status</div></div>
+      </div>
+      <div class="divider"></div>
+      <div id="d-detail" style="font-size:0.78rem;color:#94A3B8;line-height:1.7"></div>
+      <div id="d-alert" class="alert" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📏 Common FL Appliance BTU Reference</h3>
+    <div class="info-row"><span class="info-label">Pool heater (small, 150K)</span><span class="info-val">150 CFH NG</span></div>
+    <div class="info-row"><span class="info-label">Pool heater (large, 400K)</span><span class="info-val">400 CFH NG</span></div>
+    <div class="info-row"><span class="info-label">Whole-home generator (20kW)</span><span class="info-val">~200 CFH NG</span></div>
+    <div class="info-row"><span class="info-label">Standby generator (22kW)</span><span class="info-val">~240 CFH NG</span></div>
+    <div class="info-row"><span class="info-label">Tankless WH (199K)</span><span class="info-val">199 CFH NG</span></div>
+    <div class="info-row"><span class="info-label">Gas range + oven</span><span class="info-val">65 CFH NG</span></div>
+    <div class="info-row"><span class="info-label">Gas dryer</span><span class="info-val">22 CFH NG</span></div>
+    <p style="font-size:0.72rem;color:#94A3B8;margin-top:8px">NG heat content: ~1,000 BTU/cubic foot. CFH = BTU/hr ÷ 1,000</p>
+  </div>
+</div>
+
+<!-- TAB 2: METER GUIDE -->
+<div class="panel" id="panel-meter">
+  <div class="card">
+    <h3>⛽ FL Gas Meter Size Guide</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px">Standard residential and commercial meter capacities</p>
+    <table class="meter-table">
+      <thead><tr><th>Meter Type</th><th>Capacity (CFH)</th><th>BTU Capacity</th><th>Typical Use</th></tr></thead>
+      <tbody>
+        <tr><td>Residential Small</td><td>175 CFH</td><td>175K BTU/hr</td><td>Range + WH only</td></tr>
+        <tr><td>Residential Standard</td><td>250 CFH</td><td>250K BTU/hr</td><td>Range + WH + dryer</td></tr>
+        <tr><td>Residential Large</td><td>425 CFH</td><td>425K BTU/hr</td><td>Full home + tankless WH</td></tr>
+        <tr><td>Residential XL</td><td>800 CFH</td><td>800K BTU/hr</td><td>Home + pool heater</td></tr>
+        <tr><td>Commercial Small</td><td>1,600 CFH</td><td>1.6M BTU/hr</td><td>Large pool + generator</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-warn" style="margin-top:10px">⚠️ The meter size in the table above uses the "diversity factor" for simultaneous use. In practice, not all appliances run simultaneously — utilities apply a diversity factor of 0.5–0.75 for residential. Your actual meter requirement is typically lower than full BTU sum.</div>
+  </div>
+
+  <div class="card">
+    <h3>🔄 Meter Upgrade Process</h3>
+    <div class="step-list">
+      <div class="step-item"><div class="step-text"><strong>Licensed CPC pulls gas permit</strong> — Your licensed plumbing contractor (CPC) submits the gas permit to your FL county. Permit includes updated appliance list and total BTU load calculation showing meter upgrade is needed.</div></div>
+      <div class="step-item"><div class="step-text"><strong>Contractor contacts utility</strong> — CPC or homeowner calls Peoples Gas / FPL Gas / TECO to report the added load. Utility sends field technician to measure current meter and verify capacity. This is a FREE utility service — no charge to request a load study.</div></div>
+      <div class="step-item"><div class="step-text"><strong>Utility load study / approval</strong> — Utility calculates total connected load using diversity factors. If current meter is undersized, utility schedules meter upgrade. Typical FL timeline: 2–6 weeks for residential meter swap.</div></div>
+      <div class="step-item"><div class="step-text"><strong>Meter upgrade installed</strong> — Utility installs new meter at no cost to homeowner (meter is utility property). New gas line or regulator changes on homeowner's side: contractor's responsibility. Utility shuts gas briefly (~30 min) during meter swap.</div></div>
+      <div class="step-item"><div class="step-text"><strong>Relight and inspection</strong> — After meter swap, licensed contractor relights all pilot lights and verifies appliance operation. FL county inspector reviews gas installation. Final inspection signed off. Project complete.</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ Meter Upgrade Readiness Checklist</h3>
+    <div id="meter-checklist">
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Total BTU demand calculation completed (use Demand Calc tab)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Gas permit applied for (licensed CPC)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Utility notified of added load (Peoples Gas / FPL Gas / TECO)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Gas line from meter sized for total new demand (per NFPA 54)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Regulator pressure adequate for new appliances</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>All CSST bonded per FL code (if applicable)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Pressure test (10 PSI, 15 min) scheduled for inspection</div></div>
+    </div>
+    <div id="meter-score" style="margin-top:10px;font-size:0.78rem;color:#94A3B8;text-align:center"></div>
+  </div>
+</div>
+
+<!-- TAB 3: FL UTILITIES -->
+<div class="panel" id="panel-code">
+  <div class="card">
+    <h3>📋 FL Gas Utility Contact & Process Guide</h3>
+
+    <div class="alert alert-blue">Florida has three main natural gas utilities: Peoples Gas (most of FL), FPL Gas (South FL), and TECO Peoples Gas (Tampa Bay). Each has a slightly different meter upgrade process — contact your local utility before beginning work.</div>
+
+    <div class="step-list">
+      <div class="step-item"><div class="step-text"><strong>Peoples Gas (Emera Florida)</strong> — Serves most of Florida outside of South FL and Tampa Bay. Service area: Jacksonville, Orlando, Gainesville, Tallahassee, Sarasota, Fort Myers, and more. For new load: call 1-877-832-6747 and request a "New Service / Meter Upgrade" study. Online: myfloridanaturalgas.com. Typical timeline: 2–4 weeks for residential meter upgrade after permit.</div></div>
+      <div class="step-item"><div class="step-text"><strong>FPL Gas (NextEra)</strong> — Serves South Florida: Miami-Dade, Broward, Palm Beach, Martin, St. Lucie counties. Call 1-800-375-2434 for gas service upgrades. For large additions (pool heater + generator): FPL Gas may require a formal load study — submit through your licensed contractor. Timeline: 3–6 weeks for commercial-tier meter upgrades in HVHZ service area.</div></div>
+      <div class="step-item"><div class="step-text"><strong>TECO Peoples Gas (Tampa area)</strong> — Serves Hillsborough, Pasco, Pinellas, Hernando, and surrounding counties. Call 813-228-1234 or visit tecoenergy.com. TECO typically does a complimentary load analysis for customers adding pool heaters or generators. Same Peoples Gas parent company — similar process to statewide Peoples Gas.</div></div>
+      <div class="step-item"><div class="step-text"><strong>Diversity Factor — Why Your Meter May Be Adequate</strong> — Gas utilities don't size meters for 100% simultaneous load. They apply a "diversity factor" — typically 0.5–0.75 for residential. Example: pool heater (250K BTU) + tankless WH (199K BTU) + range (65K BTU) = 514K total, but with 0.65 diversity factor = 334K CFH effective demand. This often means a 425 CFH residential meter is adequate. Your utility calculates this — don't assume you need an upgrade without their study.</div></div>
+      <div class="step-item"><div class="step-text"><strong>Service Line Size — Critical for Large Loads</strong> — Even with correct meter, if the underground gas service line from the main to your meter is undersized, flow will be restricted. For very large BTU additions (pool heater + generator + tankless), utility may need to upgrade the service line — this is utility responsibility and typically free, but adds lead time (4–8 weeks). Ask utility to confirm service line size during load study.</div></div>
+      <div class="step-item"><div class="step-text"><strong>Propane (LP) Alternative</strong> — If natural gas service is not available at your FL property (rural areas, some coastal communities), LP (propane) is a full alternative. LP tanks are utility-owned (leased) or privately-owned. Propane has ~2.5x more BTU per cubic foot than NG — smaller volume needed but different pipe sizing. NFPA 58 governs LP tank installation. For FL pools and generators in non-NG areas: LP is the standard solution.</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🗺️ FL Gas Utility by County</h3>
+    <div class="info-row"><span class="info-label">Miami-Dade / Broward / Palm Beach</span><span class="info-val">FPL Gas</span></div>
+    <div class="info-row"><span class="info-label">Hillsborough / Pinellas / Pasco</span><span class="info-val">TECO Peoples Gas</span></div>
+    <div class="info-row"><span class="info-label">Orange / Osceola / Seminole</span><span class="info-val">Peoples Gas</span></div>
+    <div class="info-row"><span class="info-label">Duval / Clay / Nassau</span><span class="info-val">Peoples Gas</span></div>
+    <div class="info-row"><span class="info-label">Sarasota / Manatee / Lee</span><span class="info-val">Peoples Gas</span></div>
+    <div class="info-row"><span class="info-label">Leon / Alachua / Gainesville</span><span class="info-val">Peoples Gas</span></div>
+    <div class="info-row"><span class="info-label">Monroe / Collier</span><span class="info-val">FPL Gas (limited) or LP</span></div>
+    <div class="info-row"><span class="info-label">Rural / coastal areas</span><span class="info-val">LP (propane) — no NG main</span></div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div class="panel" id="panel-quote">
+  <div class="card">
+    <h3>📞 Gas Meter Upgrade & Line Extension Quote</h3>
+    <p style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px">Licensed CPC — FL gas line sizing, permit, and utility coordination</p>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone Number</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>City / ZIP</label>
+    <input type="text" id="q-city" placeholder="e.g. Palm Beach Gardens, 33418">
+
+    <label>FL County</label>
+    <div class="county-wrap">
+      <select id="q-county">
+        <option value="">— Select County —</option>
+        <option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option>
+        <option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option>
+        <option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option>
+        <option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option>
+        <option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option>
+        <option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option>
+        <option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option>
+        <option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option>
+        <option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option>
+        <option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option>
+        <option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option>
+        <option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option>
+        <option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option>
+        <option>Walton</option><option>Washington</option>
+      </select>
+    </div>
+
+    <label>What Are You Adding?</label>
+    <div class="county-wrap">
+      <select id="q-service">
+        <option>Pool heater gas line</option>
+        <option>Whole-home generator gas line</option>
+        <option>Tankless water heater gas line</option>
+        <option>Outdoor kitchen / gas grill</option>
+        <option>Pool heater + generator (combined)</option>
+        <option>Full gas demand review — multiple new appliances</option>
+        <option>LP to NG conversion</option>
+        <option>New gas service to property</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="submitQuote()">Request Gas Demand Assessment →</button>
+    <a class="phone-btn" href="tel:5615555473">📞 Call Now: (561) 555-PIPE</a>
+  </div>
+
+  <div class="card">
+    <h3>💰 FL Gas Line Extension Cost Guide</h3>
+    <div class="info-row"><span class="info-label">Gas line to pool heater (50 ft)</span><span class="info-val">$600–$1,400</span></div>
+    <div class="info-row"><span class="info-label">Gas line to generator (50 ft)</span><span class="info-val">$800–$2,000</span></div>
+    <div class="info-row"><span class="info-label">Gas line to outdoor kitchen</span><span class="info-val">$500–$1,200</span></div>
+    <div class="info-row"><span class="info-label">Gas meter upgrade (utility installs)</span><span class="info-val">Free (utility responsibility)</span></div>
+    <div class="info-row"><span class="info-label">Regulator upgrade (homeowner side)</span><span class="info-val">$200–$500</span></div>
+    <div class="info-row"><span class="info-label">Gas permit (FL county)</span><span class="info-val">$75–$250</span></div>
+    <div class="info-row"><span class="info-label">Gas pressure test + inspection</span><span class="info-val">Included in permit</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+<!-- FL GAS METER DEMAND DATA — FLORIDA PLUMBING / NFPA 54 REFERENCE -->
+<!-- NFPA 54-2021 National Fuel Gas Code -->
+<!-- Florida Plumbing Code Section 402 — Gas Demand -->
+<!-- Peoples Gas / FPL Gas / TECO service standards -->
+<!--
+GAS DEMAND CALCULATION (NFPA 54 SECTION 402):
+1. List all gas appliances and their BTU/hr input ratings
+2. Sum all BTU/hr values
+3. Apply diversity factor (utility applies this — homeowner/contractor does NOT)
+4. Convert to CFH: BTU/hr ÷ 1,000 = CFH (natural gas at 1,000 BTU/cu ft)
+5. Select meter size from utility meter table
+
+DIVERSITY FACTORS (Typical FL Residential):
+Pool heater only: 1.0 (runs continuously when on)
+Generator only: 1.0 (runs continuously during outage)
+Pool heater + generator: 0.75 (rarely run simultaneously)
+Full home (all appliances): 0.5–0.65
+High-demand estimate (new addition): 0.75 recommended for sizing
+
+BTU INPUT RATINGS (FL COMMON APPLIANCES):
+Gas range/cooktop: 55,000–65,000 BTU/hr
+Gas oven: 15,000–25,000 BTU/hr (often included in range rating)
+Gas furnace: 60,000–150,000 BTU/hr (FL: rare; 80,000–100,000 typical)
+Storage water heater (40 gal): 36,000–50,000 BTU/hr
+Tankless WH (small): 120,000–150,000 BTU/hr
+Tankless WH (large): 180,000–199,000 BTU/hr
+Pool heater (small): 100,000–150,000 BTU/hr
+Pool heater (medium): 200,000–250,000 BTU/hr
+Pool heater (large): 300,000–400,000 BTU/hr
+Whole-home generator (16kW NG): ~130,000 BTU/hr
+Whole-home generator (20kW NG): ~200,000 BTU/hr
+Whole-home generator (22kW NG): ~240,000 BTU/hr
+Whole-home generator (24kW NG): ~290,000 BTU/hr
+Generac 22kW (7042): ~200 CFH NG at full load
+Gas fireplace (log set): 25,000–60,000 BTU/hr
+Gas dryer: 20,000–22,000 BTU/hr
+Outdoor grill/kitchen: 40,000–120,000 BTU/hr
+Commercial wok: 100,000–160,000 BTU/hr
+
+METER CAPACITIES (TYPICAL FL RESIDENTIAL):
+AC-175 meter: 175 CFH = 175,000 BTU/hr
+AC-250 meter: 250 CFH = 250,000 BTU/hr
+AC-425 meter: 425 CFH = 425,000 BTU/hr
+AC-800 meter: 800 CFH = 800,000 BTU/hr
+1600 meter: 1,600 CFH (commercial tier)
+
+METER UPGRADE COST:
+Meter itself: utility property — no cost to homeowner
+Utility installs, owns, and maintains meter
+Homeowner costs: gas permit, any new pipe/regulator on homeowner side
+FPL Gas: may charge engineering fee for large commercial upgrades
+
+SERVICE PRESSURE:
+Residential standard: 7" WC (water column) delivered to appliances
+Medium pressure: 2 PSI (with regulator stepping down to 7" WC at appliances)
+High-pressure: 5+ PSI (requires listed regulator, larger commercial)
+
+FL COUNTIES WITH NG SERVICE:
+Full service: Alachua, Baker, Brevard, Broward, Charlotte, Citrus, Clay, Collier (limited),
+Columbia, Duval, Flagler, Hardee, Hernando, Highlands, Hillsborough, Indian River,
+Lake, Lee, Leon, Levy, Manatee, Marion, Martin, Miami-Dade, Nassau, Okaloosa,
+Orange, Osceola, Palm Beach, Pasco, Pinellas, Polk, Putnam, Santa Rosa (limited),
+Sarasota, Seminole, St. Johns, St. Lucie, Sumter, Volusia
+LP gas only (no NG main): Many rural areas in Bay, Calhoun, Dixie, Gilchrist,
+Glades, Gulf, Hamilton, Hendry, Holmes, Jackson, Jefferson, Lafayette, Liberty,
+Madison, Monroe (Keys), Okeechobee, Taylor, Union, Wakulla, Walton, Washington
+
+FL UTILITY PHONE NUMBERS:
+Peoples Gas: 1-877-832-6747 (statewide except Tampa + South FL)
+TECO Peoples Gas: 1-813-228-1234 (Tampa Bay area)
+FPL Gas: 1-800-375-2434 (South FL: Miami-Dade, Broward, Palm Beach)
+Florida Public Service Commission (complaints): 1-800-342-3552
+
+GAS PERMIT REQUIREMENTS (FL FPC 406):
+Gas permit required for: any new gas line, appliance connection, or meter upgrade work
+Licensed CPC (Certified Plumbing Contractor) with gas endorsement required
+Homeowner permit: NOT allowed for gas additions in FL (unlike some minor WH work)
+Pressure test: 10 PSI air, 15 minutes, no measurable drop
+Inspection: county gas inspector reviews before gas is turned on
+
+PRACTICAL FL NOTES:
+Pool heater is most common FL meter upgrade trigger
+Generator adds: often push homeowner from 250 CFH to 425 or 800 CFH meter
+Both pool + generator: may require 800 CFH or commercial meter
+Utility timeline: 2–6 weeks for meter swap (can delay project — plan ahead)
+CSST (yellow corrugated): must be bonded within 6 ft of meter, #6 AWG copper
+-->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  const tabs=['demand','meter','code','quote'];
+  document.querySelectorAll('.tab')[tabs.indexOf(t)].classList.add('active');
+  document.getElementById('panel-'+t).classList.add('active');
+}
+
+const applBTU={};
+
+function toggleAppl(btn, key, btu){
+  const on = btn.classList.toggle('on');
+  applBTU[key] = on ? btu : 0;
+}
+
+function calcDemand(){
+  const totalBTU = Object.values(applBTU).reduce((a,b)=>a+b, 0);
+  if(totalBTU === 0){
+    alert('Please toggle on at least one gas appliance.');
+    return;
+  }
+  const cfhRequired = Math.ceil(totalBTU / 1000);
+  const divCFH = Math.ceil(cfhRequired * 0.75);
+
+  // Meter selection
+  const meterSizes=[175,250,425,800,1600];
+  const meterNames=['175 CFH (Residential Small)','250 CFH (Residential Standard)','425 CFH (Residential Large)','800 CFH (Residential XL)','1,600 CFH (Commercial)'];
+  let meterIdx = meterSizes.findIndex(s=>s>=divCFH);
+  if(meterIdx<0) meterIdx=4;
+
+  const currentMeterVal=parseInt(document.getElementById('currentMeter').value)||0;
+  let meterStatus='';
+  let meterStatusStyle='';
+  if(currentMeterVal===0){
+    meterStatus='Unknown';
+    meterStatusStyle='';
+  } else if(currentMeterVal>=divCFH){
+    meterStatus='Adequate ✅';
+  } else {
+    meterStatus='Upgrade Needed';
+  }
+
+  document.getElementById('d-total').textContent=(totalBTU/1000).toFixed(0)+'K BTU';
+  document.getElementById('d-cfh').textContent=divCFH+' CFH';
+  document.getElementById('d-meter').textContent=meterNames[meterIdx];
+  document.getElementById('d-status').textContent=meterStatus||meterNames[meterIdx].split(' ')[0]+' CFH';
+
+  let detail=`<strong>Total connected load:</strong> ${totalBTU.toLocaleString()} BTU/hr (${cfhRequired} CFH)<br>`;
+  detail+=`<strong>With 0.75 diversity factor:</strong> ${divCFH} CFH effective demand<br>`;
+  detail+=`<strong>Recommended meter:</strong> ${meterNames[meterIdx]}<br>`;
+  if(currentMeterVal>0){
+    detail+=`<strong>Your current meter:</strong> ${currentMeterVal} CFH — `;
+    detail+=currentMeterVal>=divCFH?'<span style="color:#22C55E">Adequate for new load</span>':'<span style="color:#EF4444">Upgrade needed — contact your FL gas utility</span>';
+    detail+='<br>';
+  }
+  document.getElementById('d-detail').innerHTML=detail;
+
+  const alertEl=document.getElementById('d-alert');
+  if(currentMeterVal>0&&currentMeterVal<divCFH){
+    alertEl.className='alert alert-red';
+    alertEl.textContent='⛔ Your current meter is undersized for the new load. Contact Peoples Gas / FPL Gas / TECO to request a free load study and meter upgrade. Your licensed CPC should coordinate this during the permit process.';
+  } else if(applBTU['pool']||applBTU['gen']){
+    alertEl.className='alert alert-warn';
+    alertEl.textContent='⚠️ Pool heaters and generators are the most common triggers for FL meter upgrades. Contact your gas utility before installation — the upgrade process takes 2–6 weeks and must be coordinated with your gas permit.';
+  } else {
+    alertEl.className='alert alert-green';
+    alertEl.textContent='✅ Demand calculated. Share this BTU total with your licensed CPC — they will verify meter adequacy and coordinate with your FL gas utility as part of the gas permit process.';
+  }
+  document.getElementById('demandResult').classList.add('show');
+}
+
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  const parent=el.closest('[id$="-checklist"]');
+  if(!parent) return;
+  const all=parent.querySelectorAll('.chk');
+  const done=parent.querySelectorAll('.chk.checked').length;
+  const scoreId=parent.id.replace('-checklist','-score');
+  const scoreEl=document.getElementById(scoreId);
+  if(scoreEl) scoreEl.textContent=done+'/'+all.length+' items complete'+(done===all.length?' — Ready for utility coordination! ✅':'');
+}
+
+function submitQuote(){
+  const name=document.getElementById('q-name').value.trim();
+  const phone=document.getElementById('q-phone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+
+</div>
+</body>
+</html>

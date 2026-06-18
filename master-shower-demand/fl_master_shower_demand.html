@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Master Shower Demand Calculator | Multi-Outlet GPM & Tankless Sizing</title>
+<meta name="description" content="Calculate total GPM for master shower systems with rain heads, body sprays, and handshowers. Size tankless water heaters and verify FL water conservation compliance.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#F97316;color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.72rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#F97316;border-bottom-color:#F97316}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#F97316;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#F97316}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.fixture-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.fixture-card{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:12px}
+.fixture-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.fixture-name{font-size:.8rem;font-weight:700;color:#E2E8F0}
+.fixture-gpm{font-size:.72rem;color:#94A3B8}
+.fixture-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.fixture-label{font-size:.72rem;color:#94A3B8;flex:1}
+.qty-control{display:flex;align-items:center;gap:6px}
+.qty-btn{width:28px;height:28px;border-radius:6px;border:1px solid #1E293B;background:#0F1629;color:#E2E8F0;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+.qty-btn:hover{background:#F97316;border-color:#F97316}
+.qty-val{width:32px;text-align:center;font-size:.85rem;font-weight:700;color:#fff}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0}
+.toggle-label{font-size:.78rem;color:#E2E8F0}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#1E293B;border-radius:11px;cursor:pointer;transition:.2s}
+.slider:before{position:absolute;content:'';height:16px;width:16px;left:3px;top:3px;background:#94A3B8;border-radius:50%;transition:.2s}
+input:checked+.slider{background:#F97316}
+input:checked+.slider:before{transform:translateX(18px);background:#fff}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#F97316;color:#fff}
+.btn-primary:hover{background:#ea6d0e}
+.result-box{background:#141929;border:1px solid #F97316;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.result-main{font-size:2rem;font-weight:800;color:#F97316;text-align:center}
+.result-unit{font-size:.8rem;color:#94A3B8;text-align:center;margin-top:2px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.result-item{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.result-item .val{font-size:1.05rem;font-weight:700;color:#fff}
+.result-item .lbl{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.result-notes{margin-top:12px;font-size:.75rem;color:#94A3B8;line-height:1.6}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.spec-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1E293B;font-size:.75rem}
+.spec-row:last-child{border-bottom:none}
+.spec-lbl{color:#94A3B8}
+.spec-val{color:#E2E8F0;font-weight:600;text-align:right}
+.tier-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.tier-card{background:#141929;border:2px solid #1E293B;border-radius:10px;padding:10px;cursor:pointer;transition:.2s;text-align:center}
+.tier-card.selected{border-color:#F97316}
+.tier-card .tc-name{font-size:.72rem;font-weight:700;color:#E2E8F0}
+.tier-card .tc-gpm{font-size:.65rem;color:#94A3B8;margin-top:3px}
+.heater-card{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:12px;margin-top:8px}
+.heater-card h4{font-size:.78rem;font-weight:700;color:#F97316;margin-bottom:6px}
+.heater-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
+.h-cell{background:#0F1629;border-radius:6px;padding:8px}
+.h-cell .h-val{font-size:.9rem;font-weight:700;color:#fff}
+.h-cell .h-lbl{font-size:.6rem;color:#94A3B8;margin-top:2px}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#F97316;border-color:#F97316}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#fff;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:6px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#F97316;transition:width .4s}
+.county-rule{background:#0F1629;border:1px solid #1E293B;border-radius:8px;padding:10px;margin-top:8px;font-size:.75rem;color:#94A3B8;line-height:1.6}
+.quote-form label{margin-top:10px}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#F97316}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.progress-ring{text-align:center;margin:10px 0}
+.compliance-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.7rem;font-weight:700;margin:4px}
+.cb-green{background:rgba(34,197,94,.15);color:#22C55E;border:1px solid rgba(34,197,94,.3)}
+.cb-red{background:rgba(239,68,68,.15);color:#EF4444;border:1px solid rgba(239,68,68,.3)}
+.cb-orange{background:rgba(249,115,22,.15);color:#F97316;border:1px solid rgba(249,115,22,.3)}
+.flow-table{width:100%;border-collapse:collapse;margin-top:8px}
+.flow-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:5px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.flow-table td{font-size:.72rem;color:#E2E8F0;padding:6px 8px;border-bottom:1px solid #0F1629}
+.flow-table tr:hover td{background:#141929}
+.highlight-row td{color:#F97316;font-weight:700}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🚿 Master Shower Demand Calculator</h1>
+  <p>Multi-outlet GPM sizing, tankless heater selection & FL water conservation compliance</p>
+  <span class="badge">FL PLUMBING CODE COMPLIANT</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('calc')">GPM Calc</div>
+  <div class="tab" onclick="showTab('tankless')">Tankless Size</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: GPM CALCULATOR -->
+<div id="tab-calc" class="panel active">
+  <div class="card">
+    <div class="card-title">🚿 Configure Your Shower System</div>
+
+    <label>Shower Type</label>
+    <div class="tier-cards" id="shower-tier">
+      <div class="tier-card selected" onclick="selectTier(this,'standard')" data-tier="standard">
+        <div class="tc-name">Standard</div>
+        <div class="tc-gpm">1 head</div>
+      </div>
+      <div class="tier-card" onclick="selectTier(this,'deluxe')" data-tier="deluxe">
+        <div class="tc-name">Deluxe</div>
+        <div class="tc-gpm">2–3 heads</div>
+      </div>
+      <div class="tier-card" onclick="selectTier(this,'spa')" data-tier="spa">
+        <div class="tc-name">Spa Suite</div>
+        <div class="tc-gpm">4+ heads</div>
+      </div>
+    </div>
+
+    <div class="section-title">Shower Outlets</div>
+    <div class="fixture-grid" id="fixture-grid">
+
+      <div class="fixture-card">
+        <div class="fixture-header">
+          <span class="fixture-name">🌧 Rain Head (Overhead)</span>
+          <span class="fixture-gpm" id="rain-gpm-display">0 GPM</span>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Standard (1.8 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('rain-std',-1)">−</button>
+            <div class="qty-val" id="rain-std-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('rain-std',1)">+</button>
+          </div>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">WaterSense (1.5 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('rain-ws',-1)">−</button>
+            <div class="qty-val" id="rain-ws-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('rain-ws',1)">+</button>
+          </div>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Hi-Flow (2.5 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('rain-hf',-1)">−</button>
+            <div class="qty-val" id="rain-hf-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('rain-hf',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixture-card">
+        <div class="fixture-header">
+          <span class="fixture-name">💦 Body Sprays / Jets</span>
+          <span class="fixture-gpm" id="body-gpm-display">0 GPM</span>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Standard spray (0.5 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('body-std',-1)">−</button>
+            <div class="qty-val" id="body-std-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('body-std',1)">+</button>
+          </div>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Jet body spray (1.0 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('body-jet',-1)">−</button>
+            <div class="qty-val" id="body-jet-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('body-jet',1)">+</button>
+          </div>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Massage jet (1.5 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('body-mass',-1)">−</button>
+            <div class="qty-val" id="body-mass-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('body-mass',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixture-card">
+        <div class="fixture-header">
+          <span class="fixture-name">🖐 Handshower / Wand</span>
+          <span class="fixture-gpm" id="hand-gpm-display">0 GPM</span>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">WaterSense (1.5 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('hand-ws',-1)">−</button>
+            <div class="qty-val" id="hand-ws-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('hand-ws',1)">+</button>
+          </div>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Standard (1.8 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('hand-std',-1)">−</button>
+            <div class="qty-val" id="hand-std-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('hand-std',1)">+</button>
+          </div>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Multi-function (2.5 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('hand-mf',-1)">−</button>
+            <div class="qty-val" id="hand-mf-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('hand-mf',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixture-card">
+        <div class="fixture-header">
+          <span class="fixture-name">🌊 Steam / Other</span>
+          <span class="fixture-gpm" id="steam-gpm-display">0 GPM</span>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Steam head (0.1 GPM eq)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('steam-head',-1)">−</button>
+            <div class="qty-val" id="steam-head-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('steam-head',1)">+</button>
+          </div>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Tub filler (4.0 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('tub-fill',-1)">−</button>
+            <div class="qty-val" id="tub-fill-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('tub-fill',1)">+</button>
+          </div>
+        </div>
+        <div class="fixture-row">
+          <span class="fixture-label">Floor drain / waste (0 GPM)</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="adjQty('drain',-1)">−</button>
+            <div class="qty-val" id="drain-qty">0</div>
+            <button class="qty-btn" onclick="adjQty('drain',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Water Supply Conditions</div>
+    <div class="row2">
+      <div>
+        <label>Inlet Water Temp (°F)</label>
+        <input type="number" id="inlet-temp" value="72" min="55" max="85">
+      </div>
+      <div>
+        <label>Target Shower Temp (°F)</label>
+        <input type="number" id="target-temp" value="105" min="95" max="120">
+      </div>
+    </div>
+    <div class="row2" style="margin-top:10px">
+      <div>
+        <label>FL County</label>
+        <select id="county-sel">
+          <option value="miami-dade">Miami-Dade</option>
+          <option value="broward">Broward</option>
+          <option value="palm-beach">Palm Beach</option>
+          <option value="hillsborough" selected>Hillsborough</option>
+          <option value="orange">Orange</option>
+          <option value="pinellas">Pinellas</option>
+          <option value="duval">Duval</option>
+          <option value="lee">Lee</option>
+          <option value="polk">Polk</option>
+          <option value="brevard">Brevard</option>
+          <option value="volusia">Volusia</option>
+          <option value="sarasota">Sarasota</option>
+          <option value="manatee">Manatee</option>
+          <option value="pasco">Pasco</option>
+          <option value="seminole">Seminole</option>
+          <option value="collier">Collier</option>
+          <option value="lake">Lake</option>
+          <option value="st-johns">St. Johns</option>
+          <option value="flagler">Flagler</option>
+          <option value="alachua">Alachua</option>
+          <option value="marion">Marion</option>
+          <option value="clay">Clay</option>
+          <option value="nassau">Nassau</option>
+          <option value="st-lucie">St. Lucie</option>
+          <option value="martin">Martin</option>
+          <option value="indian-river">Indian River</option>
+          <option value="okeechobee">Okeechobee</option>
+          <option value="highlands">Highlands</option>
+          <option value="hardee">Hardee</option>
+          <option value="desoto">DeSoto</option>
+          <option value="charlotte">Charlotte</option>
+          <option value="glades">Glades</option>
+          <option value="hendry">Hendry</option>
+          <option value="monroe">Monroe</option>
+          <option value="osceola">Osceola</option>
+          <option value="sumter">Sumter</option>
+          <option value="hernando">Hernando</option>
+          <option value="citrus">Citrus</option>
+          <option value="gilchrist">Gilchrist</option>
+          <option value="levy">Levy</option>
+          <option value="dixie">Dixie</option>
+          <option value="columbia">Columbia</option>
+          <option value="hamilton">Hamilton</option>
+          <option value="suwannee">Suwannee</option>
+          <option value="lafayette">Lafayette</option>
+          <option value="madison">Madison</option>
+          <option value="taylor">Taylor</option>
+          <option value="jefferson">Jefferson</option>
+          <option value="leon">Leon</option>
+          <option value="wakulla">Wakulla</option>
+          <option value="franklin">Franklin</option>
+          <option value="liberty">Liberty</option>
+          <option value="gadsden">Gadsden</option>
+          <option value="calhoun">Calhoun</option>
+          <option value="gulf">Gulf</option>
+          <option value="bay">Bay</option>
+          <option value="jackson">Jackson</option>
+          <option value="washington">Washington</option>
+          <option value="holmes">Holmes</option>
+          <option value="walton">Walton</option>
+          <option value="okaloosa">Okaloosa</option>
+          <option value="santa-rosa">Santa Rosa</option>
+          <option value="escambia">Escambia</option>
+          <option value="union">Union</option>
+          <option value="baker">Baker</option>
+          <option value="bradford">Bradford</option>
+          <option value="putnam">Putnam</option>
+          <option value="flagler">Flagler</option>
+        </select>
+      </div>
+      <div>
+        <label>Heater Location</label>
+        <select id="heater-loc">
+          <option value="garage">Garage / Utility</option>
+          <option value="closet">Closet / Alcove</option>
+          <option value="attic">Attic</option>
+          <option value="outdoor">Outdoor Enclosure</option>
+          <option value="basement">Below Grade</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="calcShower()">Calculate GPM Demand</button>
+
+    <div class="result-box" id="shower-result">
+      <div class="result-main" id="res-gpm">—</div>
+      <div class="result-unit">Total Peak GPM Demand</div>
+      <div class="result-grid">
+        <div class="result-item"><div class="val" id="res-rain">0</div><div class="lbl">Rain Head GPM</div></div>
+        <div class="result-item"><div class="val" id="res-body">0</div><div class="lbl">Body Spray GPM</div></div>
+        <div class="result-item"><div class="val" id="res-hand">0</div><div class="lbl">Handshower GPM</div></div>
+        <div class="result-item"><div class="val" id="res-other">0</div><div class="lbl">Other GPM</div></div>
+      </div>
+      <div class="result-notes" id="res-notes"></div>
+      <div id="res-alert"></div>
+      <div id="compliance-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: TANKLESS SIZING -->
+<div id="tab-tankless" class="panel">
+  <div class="card">
+    <div class="card-title">🔥 Tankless Heater Sizing</div>
+
+    <div class="row2">
+      <div>
+        <label>Peak GPM (from calc or enter)</label>
+        <input type="number" id="tank-gpm" placeholder="e.g. 6.5" step="0.1" min="0.5" max="25">
+      </div>
+      <div>
+        <label>FL County (groundwater temp)</label>
+        <select id="tank-county">
+          <option value="73">South FL (73°F GW)</option>
+          <option value="70" selected>Central FL (70°F GW)</option>
+          <option value="67">North FL (67°F GW)</option>
+          <option value="65">Panhandle (65°F GW)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2" style="margin-top:10px">
+      <div>
+        <label>Desired Output Temp (°F)</label>
+        <input type="number" id="tank-out" value="120" min="100" max="140">
+      </div>
+      <div>
+        <label>Fuel Type</label>
+        <select id="tank-fuel">
+          <option value="gas">Natural Gas</option>
+          <option value="propane">Propane (LP)</option>
+          <option value="electric">Electric</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2" style="margin-top:10px">
+      <div>
+        <label>Simultaneous Uses</label>
+        <select id="tank-uses">
+          <option value="shower-only">Shower Only</option>
+          <option value="shower-sink">Shower + Sink</option>
+          <option value="shower-multi">Shower + Multiple</option>
+        </select>
+      </div>
+      <div>
+        <label>Installation Method</label>
+        <select id="tank-install">
+          <option value="single">Single Unit</option>
+          <option value="series">Series (2 units)</option>
+          <option value="parallel">Parallel (2 units)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="calcTankless()">Size My Tankless Heater</button>
+
+    <div class="result-box" id="tank-result">
+      <div class="result-main" id="tank-res-btu">—</div>
+      <div class="result-unit" id="tank-res-unit">BTU/hr Required</div>
+      <div class="heater-card">
+        <h4>Recommended Heaters</h4>
+        <div id="tank-recommendations"></div>
+      </div>
+      <div class="result-notes" id="tank-notes"></div>
+      <div id="tank-alert"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 FL Tankless Sizing Reference</div>
+    <table class="flow-table">
+      <thead>
+        <tr><th>GPM</th><th>ΔT 50°F</th><th>ΔT 45°F</th><th>Gas Size</th><th>Electric</th></tr>
+      </thead>
+      <tbody id="sizing-table"></tbody>
+    </table>
+    <div class="info-block" style="margin-top:10px">
+      <p><strong>FL Groundwater Temps:</strong> South FL 73°F avg → ΔT ~47°F to 120°F | Central FL 70°F → ΔT 50°F | North FL 67°F → ΔT 53°F | Panhandle 65°F → ΔT 55°F</p>
+      <p style="margin-top:6px"><strong>Rule of thumb:</strong> 1 GPM requires ~2,100 BTU/hr for each °F of temperature rise (1 GPM × ΔT × 500 × 8.33 ÷ 60 × efficiency)</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FL Water Conservation Compliance</div>
+
+    <div class="section-title">FL Showerhead Flow Limits (FPC 604.4)</div>
+    <table class="flow-table">
+      <thead>
+        <tr><th>Fixture</th><th>Max GPM (FL)</th><th>WaterSense</th><th>IECC Resid</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Showerhead</td><td>2.0 GPM @ 80 psi</td><td>1.5–1.8 GPM</td><td>2.0 GPM</td></tr>
+        <tr><td>Body spray</td><td>0.5 GPM each</td><td>0.5 GPM</td><td>—</td></tr>
+        <tr><td>Handshower</td><td>2.0 GPM @ 80 psi</td><td>1.5 GPM</td><td>2.0 GPM</td></tr>
+        <tr><td>Bathtub filler</td><td>4.0 GPM</td><td>—</td><td>4.0 GPM</td></tr>
+        <tr class="highlight-row"><td>Multiple showerheads</td><td>2.0 GPM total</td><td colspan="2">Per FPC exception — see note</td></tr>
+      </tbody>
+    </table>
+    <div class="info-block" style="margin-top:8px">
+      <p><strong>FPC 604.4 Exception:</strong> Where more than one showerhead is controlled by a single valve, the aggregate flow rate of all heads shall not exceed 2.0 GPM at 80 psi unless each outlet has a separate shutoff — then each outlet is rated individually.</p>
+      <p style="margin-top:6px"><strong>Body Spray Exception:</strong> FPC Section 604.4.2 — each body spray panel outlet rated individually at 0.5 GPM max. A 16-jet panel = 8.0 GPM aggregate is code-compliant if each head is ≤0.5 GPM.</p>
+    </div>
+
+    <div class="section-title">County Water Conservation Ordinances</div>
+    <div>
+      <label>Select County</label>
+      <select id="county-code" onchange="showCountyCode()">
+        <option value="miami-dade">Miami-Dade</option>
+        <option value="broward">Broward</option>
+        <option value="palm-beach">Palm Beach</option>
+        <option value="hillsborough">Hillsborough</option>
+        <option value="orange">Orange</option>
+        <option value="pinellas">Pinellas</option>
+        <option value="duval">Duval</option>
+        <option value="sarasota">Sarasota</option>
+        <option value="collier">Collier</option>
+        <option value="volusia">Volusia</option>
+        <option value="other">Other FL County</option>
+      </select>
+    </div>
+    <div class="county-rule" id="county-code-text">Select a county to see local water conservation rules.</div>
+
+    <div class="section-title">Permit Requirements — FL Master Shower</div>
+    <div class="info-block">
+      <p><strong>When a permit IS required (FBC/FPC):</strong></p>
+      <p>• Adding or relocating any water supply line</p>
+      <p>• Installing new showerhead rough-in (new studs, blocking, supply piping)</p>
+      <p>• Adding body spray system (new supply manifold)</p>
+      <p>• Replacing tankless water heater (new installation)</p>
+      <p>• Changing water heater fuel type (gas↔electric)</p>
+      <p style="margin-top:8px"><strong>When no permit required:</strong></p>
+      <p>• Like-for-like showerhead replacement (same location, same connection)</p>
+      <p>• Replacing handshower slide bar (no new piping)</p>
+      <p>• Water heater in-kind replacement (same fuel, same BTU ±10%)</p>
+    </div>
+
+    <div class="section-title">Water Heater Code — FL Specifics</div>
+    <div class="info-block">
+      <p><strong>FPC Chapter 5 — Water Heaters:</strong></p>
+      <p>• Tankless units require dedicated gas or electrical circuit</p>
+      <p>• Gas tankless: minimum 200,000 BTU installations need 1-inch gas supply in most FL applications</p>
+      <p>• Temperature relief valve required on all tankless units (ASME rated)</p>
+      <p>• FL Energy Code (FECC) requires EF ≥ 0.67 for gas storage; tankless typically EF 0.82–0.96</p>
+      <p>• South FL HVHZ: all outdoor tankless enclosures must meet Miami-Dade NOA 140 mph wind rating</p>
+      <p>• FL Statute 163.04 prohibits HOAs from preventing installation of solar water heaters</p>
+      <p style="margin-top:8px"><strong>SWFRPC Overlay (Lee, Collier, Charlotte, Sarasota):</strong></p>
+      <p>• SFWMD requires WaterSense-labeled showerheads on all new construction (per SFWMD Rule 40E-22)</p>
+      <p>• Rebate programs available through SFWMD and utility partners</p>
+    </div>
+
+    <div class="section-title">Installation Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Showerheads ≤2.0 GPM each at 80 psi <span class="check-sub">FPC 604.4 — or WaterSense ≤1.8 GPM for SFWMD rebate</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Body sprays ≤0.5 GPM each <span class="check-sub">FPC 604.4.2 — each outlet individually rated</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Individual shutoff valves for each shower outlet <span class="check-sub">Required if aggregate flow >2.0 GPM (multi-head systems)</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Pressure balancing or thermostatic valve installed <span class="check-sub">FPC 424.3 — required in all shower applications</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Shower drain properly sized for peak GPM <span class="check-sub">FPC Table 709.1 — 2" drain = 2.9 GPM, 3" = 4.6 GPM</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Hot water supply sized ≥3/4" for systems >4 GPM <span class="check-sub">FPC Table 604.4 — friction loss calculation required</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Tankless heater permit pulled (if new installation) <span class="check-sub">FBC Section 105 — mechanical permit required</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Gas line sized for total BTU demand (if gas tankless) <span class="check-sub">NFPA 54 / FPC 411 — include all simultaneous appliances</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Relief valve and condensate drain piped correctly <span class="check-sub">FPC 504 — TPR valve, condensate to approved receptor</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Accessible cleanout for tile shower drain <span class="check-sub">FPC 708.3 — accessible within 5 feet of shower</span></div>
+      </div>
+    </div>
+    <div class="score-bar" style="margin-top:10px"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 10 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a Master Shower Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Polk</option>
+      <option>Brevard</option><option>Volusia</option><option>Sarasota</option>
+      <option>Manatee</option><option>Pasco</option><option>Seminole</option>
+      <option>Collier</option><option>Other</option>
+    </select>
+
+    <label>Project Type</label>
+    <select id="q-type">
+      <option>New shower build</option>
+      <option>Shower remodel / expand</option>
+      <option>Add body sprays to existing</option>
+      <option>Tankless water heater install</option>
+      <option>Upgrade existing showerheads</option>
+      <option>Full master bath remodel</option>
+    </select>
+
+    <label>Total Outlets Planned</label>
+    <select id="q-outlets">
+      <option>1 (single showerhead)</option>
+      <option>2–3 (standard deluxe)</option>
+      <option>4–6 (rain + body + hand)</option>
+      <option>7–12 (full spa system)</option>
+      <option>13+ (luxury estate)</option>
+    </select>
+
+    <label>Preferred Water Heater Type</label>
+    <select id="q-heater">
+      <option>Tankless natural gas</option>
+      <option>Tankless propane</option>
+      <option>Tankless electric</option>
+      <option>Tank-type (keep existing)</option>
+      <option>Not sure — need advice</option>
+    </select>
+
+    <label>Additional Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="Tell us about your master shower vision, current setup, or any concerns..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Consultation</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | Licensed FL Plumbing Contractor | FL Lic. #CFC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🚿</div>
+
+<!-- Hidden SEO / keyword data -->
+<div style="display:none" aria-hidden="true" id="kw-data">
+fl master shower gpm calculator, tankless water heater sizing florida, multi-outlet shower demand, body spray flow rate, rain head gpm florida, fl plumbing code shower, waterSense florida, FPC 604.4 showerhead, master bath remodel plumbing, florida water conservation shower, SFWMD rebate showerhead, south florida shower permit, broward shower code, miami-dade shower permit, palm beach water conservation, hillsborough shower remodel, tankless heater florida, condensing tankless florida, on-demand water heater fl, whole house tankless sizing, shower body spray panel, thermostatic valve florida, pressure balancing valve, shower drain sizing florida, FPC 709 drain table, fl plumber master shower, luxury shower plumbing florida, spa shower system fl, steam shower florida, shower system permit, fl plumbing contractor shower, florida energy code water heater, FECC tankless, WaterSense certified florida, 1.8 gpm rain head, fl groundwater temperature, delta t calculation shower, rinnai tankless florida, navien tankless, noritz tankless, rheem tankless florida, bosch tankless, rinnai RU199in florida, navien NPE240, shower valve pressure balance, mixing valve shower, thermostatic shower system, custom shower plumbing florida
+fl master shower gpm calculation method: sum all simultaneous outlet GPM; body sprays each 0.5 GPM max per FPC 604.4.2; rain heads 1.5-2.5 GPM; handshower 1.5-2.5 GPM; tub filler 4.0 GPM; steam generator 0.1 GPM equivalent; total peak demand drives tankless BTU sizing
+tankless water heater BTU formula: Required BTU/hr = GPM x 500 x ΔT x 8.33 / 60 where ΔT = desired output temp minus groundwater inlet temp; Florida groundwater: South 73F, Central 70F, North 67F, Panhandle 65F; at 120F output Central FL ΔT = 50F; 5 GPM x 500 x 50 x 8.33 / 60 = 173,542 BTU/hr needed
+florida shower flow rate limits: FPC 604.4 - showerhead max 2.0 GPM at 80 psi; body spray max 0.5 GPM each; handshower max 2.0 GPM; bathtub filler max 4.0 GPM; when multiple heads on single valve aggregate must not exceed 2.0 GPM unless individual shutoffs installed per FPC 604.4 exception
+fl water heater energy code FECC 2023: tankless gas EF minimum 0.82; electric resistance minimum 0.92; heat pump water heater EF 2.0+ preferred; fl statute 553.9085 requires efficient water heaters in new construction; SFWMD rule 40E-22 requires WaterSense labeled showerheads in new construction in SFWMD jurisdiction (Lee, Collier, Hendry, Glades, Palm Beach, Martin, St Lucie, Okeechobee, Broward, Miami-Dade, Monroe)
+shower drain sizing per FPC table 709.1: 2 inch drain = 2.9 GPM max; 3 inch drain = 4.6 GPM max; 4 inch drain = 8.0 GPM max; recommend 3 inch for systems 3-6 GPM; 4 inch for systems 6+ GPM or with body spray panels
+body spray compliance note: FPC allows unlimited body sprays if each outlet rated at 0.5 GPM or less AND each has individual shutoff; 16-spray panel = 8.0 GPM aggregate is code compliant; thermostatic valve required for systems with body sprays to prevent scalding
+fl permit requirements master shower: mechanical permit required for new tankless water heater installation per FBC 105.2; plumbing permit for new rough-in piping per FPC 103; no permit for like-for-like showerhead replacement; HVHZ requires NOA-approved equipment for south florida installations
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+const OUTLET_RATES={
+  'rain-std':1.8,'rain-ws':1.5,'rain-hf':2.5,
+  'body-std':0.5,'body-jet':1.0,'body-mass':1.5,
+  'hand-ws':1.5,'hand-std':1.8,'hand-mf':2.5,
+  'steam-head':0.1,'tub-fill':4.0,'drain':0
+};
+
+const COUNTIES_FL={
+  'miami-dade':'Miami-Dade County: Miami-Dade Water & Sewer (WASD) enforces FPC 604.4 strictly. All shower remodels require plumbing permit. WaterSense fixtures required on all new construction per WASD Ordinance 10-25. Rebate: $50/WaterSense showerhead through WASD. HVHZ applies — all fixtures must meet FL Product Approval.',
+  'broward':'Broward County: Broward County Code Sec. 27-232 requires low-flow showerheads ≤2.0 GPM in all new and remodeled bathrooms. SFWMD rule requires WaterSense certification for new construction. Hollywood, Fort Lauderdale, and Sunrise have additional local ordinances. Rebate: up to $75 for qualifying fixtures.',
+  'palm-beach':'Palm Beach County: Palm Beach County Water Utilities requires WaterSense certification for all showerheads in new construction (SFWMD jurisdiction). Code Sec. 86-150 mandates flow restrictors on all showerheads. Boca Raton and Delray Beach offer rebates for water-efficient fixtures.',
+  'hillsborough':'Hillsborough County: Tampa Bay Water and Hillsborough County Environmental Regulation require ≤2.0 GPM showerheads. City of Tampa offers rebates through Conserve Florida program. Southwest FL Water Management District (SWFWMD) rules apply for new construction.',
+  'orange':'Orange County: Orlando Utilities Commission (OUC) and Orange County Utilities enforce FPC 604.4. WaterSense fixtures strongly encouraged; rebates through OUC Green program. All shower plumbing permits required through Orange County Building & Safety Division.',
+  'pinellas':'Pinellas County: Pinellas County Utilities Code Sec. 58-202 — all showerheads ≤2.0 GPM. St. Petersburg and Clearwater have active WaterSense rebate programs ($25–$100). Pinellas County Building Department requires permit for all new tankless installations.',
+  'duval':'Duval County (Jacksonville): JEA (Jacksonville Electric Authority) does not mandate specific GPM limits beyond FPC 604.4 but offers rebates for WaterSense fixtures. Jacksonville Building Inspections requires permit for new tankless heaters and shower rough-in.',
+  'sarasota':'Sarasota County: Sarasota County Utilities Ordinance 2019-017 — WaterSense required for new construction. SWFWMD jurisdiction. Rebates through Sarasota County and utilities. Note: Sarasota is in Level II Water Conservation zone — restrictions may apply during drought.',
+  'collier':'Collier County: SFWMD and Collier County Growth Management require WaterSense showerheads in all new construction (Rule 40E-22). Naples Utilities offers rebates. Collier County Building Department enforces energy code FECC 2023 for tankless installations.',
+  'volusia':'Volusia County: Volusia County Division of Building Safety requires permit for new shower rough-in. SJRWMD (St. Johns River Water Management) jurisdiction — WaterSense encouraged; rebates available through SJRWMD. No mandatory GPM below FPC 604.4.',
+  'other':'Other FL County: Florida Plumbing Code (FPC) 604.4 applies statewide — showerheads max 2.0 GPM at 80 psi, body sprays max 0.5 GPM each. Check with your Water Management District (WMD) for local conservation requirements. Contact your county building department for permit requirements.'
+};
+
+const TANKLESS_MODELS={
+  gas:[
+    {btu:180000,gpm:8.5,model:'Rinnai RU180iN',note:'Condensing, 0.95 UEF, up to 2 zones'},
+    {btu:199000,gpm:9.4,model:'Navien NPE-240A2',note:'Condensing combo, built-in recirculation'},
+    {btu:199000,gpm:9.4,model:'Rinnai RU199iN',note:'Condensing, top pick for FL master showers'},
+    {btu:180000,gpm:8.3,model:'Noritz NRCQ98DV',note:'Commercial grade, DVSA venting'},
+    {btu:167000,gpm:7.8,model:'Rheem RTG-95DVLN',note:'Budget-friendly condensing option'},
+    {btu:140000,gpm:6.6,model:'Navien NPE-180A2',note:'Good for 3–4 GPM systems'},
+    {btu:120000,gpm:5.7,model:'Rinnai RU130iN',note:'Entry condensing, ideal for standard shower'},
+    {btu:95000,gpm:4.5,model:'Rheem RTG-74DVN',note:'Single shower, storage tank backup option'}
+  ],
+  propane:[
+    {btu:199000,gpm:9.4,model:'Navien NPE-240A2 LP',note:'Propane version, same performance as NG'},
+    {btu:199000,gpm:9.4,model:'Rinnai RU199iP',note:'Propane condensing, requires 250gal+ tank'},
+    {btu:180000,gpm:8.5,model:'Noritz NRC98-DV LP',note:'High capacity propane'},
+    {btu:167000,gpm:7.8,model:'Rheem RTG-95DVLP',note:'Propane, easy NG→LP conversion kit'}
+  ],
+  electric:[
+    {btu:102400,gpm:4.9,model:'Stiebel Eltron Tempra 30 Plus',note:'240V/30kW, ideal for FL ΔT ~50°F'},
+    {btu:68000,gpm:3.2,model:'Ecosmart ECO 27',note:'240V/27kW, single master shower'},
+    {btu:85000,gpm:4.1,model:'Rheem RTEX-36',note:'240V/36kW, handles rain+handshower'},
+    {btu:51000,gpm:2.4,model:'Bosch Electric Tronic 6000T',note:'Budget electric, low-demand showers'}
+  ]
+};
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    if(['calc','tankless','code','quote'][i]===t)el.classList.add('active');
+  });
+  if(t==='tankless')buildSizingTable();
+}
+
+function selectTier(el,tier){
+  document.querySelectorAll('.tier-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function adjQty(id,delta){
+  const el=document.getElementById(id+'-qty');
+  let v=parseInt(el.textContent)||0;
+  v=Math.max(0,Math.min(12,v+delta));
+  el.textContent=v;
+  updateDisplayGPM();
+}
+
+function updateDisplayGPM(){
+  const cat={rain:['rain-std','rain-ws','rain-hf'],body:['body-std','body-jet','body-mass'],hand:['hand-ws','hand-std','hand-mf'],steam:['steam-head','tub-fill','drain']};
+  const labels={rain:'rain-gpm-display',body:'body-gpm-display',hand:'hand-gpm-display',steam:'steam-gpm-display'};
+  Object.entries(cat).forEach(([g,ids])=>{
+    let gpm=ids.reduce((s,id)=>{
+      const q=parseInt(document.getElementById(id+'-qty').textContent)||0;
+      return s+q*(OUTLET_RATES[id]||0);
+    },0);
+    document.getElementById(labels[g]).textContent=gpm.toFixed(1)+' GPM';
+  });
+}
+
+function calcShower(){
+  const inletT=parseFloat(document.getElementById('inlet-temp').value)||72;
+  const targetT=parseFloat(document.getElementById('target-temp').value)||105;
+  const county=document.getElementById('county-sel').value;
+
+  let rainGPM=0,bodyGPM=0,handGPM=0,otherGPM=0;
+  ['rain-std','rain-ws','rain-hf'].forEach(id=>{
+    const q=parseInt(document.getElementById(id+'-qty').textContent)||0;
+    rainGPM+=q*(OUTLET_RATES[id]||0);
+  });
+  ['body-std','body-jet','body-mass'].forEach(id=>{
+    const q=parseInt(document.getElementById(id+'-qty').textContent)||0;
+    bodyGPM+=q*(OUTLET_RATES[id]||0);
+  });
+  ['hand-ws','hand-std','hand-mf'].forEach(id=>{
+    const q=parseInt(document.getElementById(id+'-qty').textContent)||0;
+    handGPM+=q*(OUTLET_RATES[id]||0);
+  });
+  ['steam-head','tub-fill','drain'].forEach(id=>{
+    const q=parseInt(document.getElementById(id+'-qty').textContent)||0;
+    otherGPM+=q*(OUTLET_RATES[id]||0);
+  });
+
+  const totalGPM=rainGPM+bodyGPM+handGPM+otherGPM;
+
+  if(totalGPM===0){
+    alert('Add at least one fixture to calculate.');
+    return;
+  }
+
+  document.getElementById('res-gpm').textContent=totalGPM.toFixed(1)+' GPM';
+  document.getElementById('res-rain').textContent=rainGPM.toFixed(1);
+  document.getElementById('res-body').textContent=bodyGPM.toFixed(1);
+  document.getElementById('res-hand').textContent=handGPM.toFixed(1);
+  document.getElementById('res-other').textContent=otherGPM.toFixed(1);
+
+  const dt=targetT-inletT;
+  const btuNeeded=totalGPM*500*dt*8.33/60;
+
+  let drainSize='2-inch';
+  if(totalGPM>4.6)drainSize='4-inch';
+  else if(totalGPM>2.9)drainSize='3-inch';
+
+  let pipeSize='1/2-inch';
+  if(totalGPM>4)pipeSize='3/4-inch';
+  if(totalGPM>8)pipeSize='1-inch';
+
+  let notes=`<strong>ΔT:</strong> ${dt}°F rise required (${inletT}°F in → ${targetT}°F out)<br>`;
+  notes+=`<strong>BTU Required:</strong> ${Math.round(btuNeeded).toLocaleString()} BTU/hr<br>`;
+  notes+=`<strong>Min Drain Size:</strong> ${drainSize} (FPC Table 709.1)<br>`;
+  notes+=`<strong>Hot Water Supply:</strong> ${pipeSize} minimum recommended`;
+
+  document.getElementById('res-notes').innerHTML=notes;
+
+  let alertHtml='';
+  const singleHeadMax=2.0;
+  const hasMultiHead=(document.getElementById('rain-std-qty').textContent*1+document.getElementById('rain-ws-qty').textContent*1+document.getElementById('rain-hf-qty').textContent*1)>1 || bodyGPM>0;
+
+  if(totalGPM>15){
+    alertHtml='<div class="alert alert-red" style="margin-top:10px">⚠️ <strong>Very high demand ('+totalGPM.toFixed(1)+' GPM).</strong> Will require 2 tankless units in parallel and 1" gas service minimum.</div>';
+  } else if(totalGPM>8){
+    alertHtml='<div class="alert alert-warn" style="margin-top:10px">⚠️ <strong>High demand ('+totalGPM.toFixed(1)+' GPM).</strong> A 199,000+ BTU condensing tankless unit required. Consider 2 units for reliability.</div>';
+  } else if(totalGPM>4){
+    alertHtml='<div class="alert alert-blue" style="margin-top:10px">ℹ️ <strong>Moderate demand ('+totalGPM.toFixed(1)+' GPM).</strong> A 140,000–199,000 BTU tankless unit recommended.</div>';
+  } else {
+    alertHtml='<div class="alert alert-ok" style="margin-top:10px">✅ <strong>Standard demand ('+totalGPM.toFixed(1)+' GPM).</strong> Any 80,000–120,000 BTU tankless unit should cover this load.</div>';
+  }
+  document.getElementById('res-alert').innerHTML=alertHtml;
+
+  let compHtml='<div style="margin-top:10px">';
+  if(hasMultiHead){
+    compHtml+='<span class="compliance-badge cb-orange">⚠ Multi-Head: Verify FPC 604.4</span>';
+  }
+  const rainStdQ=parseInt(document.getElementById('rain-std-qty').textContent)||0;
+  const rainHfQ=parseInt(document.getElementById('rain-hf-qty').textContent)||0;
+  if(rainHfQ>0){
+    compHtml+='<span class="compliance-badge cb-red">⚠ Hi-Flow head: may exceed 2.0 GPM limit</span>';
+  }
+  if(bodyGPM>0){
+    compHtml+='<span class="compliance-badge cb-green">✓ Body sprays: FPC 604.4.2 compliant</span>';
+  }
+  if(rainStdQ>0 && rainHfQ===0){
+    compHtml+='<span class="compliance-badge cb-green">✓ Standard rain heads: FPC compliant</span>';
+  }
+  compHtml+='</div>';
+  document.getElementById('compliance-status').innerHTML=compHtml;
+
+  document.getElementById('shower-result').classList.add('show');
+  document.getElementById('tank-gpm').value=totalGPM.toFixed(1);
+}
+
+function buildSizingTable(){
+  const tbody=document.getElementById('sizing-table');
+  if(tbody.children.length>0)return;
+  const rows=[
+    [1,2100,1890,'50kBTU gas','4kW electric'],
+    [2,4200,3780,'80kBTU gas','8kW electric'],
+    [3,6300,5670,'100kBTU gas','13kW electric'],
+    [4,8400,7560,'120kBTU gas','17kW electric'],
+    [5,10500,9450,'140kBTU gas','21kW electric'],
+    [6,12600,11340,'167kBTU gas','25kW electric'],
+    [7,14700,13230,'180kBTU gas','29kW electric'],
+    [8,16800,15120,'199kBTU gas','33kW electric'],
+    [10,21000,18900,'2x199kBTU','>40kW (2 units)'],
+    [12,25200,22680,'2x199kBTU','2x27kW units']
+  ];
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td>'+r[0]+'</td><td>'+r[1].toLocaleString()+'</td><td>'+r[2].toLocaleString()+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function calcTankless(){
+  const gpm=parseFloat(document.getElementById('tank-gpm').value);
+  const gwTemp=parseInt(document.getElementById('tank-county').value)||70;
+  const outTemp=parseFloat(document.getElementById('tank-out').value)||120;
+  const fuel=document.getElementById('tank-fuel').value;
+  const uses=document.getElementById('tank-uses').value;
+  const install=document.getElementById('tank-install').value;
+
+  if(!gpm||gpm<=0){alert('Enter peak GPM to size tankless heater.');return;}
+
+  const dt=outTemp-gwTemp;
+  let adjGPM=gpm;
+  if(uses==='shower-sink')adjGPM+=1.5;
+  if(uses==='shower-multi')adjGPM+=3.0;
+  if(install==='parallel')adjGPM=adjGPM/2;
+
+  const btuNeeded=adjGPM*500*dt*8.33/60;
+  const btuDisplay=install==='parallel'?btuNeeded*2:btuNeeded;
+
+  document.getElementById('tank-res-btu').textContent=Math.round(btuDisplay/1000)+'k';
+  document.getElementById('tank-res-unit').textContent='BTU/hr Required ('+adjGPM.toFixed(1)+' GPM × '+dt+'°F ΔT)'+(install==='parallel'?' × 2 units':'');
+
+  const models=TANKLESS_MODELS[fuel]||TANKLESS_MODELS.gas;
+  const targetBTU=install==='parallel'?btuNeeded:btuDisplay;
+  const fits=models.filter(m=>m.btu>=targetBTU);
+  const recs=fits.slice(0,3).length>0?fits.slice(0,3):models.slice(-3);
+
+  let recHtml='';
+  recs.forEach((m,i)=>{
+    const label=i===0?'<span style="color:#22C55E;font-size:.65rem;font-weight:700"> ★ TOP PICK</span>':'';
+    recHtml+=`<div style="background:#0F1629;border-radius:8px;padding:10px;margin-top:6px">
+      <div style="font-size:.78rem;font-weight:700;color:#F97316">${esc(m.model)}${label}</div>
+      <div style="font-size:.7rem;color:#94A3B8;margin-top:4px">${esc(m.note)}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+        <div class="h-cell"><div class="h-val">${m.btu.toLocaleString()}</div><div class="h-lbl">BTU/hr</div></div>
+        <div class="h-cell"><div class="h-val">${m.gpm} GPM</div><div class="h-lbl">@ FL ΔT</div></div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('tank-recommendations').innerHTML=recHtml;
+
+  let notesHtml=`<strong>Calculation:</strong> ${adjGPM.toFixed(1)} GPM × ${dt}°F ΔT = ${Math.round(btuDisplay/1000)}k BTU/hr<br>`;
+  notesHtml+=`<strong>FL Groundwater:</strong> ${gwTemp}°F → Set output ${outTemp}°F<br>`;
+  if(install==='parallel')notesHtml+=`<strong>Parallel Config:</strong> Each unit handles ${adjGPM.toFixed(1)} GPM at ${Math.round(btuNeeded/1000)}k BTU/hr<br>`;
+  if(install==='series')notesHtml+=`<strong>Series Config:</strong> Unit 1 pre-heats, Unit 2 reaches setpoint — good for cold winters<br>`;
+  document.getElementById('tank-notes').innerHTML=notesHtml;
+
+  let alertHtml='';
+  if(fuel==='gas'&&btuDisplay>199000){
+    alertHtml='<div class="alert alert-warn" style="margin-top:10px">⚠️ Demand exceeds single-unit capacity (199k BTU max). Use 2 units in parallel configuration.</div>';
+  } else if(fuel==='electric'&&btuDisplay>102400){
+    alertHtml='<div class="alert alert-red" style="margin-top:10px">⚠️ High electric demand. Requires 200A+ service. Gas tankless strongly recommended for this load.</div>';
+  } else {
+    alertHtml='<div class="alert alert-ok" style="margin-top:10px">✅ System is properly sized for your FL shower demand.</div>';
+  }
+  document.getElementById('tank-alert').innerHTML=alertHtml;
+  document.getElementById('tank-result').classList.add('show');
+}
+
+function showCountyCode(){
+  const county=document.getElementById('county-code').value;
+  const text=COUNTIES_FL[county]||COUNTIES_FL['other'];
+  document.getElementById('county-code-text').textContent=text;
+}
+
+function toggleCheck(el){
+  const box=el.querySelector('.check-box');
+  box.classList.toggle('checked');
+  updateCheckScore();
+}
+
+function updateCheckScore(){
+  const items=document.querySelectorAll('#code-checklist .check-box');
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  const total=items.length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  const name=document.getElementById('q-name').value.trim();
+  if(!name){alert('Please enter your name.');return;}
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+
+// Init
+showCountyCode();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+<!-- fl-plumbing-seo: master-shower rain-head body-spray handshower tankless sizing GPM FL plumbing code WaterSense FPC 604.4 SFWMD conservation -->
+
+</div>
+</body>
+</html>
