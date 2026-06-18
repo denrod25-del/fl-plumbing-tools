@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Multi-Head Shower Demand & Drain Sizing Calculator | GPM | Tankless Water Heater | Florida</title>
+<meta name="description" content="Calculate combined GPM demand for multi-head showers with rain heads, body sprays, handheld, and steam units. Size supply pipe, drain, and tankless water heater capacity for Florida's luxury shower installations under FPC 604 and manufacturer specs.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#F97316;color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#F97316;border-bottom-color:#F97316}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#F97316;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#F97316}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#F97316;color:#fff}
+.btn-primary:hover{background:#d4610f}
+.result-box{background:#141929;border:1px solid #F97316;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metrics-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.1rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.67rem;margin-top:2px}
+.metric.orange .mv{color:#F97316}
+.metric.green .mv{color:#22C55E}
+.metric.red .mv{color:#EF4444}
+.metric.warn .mv{color:#F4B942}
+.metric.blue .mv{color:#00B4FF}
+.metric.gold .mv{color:#F4B942}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-gold{background:rgba(244,185,66,.12);border:1px solid rgba(244,185,66,.4);color:#F4B942}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.sh-table{width:100%;border-collapse:collapse;margin-top:8px}
+.sh-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:6px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.sh-table td{font-size:.72rem;color:#E2E8F0;padding:7px 8px;border-bottom:1px solid #0F1629}
+.sh-table tr:hover td{background:#141929}
+.sh-table .ok td{color:#22C55E}
+.sh-table .warn-row td{color:#F97316}
+.sh-table .red-row td{color:#EF4444}
+.sh-table .orange{color:#F97316;font-weight:700}
+.fixture-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#141929;border-radius:8px;margin:5px 0;cursor:pointer;border:1px solid #1E293B;transition:.2s}
+.fixture-toggle:hover{border-color:#F97316}
+.fixture-toggle.active-fx{border-color:#F97316;background:rgba(249,115,22,.08)}
+.toggle-left{display:flex;align-items:center;gap:10px}
+.toggle-icon{font-size:1.2rem}
+.toggle-info{font-size:.75rem;font-weight:600;color:#E2E8F0}
+.toggle-sub{font-size:.65rem;color:#94A3B8}
+.toggle-qty{display:flex;align-items:center;gap:6px}
+.qty-btn{width:26px;height:26px;background:#0F1629;border:1px solid #1E293B;border-radius:5px;color:#E2E8F0;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.qty-btn:hover{border-color:#F97316;color:#F97316}
+.qty-val{width:28px;text-align:center;font-size:.85rem;font-weight:700;color:#F97316}
+.gpm-badge{font-size:.65rem;color:#F97316;font-weight:700;white-space:nowrap}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#F97316;border-color:#F97316}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#fff;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#F97316;transition:width .4s}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#F97316}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F97316;color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.demand-bar-wrap{background:#141929;border-radius:10px;padding:14px;margin-top:10px}
+.bar-label{display:flex;justify-content:space-between;font-size:.68rem;color:#94A3B8;margin-bottom:3px}
+.bar-track{height:14px;background:#0A0E1A;border-radius:4px;overflow:hidden;margin-bottom:8px}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🚿 FL Multi-Head Shower Demand & Drain Sizing</h1>
+  <p>Calculate combined GPM for rain heads, body sprays, handheld units, and steam. Size supply pipe, drain, and tankless water heater for luxury FL shower systems</p>
+  <span class="badge">TANKLESS CAPACITY CHECK</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('demand')">GPM Demand</div>
+  <div class="tab" onclick="showTab('systems')">Pipe & Drain</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: GPM DEMAND CALCULATOR -->
+<div id="tab-demand" class="panel active">
+  <div class="card">
+    <div class="card-title">🚿 Select Your Shower Components</div>
+    <p style="font-size:.72rem;color:#94A3B8;margin-bottom:10px">Tap each component to include it. Adjust quantity with +/−. GPM values are EPA WaterSense defaults unless overridden in System tab.</p>
+
+    <div id="fixture-toggles">
+      <div class="fixture-toggle" id="toggle-rain" onclick="toggleFx('rain')">
+        <div class="toggle-left">
+          <span class="toggle-icon">🌧️</span>
+          <div>
+            <div class="toggle-info">Rain Head / Ceiling Shower</div>
+            <div class="toggle-sub">Overhead cascade spray — 2.0 GPM (WaterSense) or 2.5 GPM (standard)</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="gpm-badge" id="rain-gpm-badge">2.5 GPM each</span>
+          <div class="toggle-qty" onclick="event.stopPropagation()">
+            <div class="qty-btn" onclick="changeQty('rain',-1)">−</div>
+            <div class="qty-val" id="qty-rain">0</div>
+            <div class="qty-btn" onclick="changeQty('rain',1)">+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixture-toggle" id="toggle-body" onclick="toggleFx('body')">
+        <div class="toggle-left">
+          <span class="toggle-icon">💧</span>
+          <div>
+            <div class="toggle-info">Body Spray Jets</div>
+            <div class="toggle-sub">Side wall sprays — 0.5 GPM per jet (Kohler/Moen typical)</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="gpm-badge" id="body-gpm-badge">0.5 GPM each</span>
+          <div class="toggle-qty" onclick="event.stopPropagation()">
+            <div class="qty-btn" onclick="changeQty('body',-1)">−</div>
+            <div class="qty-val" id="qty-body">0</div>
+            <div class="qty-btn" onclick="changeQty('body',1)">+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixture-toggle" id="toggle-hand" onclick="toggleFx('hand')">
+        <div class="toggle-left">
+          <span class="toggle-icon">🤲</span>
+          <div>
+            <div class="toggle-info">Handheld Showerhead</div>
+            <div class="toggle-sub">Wand / slide bar head — 1.8 GPM (WaterSense) or 2.0 GPM typical</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="gpm-badge" id="hand-gpm-badge">2.0 GPM each</span>
+          <div class="toggle-qty" onclick="event.stopPropagation()">
+            <div class="qty-btn" onclick="changeQty('hand',-1)">−</div>
+            <div class="qty-val" id="qty-hand">0</div>
+            <div class="qty-btn" onclick="changeQty('hand',1)">+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixture-toggle" id="toggle-wall" onclick="toggleFx('wall')">
+        <div class="toggle-left">
+          <span class="toggle-icon">🔵</span>
+          <div>
+            <div class="toggle-info">Standard Wall Showerhead</div>
+            <div class="toggle-sub">Traditional head — 2.0 GPM (WaterSense) or 2.5 GPM (standard FL)</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="gpm-badge" id="wall-gpm-badge">2.0 GPM each</span>
+          <div class="toggle-qty" onclick="event.stopPropagation()">
+            <div class="qty-btn" onclick="changeQty('wall',-1)">−</div>
+            <div class="qty-val" id="qty-wall">0</div>
+            <div class="qty-btn" onclick="changeQty('wall',1)">+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixture-toggle" id="toggle-steam" onclick="toggleFx('steam')">
+        <div class="toggle-left">
+          <span class="toggle-icon">♨️</span>
+          <div>
+            <div class="toggle-info">Steam Generator</div>
+            <div class="toggle-sub">Dedicated steam unit — 0.5–0.75 GPM water supply; 120°F min dedicated hot water line</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="gpm-badge" id="steam-gpm-badge">0.6 GPM each</span>
+          <div class="toggle-qty" onclick="event.stopPropagation()">
+            <div class="qty-btn" onclick="changeQty('steam',-1)">−</div>
+            <div class="qty-val" id="qty-steam">0</div>
+            <div class="qty-btn" onclick="changeQty('steam',1)">+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixture-toggle" id="toggle-tub" onclick="toggleFx('tub')">
+        <div class="toggle-left">
+          <span class="toggle-icon">🛁</span>
+          <div>
+            <div class="toggle-info">Soaking Tub / Whirlpool Fill</div>
+            <div class="toggle-sub">Adjacent fill valve — 6–10 GPM; typically separate circuit but often shares hot water</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="gpm-badge" id="tub-gpm-badge">8.0 GPM each</span>
+          <div class="toggle-qty" onclick="event.stopPropagation()">
+            <div class="qty-btn" onclick="changeQty('tub',-1)">−</div>
+            <div class="qty-val" id="qty-tub">0</div>
+            <div class="qty-btn" onclick="changeQty('tub',1)">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <label style="margin-top:14px">Water Heater Type</label>
+    <select id="wh-type" onchange="updateWHFields()">
+      <option value="tank">Tank storage (40–80 gal) — standard FL homes</option>
+      <option value="tankless" selected>Tankless (on-demand) — luxury showers often require</option>
+      <option value="tank-tankless">Tank + booster tankless — high-demand hybrid</option>
+    </select>
+
+    <div id="tankless-fields">
+      <label>Tankless Heater Rated GPM</label>
+      <select id="wh-gpm">
+        <option value="6">6 GPM (Rinnai V65i / small unit)</option>
+        <option value="9" selected>9 GPM (Navien NPE-210 / mid-size)</option>
+        <option value="11">11 GPM (Rinnai RU199 / large)</option>
+        <option value="14">14 GPM (Navien NPE-240A / very large)</option>
+        <option value="custom">Custom GPM</option>
+      </select>
+      <label>FL Ground Water Temp (°F)</label>
+      <select id="fl-gwt">
+        <option value="72" selected>North FL — 68–72°F</option>
+        <option value="74">Central FL — 72–76°F</option>
+        <option value="76">South FL — 74–78°F</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" onclick="calcDemand()">Calculate Demand</button>
+
+    <div class="result-box" id="demand-result">
+      <div style="font-size:.85rem;font-weight:700;color:#F97316;margin-bottom:8px">Multi-Head Shower Demand Results</div>
+      <div class="metrics-grid" id="demand-metrics"></div>
+      <div class="demand-bar-wrap" id="demand-bars"></div>
+      <div id="demand-alerts"></div>
+      <div id="tankless-result"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Typical FL Luxury Shower Scenarios</div>
+    <table class="sh-table">
+      <thead><tr><th>Scenario</th><th>Components</th><th>Total GPM</th><th>Tankless Size</th></tr></thead>
+      <tbody>
+        <tr class="ok"><td>Basic upgrade</td><td>2× wall + handheld</td><td>6 GPM</td><td>6–8 GPM</td></tr>
+        <tr><td>Spa shower</td><td>Rain + 6 body + handheld</td><td>7.5 GPM</td><td>9–11 GPM</td></tr>
+        <tr class="warn-row"><td>Master suite</td><td>2× rain + 12 body + 2× handheld</td><td>15 GPM</td><td>14 GPM +</td></tr>
+        <tr class="red-row"><td>Wellness suite</td><td>2× rain + 16 body + steam + tub</td><td>25+ GPM</td><td>Dual unit / tank</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-gold" style="margin-top:8px">⚡ <strong>FL Design Note:</strong> FL's warm climate allows body sprays and steam to be used simultaneously year-round unlike northern climates. Always size for simultaneous operation — FL luxury clients expect all heads on at once.</div>
+  </div>
+</div>
+
+<!-- TAB 2: PIPE & DRAIN SIZING -->
+<div id="tab-systems" class="panel">
+  <div class="card">
+    <div class="card-title">🔧 Supply Pipe & Drain Sizing Reference</div>
+
+    <div class="section-title">Supply Pipe Sizing by GPM Demand</div>
+    <table class="sh-table">
+      <thead><tr><th>Total GPM</th><th>Min Pipe Size</th><th>Recommended</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr class="ok"><td>0–4 GPM</td><td>½"</td><td>½"</td><td>2–3 fixture system</td></tr>
+        <tr class="ok"><td>4–8 GPM</td><td>¾"</td><td>¾"</td><td>Spa shower; most FL upgrades</td></tr>
+        <tr><td>8–14 GPM</td><td>1"</td><td>1"</td><td>Master suite; rain + body spray</td></tr>
+        <tr class="warn-row"><td>14–20 GPM</td><td>1¼"</td><td>1½"</td><td>Large wellness shower</td></tr>
+        <tr class="red-row"><td>20+ GPM</td><td>1½"</td><td>2"</td><td>Dual-person luxury; dedicated line</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-blue" style="margin-top:6px">💡 <strong>Tip:</strong> Size supply pipe to the shower valve manifold, not the individual heads. Use a ¾" dedicated branch from the main water service to the shower manifold, then ½" home runs to each valve group. This reduces pressure drop significantly.</div>
+
+    <div class="section-title">Shower Drain Sizing by GPM</div>
+    <table class="sh-table">
+      <thead><tr><th>Drain Size</th><th>Max Drain Capacity</th><th>Max GPM for Shower</th></tr></thead>
+      <tbody>
+        <tr><td>2" drain</td><td>2 DFU = ~24 GPM capacity</td><td>Up to 6 GPM shower</td></tr>
+        <tr class="ok"><td>3" drain</td><td>3–6 DFU = ~30 GPM capacity</td><td>6–15 GPM shower</td></tr>
+        <tr><td>4" drain</td><td>10+ DFU = ~50 GPM capacity</td><td>15–30 GPM shower</td></tr>
+      </tbody>
+    </table>
+    <div class="info-block">
+      <p><strong>FL drain note:</strong> Under FPC, shower drain sizes must accommodate simultaneous full flow from all fixtures. For multi-head showers with 10+ GPM demand, a 3" linear drain (single pipe) is typically required. For 20+ GPM, consider dual 3" drains or a single 4" drain. FL slab construction limits drain re-routing — plan the drain size before tile!</p>
+    </div>
+
+    <div class="section-title">Tankless Water Heater GPM Derating for FL</div>
+    <table class="sh-table">
+      <thead><tr><th>Unit Rating</th><th>Rise 70°F (72° FL ground)</th><th>Rise 50°F (adjusted)</th></tr></thead>
+      <tbody>
+        <tr><td>Rinnai V65i</td><td>3.5 GPM @ 70° rise</td><td>5.2 GPM @ 50° rise</td></tr>
+        <tr class="ok"><td>Navien NPE-210S</td><td>5.0 GPM @ 70° rise</td><td>7.5 GPM @ 50° rise</td></tr>
+        <tr class="ok"><td>Rinnai RU199eN</td><td>6.5 GPM @ 70° rise</td><td>9.7 GPM @ 50° rise</td></tr>
+        <tr><td>Navien NPE-240A</td><td>8.0 GPM @ 70° rise</td><td>12.0 GPM @ 50° rise</td></tr>
+        <tr><td>Rheem RTGH-95DVLN</td><td>5.5 GPM @ 70° rise</td><td>8.2 GPM @ 50° rise</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-gold" style="margin-top:6px">💡 FL advantage: Ground water temp of 72–76°F means only a 50–55°F rise to reach 105°F set point (vs 70°F rise in northern states). FL tankless units can deliver 30–40% more GPM than their northern ratings suggest.</div>
+
+    <div class="section-title">Custom GPM Override</div>
+    <div class="info-block">
+      <p style="margin-bottom:8px"><strong>Override fixture GPM values</strong> for specific product specs:</p>
+    </div>
+    <div class="row2">
+      <div><label>Rain Head GPM</label><input type="number" id="o-rain" placeholder="2.5" step="0.1" min="0.5" max="8"></div>
+      <div><label>Body Spray GPM (each)</label><input type="number" id="o-body" placeholder="0.5" step="0.1" min="0.1" max="2"></div>
+    </div>
+    <div class="row2">
+      <div><label>Handheld GPM</label><input type="number" id="o-hand" placeholder="2.0" step="0.1" min="0.5" max="5"></div>
+      <div><label>Wall Head GPM</label><input type="number" id="o-wall" placeholder="2.0" step="0.1" min="0.5" max="5"></div>
+    </div>
+    <div class="row2">
+      <div><label>Steam Supply GPM</label><input type="number" id="o-steam" placeholder="0.6" step="0.1" min="0.2" max="2"></div>
+      <div><label>Tub Fill GPM</label><input type="number" id="o-tub" placeholder="8.0" step="0.5" min="2" max="20"></div>
+    </div>
+    <button class="btn btn-primary" onclick="applyOverrides()">Apply Custom Values</button>
+    <div id="override-msg"></div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FL Code — Multi-Head Shower Systems</div>
+
+    <div class="section-title">FPC 408.9 — Shower Compartments</div>
+    <div class="info-block">
+      <p><strong>FPC 408.9:</strong> Each shower stall shall have a minimum floor area of 900 square inches (30"×30") and be capable of enclosing a 30" diameter circle. FL inspectors may require larger for multi-head configurations. Walk-in showers with body sprays often require 36"×48" minimum for practical use.</p>
+      <p style="margin-top:6px"><strong>Multi-head showers note:</strong> Body spray systems mounted on opposite walls require a minimum 36" stall width to avoid direct spray collision and cross-spray water waste issues in FL. Linear drain installations require waterproofing on all walls to 6" above top spray outlet.</p>
+    </div>
+
+    <div class="section-title">FPC 604 — Water Supply System Sizing</div>
+    <div class="info-block">
+      <p><strong>FPC 604.3:</strong> The supply pipe shall be sized to accommodate the total demand based on fixture units and developed pipe length. Multi-head showers with 10+ GPM demand routinely require 1" or larger supply runs to maintain adequate pressure at all outlets simultaneously.</p>
+      <p style="margin-top:6px"><strong>FPC 604.4 (Velocity):</strong> Maximum velocity in supply piping is 8 ft/s for cold, 5 ft/s for hot. High-GPM showers may require upsizing pipe to maintain these velocity limits and prevent erosion of copper fittings. This is why FL luxury shower plumbing often runs 1" hot and cold to the shower.</p>
+    </div>
+
+    <div class="section-title">FPC 412.2 — Shower Drain Requirements</div>
+    <div class="info-block">
+      <p><strong>FPC 412.2:</strong> Shower drains shall have a strainer area of not less than 3 square inches of total inlet area and shall be provided with a removable strainer. Multi-head showers need linear drains or multiple point drains to capture full flow — ensure strainer area meets or exceeds FPC requirement for total GPM.</p>
+      <p style="margin-top:6px"><strong>FL slab consideration:</strong> Multi-head shower drains in slab construction cannot be easily relocated after pour. In FL renovations, the drain position often dictates the shower layout. Confirm drain location and diameter with structural before design lock-in.</p>
+    </div>
+
+    <div class="section-title">Multi-Head Shower Compliance Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Supply pipe sized for simultaneous full-flow from all heads <span class="check-sub">FPC 604.3 — do not use individual fixture flow — use total simultaneous GPM for pipe selection; typically 1" or larger for multi-head systems</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Dedicated ¾" or 1" hot and cold supply runs to shower manifold <span class="check-sub">FPC 604.4 velocity limits — ¾" supply limits hot water to ~5 GPM at 5 ft/s; 10+ GPM showers need 1" supply; pressure-balance or thermostatic valve required</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Pressure-balancing or thermostatic shower valve installed <span class="check-sub">FPC 424.3 — all showers require ASSE 1016 anti-scald protection; multi-head showers with steam strongly recommend thermostatic valve for precise temperature control</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Drain sized for total simultaneous GPM from all outlets <span class="check-sub">FPC 412.2 — 3" drain for 6–15 GPM systems; 4" or dual 3" for 15+ GPM; linear drain must have adequate grate inlet area; confirm with FL-licensed plumber on slab jobs</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Tankless water heater sized for FL-adjusted simultaneous GPM <span class="check-sub">FL ground water 72–76°F → 50–55°F rise to 105°F set point; verify rated GPM at actual temperature rise, not max-rise rating; size 20–30% above calculated shower GPM</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Steam generator on dedicated ½" cold water supply and separate hot water line <span class="check-sub">Most steam generator manufacturers require their own supply line; combined cold supply only (steam units heat their own water internally); check manufacturer spec sheet for FL humidity rating</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Waterproofing membrane on all shower walls to correct height <span class="check-sub">FBC R307 / ANSI A108.01 — waterproofing required to 72" above drain or 6" above top shower outlet, whichever is higher; body sprays require perimeter waterproofing; LATICRETE Hydro Ban or Schluter Kerdi common in FL</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Ventilation adequate for steam shower moisture load <span class="check-sub">FL already high-humidity climate; steam showers require exhaust fan minimum 110 CFM for steam rooms or per steam generator manufacturer spec; HVAC to be notified of added moisture load</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 8 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a Multi-Head Shower Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Seminole</option><option>Other</option>
+    </select>
+
+    <label>Project Type</label>
+    <select id="q-proj">
+      <option>New luxury shower installation</option>
+      <option>Shower remodel / upgrade</option>
+      <option>Add body sprays to existing shower</option>
+      <option>Steam shower addition</option>
+      <option>Tankless water heater upgrade for shower</option>
+      <option>Supply pipe upsizing for multi-head system</option>
+      <option>Drain upsizing / linear drain installation</option>
+      <option>Complete master bathroom renovation</option>
+    </select>
+
+    <label>Estimated Total GPM Needed</label>
+    <select id="q-gpm">
+      <option>Under 6 GPM — basic upgrade</option>
+      <option>6–10 GPM — spa shower</option>
+      <option>10–15 GPM — master suite luxury</option>
+      <option>15–25 GPM — wellness suite</option>
+      <option>25+ GPM — full luxury / commercial grade</option>
+      <option>Not sure — need assessment</option>
+    </select>
+
+    <label>Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="Current shower size, existing pipe size, location in FL, any special requirements..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Consultation</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | FL Licensed Plumbing Contractor | CPC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🚿</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+florida multi head shower calculator, multi head shower GPM florida, rain head shower sizing florida, body spray shower florida, steam shower florida, luxury shower plumbing florida, shower drain sizing florida, tankless water heater multi head shower florida, shower supply pipe sizing florida, FPC 408.9 shower florida, FPC 604 shower florida, FL shower remodel pipe size, body jets shower GPM florida, rain head GPM florida, handheld showerhead florida, steam generator florida plumbing, shower manifold florida, shower valve thermostatic florida, ASSE 1016 shower florida, linear drain shower florida, shower drain 3 inch florida, slab drain shower florida, shower waterproofing florida, multi outlet shower florida, Navien NPE multi head florida, Rinnai tankless shower florida, dual shower heads florida, luxury master shower florida plumber, body spray shower install florida, rain head install florida, shower pipe upsizing florida
+Multi-head shower GPM calculation: sum GPM of all simultaneous outlets; rain head typically 2.0 to 2.5 GPM; each body spray jet 0.5 GPM (e.g. 12 body sprays equals 6 GPM alone); handheld showerhead 1.8 to 2.0 GPM; standard wall head 2.0 to 2.5 GPM; steam generator water supply 0.5 to 0.75 GPM; soaking tub fill 6 to 10 GPM; Florida luxury spa shower commonly 8 to 15 GPM simultaneous demand; master wellness suite 20 to 30 GPM simultaneous; size all pipe and tankless for worst-case simultaneous operation
+Tankless water heater sizing for Florida: Florida ground water temperature 72 to 76 degrees F versus northern states 50 to 55 degrees F; Florida shower set point typically 100 to 105 degrees F; therefore temperature rise only 28 to 33 degrees F in Florida versus 50 to 55 degrees north; Florida tankless units deliver significantly more GPM than nameplate rating at northern standards; Navien NPE-210S rated 5 GPM at 70 degree rise delivers 8 to 9 GPM in Florida conditions; always size tankless at 20 to 30 percent above calculated shower GPM demand for margin
+Shower drain sizing for multi head Florida: FPC 412.2 requires shower drain strainer area not less than 3 square inches; drain flow capacity by pipe size: 2 inch drain handles up to 24 GPM instantaneous; 3 inch drain handles 30 to 50 GPM; for multi head showers over 8 GPM use 3 inch drain minimum in Florida slab construction; linear drain must have grate opening area sufficient for full flow; dual 3 inch drains for very large wellness showers exceeding 20 GPM; plan drain location before slab pour on Florida new construction
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// Default GPM values
+let GPM={rain:2.5,body:0.5,hand:2.0,wall:2.0,steam:0.6,tub:8.0};
+let COUNTS={rain:0,body:0,hand:0,wall:0,steam:0,tub:0};
+let ACTIVE={rain:false,body:false,hand:false,wall:false,steam:false,tub:false};
+
+function toggleFx(key){
+  const el=document.getElementById('toggle-'+key);
+  if(ACTIVE[key]){
+    ACTIVE[key]=false;
+    COUNTS[key]=0;
+    document.getElementById('qty-'+key).textContent='0';
+    el.classList.remove('active-fx');
+  } else {
+    ACTIVE[key]=true;
+    if(COUNTS[key]===0)COUNTS[key]=1;
+    document.getElementById('qty-'+key).textContent=COUNTS[key];
+    el.classList.add('active-fx');
+  }
+}
+
+function changeQty(key,d){
+  const newVal=Math.max(0,COUNTS[key]+d);
+  COUNTS[key]=newVal;
+  document.getElementById('qty-'+key).textContent=newVal;
+  if(newVal===0){ACTIVE[key]=false;document.getElementById('toggle-'+key).classList.remove('active-fx');}
+  else {ACTIVE[key]=true;document.getElementById('toggle-'+key).classList.add('active-fx');}
+}
+
+function updateWHFields(){
+  const t=document.getElementById('wh-type').value;
+  document.getElementById('tankless-fields').style.display=(t==='tank')?'none':'block';
+}
+
+function calcDemand(){
+  const keys=['rain','body','hand','wall','steam','tub'];
+  let total=0;
+  const parts=[];
+  keys.forEach(k=>{
+    if(COUNTS[k]>0){
+      const sub=GPM[k]*COUNTS[k];
+      total+=sub;
+      parts.push({k,count:COUNTS[k],gpmEach:GPM[k],subTotal:sub});
+    }
+  });
+  if(total===0){alert('Please add at least one fixture.');return;}
+
+  // Pipe sizing
+  let pipe='½"';
+  if(total>4)pipe='¾"';
+  if(total>8)pipe='1"';
+  if(total>14)pipe='1¼"';
+  if(total>20)pipe='1½"';
+  if(total>28)pipe='2"';
+
+  // Drain sizing
+  let drain='2"';
+  if(total>6)drain='3"';
+  if(total>15)drain='4" or dual 3"';
+
+  // Hot GPM (exclude cold-only like steam)
+  const hotGPM=total-(COUNTS.steam*GPM.steam); // steam has dedicated internal heater
+  const whType=document.getElementById('wh-type').value;
+  const whGPM=parseFloat(document.getElementById('wh-gpm')?.value)||9;
+  const gwt=parseFloat(document.getElementById('fl-gwt')?.value)||72;
+  // FL-adjusted GPM: rated at 70°F rise, FL actual rise to 105°F setpoint
+  const flRise=105-gwt;
+  const adjustedGPM=whType==='tank'?99:(whGPM*(70/flRise));
+
+  const whStatus=whType==='tank'?'OK (tank)':adjustedGPM>=hotGPM?'✅ Adequate':'⚠️ UNDERSIZED';
+  const whOk=whType==='tank'||adjustedGPM>=hotGPM;
+
+  const metrics=[
+    {val:total.toFixed(1)+' GPM',lbl:'Total Demand',cls:'orange',sub:'All heads simultaneous'},
+    {val:pipe,lbl:'Supply Pipe',cls:total>14?'warn':total>8?'blue':'green',sub:'Min recommended'},
+    {val:drain,lbl:'Drain Size',cls:total>15?'warn':total>6?'blue':'green',sub:'FPC 412 sized'},
+    {val:whType==='tank'?'Tank OK':adjustedGPM.toFixed(1)+' GPM',lbl:'WH Capacity',cls:whOk?'green':'red',sub:whType==='tank'?'Adequate':'FL-adjusted'},
+  ];
+  let mHtml='';
+  metrics.forEach(m=>{mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.ms||m.sub||'')}</div></div>`;});
+  document.getElementById('demand-metrics').innerHTML=mHtml;
+
+  // Bar chart
+  let barHtml='<div style="font-size:.75rem;font-weight:700;color:#94A3B8;margin-bottom:8px">GPM BREAKDOWN BY COMPONENT</div>';
+  parts.forEach(p=>{
+    const pct=Math.min(100,p.subTotal/total*100);
+    const names={rain:'Rain Head(s)',body:'Body Sprays',hand:'Handheld(s)',wall:'Wall Head(s)',steam:'Steam Generator',tub:'Tub Fill'};
+    barHtml+=`<div class="bar-label"><span>${esc(names[p.k]||p.k)} ×${p.count}</span><span style="color:#F97316;font-weight:700">${p.subTotal.toFixed(1)} GPM</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:${pct.toFixed(0)}%;background:#F97316"></div></div>`;
+  });
+  document.getElementById('demand-bars').innerHTML=barHtml;
+
+  let alertHtml='';
+  if(!whOk)alertHtml+=`<div class="alert alert-red" style="margin-top:8px">🚨 Tankless undersized! FL-adjusted capacity: ${adjustedGPM.toFixed(1)} GPM but shower needs ${hotGPM.toFixed(1)} GPM hot water. Upgrade to a larger unit or add a second tankless unit in parallel.</div>`;
+  if(COUNTS.tub>0)alertHtml+=`<div class="alert alert-warn" style="margin-top:8px">⚠️ Soaking tub fill (8 GPM) is included. If tub and shower will NOT run simultaneously, calculate without tub for hot water sizing — include it only for drain sizing.</div>`;
+  if(COUNTS.body>8)alertHtml+=`<div class="alert alert-gold" style="margin-top:8px">💡 ${COUNTS.body} body sprays × ${GPM.body} GPM = ${(COUNTS.body*GPM.body).toFixed(1)} GPM. Consider running in zones (left/right panels separately) to reduce instantaneous demand and allow a smaller tankless unit.</div>`;
+  if(total>14)alertHtml+=`<div class="alert alert-warn" style="margin-top:8px">⚠️ High demand (${total.toFixed(1)} GPM). Verify main water service can support this flow simultaneously with other home fixtures. FL homes on ¾" service lines may need 1" service upgrade.</div>`;
+  document.getElementById('demand-alerts').innerHTML=alertHtml;
+  document.getElementById('tankless-result').innerHTML='';
+  document.getElementById('demand-result').classList.add('show');
+}
+
+function applyOverrides(){
+  const fields={rain:'o-rain',body:'o-body',hand:'o-hand',wall:'o-wall',steam:'o-steam',tub:'o-tub'};
+  let changed=0;
+  Object.entries(fields).forEach(([k,id])=>{
+    const v=parseFloat(document.getElementById(id).value);
+    if(!isNaN(v)&&v>0){GPM[k]=v;document.getElementById(k+'-gpm-badge').textContent=v.toFixed(1)+' GPM each';changed++;}
+  });
+  document.getElementById('override-msg').innerHTML=changed?`<div class="alert alert-ok" style="margin-top:8px">✅ ${changed} custom GPM value(s) applied. Re-run demand calculator to update results.</div>`:'<div class="alert alert-warn" style="margin-top:8px">No values changed. Enter GPM numbers in the fields above to override defaults.</div>';
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['demand','systems','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+updateWHFields();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+<!-- fl-plumbing-seo: multi head shower GPM calculator florida rain head shower sizing florida body spray shower florida luxury shower plumbing florida shower demand calculator tankless water heater multi head shower florida shower supply pipe sizing florida FPC 408.9 shower florida FPC 604 shower sizing florida steam shower GPM florida shower drain sizing florida linear drain florida thermostatic shower valve florida luxury master shower florida plumber multi outlet shower system florida -->
+
+</div>
+</body>
+</html>

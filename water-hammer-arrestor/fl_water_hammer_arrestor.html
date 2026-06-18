@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Water Hammer & Arrestor Sizing Calculator | Surge Pressure | FPC 604.10 | Florida</title>
+<meta name="description" content="Calculate water hammer surge pressure using the Joukowsky formula, size water hammer arrestors per PDI WH-201, and check FPC 604.10 compliance. Covers Florida's high municipal supply pressure conditions for all 67 counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#F4B942;color:#0A0E1A;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#F4B942;border-bottom-color:#F4B942}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#F4B942;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#F4B942}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#F4B942;color:#0A0E1A}
+.btn-primary:hover{background:#d4a017}
+.result-box{background:#141929;border:1px solid #F4B942;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metrics-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.1rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.67rem;margin-top:2px}
+.metric.gold .mv{color:#F4B942}
+.metric.green .mv{color:#22C55E}
+.metric.red .mv{color:#EF4444}
+.metric.warn .mv{color:#F97316}
+.metric.blue .mv{color:#00B4FF}
+.metric.cyan .mv{color:#06B6D4}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-gold{background:rgba(244,185,66,.12);border:1px solid rgba(244,185,66,.4);color:#F4B942}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.wh-table{width:100%;border-collapse:collapse;margin-top:8px}
+.wh-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:6px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.wh-table td{font-size:.72rem;color:#E2E8F0;padding:7px 8px;border-bottom:1px solid #0F1629}
+.wh-table tr:hover td{background:#141929}
+.wh-table .rec td{color:#22C55E;font-weight:700}
+.wh-table .warn-row td{color:#F97316}
+.wh-table .gold{color:#F4B942;font-weight:700}
+.arrestor-card{background:#141929;border:1px solid #1E293B;border-radius:10px;padding:12px;margin:8px 0}
+.arrestor-card.recommended{border-color:#F4B942}
+.arrestor-card h4{font-size:.78rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.spec-row{display:flex;justify-content:space-between;margin:3px 0;font-size:.72rem}
+.spec-row .sk{color:#94A3B8}.spec-row .sv{color:#E2E8F0;font-weight:600}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#F4B942;border-color:#F4B942}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#0A0E1A;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#F4B942;transition:width .4s}
+.surge-viz{background:#141929;border-radius:10px;padding:14px;margin-top:12px;text-align:center}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#F4B942}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>💥 FL Water Hammer & Arrestor Sizing</h1>
+  <p>Calculate surge pressure with the Joukowsky formula, size arrestors per PDI WH-201, and check FPC 604.10 compliance for Florida's high-pressure supply systems</p>
+  <span class="badge">PDI WH-201 SIZING</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('surge')">Surge Calc</div>
+  <div class="tab" onclick="showTab('arrestor')">Arrestor Size</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: SURGE CALCULATOR -->
+<div id="tab-surge" class="panel active">
+  <div class="card">
+    <div class="card-title">⚡ Water Hammer Surge Pressure Calculator</div>
+    <div class="info-block" style="margin-bottom:12px">
+      <p><strong>Joukowsky Formula:</strong> ΔP = ρ × a × ΔV / 144 (in PSI), where ρ is water density (62.4 lb/ft³), a is pressure wave speed (ft/s), and ΔV is the velocity change (ft/s). In FL, high municipal supply pressures (60–100+ PSI) amplify water hammer significantly.</p>
+    </div>
+
+    <label>FL County</label>
+    <select id="s-county">
+      <option value="miami-dade">Miami-Dade (typical 65–85 PSI)</option>
+      <option value="broward">Broward (typical 60–80 PSI)</option>
+      <option value="palm-beach">Palm Beach (typical 65–85 PSI)</option>
+      <option value="hillsborough" selected>Hillsborough (typical 60–80 PSI)</option>
+      <option value="orange">Orange (typical 55–75 PSI)</option>
+      <option value="pinellas">Pinellas (typical 65–90 PSI)</option>
+      <option value="duval">Duval (typical 55–75 PSI)</option>
+      <option value="collier">Collier (typical 70–100 PSI)</option>
+      <option value="other">Other FL County</option>
+    </select>
+
+    <label>Static Supply Pressure (PSI)</label>
+    <input type="number" id="s-psi" value="75" min="20" max="150">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">Check your gauge at a hose bib with no flow. FL average: 60–80 PSI. Above 80 PSI requires PRV (FPC 604.8).</p>
+
+    <label>Pipe Material</label>
+    <select id="s-mat">
+      <option value="copper" selected>Copper (wave speed ≈4,000 ft/s)</option>
+      <option value="cpvc">CPVC (wave speed ≈1,500 ft/s)</option>
+      <option value="pex">PEX (wave speed ≈500 ft/s)</option>
+      <option value="galv">Galvanized steel (wave speed ≈4,500 ft/s)</option>
+      <option value="pvc">PVC (wave speed ≈1,300 ft/s)</option>
+    </select>
+
+    <label>Pipe Diameter (inches)</label>
+    <select id="s-dia">
+      <option value="0.5">½" (branch / fixture supply)</option>
+      <option value="0.75" selected>¾" (main branch)</option>
+      <option value="1.0">1" (main supply / large branch)</option>
+      <option value="1.25">1¼"</option>
+      <option value="1.5">1½"</option>
+      <option value="2.0">2" (main)</option>
+    </select>
+
+    <label>Flow Rate Before Valve Closure (GPM)</label>
+    <input type="number" id="s-gpm" value="4" min="0.5" max="50" step="0.5">
+    <p style="font-size:.67rem;color:#94A3B8;margin-top:3px">Typical dishwasher: 2 GPM, washing machine: 4 GPM, toilet fill: 2–3 GPM, shower: 2–2.5 GPM.</p>
+
+    <label>Valve Closure Type</label>
+    <select id="s-valve">
+      <option value="instant">Instant / solenoid (washing machine, dishwasher) — &lt;0.5 sec</option>
+      <option value="fast" selected>Fast close (0.5–1.5 sec)</option>
+      <option value="slow">Slow close (1.5–5 sec)</option>
+      <option value="gradual">Gradual (5+ sec) — manual quarter-turn</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcSurge()">Calculate Surge Pressure</button>
+
+    <div class="result-box" id="surge-result">
+      <div style="font-size:.85rem;font-weight:700;color:#F4B942;margin-bottom:6px">Water Hammer Surge Results</div>
+      <div class="metrics-grid" id="surge-metrics"></div>
+      <div id="surge-recs"></div>
+      <div class="surge-viz" id="surge-viz"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔊 Common Water Hammer Sources in FL Homes</div>
+    <table class="wh-table">
+      <thead><tr><th>Source</th><th>Flow Rate</th><th>Valve Type</th><th>Hammer Risk</th></tr></thead>
+      <tbody>
+        <tr class="warn-row"><td>Washing machine</td><td>4–6 GPM</td><td>Solenoid (instant)</td><td>Very high</td></tr>
+        <tr class="warn-row"><td>Dishwasher</td><td>2–3 GPM</td><td>Solenoid (instant)</td><td>High</td></tr>
+        <tr><td>Toilet fill valve</td><td>2–3 GPM</td><td>Float / solenoid</td><td>Moderate-High</td></tr>
+        <tr><td>Refrigerator ice maker</td><td>0.5–1 GPM</td><td>Solenoid (instant)</td><td>Moderate</td></tr>
+        <tr class="rec"><td>Shower / tub</td><td>2–2.5 GPM</td><td>Manual</td><td>Low</td></tr>
+        <tr class="rec"><td>Hose bib</td><td>4–8 GPM</td><td>Manual</td><td>Low</td></tr>
+        <tr><td>Irrigation solenoid</td><td>5–15 GPM</td><td>Solenoid (instant)</td><td>High</td></tr>
+        <tr><td>Booster pump check valve</td><td>Variable</td><td>Check (slam)</td><td>Very high</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-gold" style="margin-top:8px">⚡ <strong>FL Note:</strong> FL's high municipal water pressures (often 70–100 PSI before PRV) significantly amplify water hammer. A washing machine in an 80 PSI FL home can generate 300–600 PSI surge spikes that damage fixtures, joints, and water heater connections over time.</div>
+  </div>
+</div>
+
+<!-- TAB 2: ARRESTOR SIZING -->
+<div id="tab-arrestor" class="panel">
+  <div class="card">
+    <div class="card-title">🛡️ PDI WH-201 Arrestor Sizing Calculator</div>
+    <div class="info-block" style="margin-bottom:12px">
+      <p><strong>PDI WH-201</strong> (Plumbing and Drainage Institute) is the standard method for sizing water hammer arrestors. Arrestors are classified by letter (A through F) based on the number of fixture units they protect. FPC 604.10 requires arrestors on quick-closing valves.</p>
+    </div>
+
+    <div class="section-title">Add Fixtures with Quick-Closing Valves</div>
+    <div id="fixture-list" style="margin-bottom:10px"></div>
+    <div class="row2">
+      <div>
+        <label>Fixture Type</label>
+        <select id="fx-type">
+          <option value="washer">Washing machine (4 FU)</option>
+          <option value="dishwasher">Dishwasher (2 FU)</option>
+          <option value="toilet">Toilet — flush valve (4 FU)</option>
+          <option value="toilet-tank">Toilet — tank fill (2 FU)</option>
+          <option value="fridge">Refrigerator ice maker (1 FU)</option>
+          <option value="irrigation">Irrigation zone (5 FU)</option>
+          <option value="custom">Custom fixture</option>
+        </select>
+      </div>
+      <div>
+        <label>Count</label>
+        <input type="number" id="fx-count" value="1" min="1" max="20">
+      </div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="addFixture()">+ Add Fixture</button>
+
+    <div class="result-box show" id="arrestor-result" style="margin-top:14px">
+      <div style="font-size:.85rem;font-weight:700;color:#F4B942;margin-bottom:6px">PDI WH-201 Sizing Result</div>
+      <div id="arrestor-content"><div style="font-size:.75rem;color:#94A3B8;text-align:center;padding:12px">Add fixtures above to calculate arrestor sizing.</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 PDI WH-201 Arrestor Size Reference</div>
+    <table class="wh-table">
+      <thead><tr><th>PDI Class</th><th>Fixture Units</th><th>Pipe Size</th><th>Common Use</th></tr></thead>
+      <tbody>
+        <tr><td class="gold">A</td><td>1–11 FU</td><td>⅜" to ½"</td><td>1–3 fixtures; single washer</td></tr>
+        <tr><td class="gold">B</td><td>12–32 FU</td><td>½"</td><td>Small residential branch</td></tr>
+        <tr class="rec"><td class="gold">C</td><td>33–60 FU</td><td>½" to ¾"</td><td>Most residential main lines</td></tr>
+        <tr><td class="gold">D</td><td>61–96 FU</td><td>¾"</td><td>Large residence / small commercial</td></tr>
+        <tr><td class="gold">E</td><td>97–154 FU</td><td>¾" to 1"</td><td>Commercial / multi-family</td></tr>
+        <tr><td class="gold">F</td><td>155–330 FU</td><td>1"</td><td>Large commercial buildings</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Popular FL Arrestor Brands</div>
+    <div class="arrestor-card recommended">
+      <h4>Sioux Chief Mini-Rester 660 Series ⭐</h4>
+      <div class="spec-row"><span class="sk">Classes</span><span class="sv">A, C, D — most common FL</span></div>
+      <div class="spec-row"><span class="sk">Install</span><span class="sv">Sweat or threaded; stands or inline</span></div>
+      <div class="spec-row"><span class="sv" style="font-size:.68rem;color:#94A3B8">Most popular FL plumber choice; pre-charged permanent piston</span></div>
+    </div>
+    <div class="arrestor-card">
+      <h4>Watts Series 15M Series</h4>
+      <div class="spec-row"><span class="sk">Classes</span><span class="sv">A through F available</span></div>
+      <div class="spec-row"><span class="sk">Install</span><span class="sv">Threaded; brass body</span></div>
+    </div>
+    <div class="arrestor-card">
+      <h4>Zurn Wilkins WHA / WHAB</h4>
+      <div class="spec-row"><span class="sk">Classes</span><span class="sv">A, B, C, D</span></div>
+      <div class="spec-row"><span class="sk">Install</span><span class="sv">Sweat or push-fit connections</span></div>
+    </div>
+    <div class="alert alert-gold" style="margin-top:8px">💡 <strong>Placement tip:</strong> Install on the hot AND cold supply to each appliance with a quick-closing valve. Locate within 6 ft of the valve, on the supply side. Vertical orientation preferred for self-recharging piston models.</div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FL Plumbing Code — Water Hammer</div>
+
+    <div class="section-title">FPC 604.10 — Water Hammer</div>
+    <div class="info-block">
+      <p><strong>FPC 604.10:</strong> The flow of water shall not produce a water hammer condition. Where quick-acting valves are used, they shall be provided with water hammer arrestors designed and installed in accordance with the PDI Standard WH 201, ASSE Standard 1010, or AWWA Standards C651 through C654.</p>
+      <p style="margin-top:6px"><strong>Quick-acting valves</strong> include: solenoid valves (dishwashers, washing machines, ice makers, irrigation), diaphragm valves, ball valves operated mechanically by appliances, and flush valves for toilets.</p>
+    </div>
+
+    <div class="section-title">FPC 604.8 — Maximum Supply Pressure</div>
+    <div class="info-block">
+      <p><strong>FPC 604.8:</strong> Where the water pressure in the public water main or the individual water supply system exceeds 80 psi (552 kPa), an approved pressure-reducing valve conforming to ASSE 1003 or CSA Standard B356, with strainer, shall be installed.</p>
+      <p style="margin-top:6px"><strong>Critical for water hammer:</strong> High supply pressure amplifies hammer. A PRV set to 60–70 PSI significantly reduces surge pressure — often eliminating hammer symptoms without adding arrestors. FPC 604.8 makes PRV installation mandatory above 80 PSI.</p>
+    </div>
+
+    <div class="section-title">ASSE 1010 — Water Hammer Arrestors Standard</div>
+    <div class="info-block">
+      <p><strong>ASSE 1010</strong> (American Society of Sanitary Engineering) is the product standard for water hammer arrestors. FPC references both PDI WH-201 (sizing) and ASSE 1010 (product compliance). Always specify ASSE 1010-listed arrestors for FL building permit compliance.</p>
+      <p style="margin-top:6px"><strong>Key ASSE 1010 requirements:</strong> Pre-pressurized sealed piston design; rated for 250 PSI working pressure; 200°F max temperature; shall not require periodic maintenance; cycle-rated to 500,000+ cycles.</p>
+    </div>
+
+    <div class="section-title">Water Hammer Compliance Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Static supply pressure measured and documented <span class="check-sub">Measure at hose bib with no flow; FL systems commonly 60–100+ PSI; above 80 PSI requires PRV per FPC 604.8</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">PRV installed and set to 60–70 PSI if static pressure exceeds 80 PSI <span class="check-sub">FPC 604.8 — ASSE 1003-listed PRV with integral strainer; typically at main entry; verify downstream pressure after installation</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Water hammer arrestors on all quick-closing valve appliances <span class="check-sub">FPC 604.10 — washing machine, dishwasher, ice maker, solenoid irrigation valves; ASSE 1010-listed; PDI WH-201 sizing</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Arrestors installed within 6 ft of appliance, supply side <span class="check-sub">PDI WH-201 installation guidance — closer is more effective; one on hot supply, one on cold supply for washers</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Irrigation system solenoid valves have arrestors or slow-close valves <span class="check-sub">Multiple zone solenoids closing simultaneously can create severe hammer; arrestor at manifold or each zone valve recommended</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Water supply pipes properly secured and supported <span class="check-sub">Unsupported pipes amplify hammer noise and vibration — copper: every 6 ft horizontal, 10 ft vertical; straps at each joint recommended</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Air chambers (if used) checked and recharged <span class="check-sub">Traditional air chambers lose air over time and become waterlogged — replace with ASSE 1010 piston arrestors which do not require recharging</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Check valve on booster pump has slow-close feature <span class="check-sub">Fast-closing check valves on booster pumps create severe water hammer — specify slow-close (10–30 sec) check valves for booster applications</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 8 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a Water Hammer Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Polk</option><option>Seminole</option>
+      <option>Other</option>
+    </select>
+
+    <label>Problem Description</label>
+    <select id="q-prob">
+      <option>Banging pipes when washer / dishwasher shuts off</option>
+      <option>Banging pipes when toilet flushes</option>
+      <option>Loud thump when irrigation turns off</option>
+      <option>Water pressure too high</option>
+      <option>Pipes rattling and vibrating</option>
+      <option>Water hammer arrestor installation (new construction)</option>
+      <option>PRV inspection / replacement</option>
+      <option>General water hammer diagnosis</option>
+    </select>
+
+    <label>Property Type</label>
+    <select id="q-prop">
+      <option>Single-family home</option>
+      <option>Condo / townhouse</option>
+      <option>Multi-family / apartment</option>
+      <option>Commercial</option>
+      <option>New construction</option>
+    </select>
+
+    <label>Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="When does the banging occur, how loud, any visible pipe movement or damage..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Diagnosis</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | FL Licensed Plumbing Contractor | CPC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 💥</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+florida water hammer calculator, water hammer arrestor sizing florida, PDI WH-201 florida, FPC 604.10 water hammer, water hammer florida plumbing, banging pipes florida, pipe banging washing machine florida, water hammer fix florida, surge pressure calculator florida, Joukowsky water hammer formula, ASSE 1010 water hammer arrestor florida, PRV water hammer florida, FPC 604.8 pressure reducing valve florida, high water pressure florida, water hammer washing machine florida, solenoid valve water hammer florida, irrigation water hammer florida, Sioux Chief Mini-Rester florida, water hammer arrestor install florida, pipe hammer florida plumber, water pressure spike florida, banging pipes when toilet flushes florida, plumbing vibration florida, water hammer diagnosis florida, PRV installation florida, air chamber recharge florida, water hammer toilet florida, water hammer dishwasher florida, water hammer ice maker florida, copper pipe water hammer florida, PEX water hammer florida
+Joukowsky water hammer formula: surge pressure delta P equals rho times a times delta V divided by 144 to convert to PSI; rho is water density 62.4 lb per cubic foot; a is pressure wave speed in feet per second depending on pipe material; delta V is velocity change in feet per second; velocity V equals flow rate Q in GPM times 0.4085 divided by inside diameter squared in inches; for copper pipe a equals approximately 4000 feet per second; for PEX a equals approximately 500 feet per second; wave speed ratio explains why PEX is much quieter than copper for water hammer
+Pipe inside diameter reference for water hammer velocity calculation: 1/2 inch copper type L inside diameter 0.545 inch; 3/4 inch copper type L 0.785 inch; 1 inch copper type L 1.025 inch; 1/2 inch PEX 0.475 inch; 3/4 inch PEX 0.671 inch; velocity at 4 GPM through 3/4 copper equals 4 times 0.4085 divided by 0.785 squared equals 2.65 feet per second; surge at copper equals 62.4 times 4000 times 2.65 divided by 144 equals 4581 PSI theoretical instantaneous for complete instant closure
+PDI WH-201 fixture unit table for water hammer arrestor sizing: clothes washer 4 fixture units; dishwasher 2 fixture units; toilet flush tank 2 fixture units; toilet flush valve 4 fixture units; shower 2 fixture units; lavatory 1 fixture unit; kitchen sink 2 fixture units; refrigerator ice maker 1 fixture unit; irrigation zone solenoid 5 fixture units; standard residential home typically 15 to 40 total fixture units; PDI class C covers 33 to 60 FU and is most common for full house residential applications
+Florida water pressure issues: FL municipalities often deliver 70 to 100 PSI at the meter especially in hilly areas; Collier County known for very high pressures; PRV is required by FPC 604.8 above 80 PSI; properly set PRV at 60 to 65 PSI dramatically reduces water hammer severity; PRV setting combined with water hammer arrestors on all solenoid valves eliminates virtually all water hammer complaints in FL homes
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// Pipe wave speeds ft/s
+const WAVE={copper:4000,cpvc:1500,pex:500,galv:4500,pvc:1300};
+
+// Pipe IDs (inches) — type L copper or standard plastic
+const PIPE_ID={0.5:{copper:0.545,cpvc:0.526,pex:0.475,galv:0.622,pvc:0.546},
+               0.75:{copper:0.785,cpvc:0.722,pex:0.671,galv:0.824,pvc:0.758},
+               1.0:{copper:1.025,cpvc:0.936,pex:0.860,galv:1.049,pvc:1.004},
+               1.25:{copper:1.265,cpvc:1.164,pex:1.077,galv:1.380,pvc:1.280},
+               1.5:{copper:1.505,cpvc:1.386,pex:1.273,galv:1.610,pvc:1.502},
+               2.0:{copper:1.985,cpvc:1.821,pex:1.655,galv:2.067,pvc:1.943}};
+
+// Valve closure factor
+const CLOSURE_FACTOR={instant:1.0,fast:0.7,slow:0.25,gradual:0.05};
+
+function calcSurge(){
+  const matKey=document.getElementById('s-mat').value;
+  const diaKey=parseFloat(document.getElementById('s-dia').value);
+  const gpm=parseFloat(document.getElementById('s-gpm').value)||4;
+  const staticPSI=parseFloat(document.getElementById('s-psi').value)||75;
+  const valveKey=document.getElementById('s-valve').value;
+  const county=document.getElementById('s-county').value;
+
+  const a=WAVE[matKey]||4000;
+  const idMap=PIPE_ID[diaKey]||PIPE_ID[0.75];
+  const id=idMap[matKey]||idMap.copper;
+  const rho=62.4;
+
+  // Velocity ft/s
+  const velocity=(gpm*0.4085)/(id*id);
+  const dv=velocity*CLOSURE_FACTOR[valveKey];
+  // Surge PSI (Joukowsky): ΔP = ρ·a·ΔV / 144
+  const surgePSI=Math.round((rho*a*dv)/144);
+  const peakPSI=staticPSI+surgePSI;
+
+  const prvNeeded=staticPSI>80;
+  const dangerPeak=peakPSI>300;
+
+  const matNames={copper:'Copper',cpvc:'CPVC',pex:'PEX',galv:'Galvanized',pvc:'PVC'};
+  const clsNames={instant:'Instant (solenoid)',fast:'Fast-close',slow:'Slow-close',gradual:'Gradual'};
+
+  const metrics=[
+    {val:velocity.toFixed(2)+' ft/s',lbl:'Flow Velocity',cls:'gold',sub:'In '+diaKey+'" '+matNames[matKey]},
+    {val:surgePSI+' PSI',lbl:'Surge Pressure',cls:surgePSI>200?'red':surgePSI>100?'warn':'gold',sub:'Joukowsky formula'},
+    {val:peakPSI+' PSI',lbl:'Peak Pressure',cls:peakPSI>300?'red':peakPSI>200?'warn':'gold',sub:'Static + surge'},
+    {val:staticPSI>80?'REQUIRED':'OK',lbl:'PRV Status',cls:prvNeeded?'warn':'green',sub:staticPSI+' PSI supply'},
+  ];
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('surge-metrics').innerHTML=mHtml;
+
+  let alertHtml='';
+  if(dangerPeak){
+    alertHtml+=`<div class="alert alert-red" style="margin-top:8px">🚨 <strong>Dangerous surge detected!</strong> ${peakPSI} PSI peak pressure can rupture joints, damage appliance solenoids, and burst flex connectors. Immediate action required: install water hammer arrestors and verify PRV setting.</div>`;
+  } else if(peakPSI>200){
+    alertHtml+=`<div class="alert alert-warn" style="margin-top:8px">⚠️ <strong>High surge pressure (${peakPSI} PSI).</strong> Water hammer arrestors required on all quick-closing valves. ${prvNeeded?'PRV installation required (FPC 604.8 — supply exceeds 80 PSI).':''}</div>`;
+  } else {
+    alertHtml+=`<div class="alert alert-ok" style="margin-top:8px">✅ Surge pressure manageable (${peakPSI} PSI peak). ${valveKey==='instant'||valveKey==='fast'?'Water hammer arrestors still recommended per FPC 604.10 on all solenoid valves.':'Low risk — manual valve closure reduces hammer significantly.'}</div>`;
+  }
+  if(prvNeeded)alertHtml+=`<div class="alert alert-warn" style="margin-top:6px">⚠️ <strong>PRV Required:</strong> ${staticPSI} PSI exceeds 80 PSI limit (FPC 604.8). Install ASSE 1003 PRV set to 60–70 PSI. This alone may resolve water hammer symptoms.</div>`;
+  if(matKey==='pex')alertHtml+=`<div class="alert alert-gold" style="margin-top:6px">💡 <strong>PEX advantage:</strong> PEX's low wave speed (500 ft/s vs 4,000 ft/s for copper) dramatically reduces surge pressure. This is one reason FL new construction increasingly uses PEX.</div>`;
+  document.getElementById('surge-recs').innerHTML=alertHtml;
+
+  // Surge visualization
+  const staticBarPct=Math.min(95,staticPSI/200*100);
+  const surgeBarPct=Math.min(95,surgePSI/200*100);
+  const vizHtml=`<div style="font-size:.75rem;font-weight:700;color:#94A3B8;margin-bottom:8px">PRESSURE PROFILE — ${esc(clsNames[valveKey])} closure</div>
+    <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94A3B8;margin-bottom:3px"><span>Static pressure</span><span>${staticPSI} PSI</span></div>
+    <div style="height:16px;background:#1E293B;border-radius:4px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:${staticBarPct.toFixed(0)}%;background:#F4B942;border-radius:4px"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94A3B8;margin-bottom:3px"><span>Surge spike</span><span>+${surgePSI} PSI</span></div>
+    <div style="height:16px;background:#1E293B;border-radius:4px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:${surgeBarPct.toFixed(0)}%;background:${surgePSI>200?'#EF4444':'#F97316'};border-radius:4px"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#94A3B8;margin-bottom:3px"><span>Peak pressure</span><span>${peakPSI} PSI</span></div>
+    <div style="height:16px;background:#1E293B;border-radius:4px;overflow:hidden"><div style="height:100%;width:${Math.min(95,peakPSI/400*100).toFixed(0)}%;background:${peakPSI>300?'#EF4444':peakPSI>200?'#F97316':'#22C55E'};border-radius:4px"></div></div>
+    <div style="font-size:.65rem;color:#94A3B8;margin-top:6px;text-align:center">Bars scale to 200 PSI / 200 PSI / 400 PSI respectively</div>`;
+  document.getElementById('surge-viz').innerHTML=vizHtml;
+  document.getElementById('surge-result').classList.add('show');
+}
+
+// PDI Arrestor sizing
+const PDI_CLASS=[
+  {cls:'A',minFU:1,maxFU:11,pipe:'⅜"–½"'},
+  {cls:'B',minFU:12,maxFU:32,pipe:'½"'},
+  {cls:'C',minFU:33,maxFU:60,pipe:'½"–¾"'},
+  {cls:'D',minFU:61,maxFU:96,pipe:'¾"'},
+  {cls:'E',minFU:97,maxFU:154,pipe:'¾"–1"'},
+  {cls:'F',minFU:155,maxFU:330,pipe:'1"'},
+];
+
+const FX_FU={washer:4,dishwasher:2,toilet:4,'toilet-tank':2,fridge:1,irrigation:5,custom:3};
+const FX_NAMES={washer:'Washing machine',dishwasher:'Dishwasher',toilet:'Toilet (flush valve)','toilet-tank':'Toilet (tank fill)',fridge:'Refrigerator ice maker',irrigation:'Irrigation zone solenoid',custom:'Custom fixture'};
+
+let fixtures=[];
+
+function addFixture(){
+  const type=document.getElementById('fx-type').value;
+  const count=parseInt(document.getElementById('fx-count').value)||1;
+  fixtures.push({type,count,fu:FX_FU[type]||3});
+  renderArrestors();
+}
+
+function removeFx(i){fixtures.splice(i,1);renderArrestors();}
+
+function renderArrestors(){
+  let listHtml='';
+  let totalFU=0;
+  fixtures.forEach((f,i)=>{
+    const fu=f.fu*f.count;
+    totalFU+=fu;
+    listHtml+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:#141929;border-radius:7px;margin-bottom:5px;font-size:.73rem">
+      <span>${esc(FX_NAMES[f.type]||f.type)} ×${f.count}</span>
+      <span style="color:#F4B942;font-weight:700">${fu} FU</span>
+      <span style="cursor:pointer;color:#EF4444;padding:2px 6px" onclick="removeFx(${i})">✕</span>
+    </div>`;
+  });
+  document.getElementById('fixture-list').innerHTML=listHtml;
+
+  if(!fixtures.length){
+    document.getElementById('arrestor-content').innerHTML='<div style="font-size:.75rem;color:#94A3B8;text-align:center;padding:12px">Add fixtures above to calculate arrestor sizing.</div>';
+    return;
+  }
+
+  const pdiClass=PDI_CLASS.find(p=>totalFU>=p.minFU&&totalFU<=p.maxFU)||PDI_CLASS[PDI_CLASS.length-1];
+  const html=`<div style="font-size:.8rem;font-weight:700;color:#94A3B8;margin-bottom:6px">Total Fixture Units: <span style="color:#F4B942">${totalFU} FU</span></div>
+    <div class="arrestor-card recommended">
+      <h4>PDI Class ${esc(pdiClass.cls)} Arrestor Required ⭐</h4>
+      <div class="spec-row"><span class="sk">Fixture units protected</span><span class="sv">${pdiClass.minFU}–${pdiClass.maxFU} FU</span></div>
+      <div class="spec-row"><span class="sk">Your system</span><span class="sv">${totalFU} FU total</span></div>
+      <div class="spec-row"><span class="sk">Typical connection size</span><span class="sv">${pdiClass.pipe}</span></div>
+      <div class="spec-row"><span class="sk">Recommended product</span><span class="sv">Sioux Chief 660-${pdiClass.cls} or equivalent</span></div>
+    </div>
+    <div class="alert alert-gold" style="margin-top:6px">Install one Class ${esc(pdiClass.cls)} arrestor per appliance group, OR size a single larger arrestor at the main line serving all listed fixtures. Verify ASSE 1010 listing on product for FL permit compliance.</div>`;
+  document.getElementById('arrestor-content').innerHTML=html;
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['surge','arrestor','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// Initialize
+renderArrestors();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+<!-- fl-plumbing-seo: water hammer arrestor sizing florida joukowsky formula surge pressure PDI WH-201 water hammer calculator florida banging pipes washing machine florida solenoid valve hammer florida FPC 604.10 water hammer ASSE 1010 arrestor florida PRV water pressure florida FPC 604.8 pressure reducing valve florida slab water hammer copper pipe florida Sioux Chief Mini-Rester florida water hammer fix pipe banging dishwasher florida irrigation solenoid water hammer florida -->
+
+</div>
+</body>
+</html>
