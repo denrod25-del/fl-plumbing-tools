@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Tankless Water Heater Venting Calculator | Florida Plumbing</title>
+<meta name="description" content="Calculate venting requirements for Florida tankless water heaters. Vent type selector, clearance calculator, FL hurricane wind cap requirements, coastal salt air guide, horizontal run limits for FL climate.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.hero{background:linear-gradient(135deg,#0A0E1A 0%,#0F1629 50%,#0A0E1A 100%);padding:24px 16px 16px;text-align:center;border-bottom:1px solid #1E2A45}
+.hero h1{font-size:1.4rem;font-weight:700;color:#06B6D4;margin-bottom:6px;line-height:1.3}
+.hero p{font-size:0.85rem;color:#94A3B8;max-width:480px;margin:0 auto}
+.badge{display:inline-block;background:#06B6D422;color:#06B6D4;border:1px solid #06B6D444;border-radius:4px;font-size:0.7rem;font-weight:600;padding:2px 8px;margin-bottom:8px;letter-spacing:.05em}
+.tabs{display:flex;background:#0F1629;border-bottom:1px solid #1E2A45;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{flex:1;min-width:80px;padding:12px 8px;text-align:center;font-size:0.75rem;font-weight:600;color:#94A3B8;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab.active{color:#06B6D4;border-bottom-color:#06B6D4;background:#06B6D40D}
+.tab:hover:not(.active){color:#E2E8F0;background:#1E2A4522}
+.panel{display:none;padding:16px;max-width:480px;margin:0 auto}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2A45;border-radius:10px;padding:14px;margin-bottom:14px}
+.card h3{font-size:0.85rem;font-weight:700;color:#06B6D4;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+label{display:block;font-size:0.78rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=text],input[type=tel],input[type=number]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:6px;color:#E2E8F0;padding:9px 10px;font-size:0.82rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#06B6D4}
+.btn{width:100%;background:#06B6D4;color:#000;border:none;border-radius:8px;padding:12px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:12px;letter-spacing:.02em}
+.btn:hover{background:#0891B2}
+.result-box{background:#141929;border:1px solid #06B6D433;border-radius:8px;padding:14px;margin-top:12px;display:none}
+.result-box.show{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{background:#0F1629;border:1px solid #1E2A45;border-radius:8px;padding:10px;text-align:center}
+.metric-val{font-size:1.1rem;font-weight:700;color:#06B6D4}
+.metric-lbl{font-size:0.7rem;color:#94A3B8;margin-top:2px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#94A3B8}
+.info-val{color:#E2E8F0;font-weight:600;text-align:right;max-width:65%}
+.alert{border-radius:8px;padding:10px 12px;font-size:0.78rem;margin-bottom:10px;border:1px solid}
+.alert-warn{background:#F4B94211;border-color:#F4B94244;color:#F4B942}
+.alert-info{background:#06B6D411;border-color:#06B6D433;color:#06B6D4}
+.alert-red{background:#EF444411;border-color:#EF444433;color:#EF4444}
+.alert-green{background:#22C55E11;border-color:#22C55E33;color:#22C55E}
+.step-list{counter-reset:steps;margin-top:8px}
+.step-item{counter-increment:steps;display:flex;gap:10px;margin-bottom:10px;font-size:0.78rem}
+.step-item::before{content:counter(steps);background:#06B6D4;color:#000;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;margin-top:1px}
+.step-text{color:#E2E8F0;line-height:1.5}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.check-item:last-child{border-bottom:none}
+.chk{width:16px;height:16px;border-radius:3px;border:2px solid #1E2A45;flex-shrink:0;cursor:pointer;margin-top:1px;background:#141929}
+.chk.checked{background:#06B6D4;border-color:#06B6D4}
+.divider{height:1px;background:#1E2A45;margin:12px 0}
+.phone-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#06B6D41A;border:1px solid #06B6D444;border-radius:8px;padding:12px;color:#06B6D4;font-weight:700;font-size:0.88rem;cursor:pointer;margin-top:10px;text-decoration:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#000;font-weight:700;padding:12px 22px;border-radius:8px;font-size:0.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.county-wrap{position:relative}
+.county-wrap::after{content:'▼';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:0.65rem;pointer-events:none}
+.vent-option{background:#141929;border:2px solid #1E2A45;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.vent-option.selected{border-color:#06B6D4;background:#06B6D40D}
+.vent-option h4{font-size:0.82rem;font-weight:700;margin-bottom:4px;color:#E2E8F0}
+.vent-option p{font-size:0.72rem;color:#94A3B8;line-height:1.5}
+.tag{display:inline-block;border-radius:4px;font-size:0.65rem;font-weight:700;padding:2px 6px;margin-right:4px;margin-bottom:4px}
+.tag-cyan{background:#06B6D422;color:#06B6D4;border:1px solid #06B6D444}
+.tag-green{background:#22C55E22;color:#22C55E;border:1px solid #22C55E44}
+.tag-orange{background:#F9731622;color:#F97316;border:1px solid #F9731644}
+.tag-yellow{background:#F4B94222;color:#F4B942;border:1px solid #F4B94244}
+.tag-red{background:#EF444422;color:#EF4444;border:1px solid #EF444444}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">💨 FLORIDA TANKLESS VENTING</div>
+  <h1>Tankless Water Heater Venting Calculator</h1>
+  <p>Vent type selector, clearance calc, FL hurricane cap requirements, coastal salt air guide, horizontal run limits for FL climate</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('selector')">🔧 Vent Selector</div>
+  <div class="tab" onclick="showTab('clearance')">📐 Clearance Calc</div>
+  <div class="tab" onclick="showTab('code')">📋 FL Code</div>
+  <div class="tab" onclick="showTab('quote')">📞 Quote</div>
+</div>
+
+<!-- TAB 1: VENT SELECTOR -->
+<div class="panel active" id="panel-selector">
+  <div class="card">
+    <h3>🔧 Tankless Water Heater Vent Type Selector</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:12px">Answer these questions to find the right venting approach for your FL installation</p>
+
+    <label>Heater Fuel Type</label>
+    <div class="county-wrap">
+      <select id="fuelType">
+        <option value="ng">Natural gas</option>
+        <option value="lp">Propane (LP)</option>
+      </select>
+    </div>
+
+    <label>Heater Category</label>
+    <div class="county-wrap">
+      <select id="heaterCat">
+        <option value="noncondens">Non-condensing (flue temp > 350°F)</option>
+        <option value="condens">Condensing (flue temp ≤ 350°F) — more efficient</option>
+      </select>
+    </div>
+
+    <label>Installation Location</label>
+    <div class="county-wrap">
+      <select id="installLoc">
+        <option value="indoor_util">Indoor — utility/closet</option>
+        <option value="indoor_garage">Indoor — garage</option>
+        <option value="indoor_attic">Indoor — attic</option>
+        <option value="outdoor">Outdoor — dedicated outdoor unit</option>
+        <option value="screened">Outdoor — under screened enclosure / lanai</option>
+      </select>
+    </div>
+
+    <label>Combustion Air Source</label>
+    <div class="county-wrap">
+      <select id="combustAir">
+        <option value="direct">Direct vent — air from outdoors through sealed pipe</option>
+        <option value="indoor">Indoor air — combustion air from room</option>
+        <option value="power">Power vent — blower-induced, indoor air</option>
+      </select>
+    </div>
+
+    <label>Available Venting Direction</label>
+    <div class="county-wrap">
+      <select id="ventDir">
+        <option value="horizontal">Horizontal through wall (most common FL)</option>
+        <option value="vertical">Vertical through roof</option>
+        <option value="either">Either available</option>
+      </select>
+    </div>
+
+    <label>FL Location Type</label>
+    <div class="county-wrap">
+      <select id="flLocation">
+        <option value="inland">Inland — more than 3 miles from coast</option>
+        <option value="coastal">Coastal — within 3 miles of salt water</option>
+        <option value="hvhz">HVHZ — High Velocity Hurricane Zone (Miami-Dade, Broward)</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="selectVentType()">Get Vent Recommendation</button>
+
+    <div class="result-box" id="ventResult">
+      <div id="vent-rec-title" style="font-size:0.9rem;font-weight:700;color:#06B6D4;margin-bottom:8px"></div>
+      <div id="vent-rec-detail" style="font-size:0.78rem;color:#94A3B8;line-height:1.7;margin-bottom:10px"></div>
+      <div id="vent-alert" class="alert"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 Vent Type Reference Guide</h3>
+
+    <div class="vent-option" onclick="selectVentCard(this,'typeB')">
+      <h4>Type B — Natural Draft</h4>
+      <span class="tag tag-yellow">Non-condensing only</span>
+      <span class="tag tag-orange">Vertical required</span>
+      <p>Double-wall aluminum/galvanized vent. Requires natural convection to draft. Must run primarily vertical. NOT recommended for FL horizontal runs — heat and humidity reduce draft. Only for non-condensing heaters in unconditioned spaces with vertical path available.</p>
+    </div>
+
+    <div class="vent-option" onclick="selectVentCard(this,'direct')">
+      <h4>Direct Vent (Sealed Combustion)</h4>
+      <span class="tag tag-green">FL Preferred</span>
+      <span class="tag tag-cyan">Horizontal OK</span>
+      <span class="tag tag-green">Most efficient</span>
+      <p>Concentric or two-pipe system: combustion air in from outside, exhaust out — all through sealed termination. No indoor air used. Works with both condensing and non-condensing. Best choice for indoor FL installations. Horizontal termination through wall = typical FL setup.</p>
+    </div>
+
+    <div class="vent-option" onclick="selectVentCard(this,'power')">
+      <h4>Power Vent (Blower-Induced)</h4>
+      <span class="tag tag-cyan">Horizontal OK</span>
+      <span class="tag tag-yellow">Indoor air used</span>
+      <p>Heater has built-in blower forcing exhaust through PVC/CPVC or polypropylene pipe. Uses indoor combustion air — requires combustion air makeup in small spaces. Good for indoor utility room. Longer horizontal runs possible vs natural draft. FL-common for indoor closet installs.</p>
+    </div>
+
+    <div class="vent-option" onclick="selectVentCard(this,'outdoor')">
+      <h4>Outdoor / Non-Vented Outdoor Units</h4>
+      <span class="tag tag-green">FL Popular</span>
+      <span class="tag tag-cyan">No vent pipe</span>
+      <span class="tag tag-orange">FL code: UV & rain rated</span>
+      <p>Outdoor-rated tankless units (Rinnai RU199eN Outdoor, Navien NPE-240S Outdoor, etc.) require NO venting — they exhaust directly to open air. Most popular FL solution. Must be rated for outdoor installation. Rain shield and UV protection required. FL HVHZ: must be anchored per FBC wind code.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: CLEARANCE CALC -->
+<div class="panel" id="panel-clearance">
+  <div class="card">
+    <h3>📐 Vent Clearance & Run Calculator</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:12px">Calculate maximum vent run and required clearances for FL installation</p>
+
+    <label>Vent Type</label>
+    <div class="county-wrap">
+      <select id="c-ventType">
+        <option value="direct-condens">Direct vent — condensing (PVC/CPVC/polypropylene)</option>
+        <option value="direct-noncondens">Direct vent — non-condensing (stainless Category III/IV)</option>
+        <option value="power-pvc">Power vent — PVC/CPVC exhaust</option>
+        <option value="power-stainless">Power vent — stainless exhaust</option>
+        <option value="typeB">Type B natural draft</option>
+      </select>
+    </div>
+
+    <label>Vent Pipe Diameter</label>
+    <div class="county-wrap">
+      <select id="c-diameter">
+        <option value="3">3" diameter</option>
+        <option value="4">4" diameter</option>
+        <option value="5">5" diameter</option>
+      </select>
+    </div>
+
+    <label>Number of Horizontal Runs (elbow pairs)</label>
+    <div class="county-wrap">
+      <select id="c-elbows">
+        <option value="0">0 — straight run</option>
+        <option value="1">1 pair of 90° elbows (one direction change)</option>
+        <option value="2">2 pairs (two direction changes)</option>
+        <option value="3">3+ pairs</option>
+      </select>
+    </div>
+
+    <label>Heater BTU Input</label>
+    <div class="county-wrap">
+      <select id="c-btu">
+        <option value="120000">120,000–150,000 BTU (small unit)</option>
+        <option value="180000">180,000–200,000 BTU (medium)</option>
+        <option value="199000">199,000 BTU (large residential)</option>
+        <option value="250000">250,000+ BTU (commercial grade)</option>
+      </select>
+    </div>
+
+    <label>FL Climate Zone</label>
+    <div class="county-wrap">
+      <select id="c-climate">
+        <option value="south">South FL — Miami, Fort Lauderdale, Keys (zone 1)</option>
+        <option value="central">Central FL — Tampa, Orlando, Sarasota (zone 2)</option>
+        <option value="north">North FL — Jacksonville, Tallahassee, Gainesville (zone 3)</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="calcClearance()">Calculate Vent Requirements</button>
+
+    <div class="result-box" id="clearResult">
+      <div class="grid2">
+        <div class="metric"><div class="metric-val" id="cl-maxrun">—</div><div class="metric-lbl">Max Vent Run</div></div>
+        <div class="metric"><div class="metric-val" id="cl-minrise">—</div><div class="metric-lbl">Min Rise (horiz)</div></div>
+        <div class="metric"><div class="metric-val" id="cl-wallclr">—</div><div class="metric-lbl">Wall Clearance</div></div>
+        <div class="metric"><div class="metric-val" id="cl-pipe">—</div><div class="metric-lbl">Pipe Material</div></div>
+      </div>
+      <div class="divider"></div>
+      <div id="cl-detail" style="font-size:0.78rem;color:#94A3B8;line-height:1.7"></div>
+      <div id="cl-alert" class="alert" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📏 FL Vent Termination Clearances</h3>
+    <div class="info-row"><span class="info-label">From any door, window, or opening</span><span class="info-val">12" minimum (direct vent: 4")</span></div>
+    <div class="info-row"><span class="info-label">From gas meter or regulator</span><span class="info-val">36" minimum</span></div>
+    <div class="info-row"><span class="info-label">From electrical meter or panel</span><span class="info-val">36" minimum</span></div>
+    <div class="info-row"><span class="info-label">From inside corner</span><span class="info-val">6" minimum (HVHZ: 24")</span></div>
+    <div class="info-row"><span class="info-label">From ground level (horizontal)</span><span class="info-val">12" minimum</span></div>
+    <div class="info-row"><span class="info-label">Above grade — any flood zone</span><span class="info-val">Above BFE (Base Flood Elevation)</span></div>
+    <div class="info-row"><span class="info-label">Below any soffit / overhang</span><span class="info-val">Verify no condensate re-entry</span></div>
+    <div class="info-row"><span class="info-label">HVHZ: hurricane-rated vent cap</span><span class="info-val">FL Product Approved or NOA required</span></div>
+
+    <div class="alert alert-warn" style="margin-top:10px">⚠️ HVHZ (Miami-Dade and Broward): vent termination cap must have an FL Product Approval number or Miami-Dade NOA. Standard vent caps fail wind test requirements — do not use unless listed for HVHZ. Ask your contractor to show the approval number before installation.</div>
+  </div>
+
+  <div class="card">
+    <h3>✅ Vent Installation Pre-Inspection Checklist</h3>
+    <div id="vent-checklist">
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Vent pipe material matches heater category (PVC OK only for condensing)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Maximum vent run not exceeded (check manufacturer spec)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Horizontal runs slope ¼" per foot back toward heater (condensate drain)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>All joints glued or screwed — no tape-only connections</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Termination cap clearances met on all sides</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>HVHZ: vent cap has FL Product Approval or NOA</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Coastal: stainless or AL vent cap — no galvanized (rusts in salt air)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Combustion air source confirmed (direct vent or makeup air)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>FL plumbing permit obtained before installation</div></div>
+    </div>
+    <div id="vent-score" style="margin-top:10px;font-size:0.78rem;color:#94A3B8;text-align:center"></div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div class="panel" id="panel-code">
+  <div class="card">
+    <h3>📋 FL Tankless Venting Code Requirements</h3>
+
+    <div class="alert alert-info">FL uses the Florida Building Code (FBC) — 7th Edition, which adopts NFPA 54 and IRC as base codes with FL amendments. Tankless water heater venting requires a permit in all FL counties. Licensed CPC required.</div>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-text"><strong>Vent Category Determines Pipe Material (NFPA 54 / FBC)</strong> — Category I (non-positive pressure, non-condensing: Type B double-wall vent). Category II (non-positive, condensing: PVC/CPVC or manufacturer approved). Category III (positive pressure, non-condensing: stainless, AL-29-4C or factory-built listed). Category IV (positive pressure, condensing: manufacturer-specified PVC/CPVC, polypropylene, or stainless). Installing wrong pipe material for the heater category = failed inspection + fire risk.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>FL Horizontal Vent Limits (NFPA 54 / Manufacturer)</strong> — Horizontal venting requires the exhaust pipe to slope back toward the heater minimum ¼" per linear foot for condensate drainage. Condensing heaters produce acidic condensate (pH 3–5) — must drain to a condensate neutralizer, then to drain. Non-condensing horizontal vents: limited horizontal run (varies by heater — typically 5–15 ft max with fan-assisted). Manufacturer's max run length always governs — never exceed it.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>PVC Use for Venting — FL Confusion</strong> — PVC pipe (Schedule 40) is acceptable ONLY for condensing (Category IV) heaters where flue temperature is rated ≤ 149°F at the vent pipe. Non-condensing heaters: flue temp can reach 350–450°F — PVC will melt and is NOT permitted. Misuse of PVC on non-condensing heaters is the #1 FL vent installation error. Check heater data plate for vent category before selecting pipe.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>FL HVHZ Venting — Miami-Dade & Broward Specific</strong> — High Velocity Hurricane Zone requires all vent terminations to be rated for 130+ mph wind. Standard vent caps (even name-brand) are not automatically HVHZ-rated. Required: FL Product Approval number (issued by FL DCA) or Miami-Dade NOA (Notice of Acceptance). Contractors must provide approval number before installation. Inspectors verify this at rough-in. Using non-approved cap = automatic fail.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Coastal FL — Salt Air Corrosion Requirements</strong> — Within 1 mile of salt water (FBC High-Velocity Hurricane Zone and Exposure Category D): galvanized vent caps prohibited — corrode within 2–3 years in FL salt air. Required: stainless steel, aluminum, or manufacturer-listed salt-air-rated vent termination. Coastal FL inspectors increasingly enforce this. Also applies to vent pipes exposed to outdoor air — all-stainless or polypropylene preferred within 1 mile of coast.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Outdoor Tankless WH — FL Code</strong> — Outdoor-rated units require no venting but must be listed for outdoor installation (check UL listing for outdoor). FBC requires the unit to withstand FL wind loads — most outdoor tankless units are secured to a mounting plate. HVHZ: mounting plate and fasteners must be rated for 130+ mph. Rain shield / weatherproof cover required if not factory-rated for outdoor. Must be above Base Flood Elevation (BFE) in any FEMA flood zone.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Combustion Air — FL Indoor Installations</strong> — Florida Building Code Section M1702 (IRC): indoor gas appliances must have adequate combustion and ventilation air. Tight FL homes (especially new construction with spray foam) often fail this. Direct vent (sealed combustion) heaters draw all combustion air from outside — no combustion air calculation needed. Power vent or atmospheric heaters drawing indoor air: calculate combustion air per FBC Table M1702.2. Small utility closets in FL: often require dedicated combustion air duct.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Condensate Neutralizer — FL Requirement for Condensing Units</strong> — Condensing tankless heater condensate has pH 3–5 (acidic). FL Plumbing Code and most FL county sewer authorities require a condensate neutralizer (limestone/calcite media) before drain. Without neutralizer, acidic condensate damages cast iron drain pipes and violates sewer discharge pH standards. Neutralizer typically lasts 1–2 years before media replacement needed.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🌊 FL County Vent Inspection Notes</h3>
+    <div class="info-row"><span class="info-label">Miami-Dade</span><span class="info-val">NOA required for vent cap; HVHZ wind rating mandatory; strict inspection</span></div>
+    <div class="info-row"><span class="info-label">Broward</span><span class="info-val">FL Product Approval required for vent cap; local CPC required</span></div>
+    <div class="info-row"><span class="info-label">Palm Beach</span><span class="info-val">Salt air provisions coastal areas; FBC standard otherwise</span></div>
+    <div class="info-row"><span class="info-label">Hillsborough / Tampa</span><span class="info-val">Standard FBC; 48-hr inspection turnaround typical</span></div>
+    <div class="info-row"><span class="info-label">Orange / Osceola</span><span class="info-val">Standard FBC; PVC vs stainless category enforcement varies by inspector</span></div>
+    <div class="info-row"><span class="info-label">Pinellas</span><span class="info-val">Coastal zones: stainless cap required; call ahead for inspector preference</span></div>
+    <div class="info-row"><span class="info-label">Monroe (Keys)</span><span class="info-val">HVHZ + extreme salt air; stainless/polypropylene vent materials standard</span></div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div class="panel" id="panel-quote">
+  <div class="card">
+    <h3>📞 Tankless WH Venting Quote</h3>
+    <p style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px">Licensed CPC — FL tankless water heater venting installation</p>
+
+    <div class="alert alert-warn">Improper venting is a leading cause of CO poisoning and fire hazard in FL homes. Our licensed CPC team ensures correct vent type, pipe material, and clearances — first time, every time.</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone Number</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>City / ZIP</label>
+    <input type="text" id="q-city" placeholder="e.g. Coral Gables, 33146">
+
+    <label>FL County</label>
+    <div class="county-wrap">
+      <select id="q-county">
+        <option value="">— Select County —</option>
+        <option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option>
+        <option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option>
+        <option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option>
+        <option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option>
+        <option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option>
+        <option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option>
+        <option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option>
+        <option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option>
+        <option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option>
+        <option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option>
+        <option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option>
+        <option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option>
+        <option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option>
+        <option>Walton</option><option>Washington</option>
+      </select>
+    </div>
+
+    <label>Service Needed</label>
+    <div class="county-wrap">
+      <select id="q-service">
+        <option>New tankless WH + venting installation</option>
+        <option>Venting only (heater already exists)</option>
+        <option>Convert from tank to tankless — full install + vent</option>
+        <option>Vent cap replacement (coastal or HVHZ rated)</option>
+        <option>Failed vent inspection — fix required</option>
+        <option>Condensate neutralizer installation</option>
+        <option>Outdoor unit mounting + permits</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="submitQuote()">Request Free Venting Assessment →</button>
+    <a class="phone-btn" href="tel:5615555473">📞 Call Now: (561) 555-PIPE</a>
+  </div>
+
+  <div class="card">
+    <h3>💰 FL Tankless Venting Cost Guide</h3>
+    <div class="info-row"><span class="info-label">Direct vent install (horizontal)</span><span class="info-val">$300–$700</span></div>
+    <div class="info-row"><span class="info-label">Power vent install (horizontal)</span><span class="info-val">$250–$600</span></div>
+    <div class="info-row"><span class="info-label">HVHZ-rated vent cap upgrade</span><span class="info-val">$150–$400</span></div>
+    <div class="info-row"><span class="info-label">Stainless vent cap (coastal)</span><span class="info-val">$100–$300</span></div>
+    <div class="info-row"><span class="info-label">Condensate neutralizer</span><span class="info-val">$120–$250 installed</span></div>
+    <div class="info-row"><span class="info-label">Combustion air duct (utility closet)</span><span class="info-val">$150–$400</span></div>
+    <div class="info-row"><span class="info-label">FL plumbing permit</span><span class="info-val">$75–$250</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+<!-- FL TANKLESS WATER HEATER VENTING DATA — FLORIDA PLUMBING CODE REFERENCE -->
+<!-- NFPA 54-2021 National Fuel Gas Code — Venting Chapter 12 -->
+<!-- Florida Building Code 7th Edition — FBC M1801-M1810 -->
+<!-- IRC Section G2427 — Venting of Appliances -->
+<!-- UL 641 — Type L Low-Temperature Venting Systems -->
+<!-- ANSI Z21.13/CSA 4.9 — Gas-fired Water Heaters -->
+<!--
+VENT CATEGORIES (NFPA 54):
+Category I: Non-positive pressure, non-condensing (flue temp > 350°F or ≥140°F above dew point)
+- Vent: Type B double-wall, Type L, or factory-built listed vent
+- Common for: older atmospheric tankless models
+- FL use: very rare; most modern units are Category III or IV
+
+Category II: Non-positive pressure, condensing
+- Vent: manufacturer-specified; often PVC/CPVC or polypropylene
+- Rare in residential tankless
+
+Category III: Positive pressure, non-condensing (flue temp > 350°F)
+- Vent: ALL-STAINLESS (AL-29-4C, 316L, or 304); AL-29-4C preferred
+- Examples: Rinnai V75e, Rinnai RL75, Bosch Therm non-condensing
+- NEVER use PVC — flue temp will melt PVC
+
+Category IV: Positive pressure, condensing (flue temp ≤ 149°F at pipe)
+- Vent: manufacturer-specified; typically 3" or 4" PVC (Schedule 40), CPVC, or polypropylene
+- Examples: Rinnai RU199eN, Navien NPE-240A, Noritz NRC1111, A.O. Smith ATI-540
+- PVC OK because condensing heaters have low flue temp
+- Condensate produced: 0.5–1.5 gal/hr — must drain
+
+MAXIMUM VENT RUNS (Typical — always verify manufacturer spec):
+Direct vent, condensing (4" PVC):
+- Rinnai RU Series: max 100 ft equivalent (subtract 5 ft per 90° elbow)
+- Navien NPE Series: max 60 ft horizontal + 60 ft vertical
+- Noritz NRC Series: max 100 ft total equivalent
+Power vent, condensing:
+- Slightly lower max run than direct vent (single-pipe vs concentric)
+- Typical: 50–75 ft max depending on model
+Non-condensing (Cat III stainless):
+- Much shorter horizontal runs; 5–15 ft horizontal max typical
+- Prefer vertical runs for non-condensing
+
+HORIZONTAL SLOPE REQUIREMENT:
+Slope: ¼" per foot (1/4 inch per linear foot) minimum
+Direction: back toward heater (so condensate drains to heater drain)
+FL note: level or near-level horizontal vent = condensate pools in pipe = corrosion + code violation
+
+ELBOW EQUIVALENT LENGTHS:
+4" 90° sweep elbow: 5 ft equivalent
+4" 45° elbow: 2.5 ft equivalent
+Each direction change reduces effective maximum run
+Example: 100 ft max run − (4 elbows × 5 ft) = 80 ft of actual straight pipe allowed
+
+FL CLIMATE EFFECT ON VENTING:
+South FL (Miami, Fort Lauderdale, Keys):
+- High humidity year-round — condensing heaters produce more condensate in humid air
+- Salt air within 1 mile of coast: use stainless or polypropylene vent
+- Winter cold snaps: rare; not a significant factor for vent operation
+- HVHZ: vent cap must have FL Product Approval or NOA
+Central FL (Tampa, Orlando, Sarasota):
+- Hot, humid summers; mild winters
+- No HVHZ but coastal zones (Pinellas, Charlotte coast) need salt air precautions
+- Standard FBC applies; no special wind-rating requirement outside coastal HVHZ
+North FL (Jacksonville, Tallahassee, Gainesville):
+- More pronounced seasons; winter freezing possible (Jacksonville, Gainesville)
+- Outdoor tankless: freeze protection kit required; insulate vent termination in freeze zones
+- No HVHZ in most of North FL
+
+VENT PIPE MATERIALS — FL GUIDE:
+PVC Schedule 40 (white): Category IV condensing only; max 149°F rated; lowest cost
+CPVC (beige): Category IV condensing; higher temp rating than PVC; higher cost
+Polypropylene: Category III or IV; excellent for coastal (non-corrosive); flexible; recommended for salt air
+AL-29-4C Stainless (Simpson Dura-Vent DirectVent Pro): Cat III or IV; premium; 20+ year FL coastal life
+304/316 Stainless: Cat III or IV; excellent; higher cost than AL-29-4C but widely available
+Type B (aluminum/galv double-wall): Category I only; not positive pressure rated
+
+COASTAL FL VENT CAP MATERIALS:
+Acceptable: Stainless steel 304/316, aluminum (Dura-Vent brand), polypropylene, PVC (non-coastal areas)
+NOT acceptable within 1 mile of salt water: Galvanized steel, zinc-plated caps, uncoated steel
+Coastal corrosion timeline for galvanized caps: 2–5 years to failure in South FL
+Premium option: Rinnai EZ vent cap (stainless), Dura-Vent DirectVent Pro termination (aluminum), DuraPlus (stainless)
+
+HVHZ VENT CAP REQUIREMENTS (Miami-Dade, Broward):
+Requirement: FL Product Approval or Miami-Dade NOA for vent termination
+Testing: TAS (Test Application Standard) 100, or ANSI/ASTM wind testing
+Examples of approved vent caps: Check HVHZ Product Approval database at floridabuilding.org
+Simpson Dura-Vent has some HVHZ-rated terminations
+Contractor obligation: show approval number before installation
+
+COMBUSTION AIR FL SPECIFIC:
+Modern FL homes (2004+ FBC): often very tight, low infiltration
+Spray foam / new IRC 2012+: near zero air leakage — combustion air calculation critical
+Rule of thumb for indoor air combustion: 50 cu ft per 1,000 BTU input
+150,000 BTU heater: 7,500 cu ft = 28' × 28' × 10' room required for indoor air
+Small utility closet (100 cu ft): NOT sufficient for indoor-air combustion
+Solution: direct vent (sealed combustion) — eliminates combustion air problem entirely
+Alternative: two combustion air openings per FBC Table M1702.2
+
+CONDENSATE NEUTRALIZER:
+Condensate pH: typically 3.0–5.0 (citric acid equivalent)
+FL sewer discharge: must be pH 6–9 before entering drain
+Media: limestone chips (calcium carbonate) — neutralizes to pH 7
+Service life: ~12–18 months (varies by water hardness and usage)
+FL-required: yes, per most FL county wastewater authorities
+Installation: in-line after condensate drain; typically below or near heater
+
+CO DETECTOR REQUIREMENT:
+FL SB 528 (2013): all FL dwellings with fossil fuel appliances must have CO detector
+Tankless gas WH = fossil fuel appliance
+CO detector: must be UL 2034 listed; hardwired or battery (10-year battery preferred)
+Location: within 10 ft of sleeping area; one per floor if multi-story
+Code reference: NFPA 720, FBC R315
+
+POPULAR FL TANKLESS VENT CONFIGURATIONS:
+Inland utility closet: Rinnai RU199eN + 4" PVC concentric direct vent through wall = most common FL setup
+Coastal installation: Navien NPE-240A + polypropylene vent + stainless vent cap = recommended
+HVHZ (Miami-Dade): Rinnai RU199eN Outdoor (no vent) + HVHZ anchor plate = most common HVHZ solution
+Garage: Power vent through garage wall; combustion air from garage (requires adequate garage ventilation)
+Outdoor preferred in FL: Avoids all vent code complications; most FL-appropriate solution for new installs
+
+TOP FL OUTDOOR TANKLESS WH UNITS:
+Rinnai RU199eN Outdoor (199,000 BTU, NG or LP): Best-seller in FL; direct outdoor; Wi-Fi
+Navien NPE-240S Outdoor: 199,900 BTU; UHX technology; good FL performance
+Noritz EZTR75-OD: 180,000 BTU; compact; salt-air rated
+Rheem RTGH-95DVLN: 199,500 BTU; 0.95 EF; outdoor ready
+All outdoor units: require freeze protection kit in North FL (Jacksonville, Tallahassee, Gainesville areas)
+-->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  const tabs=['selector','clearance','code','quote'];
+  document.querySelectorAll('.tab')[tabs.indexOf(t)].classList.add('active');
+  document.getElementById('panel-'+t).classList.add('active');
+}
+
+let selectedVentCard='';
+function selectVentCard(el,type){
+  document.querySelectorAll('.vent-option').forEach(v=>v.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedVentCard=type;
+}
+
+function selectVentType(){
+  const fuel=document.getElementById('fuelType').value;
+  const cat=document.getElementById('heaterCat').value;
+  const loc=document.getElementById('installLoc').value;
+  const air=document.getElementById('combustAir').value;
+  const dir=document.getElementById('ventDir').value;
+  const flLoc=document.getElementById('flLocation').value;
+
+  let rec='';
+  let detail='';
+  let alertClass='alert-info';
+  let alertMsg='';
+
+  // Outdoor unit: simplest FL solution
+  if(loc==='outdoor'||loc==='screened'){
+    rec='🏆 Outdoor-Rated Tankless Unit (Best FL Choice)';
+    detail='<strong>Recommendation:</strong> Install an outdoor-rated tankless unit (Rinnai RU199eN Outdoor, Navien NPE-240S Outdoor, Noritz EZTR75-OD).<br>';
+    detail+='<strong>Advantage:</strong> No venting system required — unit exhausts directly outdoors.<br>';
+    detail+='<strong>FL notes:</strong> Unit must be listed for outdoor installation.<br>';
+    if(flLoc==='hvhz'){
+      detail+='<strong>HVHZ requirement:</strong> Mounting plate and fasteners must be rated for 130+ mph wind. Show contractor FL Product Approval for mounting system.<br>';
+      alertClass='alert-warn';
+      alertMsg='⚠️ HVHZ: Outdoor tankless unit must be anchored with FL Product Approved (or Miami-Dade NOA) mounting hardware. Confirm with contractor before purchase.';
+    } else if(flLoc==='coastal'){
+      alertClass='alert-green';
+      alertMsg='✅ Outdoor units are ideal for coastal FL — no venting means no vent cap corrosion risk. Choose a unit with salt-air rated enclosure (most modern units qualify).';
+    } else {
+      alertClass='alert-green';
+      alertMsg='✅ Outdoor unit is the simplest and most reliable FL venting solution. No vent pipe, no vent cap, no combustion air calculation needed.';
+    }
+  } else if(cat==='condens'){
+    // Condensing indoor
+    if(air==='direct'){
+      rec='Direct Vent — Condensing (4" PVC or Polypropylene)';
+      detail='<strong>Pipe material:</strong> 4" Schedule 40 PVC or polypropylene (manufacturer-specified)<br>';
+      detail+='<strong>Direction:</strong> Horizontal through wall preferred for FL (no roof penetration)<br>';
+      detail+='<strong>Slope:</strong> ¼" per foot back toward heater for condensate<br>';
+      detail+='<strong>Max run:</strong> Varies by brand — typically 60–100 ft equivalent (verify manual)<br>';
+    } else {
+      rec='Power Vent — Condensing (4" PVC)';
+      detail='<strong>Pipe material:</strong> 4" Schedule 40 PVC or manufacturer-approved polypropylene<br>';
+      detail+='<strong>Combustion air:</strong> Indoor air — ensure adequate combustion air per FBC M1702<br>';
+      detail+='<strong>Direction:</strong> Horizontal through wall; slope ¼" per foot for condensate<br>';
+    }
+    if(flLoc==='hvhz'){
+      alertClass='alert-warn';
+      alertMsg='⚠️ HVHZ: Vent termination cap must have FL Product Approval or Miami-Dade NOA. PVC cap typically not HVHZ-rated — use stainless or approved polypropylene termination. Confirm NOA before installation.';
+    } else if(flLoc==='coastal'){
+      alertClass='alert-info';
+      alertMsg='🌊 Coastal FL: Use polypropylene vent pipe and stainless steel vent cap within 1 mile of salt water. PVC cap acceptable further inland.';
+    } else {
+      alertClass='alert-green';
+      alertMsg='✅ PVC direct vent is the standard FL indoor condensing tankless solution. Cost-effective, code-compliant, and suitable for horizontal termination.';
+    }
+  } else {
+    // Non-condensing indoor
+    rec='Category III Stainless Vent (Non-condensing)';
+    detail='<strong>Pipe material:</strong> AL-29-4C stainless steel (AL-29-4C preferred for FL salt air) — NEVER PVC<br>';
+    detail+='<strong>Note:</strong> Non-condensing units are less efficient (80–82% vs 96%+ for condensing)<br>';
+    detail+='<strong>FL recommendation:</strong> Strongly consider upgrading to a condensing unit — better efficiency, simpler PVC venting, condensate management replaces high-temp vent cost<br>';
+    alertClass='alert-warn';
+    alertMsg='⚠️ Non-condensing units require expensive stainless venting (AL-29-4C). In FL, upgrading to a condensing unit is almost always more cost-effective. Condensing: 96%+ efficiency + simpler PVC venting.';
+  }
+
+  document.getElementById('vent-rec-title').textContent=rec;
+  document.getElementById('vent-rec-detail').innerHTML=detail;
+  const alertEl=document.getElementById('vent-alert');
+  alertEl.className='alert '+alertClass;
+  alertEl.textContent=alertMsg;
+  document.getElementById('ventResult').classList.add('show');
+}
+
+function calcClearance(){
+  const ventType=document.getElementById('c-ventType').value;
+  const dia=parseInt(document.getElementById('c-diameter').value)||4;
+  const elbows=parseInt(document.getElementById('c-elbows').value)||0;
+  const btu=parseInt(document.getElementById('c-btu').value)||199000;
+  const climate=document.getElementById('c-climate').value;
+
+  // Base max run by vent type
+  const baseRun={
+    'direct-condens':100,
+    'direct-noncondens':30,
+    'power-pvc':75,
+    'power-stainless':40,
+    'typeB':20
+  }[ventType]||60;
+
+  // Subtract elbow equivalent (5 ft per 90° elbow pair)
+  const elbowDed=elbows*5;
+  // Diameter bonus: 5" adds ~20%
+  const diaBonus=dia>=5?baseRun*0.2:0;
+  const maxRun=Math.round(baseRun+diaBonus-elbowDed);
+
+  // Horizontal minimum rise
+  const horizRise=ventType==='typeB'?'Primarily vertical required':'¼" per ft (slope back to unit)';
+
+  // Wall clearance
+  const wallClr=ventType==='direct-condens'||ventType==='power-pvc'?'4" from opening':'12" from opening';
+
+  // Pipe material
+  const pipeMap={
+    'direct-condens':'PVC / Polyprop',
+    'direct-noncondens':'AL-29-4C Stainless',
+    'power-pvc':'PVC Sch 40',
+    'power-stainless':'304/316 SS',
+    'typeB':'Type B Dbl-Wall'
+  };
+
+  document.getElementById('cl-maxrun').textContent=maxRun+' ft';
+  document.getElementById('cl-minrise').textContent=horizRise.split('(')[0].trim();
+  document.getElementById('cl-wallclr').textContent=wallClr.split(' from')[0];
+  document.getElementById('cl-pipe').textContent=pipeMap[ventType]||'—';
+
+  let detail=`<strong>Vent type:</strong> ${document.getElementById('c-ventType').options[document.getElementById('c-ventType').selectedIndex].text}<br>`;
+  detail+=`<strong>Pipe diameter:</strong> ${dia}"<br>`;
+  detail+=`<strong>Direction changes:</strong> ${elbows} (−${elbowDed} ft equivalent)<br>`;
+  detail+=`<strong>Max equivalent run:</strong> ${maxRun} ft<br>`;
+  detail+=`<strong>Horizontal slope requirement:</strong> ${horizRise}<br>`;
+  detail+=`<strong>Clearance from windows/doors:</strong> ${wallClr}<br>`;
+  if(climate==='north') detail+='<strong>North FL note:</strong> Freeze protection kit recommended for outdoor vent termination and exposed pipe.<br>';
+  document.getElementById('cl-detail').innerHTML=detail;
+
+  const alertEl=document.getElementById('cl-alert');
+  if(ventType==='direct-noncondens'||ventType==='typeB'){
+    alertEl.className='alert alert-warn';
+    alertEl.textContent='⚠️ Non-condensing venting requires stainless pipe — NEVER use PVC on non-condensing heaters. Consider upgrading to a condensing model for simpler, less expensive PVC venting and higher efficiency (96%+ vs 80–82%).';
+  } else if(maxRun<15){
+    alertEl.className='alert alert-red';
+    alertEl.textContent='⛔ Very short maximum run — your direction changes significantly limit this vent configuration. Reduce elbows or increase pipe diameter to recover run length.';
+  } else {
+    alertEl.className='alert alert-info';
+    alertEl.textContent=`Maximum ${maxRun} ft equivalent run. Always verify against your specific heater manufacturer's installation manual — maximum run varies by brand and BTU rating.`;
+  }
+  document.getElementById('clearResult').classList.add('show');
+}
+
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  const all=document.querySelectorAll('#vent-checklist .chk');
+  const done=document.querySelectorAll('#vent-checklist .chk.checked').length;
+  document.getElementById('vent-score').textContent=done+'/'+all.length+' items checked'+(done===all.length?' — Ready for inspection! ✅':'');
+}
+
+function submitQuote(){
+  const name=document.getElementById('q-name').value.trim();
+  const phone=document.getElementById('q-phone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+</script>
+
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+<!-- fl-plumbing-seo: tankless-water-heater-venting fl-tankless-venting direct-vent-tankless power-vent-tankless condensing-tankless-vent fl-hurricane-vent-cap hvhz-vent-requirements coastal-vent-cap salt-air-vent pvc-tankless-vent category-iv-venting stainless-tankless-vent fl-tankless-permit tankless-co-safety tankless-combustion-air fl-tankless-code miami-dade-vent-cap condensate-neutralizer tankless-vent-clearance horizontal-vent-slope -->
+
+</div>
+</body>
+</html>

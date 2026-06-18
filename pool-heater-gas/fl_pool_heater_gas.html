@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Pool Heater & Spa Gas Line Sizing Calculator | Florida Plumbing</title>
+<meta name="description" content="Calculate BTU requirements and gas line sizing for Florida pool and spa heaters. Pool heater BTU calculator, NFPA 54 gas pipe sizing, heat pump vs gas comparison, FL pool plumbing permit guide.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.hero{background:linear-gradient(135deg,#0A0E1A 0%,#0F1629 50%,#0A0E1A 100%);padding:24px 16px 16px;text-align:center;border-bottom:1px solid #1E2A45}
+.hero h1{font-size:1.4rem;font-weight:700;color:#F97316;margin-bottom:6px;line-height:1.3}
+.hero p{font-size:0.85rem;color:#94A3B8;max-width:480px;margin:0 auto}
+.badge{display:inline-block;background:#F9731622;color:#F97316;border:1px solid #F9731644;border-radius:4px;font-size:0.7rem;font-weight:600;padding:2px 8px;margin-bottom:8px;letter-spacing:.05em}
+.tabs{display:flex;background:#0F1629;border-bottom:1px solid #1E2A45;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{flex:1;min-width:80px;padding:12px 8px;text-align:center;font-size:0.75rem;font-weight:600;color:#94A3B8;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab.active{color:#F97316;border-bottom-color:#F97316;background:#F973160D}
+.tab:hover:not(.active){color:#E2E8F0;background:#1E2A4522}
+.panel{display:none;padding:16px;max-width:480px;margin:0 auto}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2A45;border-radius:10px;padding:14px;margin-bottom:14px}
+.card h3{font-size:0.85rem;font-weight:700;color:#F97316;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+label{display:block;font-size:0.78rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=text],input[type=tel],input[type=number]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:6px;color:#E2E8F0;padding:9px 10px;font-size:0.82rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#F97316}
+.btn{width:100%;background:#F97316;color:#000;border:none;border-radius:8px;padding:12px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:12px;letter-spacing:.02em}
+.btn:hover{background:#EA6D0E}
+.result-box{background:#141929;border:1px solid #F9731633;border-radius:8px;padding:14px;margin-top:12px;display:none}
+.result-box.show{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.metric{background:#0F1629;border:1px solid #1E2A45;border-radius:8px;padding:10px;text-align:center}
+.metric-val{font-size:1.1rem;font-weight:700;color:#F97316}
+.metric-lbl{font-size:0.7rem;color:#94A3B8;margin-top:2px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#94A3B8}
+.info-val{color:#E2E8F0;font-weight:600;text-align:right;max-width:60%}
+.alert{border-radius:8px;padding:10px 12px;font-size:0.78rem;margin-bottom:10px;border:1px solid}
+.alert-warn{background:#F4B94211;border-color:#F4B94244;color:#F4B942}
+.alert-info{background:#F9731611;border-color:#F9731633;color:#F97316}
+.alert-green{background:#22C55E11;border-color:#22C55E33;color:#22C55E}
+.alert-blue{background:#00B4FF11;border-color:#00B4FF33;color:#00B4FF}
+.step-list{counter-reset:steps;margin-top:8px}
+.step-item{counter-increment:steps;display:flex;gap:10px;margin-bottom:10px;font-size:0.78rem}
+.step-item::before{content:counter(steps);background:#F97316;color:#000;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;margin-top:1px}
+.step-text{color:#E2E8F0;line-height:1.5}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.check-item:last-child{border-bottom:none}
+.chk{width:16px;height:16px;border-radius:3px;border:2px solid #1E2A45;flex-shrink:0;cursor:pointer;margin-top:1px;background:#141929}
+.chk.checked{background:#F97316;border-color:#F97316}
+.divider{height:1px;background:#1E2A45;margin:12px 0}
+.phone-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#F973161A;border:1px solid #F9731644;border-radius:8px;padding:12px;color:#F97316;font-weight:700;font-size:0.88rem;cursor:pointer;margin-top:10px;text-decoration:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#000;font-weight:700;padding:12px 22px;border-radius:8px;font-size:0.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.county-wrap{position:relative}
+.county-wrap::after{content:'▼';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:0.65rem;pointer-events:none}
+.pipe-table{width:100%;border-collapse:collapse;font-size:0.72rem;margin-top:8px}
+.pipe-table th{background:#1E2A45;color:#94A3B8;padding:6px 8px;text-align:left;font-weight:600}
+.pipe-table td{padding:6px 8px;border-bottom:1px solid #1E2A4533;color:#E2E8F0}
+.pipe-table tr.highlight td{background:#F9731611;color:#F97316;font-weight:700}
+.compare-card{background:#141929;border:1px solid #1E2A45;border-radius:8px;padding:12px;margin-bottom:10px}
+.compare-card h4{font-size:0.82rem;font-weight:700;margin-bottom:8px}
+.tag{display:inline-block;border-radius:4px;font-size:0.65rem;font-weight:700;padding:2px 6px;margin-right:4px;margin-bottom:4px}
+.tag-orange{background:#F9731622;color:#F97316;border:1px solid #F9731644}
+.tag-green{background:#22C55E22;color:#22C55E;border:1px solid #22C55E44}
+.tag-blue{background:#00B4FF22;color:#00B4FF;border:1px solid #00B4FF44}
+.tag-yellow{background:#F4B94222;color:#F4B942;border:1px solid #F4B94244}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">🏊 FLORIDA POOL PLUMBING</div>
+  <h1>Pool Heater & Spa Gas Line Sizing Calculator</h1>
+  <p>BTU requirements for FL pools, NFPA 54 gas pipe sizing, heat pump vs gas comparison, FL pool permit guide</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('planner')">🏊 Pool Planner</div>
+  <div class="tab" onclick="showTab('gasline')">🔥 Gas Line Calc</div>
+  <div class="tab" onclick="showTab('code')">📋 FL Code</div>
+  <div class="tab" onclick="showTab('quote')">📞 Quote</div>
+</div>
+
+<!-- TAB 1: POOL PLANNER -->
+<div class="panel active" id="panel-planner">
+  <div class="card">
+    <h3>🏊 Pool Heater BTU Calculator</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:12px">Calculate the right heater size for your Florida pool or spa</p>
+
+    <label>Pool Surface Area (sq ft)</label>
+    <input type="number" id="poolArea" placeholder="e.g. 400" min="50" max="5000">
+
+    <label>Pool Type</label>
+    <div class="county-wrap">
+      <select id="poolType">
+        <option value="inground">In-ground pool</option>
+        <option value="above">Above-ground pool</option>
+        <option value="spa">Spa / hot tub only</option>
+        <option value="combo">Pool + attached spa</option>
+        <option value="commercial">Commercial pool</option>
+      </select>
+    </div>
+
+    <label>Current Water Temp (°F) — FL average is 72°F</label>
+    <input type="number" id="currentTemp" placeholder="72" value="72" min="50" max="90">
+
+    <label>Desired Water Temp (°F)</label>
+    <div class="county-wrap">
+      <select id="desiredTemp">
+        <option value="80">80°F — warm comfort swim</option>
+        <option value="82">82°F — typical FL pool temp</option>
+        <option value="84">84°F — warm year-round</option>
+        <option value="86">86°F — therapy / elderly</option>
+        <option value="90">90°F — exercise pool</option>
+        <option value="100">100–104°F — spa / hot tub</option>
+      </select>
+    </div>
+
+    <label>Typical Wind Exposure</label>
+    <div class="county-wrap">
+      <select id="windExp">
+        <option value="low">Low — screened enclosure (most FL)</option>
+        <option value="moderate">Moderate — partial windbreak</option>
+        <option value="high">High — open / coastal / exposed</option>
+      </select>
+    </div>
+
+    <label>Pool Cover Used?</label>
+    <div class="county-wrap">
+      <select id="poolCover">
+        <option value="none">No cover</option>
+        <option value="solar">Solar blanket / bubble cover</option>
+        <option value="automatic">Automatic safety cover</option>
+      </select>
+    </div>
+
+    <label>Heater Type Preference</label>
+    <div class="county-wrap">
+      <select id="heaterPref">
+        <option value="gas">Natural gas heater</option>
+        <option value="lp">Propane (LP) heater</option>
+        <option value="heatpump">Heat pump</option>
+        <option value="hybrid">Hybrid (heat pump + gas backup)</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="calcPool()">Calculate Pool Heater Size</button>
+
+    <div class="result-box" id="poolResult">
+      <div class="grid2">
+        <div class="metric"><div class="metric-val" id="res-btu">—</div><div class="metric-lbl">BTU/hr Required</div></div>
+        <div class="metric"><div class="metric-val" id="res-heater">—</div><div class="metric-lbl">Heater Size</div></div>
+        <div class="metric"><div class="metric-val" id="res-heatup">—</div><div class="metric-lbl">Heatup Time</div></div>
+        <div class="metric"><div class="metric-val" id="res-cost">—</div><div class="metric-lbl">Est. Monthly Cost</div></div>
+      </div>
+      <div class="divider"></div>
+      <div id="res-detail" style="font-size:0.78rem;color:#94A3B8;line-height:1.7"></div>
+      <div id="res-rec" class="alert" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🆚 Heat Pump vs Gas — FL Comparison</h3>
+
+    <div class="compare-card">
+      <h4 style="color:#F97316">🔥 Gas Heater (NG or LP)</h4>
+      <span class="tag tag-orange">Fastest Heat</span>
+      <span class="tag tag-yellow">Higher Operating Cost</span>
+      <span class="tag tag-green">Works Below 55°F</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:6px;line-height:1.5">Heats pool quickly (2–4 hrs). Works in any FL temperature, including cold snaps. Efficiency: 82–95% (condensing). Best for infrequent heating, spas, or quick warmup. NG: ~$0.80–1.20/therm. LP: ~$2.50–3.50/gallon. Typical monthly FL cost: $80–$250 (NG) or $200–$600 (LP).</p>
+    </div>
+
+    <div class="compare-card">
+      <h4 style="color:#22C55E">⚡ Heat Pump</h4>
+      <span class="tag tag-green">Lowest Operating Cost</span>
+      <span class="tag tag-blue">COP 4–6x</span>
+      <span class="tag tag-yellow">Slower Heatup</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:6px;line-height:1.5">FL's warm climate is ideal for heat pumps. COP of 4–6 means $1 of electricity = $4–6 of heat. Best for maintaining temperature daily. Works well above 55°F — FL rarely dips below that. Typical monthly FL cost: $30–$100. Slower: 8–24 hrs for full heatup from cold.</p>
+    </div>
+
+    <div class="compare-card">
+      <h4 style="color:#00B4FF">🔄 Hybrid System</h4>
+      <span class="tag tag-blue">Best of Both</span>
+      <span class="tag tag-orange">FL Recommended</span>
+      <p style="font-size:0.72rem;color:#94A3B8;margin-top:6px;line-height:1.5">Heat pump as primary (low-cost operation), gas as backup for cold FL nights or rapid heatup for parties. Most cost-effective long-term for FL homeowners who use pool year-round. Payback vs gas-only: 3–5 years.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: GAS LINE CALC -->
+<div class="panel" id="panel-gasline">
+  <div class="card">
+    <h3>🔥 Pool Heater Gas Line Sizing</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:12px">Per NFPA 54 Table 402.4 — size the gas line from meter to pool heater</p>
+
+    <label>Gas Type</label>
+    <div class="county-wrap">
+      <select id="gasType2">
+        <option value="ng">Natural Gas</option>
+        <option value="lp">Propane (LP)</option>
+      </select>
+    </div>
+
+    <label>Pool Heater BTU Rating</label>
+    <div class="county-wrap">
+      <select id="heaterBTU">
+        <option value="100000">100,000 BTU (small pool / spa)</option>
+        <option value="150000">150,000 BTU (small pool)</option>
+        <option value="200000">200,000 BTU (medium pool)</option>
+        <option value="250000">250,000 BTU (large pool)</option>
+        <option value="300000">300,000 BTU (very large pool)</option>
+        <option value="400000">400,000 BTU (commercial / pool+spa)</option>
+        <option value="custom">Custom BTU (enter below)</option>
+      </select>
+    </div>
+
+    <label>Custom BTU (if selected above)</label>
+    <input type="number" id="customBTU" placeholder="e.g. 350000">
+
+    <label>Other Gas Appliances on Same Line?</label>
+    <div class="county-wrap">
+      <select id="otherAppl">
+        <option value="0">None — dedicated pool heater line</option>
+        <option value="65000">Gas range / cooktop (65,000 BTU)</option>
+        <option value="100000">Water heater (100,000 BTU)</option>
+        <option value="165000">Range + water heater (165,000 BTU)</option>
+        <option value="250000">Full house (250,000 BTU)</option>
+      </select>
+    </div>
+
+    <label>Run Length — Meter to Pool Heater (feet)</label>
+    <div class="county-wrap">
+      <select id="runLen">
+        <option value="10">Under 10 ft</option>
+        <option value="20">10–20 ft</option>
+        <option value="30">20–30 ft</option>
+        <option value="50">30–50 ft</option>
+        <option value="75">50–75 ft</option>
+        <option value="100">75–100 ft</option>
+        <option value="150">100–150 ft</option>
+      </select>
+    </div>
+
+    <label>Line Pressure</label>
+    <div class="county-wrap">
+      <select id="linePres">
+        <option value="low">Low pressure — 7" WC (standard residential)</option>
+        <option value="medium">Medium pressure — 2 PSI</option>
+        <option value="high">High pressure — 5+ PSI (with regulator)</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="calcGasLine()">Size Gas Line</button>
+
+    <div class="result-box" id="gasResult">
+      <div class="grid2">
+        <div class="metric"><div class="metric-val" id="gas-pipe">—</div><div class="metric-lbl">Min Pipe Size</div></div>
+        <div class="metric"><div class="metric-val" id="gas-total">—</div><div class="metric-lbl">Total BTU Load</div></div>
+      </div>
+      <div class="divider"></div>
+      <div id="gas-detail" style="font-size:0.78rem;color:#94A3B8;line-height:1.6"></div>
+      <div id="gas-alert" class="alert alert-info" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📏 NFPA 54 Pool Heater Pipe Sizing Quick Reference</h3>
+    <p style="font-size:0.72rem;color:#94A3B8;margin-bottom:8px">Natural Gas, low pressure (7" WC), Schedule 40 black iron pipe</p>
+    <table class="pipe-table">
+      <thead><tr><th>Pipe Size</th><th>50 ft run</th><th>75 ft run</th><th>100 ft run</th></tr></thead>
+      <tbody>
+        <tr><td>½"</td><td>72,000</td><td>59,000</td><td>50,000</td></tr>
+        <tr><td>¾"</td><td>151,000</td><td>124,000</td><td>107,000</td></tr>
+        <tr><td>1"</td><td>285,000</td><td>234,000</td><td>202,000</td></tr>
+        <tr><td>1¼"</td><td>542,000</td><td>444,000</td><td>384,000</td></tr>
+        <tr><td>1½"</td><td>822,000</td><td>673,000</td><td>583,000</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.72rem;color:#94A3B8;margin-top:8px">LP gas: multiply BTU capacity by ~0.40 (LP has higher BTU/cubic foot but lower flow rate at same pressure drop)</p>
+  </div>
+
+  <div class="card">
+    <h3>✅ Pool Gas Line Pre-Inspection Checklist</h3>
+    <div id="gas-checklist">
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Gas pipe is black iron or CSST (not galvanized or copper for NG)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>CSST bonded with #6 AWG copper within 6 ft of meter</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Sediment trap / drip leg installed at heater connection</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Manual shutoff valve within 6 ft of heater (accessible)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Heater has 18" clearance from any combustible</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Pressure test performed (10 PSI air for 15 min — FL code)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Heater is listed/labeled (AGA, CSA, or UL)</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>FL pool plumbing permit applied for (separate from gas permit)</div></div>
+    </div>
+    <div id="gas-score" style="margin-top:10px;font-size:0.78rem;color:#94A3B8;text-align:center"></div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div class="panel" id="panel-code">
+  <div class="card">
+    <h3>📋 FL Pool Heater & Gas Code Requirements</h3>
+
+    <div class="alert alert-info">Florida pools require two separate permits: a pool/equipment permit (FL Building Code Chapter 34) AND a gas permit (FPC Section 406) when a gas heater is installed. Both require a licensed contractor.</div>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-text"><strong>FL Pool Equipment Permit (FBC Chapter 34)</strong> — Any pool heater installation or replacement requires a permit. Licensed pool contractor (CPO) or licensed plumbing contractor (CPC) may pull permit. Plans must show heater location, gas stub-out, and equipment pad dimensions.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Gas Permit — FL Plumbing Code Section 406</strong> — Separate gas permit required for any new gas line or heater connection. Licensed plumbing contractor (CPC) with gas certification required in Florida. Gas line must pass pressure test (10 PSI air, 15 minutes) before inspection.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>NFPA 54 — Gas Pipe Sizing Required</strong> — All FL residential gas installations must comply with NFPA 54 (National Fuel Gas Code). Pipe size must accommodate total BTU demand including all connected appliances, not just the pool heater. Undersized pipe = failed inspection.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>CSST Bonding (FL Code Section 406.6)</strong> — Corrugated stainless steel tubing (CSST) must be electrically bonded to grounding electrode system with #6 AWG copper within 6 feet of meter. Required since 2009 FL code adoption. Pool heater bonding to pool water bonding grid: separate requirement (NFPA 70).</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Pool Electrical Bonding (NFPA 70 / FBC)</strong> — All metallic pool equipment including gas heater shell must be bonded to #8 AWG copper bonding grid. Pool water bonding via sacrificial electrode. Inspector will check heater bonding lug connection. Gas heater + pool = two separate bonding requirements.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Setback / Clearance Requirements</strong> — Gas heater: 18" from combustibles, 36" service clearance. FL pool barrier: heater must be outside pool barrier or barrier must be continuous. Enclosure (screen room): heater must have combustion air per manufacturer — confirm ventilation adequate. Coastal FL: corrosion-resistant materials required within 1 mile of salt water.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Propane (LP) in FL — Additional Rules</strong> — LP tank permit required (NFPA 58). Above-ground LP tank: minimum 10 ft from pool equipment. Underground LP tank: minimum 10 ft from pool. LP regulator and second-stage regulator required. LP gas heater must be rated for LP (not NG) — not interchangeable without conversion kit.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>FL Contractor License Requirements</strong> — Gas line for pool heater: Licensed CPC (Certified Plumbing Contractor) with Section 1 gas license OR licensed pool contractor with gas endorsement. Miami-Dade, Broward, Palm Beach: local license often required in addition. Do NOT allow unlicensed "pool guys" to run gas lines — creates serious liability and void insurance.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🌊 FL County Pool Heater Notes</h3>
+    <div class="info-row"><span class="info-label">Miami-Dade</span><span class="info-val">Local MDBC license required; strict gas inspection; NOC for heater replacement</span></div>
+    <div class="info-row"><span class="info-label">Broward</span><span class="info-val">Pool + gas permits required even for heater-only replacement</span></div>
+    <div class="info-row"><span class="info-label">Palm Beach</span><span class="info-val">Coastal corrosion provisions; salt air heater ratings enforced</span></div>
+    <div class="info-row"><span class="info-label">Hillsborough</span><span class="info-val">Combined pool/gas permit available; 48-hr inspection scheduling</span></div>
+    <div class="info-row"><span class="info-label">Orange / Osceola</span><span class="info-val">Tourist area: vacation rental pools — DBPR may inspect heater operation</span></div>
+    <div class="info-row"><span class="info-label">Pinellas</span><span class="info-val">Wind mitigation forms for equipment in coastal HVHZ zones</span></div>
+    <div class="info-row"><span class="info-label">Collier / Monroe</span><span class="info-val">HVHZ (High Velocity Hurricane Zone) — heater must be anchored to pad</span></div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div class="panel" id="panel-quote">
+  <div class="card">
+    <h3>📞 Pool Heater & Gas Line Quote</h3>
+    <p style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px">Licensed CPC with gas certification — FL pool heater installation</p>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone Number</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>City / ZIP</label>
+    <input type="text" id="q-city" placeholder="e.g. Boca Raton, 33431">
+
+    <label>FL County</label>
+    <div class="county-wrap">
+      <select id="q-county">
+        <option value="">— Select County —</option>
+        <option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option>
+        <option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option>
+        <option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option>
+        <option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option>
+        <option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option>
+        <option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option>
+        <option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option>
+        <option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option>
+        <option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option>
+        <option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option>
+        <option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option>
+        <option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option>
+        <option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option>
+        <option>Walton</option><option>Washington</option>
+      </select>
+    </div>
+
+    <label>Service Needed</label>
+    <div class="county-wrap">
+      <select id="q-service">
+        <option>New gas pool heater installation</option>
+        <option>Pool heater replacement (gas)</option>
+        <option>New gas line to pool equipment</option>
+        <option>Convert from electric to gas pool heater</option>
+        <option>Gas pressure test / inspection prep</option>
+        <option>Pool + spa heater sizing and install</option>
+        <option>Heat pump installation</option>
+        <option>Hybrid system (heat pump + gas)</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="submitQuote()">Request Free Estimate →</button>
+    <a class="phone-btn" href="tel:5615555473">📞 Call Now: (561) 555-PIPE</a>
+  </div>
+
+  <div class="card">
+    <h3>💰 FL Pool Heater Cost Guide</h3>
+    <div class="info-row"><span class="info-label">Gas heater (150K BTU)</span><span class="info-val">$1,800–$3,200 installed</span></div>
+    <div class="info-row"><span class="info-label">Gas heater (250K BTU)</span><span class="info-val">$2,500–$4,500 installed</span></div>
+    <div class="info-row"><span class="info-label">Heat pump (5-ton)</span><span class="info-val">$2,800–$5,000 installed</span></div>
+    <div class="info-row"><span class="info-label">Hybrid system</span><span class="info-val">$4,500–$8,000 installed</span></div>
+    <div class="info-row"><span class="info-label">New gas line (50 ft)</span><span class="info-val">$600–$1,400</span></div>
+    <div class="info-row"><span class="info-label">FL pool heater permit</span><span class="info-val">$100–$400</span></div>
+    <div class="info-row"><span class="info-label">FL gas permit</span><span class="info-val">$75–$250</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+<!-- FL POOL HEATER GAS LINE DATA — FLORIDA PLUMBING CODE REFERENCE -->
+<!-- NFPA 54-2021 National Fuel Gas Code — Gas Pipe Sizing Table 402.4 -->
+<!-- Florida Building Code Chapter 34 — Swimming Pools and Bathing Facilities -->
+<!-- Florida Plumbing Code Section 406 — Fuel Gas Piping -->
+<!-- NFPA 70 National Electrical Code — Pool Bonding -->
+<!-- NFPA 58 — LP Gas Storage -->
+<!--
+POOL BTU CALCULATION METHOD:
+BTU = Pool surface area (sq ft) × ΔT × 12.5
+Where ΔT = desired temp − incoming water temp
+Factor 12.5 accounts for FL climate (warm ambient, lower delta T than northern US)
+Wind factor: low (screened) = 1.0x; moderate = 1.3x; high (coastal) = 1.6x
+
+TYPICAL FL POOL BTU REQUIREMENTS:
+Small pool (200-300 sq ft, 82°F target, screened): 80,000–120,000 BTU
+Medium pool (350-500 sq ft, 84°F target): 120,000–200,000 BTU
+Large pool (600-800 sq ft): 200,000–300,000 BTU
+Very large / commercial: 300,000–400,000+ BTU
+Spa only: 50,000–100,000 BTU
+
+HEATER SIZING RULE OF THUMB:
+Size to achieve 1-degree-per-hour rise
+Oversizing reduces cycling efficiency but improves heatup time
+Undersizing: heater runs continuously, never reaches setpoint
+
+HEAT PUMP vs GAS — FL SPECIFIC:
+Heat pump efficiency: COP 4.0–6.5 (variable speed units)
+$1 electricity = $4–6.50 heat
+FL average electricity rate: $0.12–0.16/kWh
+5-ton heat pump: ~5 kW input; ~25 kW output (85,000 BTU)
+Heat pump works best when outside air > 55°F — FL average lows rarely below this
+Cold snap exception: FL can see 40°F nights (January, NW FL more often)
+Solution: Hybrid = HP primary, gas backup for <55°F
+
+MONTHLY OPERATING COST ESTIMATES (FL):
+NG gas heater (200K BTU, 8 hr/week use): ~$80–150/month
+LP gas heater (200K BTU, 8 hr/week use): ~$200–400/month
+Heat pump (5 ton, 8 hr/week): ~$30–80/month
+Solar heater (no fuel cost): ~$0 operating + collector maintenance
+
+NFPA 54 GAS PIPE SIZING (NG, Low Pressure 7" WC, Schedule 40 iron):
+Cap values (BTU/hr):
+Pipe:   10ft    20ft    30ft    40ft    50ft    75ft    100ft   150ft
+1/2":   238k    166k    134k    115k    102k    83k     72k     58k
+3/4":   502k    350k    283k    242k    216k    176k    151k    123k
+1":     946k    661k    534k    456k    407k    332k    285k    232k
+1-1/4": 1797k   1255k   1014k   867k    773k    630k    542k    441k
+1-1/2": 2726k   1904k   1539k   1316k   1174k   957k    822k    670k
+
+LP GAS SIZING ADJUSTMENT:
+LP has ~2500 BTU/cubic foot vs NG 1050 BTU/cubic foot
+But LP at 11" WC supply pressure, same pressure drop
+LP pipe sizing capacity approximately 40-45% of NG for same pipe/length
+Always verify with manufacturer heater gas connection size
+
+PRESSURE TEST REQUIREMENTS (FL FPC 406.8):
+Test pressure: 10 PSI air minimum
+Test duration: 15 minutes
+No measurable drop = pass
+Gauge: 0–30 PSI range gauge required (not low-pressure gauge)
+
+POOL BONDING REQUIREMENTS (NFPA 70 / FBC E4204):
+#8 solid copper bonding conductor
+Connect: all metallic pool equipment, ladder, rail, light niches, pump motor housing
+Pool water bonding: sacrificial electrode or Hayward EconoWater type device
+Gas heater: bond to bonding grid at heater bonding lug (NOT to gas piping)
+Gas CSST: separate #6 AWG bond to electrical grounding electrode system
+
+FL PERMIT REQUIREMENTS:
+Pool heater replacement (same BTU, same type): permit required in most FL counties
+New gas line: always requires gas permit + CPC
+Miami-Dade: NOC (Notice of Commencement) for any permit over $2,500
+Broward: Two separate permits (pool mechanical + gas)
+Palm Beach: Combined permit available for some projects
+
+FL CONTRACTOR REQUIREMENTS:
+CPC with gas certification (Section 1 of state contractor exam)
+Pool contractor (CPO) — may install equipment but NOT gas line unless dual-licensed
+Miami-Dade, Broward: Local contractor license (MDBC, Broward County Certification)
+No homeowner gas permits for pool heaters in FL (unlike some minor WH work)
+
+POPULAR FL GAS POOL HEATER BRANDS:
+Pentair MasterTemp 250/400: Most common FL; high efficiency; 84%
+Hayward H-Series H250/H400: Common; dual-sensor; good FL durability
+Raypak 266,000/336,000: Commercial-grade for large pools
+Jandy LXi: Efficiency leader; 84%; fits small equipment pad footprint
+Pentair UltraTemp: Heat pump leader; 5.3 COP
+Hayward HeatPro: Excellent FL performance; salt water rated
+
+COASTAL FL CONSIDERATIONS:
+Within 300 ft of salt water: stainless or polymer headers only
+Cupro-nickel heat exchanger: preferred for FL pool chemistry (high CYA, saltwater pools)
+Titanium heat exchanger: required for saltwater/chlorinator pools
+Certinked (salt damage): corrosion of standard copper headers in 3–5 years
+Pentair UltraTemp Ti and Hayward HeatPro titanium models: FL coastal standard
+
+FL UTILITY REBATES (GAS):
+FPL natural gas: no residential pool heater rebates (FL deregulated)
+TECO / Peoples Gas: check utility website for seasonal promotions
+Some FL municipalities: rebates for heat pump pool heaters (energy efficiency)
+FPL: heat pump pool heater may qualify for rebate through efficiency program
+-->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  const tabs=['planner','gasline','code','quote'];
+  document.querySelectorAll('.tab')[tabs.indexOf(t)].classList.add('active');
+  document.getElementById('panel-'+t).classList.add('active');
+}
+
+function calcPool(){
+  const area=parseInt(document.getElementById('poolArea').value)||400;
+  const poolType=document.getElementById('poolType').value;
+  const currentTemp=parseInt(document.getElementById('currentTemp').value)||72;
+  const desiredTemp=parseInt(document.getElementById('desiredTemp').value);
+  const wind=document.getElementById('windExp').value;
+  const cover=document.getElementById('poolCover').value;
+  const heaterPref=document.getElementById('heaterPref').value;
+
+  const deltaT=desiredTemp-currentTemp;
+  const windFactor={low:1.0,moderate:1.3,high:1.6}[wind];
+  const coverFactor={none:1.0,solar:0.75,automatic:0.65}[cover];
+  const typeFactor={inground:1.0,above:1.2,spa:2.5,combo:1.3,commercial:1.1}[poolType];
+
+  let btu=Math.round(area*deltaT*12.5*windFactor*coverFactor*typeFactor/1000)*1000;
+  if(poolType==='spa') btu=Math.max(btu,50000);
+
+  // Round up to next standard heater size
+  const sizes=[100000,150000,200000,250000,300000,400000];
+  let heaterSize=sizes.find(s=>s>=btu)||400000;
+
+  // Heatup time estimate
+  const poolVol=area*5*7.48; // gallons (assume 5 ft avg depth for inground, 3.5 ft for above)
+  const adjustedVol=poolType==='spa'?500:poolType==='above'?area*3.5*7.48:poolVol;
+  const heatupHrs=Math.round((adjustedVol*8.33*deltaT)/(heaterSize*0.82)*10)/10;
+
+  // Monthly cost estimate
+  let monthlyCost='';
+  if(heaterPref==='gas'){
+    const thermsPerHr=heaterSize/100000;
+    monthlyCost='$'+(Math.round(thermsPerHr*0.90*8*4)*1+40)+'–$'+(Math.round(thermsPerHr*1.10*8*4)*1+80)+'/mo (NG)';
+  } else if(heaterPref==='lp'){
+    const thermsPerHr=heaterSize/100000;
+    monthlyCost='$'+(Math.round(thermsPerHr*2.80*8*4)*1+60)+'–$'+(Math.round(thermsPerHr*3.50*8*4)*1+100)+'/mo (LP)';
+  } else if(heaterPref==='heatpump'){
+    monthlyCost='$30–$90/mo (HP)';
+  } else {
+    monthlyCost='$50–$120/mo (hybrid)';
+  }
+
+  document.getElementById('res-btu').textContent=(btu/1000).toFixed(0)+'K';
+  document.getElementById('res-heater').textContent=(heaterSize/1000)+'K BTU';
+  document.getElementById('res-heatup').textContent=heatupHrs+' hrs';
+  document.getElementById('res-cost').textContent=monthlyCost.split('(')[0].trim();
+
+  let detail=`<strong>Pool surface area:</strong> ${area} sq ft<br>`;
+  detail+=`<strong>Temperature rise needed:</strong> ${deltaT}°F (${currentTemp}°F → ${desiredTemp}°F)<br>`;
+  detail+=`<strong>Wind factor:</strong> ${windFactor}x | <strong>Cover factor:</strong> ${coverFactor}x<br>`;
+  detail+=`<strong>Calculated BTU requirement:</strong> ${btu.toLocaleString()} BTU/hr<br>`;
+  detail+=`<strong>Recommended heater size:</strong> ${heaterSize.toLocaleString()} BTU/hr<br>`;
+  document.getElementById('res-detail').innerHTML=detail;
+
+  const recEl=document.getElementById('res-rec');
+  if(heaterPref==='gas'){
+    recEl.className='alert alert-info';
+    recEl.textContent=`Gas ${(heaterSize/1000)+'K'} BTU heater recommended. Requires ${heaterSize>200000?'1"':'¾"'} gas line minimum (verify with gas line calculator above). Fast heatup — ideal for occasional heating or spa use.`;
+  } else if(heaterPref==='heatpump'){
+    recEl.className='alert alert-green';
+    recEl.textContent=`Heat pump ideal for FL climate. Size to ~${Math.round(heaterSize*0.45/12000)} tons. COP of 5× means 80% lower operating cost vs gas. Works best for daily temperature maintenance.`;
+  } else {
+    recEl.className='alert alert-blue';
+    recEl.textContent=`Hybrid system: Heat pump as primary for daily use + ${(heaterSize/1000)+'K'} BTU gas backup. Best long-term economics for year-round FL pool use. Typical payback vs gas-only: 4 years.`;
+  }
+  document.getElementById('poolResult').classList.add('show');
+}
+
+function calcGasLine(){
+  const gasType=document.getElementById('gasType2').value;
+  const heaterBTUsel=document.getElementById('heaterBTU').value;
+  const customBTU=parseInt(document.getElementById('customBTU').value)||0;
+  const heaterBTU=heaterBTUsel==='custom'?customBTU:parseInt(heaterBTUsel);
+  const otherAppl=parseInt(document.getElementById('otherAppl').value)||0;
+  const runLen=parseInt(document.getElementById('runLen').value)||50;
+  const linePres=document.getElementById('linePres').value;
+
+  const totalBTU=heaterBTU+otherAppl;
+  // LP adjustment: ~40% of NG capacity at same pipe size
+  const adjustedBTU=gasType==='lp'?totalBTU/0.40:totalBTU;
+
+  // NFPA 54 approximate lookup
+  const sizingTable={
+    10:{half:238000,threequarter:502000,one:946000,oneq:1797000,oneh:2726000},
+    20:{half:166000,threequarter:350000,one:661000,oneq:1255000,oneh:1904000},
+    30:{half:134000,threequarter:283000,one:534000,oneq:1014000,oneh:1539000},
+    50:{half:102000,threequarter:216000,one:407000,oneq:773000,oneh:1174000},
+    75:{half:83000,threequarter:176000,one:332000,oneq:630000,oneh:957000},
+    100:{half:72000,threequarter:151000,one:285000,oneq:542000,oneh:822000},
+    150:{half:58000,threequarter:123000,one:232000,oneq:441000,oneh:670000}
+  };
+
+  const row=sizingTable[runLen]||sizingTable[100];
+  let pipeSize='1½"';
+  if(adjustedBTU<=row.half) pipeSize='½"';
+  else if(adjustedBTU<=row.threequarter) pipeSize='¾"';
+  else if(adjustedBTU<=row.one) pipeSize='1"';
+  else if(adjustedBTU<=row.oneq) pipeSize='1¼"';
+  else if(adjustedBTU<=row.oneh) pipeSize='1½"';
+  else pipeSize='2" or larger';
+
+  document.getElementById('gas-pipe').textContent=pipeSize;
+  document.getElementById('gas-total').textContent=(totalBTU/1000).toFixed(0)+'K BTU';
+
+  let detail=`<strong>Pool heater:</strong> ${heaterBTU.toLocaleString()} BTU/hr<br>`;
+  if(otherAppl>0) detail+=`<strong>Other appliances:</strong> ${otherAppl.toLocaleString()} BTU/hr<br>`;
+  detail+=`<strong>Total gas demand:</strong> ${totalBTU.toLocaleString()} BTU/hr<br>`;
+  detail+=`<strong>Gas type:</strong> ${gasType==='ng'?'Natural Gas':'Propane (LP)'}<br>`;
+  detail+=`<strong>Run length:</strong> ${runLen} ft<br>`;
+  if(gasType==='lp') detail+=`<strong>LP pipe sizing note:</strong> LP requires larger pipe than NG for same BTU (LP ÷ 0.40 = ${adjustedBTU.toLocaleString()} equivalent NG BTU)<br>`;
+  document.getElementById('gas-detail').innerHTML=detail;
+
+  const alertEl=document.getElementById('gas-alert');
+  if(linePres==='low'&&totalBTU>300000){
+    alertEl.className='alert alert-warn';
+    alertEl.textContent='⚠️ Large BTU load at low pressure — consult gas utility about medium-pressure service (2 PSI). Medium pressure allows smaller pipe diameter and reduces pressure drop over long runs.';
+  } else {
+    alertEl.className='alert alert-info';
+    alertEl.textContent=`Minimum pipe size: ${pipeSize} (Schedule 40 black iron or approved CSST). Always install sediment trap/drip leg at pool heater connection. Pressure test at 10 PSI air for 15 minutes per FL code.`;
+  }
+  document.getElementById('gasResult').classList.add('show');
+}
+
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  const all=document.querySelectorAll('#gas-checklist .chk');
+  const done=document.querySelectorAll('#gas-checklist .chk.checked').length;
+  document.getElementById('gas-score').textContent=done+'/'+all.length+' items checked'+(done===all.length?' — Ready for inspection! ✅':'');
+}
+
+function submitQuote(){
+  const name=document.getElementById('q-name').value.trim();
+  const phone=document.getElementById('q-phone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+</script>
+
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+<!-- fl-plumbing-seo: pool-heater-sizing pool-heater-btu fl-pool-gas-line pool-heater-permit gas-pool-heater-installation florida-pool-plumbing nfpa-54-pool heat-pump-vs-gas fl-pool-heater-cost pool-spa-heater pool-gas-sizing natural-gas-pool-heater propane-pool-heater csst-bonding-pool pool-equipment-permit fl-pool-code pool-heater-btu-calculator swimming-pool-plumbing boca-raton-pool-plumbing miami-pool-heater tampa-pool-heater orlando-pool-heater jacksonville-pool-heater fort-lauderdale-pool-heater naples-pool-heater sarasota-pool-heater -->
+
+</div>
+</body>
+</html>

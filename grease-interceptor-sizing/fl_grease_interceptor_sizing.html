@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Grease Interceptor Sizing Calculator | Florida Plumbing</title>
+<meta name="description" content="Size grease interceptors and grease traps for Florida commercial kitchens. FL DBPR FOG compliance, GPM calculator, interceptor vs trap selection, cleaning schedule by county, manifest requirements.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.hero{background:linear-gradient(135deg,#0A0E1A 0%,#0F1629 50%,#0A0E1A 100%);padding:24px 16px 16px;text-align:center;border-bottom:1px solid #1E2A45}
+.hero h1{font-size:1.4rem;font-weight:700;color:#14B8A6;margin-bottom:6px;line-height:1.3}
+.hero p{font-size:0.85rem;color:#94A3B8;max-width:480px;margin:0 auto}
+.badge{display:inline-block;background:#14B8A622;color:#14B8A6;border:1px solid #14B8A644;border-radius:4px;font-size:0.7rem;font-weight:600;padding:2px 8px;margin-bottom:8px;letter-spacing:.05em}
+.tabs{display:flex;background:#0F1629;border-bottom:1px solid #1E2A45;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{flex:1;min-width:80px;padding:12px 8px;text-align:center;font-size:0.75rem;font-weight:600;color:#94A3B8;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab.active{color:#14B8A6;border-bottom-color:#14B8A6;background:#14B8A60D}
+.tab:hover:not(.active){color:#E2E8F0;background:#1E2A4522}
+.panel{display:none;padding:16px;max-width:480px;margin:0 auto}
+.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E2A45;border-radius:10px;padding:14px;margin-bottom:14px}
+.card h3{font-size:0.85rem;font-weight:700;color:#14B8A6;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+label{display:block;font-size:0.78rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=text],input[type=tel],input[type=number]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:6px;color:#E2E8F0;padding:9px 10px;font-size:0.82rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#14B8A6}
+.btn{width:100%;background:#14B8A6;color:#000;border:none;border-radius:8px;padding:12px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:12px;letter-spacing:.02em}
+.btn:hover{background:#0D9488}
+.result-box{background:#141929;border:1px solid #14B8A633;border-radius:8px;padding:14px;margin-top:12px;display:none}
+.result-box.show{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{background:#0F1629;border:1px solid #1E2A45;border-radius:8px;padding:10px;text-align:center}
+.metric-val{font-size:1.1rem;font-weight:700;color:#14B8A6}
+.metric-lbl{font-size:0.7rem;color:#94A3B8;margin-top:2px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#94A3B8}
+.info-val{color:#E2E8F0;font-weight:600;text-align:right;max-width:65%}
+.alert{border-radius:8px;padding:10px 12px;font-size:0.78rem;margin-bottom:10px;border:1px solid}
+.alert-warn{background:#F4B94211;border-color:#F4B94244;color:#F4B942}
+.alert-info{background:#14B8A611;border-color:#14B8A633;color:#14B8A6}
+.alert-red{background:#EF444411;border-color:#EF444433;color:#EF4444}
+.alert-green{background:#22C55E11;border-color:#22C55E33;color:#22C55E}
+.step-list{counter-reset:steps;margin-top:8px}
+.step-item{counter-increment:steps;display:flex;gap:10px;margin-bottom:10px;font-size:0.78rem}
+.step-item::before{content:counter(steps);background:#14B8A6;color:#000;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;margin-top:1px}
+.step-text{color:#E2E8F0;line-height:1.5}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #1E2A4533;font-size:0.78rem}
+.check-item:last-child{border-bottom:none}
+.chk{width:16px;height:16px;border-radius:3px;border:2px solid #1E2A45;flex-shrink:0;cursor:pointer;margin-top:1px;background:#141929}
+.chk.checked{background:#14B8A6;border-color:#14B8A6}
+.divider{height:1px;background:#1E2A45;margin:12px 0}
+.phone-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#14B8A61A;border:1px solid #14B8A644;border-radius:8px;padding:12px;color:#14B8A6;font-weight:700;font-size:0.88rem;cursor:pointer;margin-top:10px;text-decoration:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#000;font-weight:700;padding:12px 22px;border-radius:8px;font-size:0.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.county-wrap{position:relative}
+.county-wrap::after{content:'▼';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:0.65rem;pointer-events:none}
+.size-table{width:100%;border-collapse:collapse;font-size:0.72rem;margin-top:8px}
+.size-table th{background:#1E2A45;color:#94A3B8;padding:6px 8px;text-align:left;font-weight:600}
+.size-table td{padding:6px 8px;border-bottom:1px solid #1E2A4533;color:#E2E8F0}
+.size-table tr.highlight td{background:#14B8A611;color:#14B8A6;font-weight:700}
+.fixture-input{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:6px}
+.fixture-label{font-size:0.78rem;color:#E2E8F0}
+.fixture-num{width:60px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">🍳 FLORIDA COMMERCIAL KITCHEN PLUMBING</div>
+  <h1>Grease Interceptor Sizing Calculator</h1>
+  <p>FL DBPR FOG compliance, GPM calculator, interceptor vs trap selection, cleaning schedules, manifest requirements</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('sizer')">🔢 Size Calculator</div>
+  <div class="tab" onclick="showTab('schedule')">📅 Clean Schedule</div>
+  <div class="tab" onclick="showTab('code')">📋 FL DBPR Code</div>
+  <div class="tab" onclick="showTab('quote')">📞 Quote</div>
+</div>
+
+<!-- TAB 1: SIZE CALCULATOR -->
+<div class="panel active" id="panel-sizer">
+  <div class="card">
+    <h3>🔢 Grease Interceptor / Trap Sizing</h3>
+    <p style="font-size:0.75rem;color:#94A3B8;margin-bottom:12px">Per PDI G101 and FL DBPR / local authority guidelines</p>
+
+    <label>Establishment Type</label>
+    <div class="county-wrap">
+      <select id="estType" onchange="updateEstInfo()">
+        <option value="fullsvc">Full-service restaurant</option>
+        <option value="fast">Fast food / limited menu</option>
+        <option value="cafe">Café / bakery / deli</option>
+        <option value="bar">Bar / nightclub (minimal food)</option>
+        <option value="hotel">Hotel kitchen</option>
+        <option value="school">School / cafeteria</option>
+        <option value="hospital">Hospital / healthcare kitchen</option>
+        <option value="ghost">Ghost kitchen / commissary</option>
+        <option value="food_truck">Food truck commissary</option>
+      </select>
+    </div>
+
+    <div id="est-info" class="alert alert-info" style="display:none;margin-top:8px"></div>
+
+    <label>Number of Meals per Day</label>
+    <div class="county-wrap">
+      <select id="mealsDay">
+        <option value="50">Under 50 (small café)</option>
+        <option value="100">50–100</option>
+        <option value="200">100–200</option>
+        <option value="400">200–400 (mid-size restaurant)</option>
+        <option value="600">400–600 (busy restaurant)</option>
+        <option value="1000">600–1,000 (high volume)</option>
+        <option value="2000">1,000–2,000 (cafeteria / hotel)</option>
+        <option value="3000">Over 2,000 (large facility)</option>
+      </select>
+    </div>
+
+    <label>Cooking Method (primary)</label>
+    <div class="county-wrap">
+      <select id="cookMethod">
+        <option value="grill">Heavy frying / grilling (burger, fried chicken)</option>
+        <option value="mixed">Mixed (some fry, some bake/steam)</option>
+        <option value="light">Light cooking (sandwiches, salads, coffee)</option>
+        <option value="raw">Minimal cooking (sushi, raw bar)</option>
+      </select>
+    </div>
+
+    <label>Fixtures Connecting to Grease System</label>
+    <div style="background:#141929;border:1px solid #1E2A45;border-radius:6px;padding:10px;margin-top:6px">
+      <div class="fixture-input">
+        <span class="fixture-label">3-compartment sink</span>
+        <input type="number" class="fixture-num" id="f-3comp" value="1" min="0" max="20">
+      </div>
+      <div class="fixture-input">
+        <span class="fixture-label">Pre-rinse / prep sink</span>
+        <input type="number" class="fixture-num" id="f-prerinse" value="1" min="0" max="20">
+      </div>
+      <div class="fixture-input">
+        <span class="fixture-label">Commercial dishwasher</span>
+        <input type="number" class="fixture-num" id="f-dish" value="1" min="0" max="10">
+      </div>
+      <div class="fixture-input">
+        <span class="fixture-label">Floor drain (kitchen area)</span>
+        <input type="number" class="fixture-num" id="f-drain" value="2" min="0" max="20">
+      </div>
+      <div class="fixture-input">
+        <span class="fixture-label">Mop sink</span>
+        <input type="number" class="fixture-num" id="f-mop" value="1" min="0" max="5">
+      </div>
+      <div class="fixture-input">
+        <span class="fixture-label">Wok / range drain</span>
+        <input type="number" class="fixture-num" id="f-wok" value="0" min="0" max="10">
+      </div>
+    </div>
+
+    <label>Water Temperature at Sink (°F)</label>
+    <div class="county-wrap">
+      <select id="waterTemp">
+        <option value="140">140°F (hot — accelerates grease liquefaction)</option>
+        <option value="120">120°F (FL standard)</option>
+        <option value="100">Under 100°F (warm water only)</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="calcGrease()">Calculate Grease Interceptor Size</button>
+
+    <div class="result-box" id="greaseResult">
+      <div class="grid2">
+        <div class="metric"><div class="metric-val" id="gr-gpm">—</div><div class="metric-lbl">Flow Rate (GPM)</div></div>
+        <div class="metric"><div class="metric-val" id="gr-size">—</div><div class="metric-lbl">Min. Capacity</div></div>
+        <div class="metric"><div class="metric-val" id="gr-type">—</div><div class="metric-lbl">Device Type</div></div>
+        <div class="metric"><div class="metric-val" id="gr-clean">—</div><div class="metric-lbl">Clean Frequency</div></div>
+      </div>
+      <div class="divider"></div>
+      <div id="gr-detail" style="font-size:0.78rem;color:#94A3B8;line-height:1.7"></div>
+      <div id="gr-alert" class="alert" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📏 Standard Grease Device Sizing Chart</h3>
+    <table class="size-table">
+      <thead><tr><th>Flow Rate</th><th>PDI Rating</th><th>Capacity</th><th>Typical Use</th></tr></thead>
+      <tbody>
+        <tr><td>7 GPM</td><td>PDI-7</td><td>14 gallons</td><td>Single sink, café</td></tr>
+        <tr><td>10 GPM</td><td>PDI-10</td><td>20 gallons</td><td>Small kitchen</td></tr>
+        <tr><td>15 GPM</td><td>PDI-15</td><td>30 gallons</td><td>Small-med restaurant</td></tr>
+        <tr><td>20 GPM</td><td>PDI-20</td><td>40 gallons</td><td>Medium restaurant</td></tr>
+        <tr><td>25 GPM</td><td>PDI-25</td><td>50 gallons</td><td>Busy restaurant</td></tr>
+        <tr><td>50 GPM</td><td>PDI-50</td><td>100 gallons</td><td>High-volume / hotel</td></tr>
+        <tr><td>1,000+ gal</td><td>Interceptor</td><td>1,000–5,000 gal</td><td>Large commercial</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-warn" style="margin-top:10px">⚠️ FL DBPR and local authorities may require larger than PDI minimum. Always verify with your FL county health department and local wastewater authority before purchasing.</div>
+  </div>
+</div>
+
+<!-- TAB 2: CLEANING SCHEDULE -->
+<div class="panel" id="panel-schedule">
+  <div class="card">
+    <h3>📅 Grease Device Cleaning & Pumping Schedule</h3>
+
+    <label>Your Device Type</label>
+    <div class="county-wrap">
+      <select id="sch-type">
+        <option value="trap">Grease trap (under-sink, &lt;100 gal)</option>
+        <option value="interceptor">Grease interceptor (outdoor, 500+ gal)</option>
+        <option value="agg">Automatic grease removal unit (AGR)</option>
+      </select>
+    </div>
+
+    <label>Volume / Size</label>
+    <div class="county-wrap">
+      <select id="sch-size">
+        <option value="small">Small: 20–50 gallon trap / 500 gal interceptor</option>
+        <option value="medium">Medium: 50–100 gal trap / 1,000 gal interceptor</option>
+        <option value="large">Large: 100 gal trap / 1,500–2,500 gal interceptor</option>
+        <option value="xlarge">XL: 3,000–5,000 gal interceptor</option>
+      </select>
+    </div>
+
+    <label>Volume of Business</label>
+    <div class="county-wrap">
+      <select id="sch-vol">
+        <option value="low">Low — &lt;100 meals/day</option>
+        <option value="medium">Medium — 100–400 meals/day</option>
+        <option value="high">High — 400–800 meals/day</option>
+        <option value="very-high">Very High — 800+ meals/day</option>
+      </select>
+    </div>
+
+    <label>FL County</label>
+    <div class="county-wrap">
+      <select id="sch-county" onchange="showCountyRule()">
+        <option value="">— Select County —</option>
+        <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+        <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+        <option>Duval</option><option>Lee</option><option>Sarasota</option>
+        <option>Collier</option><option>Polk</option><option>Manatee</option>
+        <option>Other FL County</option>
+      </select>
+    </div>
+
+    <div id="county-rule" class="alert alert-info" style="display:none;margin-top:8px"></div>
+
+    <button class="btn" onclick="calcSchedule()">Get Cleaning Schedule</button>
+
+    <div class="result-box" id="schedResult">
+      <div id="sched-detail" style="font-size:0.78rem;color:#E2E8F0;line-height:1.8"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 FL FOG Manifesting Requirements</h3>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-text"><strong>Waste Manifest (Uniform Hazardous Waste Manifest)</strong> — All grease trap and interceptor pump-outs in FL require a waste manifest signed by the generator (restaurant), the transporter (pump truck company), and the disposal facility. Keep copies on-site for minimum 3 years.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Licensed Waste Hauler Required</strong> — FL requires a licensed waste transporter. In most FL counties, the transporter must be registered with the local wastewater utility. Unlicensed haulers = immediate DBPR violation + fines up to $5,000.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Record Keeping</strong> — Florida restaurant license requires proof of grease maintenance. Keep: pump-out receipts, manifests, service records. DBPR inspector will request these during routine inspection. Missing records = citation.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>25% Rule</strong> — Many FL county wastewater authorities enforce the "25% rule": when combined FOG and solids reach 25% of interceptor capacity, it must be pumped. This typically means pumping before you think you need to.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ FOG Compliance Checklist</h3>
+    <div id="fog-checklist">
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Grease device sized and installed per PDI standards</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Cleaning/pumping schedule established and documented</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Licensed waste hauler contracted for pump-outs</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this,'fog')"></div><div>Waste manifests from last 3 years on file</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>FOG program registration with local wastewater authority</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>Grease device accessible for inspection and pumping</div></div>
+      <div class="check-item"><div class="chk" onclick="toggleCheck(this)"></div><div>No garbage disposal connected to grease system (FL rule)</div></div>
+    </div>
+    <div id="fog-score" style="margin-top:10px;font-size:0.78rem;color:#94A3B8;text-align:center"></div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div class="panel" id="panel-code">
+  <div class="card">
+    <h3>📋 FL Grease Interceptor Code Requirements</h3>
+
+    <div class="alert alert-info">Florida enforces grease management through multiple agencies: FL DBPR (restaurants), FL DEP (environmental), and local wastewater utilities. Non-compliance can result in license suspension, utility surcharges, and environmental fines.</div>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-text"><strong>FPC Section 1003 — Grease Interceptors</strong> — The Florida Plumbing Code requires a grease interceptor when the installation will receive grease-laden wastes from commercial food service. Size determined by PDI G101 method. Permit required for installation and replacement.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>DBPR Chapter 509 — Restaurant License</strong> — FL food service license requires grease management plan. DBPR inspectors check: device present, accessible, properly maintained, records available. Annual inspection may include grease device check. Non-compliant device = critical violation.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Grease Trap vs Grease Interceptor</strong> — Grease TRAP: under-sink, small volume (10–100 gallons), requires weekly cleaning, for low-volume use. Grease INTERCEPTOR: outdoor, large volume (500–5,000 gallons), monthly pumping minimum, for most FL restaurants. FL county wastewater authorities often require interceptors over traps for full-service restaurants.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>No Garbage Disposals (FL Rule)</strong> — FL DBPR and most FL wastewater authorities prohibit garbage disposals (food grinders) from being connected to any drain that flows to a grease interceptor. Food solids rapidly fill interceptors and violate capacity calculations. Disposals may only drain to solid waste.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>High-Temperature Water Concern</strong> — Water above 140°F liquefies FOG, which then re-conglomerates downstream in the sewer — actually increasing blockage risk. FL DBPR recommends interceptors rated for high-temperature inlet. Some FL utilities require a cooling chamber before interceptor for water above 140°F.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>FOG Program Registration</strong> — Most FL cities (Miami, Orlando, Tampa, Jacksonville, etc.) require commercial food service establishments to register with the local FOG (Fats, Oils, Grease) program. Registration includes interceptor location, size, and pumping schedule. Annual fee: $50–$200 typical. Failure to register = utility fine.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-text"><strong>Automatic Grease Removal (AGR) Units</strong> — Some FL authorities accept AGR/AGI (Automatic Grease Interceptor) units as alternatives to traditional interceptors for smaller establishments. AGR units skim and store FOG continuously. Requires daily maintenance, weekly waste removal. Check with local authority before installing.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🏙️ FL Major City FOG Program Summary</h3>
+    <div class="info-row"><span class="info-label">Miami-Dade WASD</span><span class="info-val">FOG Program required; 1,500 gal min for full-service; surcharge for violations</span></div>
+    <div class="info-row"><span class="info-label">Broward County</span><span class="info-val">Each municipality has own FOG rules; 90-day pumping max for most</span></div>
+    <div class="info-row"><span class="info-label">Palm Beach County</span><span class="info-val">25% rule enforced; registered haulers only; manifests required</span></div>
+    <div class="info-row"><span class="info-label">City of Orlando (OUC)</span><span class="info-val">FOG registration required; 1,000 gal min; 90-day pumping cycle</span></div>
+    <div class="info-row"><span class="info-label">Tampa (TUW)</span><span class="info-val">FOG Program; monthly pumping for &lt;1,000 gal; quarterly for 1,500+ gal</span></div>
+    <div class="info-row"><span class="info-label">Jacksonville (JEA)</span><span class="info-val">JEA FOG Program; minimum 1,000 gal for most restaurants</span></div>
+    <div class="info-row"><span class="info-label">Pinellas County</span><span class="info-val">Each city varies; St. Pete strict on manifests; Clearwater requires AGR option</span></div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div class="panel" id="panel-quote">
+  <div class="card">
+    <h3>📞 Grease Interceptor Quote</h3>
+    <p style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px">Licensed CPC — FL commercial kitchen grease system installation</p>
+
+    <div class="alert alert-warn">Grease interceptor installation in FL requires a licensed plumbing contractor (CPC). Installation without permit can void DBPR license. Our team pulls all required permits.</div>
+
+    <label>Name / Business</label>
+    <input type="text" id="q-name" placeholder="Restaurant name or owner">
+
+    <label>Phone Number</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>City / ZIP</label>
+    <input type="text" id="q-city" placeholder="e.g. Tampa, 33602">
+
+    <label>FL County</label>
+    <div class="county-wrap">
+      <select id="q-county">
+        <option value="">— Select County —</option>
+        <option>Alachua</option><option>Baker</option><option>Bay</option><option>Bradford</option><option>Brevard</option>
+        <option>Broward</option><option>Calhoun</option><option>Charlotte</option><option>Citrus</option><option>Clay</option>
+        <option>Collier</option><option>Columbia</option><option>DeSoto</option><option>Dixie</option><option>Duval</option>
+        <option>Escambia</option><option>Flagler</option><option>Franklin</option><option>Gadsden</option><option>Gilchrist</option>
+        <option>Glades</option><option>Gulf</option><option>Hamilton</option><option>Hardee</option><option>Hendry</option>
+        <option>Hernando</option><option>Highlands</option><option>Hillsborough</option><option>Holmes</option><option>Indian River</option>
+        <option>Jackson</option><option>Jefferson</option><option>Lafayette</option><option>Lake</option><option>Lee</option>
+        <option>Leon</option><option>Levy</option><option>Liberty</option><option>Madison</option><option>Manatee</option>
+        <option>Marion</option><option>Martin</option><option>Miami-Dade</option><option>Monroe</option><option>Nassau</option>
+        <option>Okaloosa</option><option>Okeechobee</option><option>Orange</option><option>Osceola</option><option>Palm Beach</option>
+        <option>Pasco</option><option>Pinellas</option><option>Polk</option><option>Putnam</option><option>Santa Rosa</option>
+        <option>Sarasota</option><option>Seminole</option><option>St. Johns</option><option>St. Lucie</option><option>Sumter</option>
+        <option>Suwannee</option><option>Taylor</option><option>Union</option><option>Volusia</option><option>Wakulla</option>
+        <option>Walton</option><option>Washington</option>
+      </select>
+    </div>
+
+    <label>Service Needed</label>
+    <div class="county-wrap">
+      <select id="q-service">
+        <option>New grease interceptor installation</option>
+        <option>Grease interceptor replacement / upgrade</option>
+        <option>Grease trap installation (under-sink)</option>
+        <option>FOG compliance — failed inspection</option>
+        <option>AGR (automatic grease removal) installation</option>
+        <option>Grease line cleaning / hydro-jetting</option>
+        <option>DBPR inspection prep</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="submitQuote()">Request Commercial Quote →</button>
+    <a class="phone-btn" href="tel:5615555473">📞 Call Now: (561) 555-PIPE</a>
+  </div>
+
+  <div class="card">
+    <h3>💰 FL Grease Interceptor Cost Guide</h3>
+    <div class="info-row"><span class="info-label">Under-sink trap (20–50 gal)</span><span class="info-val">$400–$900 installed</span></div>
+    <div class="info-row"><span class="info-label">500-gal outdoor interceptor</span><span class="info-val">$2,500–$5,000 installed</span></div>
+    <div class="info-row"><span class="info-label">1,000-gal interceptor</span><span class="info-val">$4,000–$8,000 installed</span></div>
+    <div class="info-row"><span class="info-label">1,500-gal interceptor</span><span class="info-val">$5,500–$11,000 installed</span></div>
+    <div class="info-row"><span class="info-label">AGR automatic unit</span><span class="info-val">$1,800–$4,000 installed</span></div>
+    <div class="info-row"><span class="info-label">Pump-out service (per visit)</span><span class="info-val">$200–$600</span></div>
+    <div class="info-row"><span class="info-label">FL plumbing permit</span><span class="info-val">$150–$500</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ We'll call you within 2 hours!</div>
+
+<div style="display:none" aria-hidden="true" id="kw-data">
+<!-- FL GREASE INTERCEPTOR DATA — FLORIDA PLUMBING / DBPR REFERENCE -->
+<!-- PDI G101-2017: Standard for Grease Interceptors -->
+<!-- Florida Plumbing Code Section 1003 — Interceptors and Separators -->
+<!-- FL DBPR Chapter 509 — Public Food Service Establishments -->
+<!-- FL Statute 403 — Environmental Control -->
+<!-- EPA FOG Guidelines for Food Service Establishments -->
+<!--
+PDI G101 SIZING METHOD:
+1. Determine maximum flow rate from all fixtures (GPM)
+2. Apply retention time factor (usually 2x for restaurant)
+3. Apply temperature factor: cold water = 1.0; 120°F = 0.75; 140°F = 0.5
+   (Hotter water liquefies grease more — some passes through)
+4. Result = required GPM rating
+5. Minimum capacity (gallons) = GPM rating x 2
+
+FIXTURE FLOW RATES (GPM at maximum):
+3-compartment sink: 20 GPM (three 6-7 GPM compartments)
+Pre-rinse/spray: 6 GPM
+Commercial dishwasher (rack type): 20 GPM
+Floor drain: 12 GPM (typical)
+Mop sink: 6 GPM
+Single prep sink: 6 GPM
+Wok station drain: 8 GPM
+
+TEMPERATURE FACTORS (PDI G101):
+Water temp ≤ 100°F: factor 1.0 (full grease retained)
+Water temp 101–120°F: factor 0.75
+Water temp 121–140°F: factor 0.50
+Water temp > 140°F: not recommended; may require cooling chamber
+
+ESTABLISHMENT TYPE FACTORS (FL typical):
+Full-service restaurant: high grease load → interceptor preferred
+Fast food: moderate; may use trap if &lt;50 GPM total
+Café/bakery: low-moderate; under-sink trap often acceptable
+Bar (minimal food): minimal; small trap or interceptor &lt;500 gal
+School cafeteria: high volume; interceptor 1,000+ gal
+Hospital kitchen: very high; interceptor 1,500+ gal required
+
+FL-SPECIFIC SIZING:
+Miami-Dade WASD: Minimum 1,500 gallon interceptor for full-service restaurants
+City of Orlando: Minimum 1,000 gallon
+City of Tampa: Based on seat count; 50+ seats = interceptor
+Broward: Municipality-specific; ranges from 500–1,500 gal minimum
+Palm Beach: 500 gal minimum; 1,000+ for most restaurants
+
+CLEANING FREQUENCY:
+Grease trap (small, &lt;50 gal): Weekly — no exceptions for restaurants
+Grease trap (50–100 gal): Weekly to bi-weekly
+Interceptor (500 gal, low volume): Monthly minimum
+Interceptor (500 gal, high volume): Every 2 weeks
+Interceptor (1,000–1,500 gal): Monthly typical; bi-monthly for low-volume
+Interceptor (2,000+ gal): Bi-monthly to quarterly
+AGR (automatic): Daily skimming; weekly collection pump-out
+
+25% RULE (enforced by most FL wastewater authorities):
+Combined FOG + grease-free zone solids = 25% of interceptor volume
+At 25%: pump immediately
+Enforcement: wastewater utility can add surcharges for FOG in sewer
+Inspections: some FL utilities do surprise interceptor inspections
+
+MANIFEST REQUIREMENTS (FL):
+FL Department of Environmental Protection: waste manifest for each pump-out
+Hauler must be licensed waste transporter (FL Statute 403.7265)
+Copy 1: Generator (restaurant) — keep 3 years
+Copy 2: Transporter — keep 1 year
+Copy 3: Disposal facility — keep 3 years
+Content: date, volume pumped, disposal facility, FDEP permit numbers
+
+FOG PROGRAM REGISTRATION:
+Miami-Dade WASD FOG Program: Registration + annual fee $100
+City of Tampa TUW FOG: Free registration; mandatory
+City of Orlando: FOG registration with OUC
+City of Jacksonville: JEA FOG enrollment required
+Broward: By municipality — each requires own registration
+Non-registration: utility can refuse to accept waste; DBPR violation
+
+GREASE TRAP (SMALL):
+Under-sink installation (indoor)
+Typically 10–100 gallons
+Weekly cleaning by licensed plumber (most FL counties)
+Manual skimming of FOG layer
+Low install cost; high maintenance cost
+Best for: café, bar, very low-volume food service
+Not accepted by Miami-Dade, Tampa, Orlando for full-service restaurants
+
+GREASE INTERCEPTOR (LARGE):
+Outdoor underground tank (concrete, HDPE, fiberglass)
+500–5,000+ gallons
+Monthly or quarterly pump-out
+Licensed waste hauler required
+Higher install cost; lower maintenance cost per service
+Required by most FL counties for full-service restaurants
+
+AUTOMATIC GREASE REMOVAL (AGR):
+Continuous skimming motor removes FOG automatically
+Usually 15–40 gallon collection capacity
+Weekly FOG collection; daily maintenance
+Best for: facilities with space constraints (no room for outdoor interceptor)
+FL county acceptance: varies — verify before purchase
+Examples: Thermaco Trapzilla, Goslyn, Big Dipper
+
+PROHIBITED CONNECTIONS TO GREASE SYSTEM:
+Garbage disposals / food grinders: PROHIBITED in FL (DBPR rule)
+Dishwasher with pre-rinse: allowed but increases load significantly
+Floor drains from chemical storage: NOT connected to grease interceptor
+Bathroom fixtures: NEVER connected to grease system
+Sanitizer rinse from dishwasher: may be exempted in some jurisdictions (check)
+
+COMMON FL VIOLATIONS:
+1. No grease device or undersized device
+2. Grease device not pumped (records missing)
+3. Unlicensed waste hauler used
+4. Manifests not kept on file
+5. Garbage disposal connected to grease drain
+6. Interceptor not accessible (blocked by equipment)
+7. Device not registered with local FOG program
+
+FINES AND PENALTIES:
+FL DBPR critical violation: $250–$1,000 per violation
+Wastewater utility surcharge: $500–$5,000 for FOG in sewer
+Environmental fine (DEP): up to $10,000/day for illegal discharge
+DBPR license suspension: possible for repeat violations
+-->
+</div>
+
+<script>
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  const tabs=['sizer','schedule','code','quote'];
+  document.querySelectorAll('.tab')[tabs.indexOf(t)].classList.add('active');
+  document.getElementById('panel-'+t).classList.add('active');
+}
+
+const EST_INFO={
+  fullsvc:'Full-service restaurant: high grease load. Interceptor (outdoor, 500–1,500+ gal) required by most FL counties. Weekly manifests if using trap; monthly if interceptor.',
+  fast:'Fast food: moderate grease. Trap may be acceptable for small operations; interceptor recommended for >50 GPM.',
+  cafe:'Café/bakery: lower grease load. Under-sink trap (50–100 gal) may be acceptable. Verify with local wastewater authority.',
+  bar:'Bar with minimal food: low grease. Small trap or interceptor may suffice. Check with FL county if serving fried appetizers.',
+  hotel:'Hotel kitchen: very high volume. 1,500–3,000 gal interceptor typically required. FOG program registration mandatory.',
+  school:'School cafeteria: high grease load, high daily flow. 1,000–2,000 gal interceptor required. DBPR inspects food service license.',
+  hospital:'Hospital kitchen: AHCA and DBPR both regulate. 1,500–3,000 gal interceptor. Special manifest requirements for healthcare waste.',
+  ghost:'Ghost kitchen/commissary: all fixtures must drain to interceptor. High volume use. FL DBPR treats as full commercial.',
+  food_truck:'Food truck commissary: FL DBPR requires proper grease management at commissary facility. Interceptor required at commissary.'
+};
+
+function updateEstInfo(){
+  const v=document.getElementById('estType').value;
+  const el=document.getElementById('est-info');
+  if(EST_INFO[v]){el.textContent=EST_INFO[v];el.style.display='block';}
+}
+
+const COUNTY_RULES={
+  'Miami-Dade':'Miami-Dade WASD: Minimum 1,500 gallon interceptor for full-service restaurants. FOG registration required. Licensed haulers must be WASD-approved. Manifests: 3 years on file.',
+  'Broward':'Broward: Each municipality has own rules. Most require 1,000 gal minimum. Manifests required. Pumping every 90 days minimum for most.',
+  'Palm Beach':'Palm Beach County: 25% rule strictly enforced. PDI sizing minimum. Local FOG program registration per municipality. Approved hauler list available from county.',
+  'Hillsborough':'Hillsborough / Tampa: TUW FOG Program required. Based on seat count — 50+ seats = interceptor required. Monthly pumping for &lt;1,000 gal units.',
+  'Orange':'Orange County / Orlando: OUC FOG Program registration required. 1,000 gal minimum for most restaurants. Quarterly pumping for 1,500+ gal units.',
+  'Pinellas':'Pinellas County: Varies by city. St. Pete requires manifests for each pump-out. Clearwater allows AGR units as alternative. Dunedin has strict 60-day pumping requirement.',
+  'Duval':'Duval / Jacksonville: JEA FOG enrollment required. 1,000 gal minimum typical. Licensed haulers must be JEA-registered.',
+  'Lee':'Lee County: Based on meals-per-day calculation. Fort Myers requires FOG registration. Typical 90-day pumping cycle for interceptors.',
+  'Sarasota':'Sarasota County: RCID (Sarasota County Utilities) FOG program. Interceptors 500+ gal typical. Quarterly pumping minimum.',
+  'Collier':'Collier / Naples: Collier County Utilities FOG program. Minimum 1,000 gal recommended. Strict manifest record-keeping.',
+  'Polk':'Polk County: Lakeland requires FOG registration. Based on PDI sizing. Monthly pumping for most under-1,000 gal units.',
+  'Manatee':'Manatee County: Manatee County Utilities FOG program. Interceptors required for full-service. Quarterly pumping 1,000+ gal.',
+  'Other FL County':'Other FL County: Contact your local wastewater utility for FOG program rules. FL DBPR minimum: grease device properly sized, maintained, manifests on file 3 years.'
+};
+
+function showCountyRule(){
+  const county=document.getElementById('sch-county').value;
+  const el=document.getElementById('county-rule');
+  if(COUNTY_RULES[county]){el.textContent=COUNTY_RULES[county];el.style.display='block';}
+  else{el.style.display='none';}
+}
+
+function calcGrease(){
+  // Get fixture counts and flow rates
+  const f3comp=parseInt(document.getElementById('f-3comp').value)||0;
+  const fPrerinse=parseInt(document.getElementById('f-prerinse').value)||0;
+  const fDish=parseInt(document.getElementById('f-dish').value)||0;
+  const fDrain=parseInt(document.getElementById('f-drain').value)||0;
+  const fMop=parseInt(document.getElementById('f-mop').value)||0;
+  const fWok=parseInt(document.getElementById('f-wok').value)||0;
+
+  const FLOW_RATES={comp3:20,prerinse:6,dish:20,drain:12,mop:6,wok:8};
+  const rawGPM = f3comp*FLOW_RATES.comp3 + fPrerinse*FLOW_RATES.prerinse +
+    fDish*FLOW_RATES.dish + fDrain*FLOW_RATES.drain + fMop*FLOW_RATES.mop + fWok*FLOW_RATES.wok;
+
+  // Temperature factor
+  const wTemp=parseInt(document.getElementById('waterTemp').value)||120;
+  const tempFactor=wTemp>=140?0.5:wTemp>=120?0.75:1.0;
+
+  // Cook method factor
+  const cookFactors={grill:1.5,mixed:1.2,light:0.8,raw:0.6};
+  const cookFactor=cookFactors[document.getElementById('cookMethod').value]||1.0;
+
+  // PDI GPM rating
+  const adjGPM=Math.ceil(rawGPM * tempFactor * cookFactor);
+  // Minimum capacity = GPM x 2
+  const minCap=adjGPM*2;
+
+  // Device type recommendation
+  let devType='';
+  const estType=document.getElementById('estType').value;
+  const meals=parseInt(document.getElementById('mealsDay').value)||200;
+  if(adjGPM<=25 && meals<200 && (estType==='cafe'||estType==='bar')){
+    devType='Grease Trap';
+  } else if(adjGPM<=50 && meals<400){
+    devType='Interceptor 500–1,000 gal';
+  } else if(adjGPM<=100){
+    devType='Interceptor 1,000–1,500 gal';
+  } else {
+    devType='Interceptor 1,500–3,000 gal';
+  }
+
+  // Cleaning frequency
+  let cleanFreq='';
+  if(devType==='Grease Trap') cleanFreq='Weekly';
+  else if(meals>600) cleanFreq='Bi-weekly';
+  else if(meals>200) cleanFreq='Monthly';
+  else cleanFreq='Every 2 months';
+
+  document.getElementById('gr-gpm').textContent=adjGPM+' GPM';
+  document.getElementById('gr-size').textContent=minCap+' gal min';
+  document.getElementById('gr-type').textContent=devType.split(' ')[0]+' '+devType.split(' ')[1];
+  document.getElementById('gr-clean').textContent=cleanFreq;
+
+  let detail=`<strong>Raw fixture flow:</strong> ${rawGPM} GPM<br>`;
+  detail+=`<strong>Temperature factor (${wTemp}°F):</strong> ${tempFactor}x<br>`;
+  detail+=`<strong>Cooking method factor:</strong> ${cookFactor}x<br>`;
+  detail+=`<strong>Adjusted GPM:</strong> ${adjGPM} GPM<br>`;
+  detail+=`<strong>Minimum capacity:</strong> ${minCap} gallons<br>`;
+  detail+=`<strong>Recommended device:</strong> ${devType}<br>`;
+  document.getElementById('gr-detail').innerHTML=detail;
+
+  const alertEl=document.getElementById('gr-alert');
+  if(estType==='fullsvc'&&devType==='Grease Trap'){
+    alertEl.className='alert alert-warn';
+    alertEl.textContent='⚠️ Most FL counties require a grease interceptor (not trap) for full-service restaurants. Verify with your local wastewater authority before installing a grease trap only.';
+  } else {
+    alertEl.className='alert alert-info';
+    alertEl.textContent=`Recommended: ${devType}. Always verify sizing with your FL county wastewater authority — local minimums may exceed PDI calculations. FL DBPR requires licensed plumber to install with permit.`;
+  }
+  document.getElementById('greaseResult').classList.add('show');
+}
+
+function calcSchedule(){
+  const type=document.getElementById('sch-type').value;
+  const size=document.getElementById('sch-size').value;
+  const vol=document.getElementById('sch-vol').value;
+
+  const freqMap={
+    trap:{small:{low:'Weekly',medium:'Twice weekly',high:'Every 3 days',['very-high']:'Daily'},
+          medium:{low:'Weekly',medium:'Weekly',high:'Twice weekly',['very-high']:'Twice weekly'},
+          large:{low:'Bi-weekly',medium:'Weekly',high:'Weekly',['very-high']:'Twice weekly'}},
+    interceptor:{small:{low:'Monthly',medium:'Monthly',high:'Bi-weekly',['very-high']:'Every 3 weeks'},
+                 medium:{low:'Every 2 months',medium:'Monthly',high:'Monthly',['very-high']:'Bi-weekly'},
+                 large:{low:'Quarterly',medium:'Every 2 months',high:'Monthly',['very-high']:'Monthly'},
+                 xlarge:{low:'Quarterly',medium:'Quarterly',high:'Every 2 months',['very-high']:'Monthly'}},
+    agg:{small:{low:'Weekly FOG collection + daily check',medium:'Weekly',high:'2x weekly',['very-high']:'2x weekly'},
+         medium:{low:'Weekly',medium:'Weekly',high:'2x weekly',['very-high']:'2x weekly'}}
+  };
+
+  const schedule=freqMap[type]?.[size]?.[vol]||'Contact local authority';
+
+  let detail=`<strong>Device type:</strong> ${type==='trap'?'Grease Trap (under-sink)':type==='interceptor'?'Grease Interceptor (outdoor tank)':'Automatic Grease Removal Unit'}<br>`;
+  detail+=`<strong>Recommended cleaning frequency:</strong> <span style="color:#14B8A6;font-weight:700">${schedule}</span><br><br>`;
+  detail+=`<strong>Pump-out checklist:</strong><br>`;
+  detail+=`• Measure FOG layer depth before pump-out<br>`;
+  detail+=`• Confirm at or approaching 25% capacity<br>`;
+  detail+=`• Use FL-licensed waste hauler only<br>`;
+  detail+=`• Sign waste manifest — keep copy 3 years<br>`;
+  detail+=`• Record in FOG maintenance log<br>`;
+  detail+=`• Inspect baffles and inlet/outlet tees after pump-out<br>`;
+  detail+=`<br><strong>FL manifest requirement:</strong> Required for every pump-out. Request from hauler.`;
+
+  document.getElementById('sched-detail').innerHTML=detail;
+  document.getElementById('schedResult').classList.add('show');
+}
+
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  const parent=el.closest('[id$="-checklist"]');
+  if(!parent) return;
+  const all=parent.querySelectorAll('.chk');
+  const done=parent.querySelectorAll('.chk.checked').length;
+  const scoreId=parent.id.replace('-checklist','-score');
+  const scoreEl=document.getElementById(scoreId);
+  if(scoreEl) scoreEl.textContent=done+'/'+all.length+' items checked'+(done===all.length?' — FOG compliant! ✅':'');
+}
+
+function submitQuote(){
+  const name=document.getElementById('q-name').value.trim();
+  const phone=document.getElementById('q-phone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+</script>
+
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+<!-- fl-plumbing-seo: grease-interceptor-sizing grease-trap-sizing fl-dbpr-fog-compliance commercial-kitchen-plumbing grease-trap-gpm grease-interceptor-gpm fl-restaurant-grease-trap pdi-g101-sizing fog-compliance-florida grease-interceptor-cleaning grease-trap-pumping fl-fats-oils-grease grease-trap-manifest fl-wastewater-authority fog-program-registration commercial-kitchen-permit grease-trap-installation grease-interceptor-installation miami-grease-trap tampa-grease-trap orlando-grease-trap jacksonville-grease-trap -->
+
+</div>
+</body>
+</html>
