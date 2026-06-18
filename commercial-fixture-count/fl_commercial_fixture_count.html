@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Commercial Fixture Count Calculator | FPC Table 403.1 & ADA Compliance</title>
+<meta name="description" content="Calculate required plumbing fixtures for Florida commercial buildings. FPC Table 403.1, DBPR restaurant rules, ADA 2010 compliance, and FL occupancy-based fixture counts for offices, retail, gyms, restaurants, and more.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#14B8A6;color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#14B8A6;border-bottom-color:#14B8A6}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#14B8A6;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#14B8A6}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#14B8A6;color:#fff}
+.btn-primary:hover{background:#0d9488}
+.result-box{background:#141929;border:1px solid #14B8A6;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.fixture-results{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.fix-cell{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.fix-cell .fv{font-size:1.4rem;font-weight:800;color:#14B8A6}
+.fix-cell .fl{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.fix-cell .fm{font-size:.7rem;color:#E2E8F0;margin-top:2px}
+.result-notes{font-size:.75rem;color:#94A3B8;line-height:1.6;margin-top:10px}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.alert-teal{background:rgba(20,184,166,.12);border:1px solid rgba(20,184,166,.4);color:#14B8A6}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.fixture-table{width:100%;border-collapse:collapse;margin-top:8px}
+.fixture-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:5px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.fixture-table td{font-size:.72rem;color:#E2E8F0;padding:6px 8px;border-bottom:1px solid #0F1629}
+.fixture-table tr:hover td{background:#141929}
+.fixture-table .highlight td{color:#14B8A6;font-weight:700}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#14B8A6;border-color:#14B8A6}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#fff;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#14B8A6;transition:width .4s}
+.occ-chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.65rem;font-weight:700;margin:2px}
+.chip-a{background:rgba(244,185,66,.15);color:#F4B942;border:1px solid rgba(244,185,66,.3)}
+.chip-b{background:rgba(0,180,255,.15);color:#00B4FF;border:1px solid rgba(0,180,255,.3)}
+.chip-e{background:rgba(34,197,94,.15);color:#22C55E;border:1px solid rgba(34,197,94,.3)}
+.chip-m{background:rgba(249,115,22,.15);color:#F97316;border:1px solid rgba(249,115,22,.3)}
+.chip-r{background:rgba(20,184,166,.15);color:#14B8A6;border:1px solid rgba(20,184,166,.3)}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#14B8A6}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.split-input{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🏢 FL Commercial Fixture Count Calculator</h1>
+  <p>FPC Table 403.1 fixture requirements for FL occupancies with ADA & DBPR overlay</p>
+  <span class="badge">FPC 2023 + ADA 2010 COMPLIANT</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('calc')">Fixture Calc</div>
+  <div class="tab" onclick="showTab('ada')">ADA Check</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: FIXTURE CALCULATOR -->
+<div id="tab-calc" class="panel active">
+  <div class="card">
+    <div class="card-title">🔢 Required Fixture Count</div>
+
+    <label>Occupancy / Building Type</label>
+    <select id="occ-type" onchange="updateOccupancy()">
+      <optgroup label="Assembly (A)">
+        <option value="A-restaurant">Restaurant / Food Service (A-2)</option>
+        <option value="A-bar">Bar / Nightclub / Lounge (A-2)</option>
+        <option value="A-theater">Theater / Auditorium (A-1)</option>
+        <option value="A-worship">Place of Worship / Assembly Hall (A-3)</option>
+        <option value="A-gym-arena">Arena / Coliseum / Stadium (A-4/5)</option>
+      </optgroup>
+      <optgroup label="Business (B)">
+        <option value="B-office">Office Building (B)</option>
+        <option value="B-bank">Bank / Financial (B)</option>
+        <option value="B-medical">Medical / Dental Office (B)</option>
+      </optgroup>
+      <optgroup label="Educational (E)">
+        <option value="E-school">School / College (E)</option>
+        <option value="E-daycare">Day Care / Preschool (E)</option>
+      </optgroup>
+      <optgroup label="Factory / Industrial (F)">
+        <option value="F-factory">Manufacturing / Warehouse (F)</option>
+      </optgroup>
+      <optgroup label="Institutional (I)">
+        <option value="I-hospital">Hospital / Nursing Home (I-2)</option>
+      </optgroup>
+      <optgroup label="Mercantile (M)">
+        <option value="M-retail">Retail / Grocery / Store (M)</option>
+        <option value="M-mall">Shopping Mall / Anchor (M)</option>
+      </optgroup>
+      <optgroup label="Recreation / Fitness">
+        <option value="R-gym">Gym / Fitness Center</option>
+        <option value="R-spa">Salon / Day Spa</option>
+        <option value="R-pool">Public Pool / Aquatic (A-5)</option>
+      </optgroup>
+      <optgroup label="Food Processing (B/F)">
+        <option value="FP-kitchen">Commercial Kitchen (no seating)</option>
+        <option value="FP-bakery">Bakery / Food Prep Facility</option>
+      </optgroup>
+    </select>
+
+    <div id="occ-hint" class="alert alert-teal" style="margin-top:8px;font-size:.7rem">Select occupancy type to see input fields.</div>
+
+    <div id="occ-inputs" style="margin-top:10px"></div>
+
+    <div class="row2" style="margin-top:10px">
+      <div>
+        <label>Male/Female Split</label>
+        <select id="gender-split">
+          <option value="50">50/50 (unknown)</option>
+          <option value="60">60% Male / 40% Female</option>
+          <option value="40">40% Male / 60% Female</option>
+          <option value="70">70% Male / 30% Female</option>
+          <option value="30">30% Male / 70% Female</option>
+          <option value="100m">All Male (locker room / factory)</option>
+          <option value="100f">All Female</option>
+        </select>
+      </div>
+      <div>
+        <label>FL County</label>
+        <select id="county-sel">
+          <option value="miami-dade">Miami-Dade</option>
+          <option value="broward">Broward</option>
+          <option value="palm-beach">Palm Beach</option>
+          <option value="hillsborough" selected>Hillsborough</option>
+          <option value="orange">Orange</option>
+          <option value="pinellas">Pinellas</option>
+          <option value="duval">Duval</option>
+          <option value="other">Other FL County</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="calcFixtures()">Calculate Required Fixtures</button>
+
+    <div class="result-box" id="fixture-result">
+      <div style="font-size:.85rem;font-weight:700;color:#14B8A6;margin-bottom:8px" id="res-heading">Fixture Requirements</div>
+      <div class="fixture-results" id="fix-grid"></div>
+      <div class="result-notes" id="fix-notes"></div>
+      <div id="fix-alerts"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Quick Reference — FPC Table 403.1</div>
+    <table class="fixture-table">
+      <thead>
+        <tr><th>Occupancy</th><th>Load Basis</th><th>WC Ratio</th><th>Lav Ratio</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Restaurant (A-2)</td><td>Seats</td><td>1:75 M, 1:75 F</td><td>1:200</td></tr>
+        <tr><td>Office (B)</td><td>Occupants</td><td>1:25 (1-50), then 1:50</td><td>1:40</td></tr>
+        <tr><td>Retail (M)</td><td>Sq ft</td><td>1:500 sq ft</td><td>1:750</td></tr>
+        <tr><td>Gym/Fitness</td><td>Occupants</td><td>1:15 (locker)</td><td>1:12</td></tr>
+        <tr><td>School (E)</td><td>Students</td><td>1:50 students</td><td>1:50</td></tr>
+        <tr><td>Warehouse (F)</td><td>Employees</td><td>1:100 (1-10K sqft)</td><td>1:100</td></tr>
+        <tr><td>Hospital (I-2)</td><td>Beds/staff</td><td>1:25 (staff)</td><td>1:10 (patient)</td></tr>
+        <tr><td>Assembly (A-3)</td><td>Occupant load</td><td>1:125 M, 1:65 F</td><td>1:200</td></tr>
+      </tbody>
+    </table>
+    <div class="info-block" style="margin-top:8px">
+      <p><strong>Note:</strong> These are minimum counts. FL DBPR, local AHJ, and specific use requirements may require additional fixtures. Always verify with your local building department and FL Division of Hotels and Restaurants (DBPR) for food service.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: ADA CHECK -->
+<div id="tab-ada" class="panel">
+  <div class="card">
+    <div class="card-title">♿ ADA 2010 Accessible Fixture Requirements</div>
+
+    <label>Total Toilet Rooms (each gender or unisex)</label>
+    <input type="number" id="ada-rooms" value="1" min="1" max="20">
+
+    <label>Total Water Closets per Gender</label>
+    <input type="number" id="ada-wc" value="3" min="1" max="50">
+
+    <label>Total Urinals (male restroom)</label>
+    <input type="number" id="ada-urinals" value="2" min="0" max="20">
+
+    <label>Lavatories per Restroom</label>
+    <input type="number" id="ada-lavs" value="3" min="1" max="20">
+
+    <label>Building Type</label>
+    <select id="ada-bldg">
+      <option value="commercial">Commercial (new construction)</option>
+      <option value="existing">Existing building (alteration)</option>
+      <option value="medical">Medical / healthcare</option>
+      <option value="restaurant">Restaurant / food service</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="checkADA()">Check ADA Compliance</button>
+
+    <div class="result-box" id="ada-result">
+      <div style="font-size:.85rem;font-weight:700;color:#14B8A6;margin-bottom:8px">ADA Requirements</div>
+      <div id="ada-grid"></div>
+      <div id="ada-notes"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📏 ADA Restroom Dimension Guide</div>
+    <div class="section-title">Accessible Water Closet Stall (ADA 2010 §604)</div>
+    <div class="info-block">
+      <p>• <strong>Stall Width:</strong> 60" minimum clear floor space (side transfer) or 36" wide (forward approach — rarely used)</p>
+      <p>• <strong>Stall Depth:</strong> 56" minimum (side approach) or 59" with wall-mounted WC</p>
+      <p>• <strong>Centerline:</strong> WC centerline 16"–18" from side wall</p>
+      <p>• <strong>Seat Height:</strong> 17"–19" to top of seat</p>
+      <p>• <strong>Flush Control:</strong> On open side; max 44" from floor</p>
+      <p>• <strong>Grab Bars:</strong> 42" side bar + 36" rear bar; 33"–36" from floor</p>
+    </div>
+    <div class="section-title">Accessible Lavatory (ADA 2010 §606)</div>
+    <div class="info-block">
+      <p>• <strong>Rim Height:</strong> Max 34" above floor</p>
+      <p>• <strong>Knee Clearance:</strong> Min 27" high × 30" wide × 19" deep below lavatory</p>
+      <p>• <strong>Drain / Pipes:</strong> Must be insulated or configured to prevent contact</p>
+      <p>• <strong>Faucet:</strong> Operable with closed fist — lever or sensor operated</p>
+      <p>• <strong>Clear Floor Space:</strong> 30" × 48" centered on lavatory</p>
+    </div>
+    <div class="section-title">FL Specific — DBPR Food Service Accessible Requirements</div>
+    <div class="info-block">
+      <p>• FL DBPR Chapter 61C-4 (hotels) and Chapter 61C-1 (restaurants) mandate ADA compliance for all new construction and significant remodels</p>
+      <p>• Unisex accessible single-user restroom may satisfy ADA in small-establishment exception (≤5 WCs total)</p>
+      <p>• FL Building Code Chapter 11 mirrors ADA 2010 with minor amendments — both apply simultaneously</p>
+      <p>• HVHZ: no additional ADA amendments for Miami-Dade / Broward — federal and FL standards apply</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FL Plumbing Code — Commercial Fixtures</div>
+
+    <div class="section-title">FPC Section 403 — Minimum Plumbing Facilities</div>
+    <div class="info-block">
+      <p><strong>FPC 403.1 General Rule:</strong> Every building used for human occupancy, employment, recreation, or other purposes shall be provided with minimum plumbing fixtures per FPC Table 403.1.</p>
+      <p style="margin-top:6px"><strong>FPC 403.2 — Single-Toilet Exception:</strong> In a building or tenant space with a maximum of 15 occupants, the toilet facilities for both sexes may be combined in a single unisex toilet facility meeting ADA requirements.</p>
+      <p style="margin-top:6px"><strong>FPC 403.3 — Employee Facilities:</strong> Employee toilet facilities shall be separate from customer facilities when occupant load exceeds 150 per gender.</p>
+      <p style="margin-top:6px"><strong>FPC 403.4 — Public Access Required:</strong> Toilet facilities shall be accessible to the public without charge in assembly (A) and mercantile (M) occupancies when the area exceeds 20,000 sq ft or occupant load exceeds 300.</p>
+    </div>
+
+    <div class="section-title">FL DBPR — Restaurant & Food Service</div>
+    <div class="info-block">
+      <p><strong>FL DBPR Chapter 509 / Rule 61C-4:</strong></p>
+      <p>• Handwashing sinks: required in food prep area, every 300 sq ft, minimum 1 per cook line</p>
+      <p>• 3-compartment sink: required for all food establishments (DBPR 61C-4.010)</p>
+      <p>• Mop sink / service sink: required in every food service establishment</p>
+      <p>• Employee toilet: separate from customer toilet when >15 employees on peak shift</p>
+      <p>• Customer toilet: required when seating capacity ≥ 20 or takeout area ≥ 2,000 sq ft</p>
+      <p>• Toilet room signage: DBPR requires "Employees Must Wash Hands" in all FL food service restrooms</p>
+      <p>• Grease trap / interceptor: required — see FL DBPR 61C-4 and FPC Section 1003</p>
+    </div>
+
+    <div class="section-title">Service Sinks & Drinking Fountains</div>
+    <div class="info-block">
+      <p><strong>Service / Mop Sinks (FPC Table 403.1):</strong></p>
+      <p>• Assembly (A), Business (B): 1 per floor or 1 per 750 occupants, whichever is greater</p>
+      <p>• Mercantile (M): 1 per 100,000 sq ft</p>
+      <p>• Industrial (F): 1 per building (minimum)</p>
+      <p style="margin-top:8px"><strong>Drinking Fountains (FPC 403.1 / ADA §602):</strong></p>
+      <p>• Required in occupancies >300 sq ft (B, E, M, A) — 1 per 75 occupants</p>
+      <p>• ADA requires 2 units: 1 accessible (max 36" to spout) + 1 standing height (38"–43")</p>
+      <p>• Exception: single accessible unit acceptable if total occupant load ≤ 30</p>
+      <p>• FL Schools: 1 per 75 students — separate from restrooms (FPC E occupancy table)</p>
+      <p>• Bottle filler may substitute for 1 of 2 required fountains per FL Building Code interpretation</p>
+    </div>
+
+    <div class="section-title">Commercial Plumbing Compliance Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Fixture count meets or exceeds FPC Table 403.1 minimums <span class="check-sub">Calculated using occupant load from FL Fire Marshal or building permit</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">At least one ADA accessible WC per restroom <span class="check-sub">ADA 2010 §604 — min 60"×56" stall with grab bars and compliant flush control</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">At least one ADA accessible lavatory per restroom <span class="check-sub">ADA §606 — max 34" rim height, knee clearance, operable faucet</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Drinking fountains provided (if required) — accessible + standing height <span class="check-sub">FPC 403.1 + ADA §602 — 2 units required unless ≤30 occupants</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Service sink / mop sink per floor or per occupancy requirement <span class="check-sub">FPC Table 403.1 — required in all assembly, business, mercantile occupancies</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Handwashing sinks in food prep areas (DBPR restaurants) <span class="check-sub">FL DBPR 61C-4.010 — 1 per cook line, 1 per 300 sq ft food prep area</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">3-compartment sink installed (food service establishments) <span class="check-sub">DBPR requirement for all FL restaurants and food establishments</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Grease trap / interceptor sized per FPC Section 1003 (food service) <span class="check-sub">PDI G101 method — size based on fixture flow rate + temperature + cooking method factors</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Plumbing permit pulled and approved by FL local building dept <span class="check-sub">FBC 105 — commercial plumbing permit required for all new fixture installations</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">FL DBPR plan review submitted (restaurants, hotels, food service) <span class="check-sub">DBPR requires plan approval before construction for all new food service establishments in FL</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 10 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a Commercial Plumbing Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Polk</option><option>Seminole</option>
+      <option>Other</option>
+    </select>
+
+    <label>Project Type</label>
+    <select id="q-type">
+      <option>New commercial build-out</option>
+      <option>Restaurant / food service new build</option>
+      <option>Office / medical tenant improvement</option>
+      <option>Retail store plumbing</option>
+      <option>Gym / fitness center</option>
+      <option>Commercial remodel</option>
+      <option>ADA compliance upgrade</option>
+    </select>
+
+    <label>Building Size (sq ft)</label>
+    <input type="number" id="q-sqft" placeholder="e.g. 3500">
+
+    <label>Occupant / Seat Count</label>
+    <input type="number" id="q-occ" placeholder="e.g. 75">
+
+    <label>Additional Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="Describe your project, building type, or any code questions..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Consultation</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | Licensed FL Plumbing Contractor | FL Lic. #CFC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 🏢</div>
+
+<!-- Hidden SEO keyword data -->
+<div style="display:none" aria-hidden="true" id="kw-data">
+fl commercial fixture count calculator, florida plumbing fixture requirements commercial, FPC table 403.1 florida, commercial restroom fixture count florida, ADA restroom requirements florida, florida restaurant plumbing requirements DBPR, commercial plumbing florida, office building fixture count florida, retail store bathroom fixtures florida, gym locker room plumbing florida, school plumbing fixtures florida, florida commercial bathroom code, ADA accessible restroom florida, drinking fountain requirements florida, mop sink requirements florida, service sink florida commercial, 3-compartment sink florida DBPR, handwashing sink restaurant florida, grease trap florida restaurant, commercial kitchen plumbing florida, florida building code restroom, hospital fixture count florida, medical office plumbing florida, warehouse restroom requirements florida, theater auditorium plumbing florida, church assembly plumbing florida, florida plumbing contractor commercial
+FPC Table 403.1 fixture ratios: restaurant A-2 occupancy = 1 water closet per 75 male occupants and 1 per 75 female; office B = 1 WC per 25 for first 50 occupants then 1 per 50; retail M = 1 WC per 500 square feet gross area; gym = 1 WC per 15 occupants with locker room; school E = 1 WC per 50 students; assembly A-3 = 1 WC per 125 male and 1 per 65 female; warehouse F = 1 WC per 100 employees
+FL DBPR restaurant plumbing requirements: customer toilet required when seating 20 or more; handwashing sink in every food prep area every 300 square feet minimum; 3-compartment sink required all FL food establishments per DBPR 61C-4.010; mop sink required all food service; grease interceptor required sized per PDI G101 method; employee toilet separate from customer when more than 15 employees on peak shift
+ADA 2010 restroom requirements: minimum 1 accessible WC stall per restroom 60 inch wide 56 inch deep; WC centerline 16-18 inches from side wall; seat height 17-19 inches; 42 inch side grab bar plus 36 inch rear grab bar 33-36 inches from floor; accessible lavatory max 34 inch rim height; knee clearance minimum 27 inch high 30 inch wide 19 inch deep; drinking fountain 2 units required if occupancy over 30 - one at 36 inch max spout height accessible one at 38-43 inch standing height
+florida commercial plumbing permits: FBC 105 requires plumbing permit for all new commercial fixture installations; FL DBPR plan review required for all new food service establishments before construction; miami-dade county requires plan review through county building department; orange county FL requires separate plumbing sub permit; broward county commercial plumbing permit required for 5 fixtures or more new installation
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+const OCC_CONFIG={
+  'A-restaurant':{label:'Restaurant Seating (A-2)',inputs:[{id:'seats',label:'Total Seats (total capacity)',default:60},{id:'staff',label:'Peak Staff Count',default:10}],calc:calcRestaurant},
+  'A-bar':{label:'Bar/Nightclub (A-2)',inputs:[{id:'seats',label:'Occupant Load',default:100},{id:'staff',label:'Staff',default:8}],calc:calcBar},
+  'A-theater':{label:'Theater/Auditorium (A-1)',inputs:[{id:'occ',label:'Occupant Load (seats)',default:250}],calc:calcTheater},
+  'A-worship':{label:'Place of Worship (A-3)',inputs:[{id:'occ',label:'Occupant Load',default:200}],calc:calcWorship},
+  'A-gym-arena':{label:'Arena/Stadium (A-4/5)',inputs:[{id:'occ',label:'Occupant Load',default:1000}],calc:calcArena},
+  'B-office':{label:'Office (B)',inputs:[{id:'occ',label:'Total Occupants',default:50}],calc:calcOffice},
+  'B-bank':{label:'Bank/Financial (B)',inputs:[{id:'occ',label:'Total Occupants',default:25}],calc:calcOffice},
+  'B-medical':{label:'Medical/Dental Office (B)',inputs:[{id:'occ',label:'Patients + Staff',default:30},{id:'exam',label:'Exam Rooms',default:6}],calc:calcMedical},
+  'E-school':{label:'School (E)',inputs:[{id:'students',label:'Total Students',default:300},{id:'staff',label:'Staff/Faculty',default:25}],calc:calcSchool},
+  'E-daycare':{label:'Day Care (E)',inputs:[{id:'children',label:'Children Capacity',default:60},{id:'staff',label:'Staff',default:8}],calc:calcDaycare},
+  'F-factory':{label:'Factory/Warehouse (F)',inputs:[{id:'employees',label:'Total Employees',default:50},{id:'sqft',label:'Floor Area (sq ft)',default:20000}],calc:calcFactory},
+  'I-hospital':{label:'Hospital/Nursing Home (I-2)',inputs:[{id:'beds',label:'Patient Beds',default:50},{id:'staff',label:'Peak Staff',default:30}],calc:calcHospital},
+  'M-retail':{label:'Retail Store (M)',inputs:[{id:'sqft',label:'Gross Floor Area (sq ft)',default:5000},{id:'employees',label:'Employees',default:8}],calc:calcRetail},
+  'M-mall':{label:'Shopping Mall (M)',inputs:[{id:'sqft',label:'Gross Leasable Area (sq ft)',default:50000}],calc:calcMall},
+  'R-gym':{label:'Gym/Fitness Center',inputs:[{id:'members',label:'Peak Occupants',default:80},{id:'locker',label:'Locker Rooms? (1=yes)',default:1}],calc:calcGym},
+  'R-spa':{label:'Salon/Day Spa',inputs:[{id:'stations',label:'Service Stations',default:10},{id:'employees',label:'Employees',default:8}],calc:calcSpa},
+  'R-pool':{label:'Public Pool/Aquatic (A-5)',inputs:[{id:'bathers',label:'Peak Bathers',default:100}],calc:calcPool},
+  'FP-kitchen':{label:'Commercial Kitchen (B/F)',inputs:[{id:'employees',label:'Kitchen Employees',default:10},{id:'sqft',label:'Kitchen Area (sq ft)',default:800}],calc:calcKitchen},
+  'FP-bakery':{label:'Bakery/Food Prep (B/F)',inputs:[{id:'employees',label:'Employees',default:15},{id:'sqft',label:'Floor Area (sq ft)',default:1200}],calc:calcKitchen}
+};
+
+function updateOccupancy(){
+  const occ=document.getElementById('occ-type').value;
+  const cfg=OCC_CONFIG[occ];
+  if(!cfg)return;
+  document.getElementById('occ-hint').textContent='Inputs for: '+cfg.label;
+  let html='';
+  cfg.inputs.forEach(inp=>{
+    html+=`<div style="margin-top:10px"><label>${esc(inp.label)}</label><input type="number" id="inp-${esc(inp.id)}" value="${inp.default}" min="0"></div>`;
+  });
+  document.getElementById('occ-inputs').innerHTML=html;
+  document.getElementById('fixture-result').classList.remove('show');
+}
+
+function getVal(id){return parseFloat(document.getElementById('inp-'+id)?.value)||0;}
+function getSplit(){return document.getElementById('gender-split').value;}
+
+function renderResults(results,notes,alerts){
+  let gridHtml='';
+  results.forEach(r=>{
+    gridHtml+=`<div class="fix-cell"><div class="fv">${esc(String(r.val))}</div><div class="fl">${esc(r.lbl)}</div>${r.sub?`<div class="fm">${esc(r.sub)}</div>`:''}</div>`;
+  });
+  document.getElementById('fix-grid').innerHTML=gridHtml;
+  document.getElementById('fix-notes').innerHTML=notes;
+  document.getElementById('fix-alerts').innerHTML=alerts;
+  document.getElementById('fixture-result').classList.add('show');
+}
+
+function splitByGender(total){
+  const s=getSplit();
+  if(s==='100m')return{m:total,f:0};
+  if(s==='100f')return{m:0,f:total};
+  const mp=parseInt(s)/100;
+  return{m:Math.ceil(total*mp),f:Math.ceil(total*(1-mp))};
+}
+
+function calcRestaurant(){
+  const seats=getVal('seats'),staff=getVal('staff');
+  const {m,f}=splitByGender(seats);
+  const wcM=Math.max(1,Math.ceil(m/75));
+  const wcF=Math.max(1,Math.ceil(f/75));
+  const lavs=Math.max(1,Math.ceil((m+f)/200));
+  const staff_wc=staff>15?Math.ceil(staff/50):0;
+  return[
+    {val:wcM,lbl:'WC (Men)',sub:'1 per 75 male seats'},
+    {val:wcF,lbl:'WC (Women)',sub:'1 per 75 female seats'},
+    {val:lavs,lbl:'Lavatories',sub:'1 per 200 total'},
+    {val:1,lbl:'3-Comp Sink',sub:'DBPR required'},
+    {val:Math.max(1,Math.ceil(seats/300*0.1)),lbl:'Handwash Sinks',sub:'Food prep area'},
+    {val:1,lbl:'Mop Sink',sub:'DBPR required'},
+    {val:staff_wc>0?staff_wc:'Shared',lbl:'Staff WC',sub:staff>15?'Separate from customer':'Combined OK'},
+    {val:1,lbl:'Grease Trap',sub:'PDI G101 required'}
+  ];
+}
+function calcBar(){
+  const occ=getVal('seats');
+  const {m,f}=splitByGender(occ);
+  return[
+    {val:Math.max(1,Math.ceil(m/75)),lbl:'WC (Men)',sub:'1 per 75 male'},
+    {val:Math.max(1,Math.ceil(f/75)),lbl:'WC (Women)',sub:'1 per 75 female'},
+    {val:Math.max(1,Math.ceil(occ/150)),lbl:'Urinals (Men)',sub:'1 per 150 male'},
+    {val:Math.max(1,Math.ceil(occ/200)),lbl:'Lavatories',sub:'1 per 200'},
+    {val:1,lbl:'3-Comp Sink',sub:'DBPR required'},
+    {val:1,lbl:'Mop Sink',sub:'Required'}
+  ];
+}
+function calcTheater(){
+  const occ=getVal('occ');
+  const{m,f}=splitByGender(occ);
+  return[
+    {val:Math.max(1,Math.ceil(m/125)),lbl:'WC (Men)',sub:'1 per 125 male'},
+    {val:Math.max(1,Math.ceil(f/65)),lbl:'WC (Women)',sub:'1 per 65 female'},
+    {val:Math.max(1,Math.ceil(m/200)),lbl:'Urinals (Men)',sub:'1 per 200'},
+    {val:Math.max(1,Math.ceil(occ/200)),lbl:'Lavatories',sub:'1 per 200'},
+    {val:Math.max(1,Math.ceil(occ/500)),lbl:'Drinking Fntn',sub:'1 per 500'},
+    {val:1,lbl:'Service Sink',sub:'Per floor'}
+  ];
+}
+function calcWorship(){
+  const occ=getVal('occ');
+  const{m,f}=splitByGender(occ);
+  return[
+    {val:Math.max(1,Math.ceil(m/150)),lbl:'WC (Men)',sub:'1 per 150 male'},
+    {val:Math.max(1,Math.ceil(f/75)),lbl:'WC (Women)',sub:'1 per 75 female'},
+    {val:Math.max(1,Math.ceil(occ/200)),lbl:'Lavatories',sub:'1 per 200'},
+    {val:Math.max(1,Math.ceil(occ/500)),lbl:'Drinking Fntn',sub:'Accessible required'},
+    {val:1,lbl:'Service Sink',sub:'Required'}
+  ];
+}
+function calcArena(){
+  const occ=getVal('occ');
+  const{m,f}=splitByGender(occ);
+  return[
+    {val:Math.max(1,Math.ceil(m/75)),lbl:'WC (Men)',sub:'1 per 75 male'},
+    {val:Math.max(1,Math.ceil(f/40)),lbl:'WC (Women)',sub:'1 per 40 female'},
+    {val:Math.max(1,Math.ceil(m/150)),lbl:'Urinals (Men)',sub:'1 per 150 male'},
+    {val:Math.max(1,Math.ceil(occ/200)),lbl:'Lavatories',sub:'1 per 200'},
+    {val:Math.max(1,Math.ceil(occ/1000)),lbl:'Drinking Fntn',sub:'Per 1000'},
+    {val:Math.ceil(occ/10000)||1,lbl:'Service Sinks',sub:'Per concession'}
+  ];
+}
+function calcOffice(){
+  const occ=getVal('occ');
+  const{m,f}=splitByGender(occ);
+  function wcForOcc(n){if(n<=50)return Math.ceil(n/25);const base=2;return base+Math.ceil((n-50)/50);}
+  return[
+    {val:Math.max(1,Math.ceil(wcForOcc(m)/1)),lbl:'WC (Men)',sub:'FPC 403.1 ratio'},
+    {val:Math.max(1,Math.ceil(wcForOcc(f)/1)),lbl:'WC (Women)',sub:'FPC 403.1 ratio'},
+    {val:Math.max(1,Math.ceil(occ/40)),lbl:'Lavatories',sub:'1 per 40'},
+    {val:occ>30?2:1,lbl:'Drinking Fntn',sub:occ>30?'Accessible+standard':'1 accessible'},
+    {val:1,lbl:'Service Sink',sub:'Per floor'},
+    {val:occ>100?Math.ceil(occ/100):0||'Optional',lbl:'Break Room Sink',sub:'Recommended'}
+  ];
+}
+function calcMedical(){
+  const occ=getVal('occ'),exam=getVal('exam');
+  return[
+    {val:Math.max(1,Math.ceil(occ/25)),lbl:'WC (staff/pt)',sub:'1 per 25'},
+    {val:Math.max(1,Math.ceil(occ/10)),lbl:'Lavatories',sub:'1 per 10 + exam rooms'},
+    {val:exam,lbl:'Exam Room Lavs',sub:'1 per exam room (AHCA)'},
+    {val:2,lbl:'Drinking Fntn',sub:'Accessible + standing'},
+    {val:1,lbl:'Service Sink',sub:'Instrument cleaning'},
+    {val:Math.ceil(exam/3)||1,lbl:'Handwash Sinks',sub:'Near each exam cluster'}
+  ];
+}
+function calcSchool(){
+  const st=getVal('students'),staff=getVal('staff');
+  const{m,f}=splitByGender(st);
+  return[
+    {val:Math.max(1,Math.ceil(m/50)),lbl:'WC Boys',sub:'1 per 50 students'},
+    {val:Math.max(1,Math.ceil(f/50)),lbl:'WC Girls',sub:'1 per 50 students'},
+    {val:Math.max(1,Math.ceil(st/100)),lbl:'Urinals (Boys)',sub:'1 per 100'},
+    {val:Math.max(1,Math.ceil(st/50)),lbl:'Lavatories',sub:'1 per 50'},
+    {val:Math.max(2,Math.ceil(st/75)),lbl:'Drinking Fntn',sub:'1 per 75 students'},
+    {val:Math.max(1,Math.ceil(staff/50)),lbl:'Staff WC',sub:'Separate required'},
+    {val:1,lbl:'Service Sink',sub:'Custodial required'}
+  ];
+}
+function calcDaycare(){
+  const ch=getVal('children'),staff=getVal('staff');
+  return[
+    {val:Math.max(1,Math.ceil(ch/15)),lbl:'Child-size WC',sub:'1 per 15 children'},
+    {val:Math.max(1,Math.ceil(ch/15)),lbl:'Child Lavatories',sub:'Child-height required'},
+    {val:Math.max(1,Math.ceil(staff/25)),lbl:'Staff WC',sub:'Adult fixtures'},
+    {val:1,lbl:'Changing Area',sub:'FL DCF required'},
+    {val:Math.ceil(ch/30)||1,lbl:'Drinking Fntn',sub:'Child-height accessible'}
+  ];
+}
+function calcFactory(){
+  const emp=getVal('employees');
+  const{m,f}=splitByGender(emp);
+  function facWC(n){if(n<=15)return 1;if(n<=35)return 2;if(n<=55)return 3;if(n<=80)return 4;return 4+Math.ceil((n-80)/40);}
+  return[
+    {val:Math.max(1,facWC(m)),lbl:'WC (Men)',sub:'IPC 403.1 F occupancy'},
+    {val:Math.max(1,facWC(f)),lbl:'WC (Women)',sub:'IPC 403.1 F occupancy'},
+    {val:Math.max(1,Math.ceil(emp/100)),lbl:'Lavatories',sub:'1 per 100 employees'},
+    {val:emp>30?1:0,lbl:'Emergency Shower',sub:'OSHA 29 CFR 1910.151 (if chemicals)'},
+    {val:1,lbl:'Service Sink',sub:'Required'},
+    {val:emp>30?2:1,lbl:'Drinking Fntn',sub:'OSHA: 1 per 75 employees'}
+  ];
+}
+function calcHospital(){
+  const beds=getVal('beds'),staff=getVal('staff');
+  return[
+    {val:beds,lbl:'Patient WC',sub:'1 per patient room'},
+    {val:Math.max(1,Math.ceil(staff/25)),lbl:'Staff WC',sub:'1 per 25 staff'},
+    {val:beds,lbl:'Patient Lavs',sub:'In each patient room'},
+    {val:Math.max(1,Math.ceil(beds/10)),lbl:'Handwash Sinks',sub:'AHCA: 1 per 10 beds'},
+    {val:Math.ceil(beds/30)||1,lbl:'Soiled Utility Sinks',sub:'Per nursing unit'},
+    {val:Math.ceil(beds/20)||1,lbl:'Service Sinks',sub:'Per floor'},
+    {val:2,lbl:'Drinking Fntn',sub:'Accessible + standing'}
+  ];
+}
+function calcRetail(){
+  const sqft=getVal('sqft'),emp=getVal('employees');
+  const wc=Math.max(1,Math.ceil(sqft/1500));
+  return[
+    {val:Math.ceil(wc/2)||1,lbl:'WC (Men)',sub:'1 per 1,500 sq ft'},
+    {val:Math.ceil(wc/2)||1,lbl:'WC (Women)',sub:'1 per 1,500 sq ft'},
+    {val:Math.max(1,Math.ceil(sqft/2000)),lbl:'Lavatories',sub:'1 per 2,000 sq ft'},
+    {val:sqft>20000?2:1,lbl:'Drinking Fntn',sub:sqft>20000?'Public req >20k sqft':'Accessible recommended'},
+    {val:1,lbl:'Service Sink',sub:'Per 100,000 sq ft'},
+    {val:emp>15?Math.ceil(emp/50):0||'Shared',lbl:'Employee WC',sub:'If >15 employees'}
+  ];
+}
+function calcMall(){
+  const sqft=getVal('sqft');
+  return[
+    {val:Math.max(2,Math.ceil(sqft/5000)),lbl:'WC (Men)',sub:'Common area'},
+    {val:Math.max(2,Math.ceil(sqft/5000)),lbl:'WC (Women)',sub:'Common area'},
+    {val:Math.max(1,Math.ceil(sqft/8000)),lbl:'Lavatories',sub:'Common area'},
+    {val:4,lbl:'Drinking Fntn',sub:'Public required'},
+    {val:Math.ceil(sqft/50000)||1,lbl:'Family Restrooms',sub:'Accessible unisex'}
+  ];
+}
+function calcGym(){
+  const occ=getVal('members'),locker=getVal('locker');
+  const{m,f}=splitByGender(occ);
+  let res=[
+    {val:Math.max(1,Math.ceil(m/15)),lbl:'WC (Men)',sub:'1 per 15 men'},
+    {val:Math.max(1,Math.ceil(f/15)),lbl:'WC (Women)',sub:'1 per 15 women'},
+    {val:Math.max(1,Math.ceil(m/12)),lbl:'Showers (Men)',sub:'1 per 12 men'},
+    {val:Math.max(1,Math.ceil(f/12)),lbl:'Showers (Women)',sub:'1 per 12 women'},
+    {val:Math.max(1,Math.ceil(occ/12)),lbl:'Lavatories',sub:'1 per 12 members'},
+    {val:2,lbl:'Drinking Fntn',sub:'Accessible + standard'}
+  ];
+  if(locker)res.push({val:Math.max(1,Math.ceil(occ/2)),lbl:'Lockers',sub:'50% of peak occ'});
+  return res;
+}
+function calcSpa(){
+  const stations=getVal('stations'),emp=getVal('employees');
+  return[
+    {val:Math.max(1,Math.ceil((stations+emp)/25)),lbl:'WC',sub:'1 per 25 occupants'},
+    {val:Math.max(1,Math.ceil(stations/10)),lbl:'Shampoo Bowls',sub:'1 per 10 stations'},
+    {val:stations,lbl:'Styling Stations',sub:'Lavatories as needed'},
+    {val:Math.max(1,Math.ceil(emp/25)),lbl:'Employee WC',sub:'If >15 staff'},
+    {val:1,lbl:'Service Sink',sub:'Required'}
+  ];
+}
+function calcPool(){
+  const b=getVal('bathers');
+  return[
+    {val:Math.max(1,Math.ceil(b/40)),lbl:'WC',sub:'1 per 40 bathers'},
+    {val:Math.max(1,Math.ceil(b/40)),lbl:'Showers',sub:'1 per 40 required (FLDOH)'},
+    {val:Math.max(1,Math.ceil(b/60)),lbl:'Lavatories',sub:'1 per 60'},
+    {val:Math.max(1,Math.ceil(b/150)),lbl:'Drinking Fntn',sub:'Pool area required'},
+    {val:1,lbl:'Eyewash (chemical)',sub:'OSHA if chlorine storage'}
+  ];
+}
+function calcKitchen(){
+  const emp=getVal('employees'),sqft=getVal('sqft');
+  return[
+    {val:Math.max(1,Math.ceil(emp/15)),lbl:'Employee WC',sub:'1 per 15 employees'},
+    {val:Math.max(1,Math.ceil(sqft/300)),lbl:'Handwash Sinks',sub:'1 per 300 sq ft area'},
+    {val:1,lbl:'3-Comp Sink',sub:'DBPR required'},
+    {val:1,lbl:'Mop Sink',sub:'Required'},
+    {val:1,lbl:'Grease Trap',sub:'PDI G101 required'}
+  ];
+}
+
+function calcFixtures(){
+  const occ=document.getElementById('occ-type').value;
+  const cfg=OCC_CONFIG[occ];
+  if(!cfg){alert('Select an occupancy type.');return;}
+  const results=cfg.calc();
+  const notes='<strong>Code Reference:</strong> Florida Plumbing Code (FPC) Table 403.1 | ADA 2010 Standards | FL DBPR (food service)<br><strong>Note:</strong> These are minimum code requirements. Your local AHJ may require additional fixtures.';
+  let alerts='<div class="alert alert-ok" style="margin-top:8px">✅ Verify totals with your FL licensed plumbing contractor and local building department before permit submission.</div>';
+  if(occ.startsWith('A-restaurant')||occ.startsWith('A-bar')||occ.startsWith('FP')){
+    alerts+='<div class="alert alert-blue" style="margin-top:6px">ℹ️ DBPR plan review required for all FL food service establishments. Submit plumbing plans to FL Division of Hotels and Restaurants.</div>';
+  }
+  document.getElementById('res-heading').textContent='Required Fixtures — '+cfg.label;
+  renderResults(results,notes,alerts);
+}
+
+function checkADA(){
+  const rooms=parseInt(document.getElementById('ada-rooms').value)||1;
+  const wc=parseInt(document.getElementById('ada-wc').value)||1;
+  const urinals=parseInt(document.getElementById('ada-urinals').value)||0;
+  const lavs=parseInt(document.getElementById('ada-lavs').value)||1;
+  const bldg=document.getElementById('ada-bldg').value;
+
+  const minAccessibleWC=Math.max(1,Math.ceil(wc/rooms));
+  const minAccessibleLav=Math.max(1,Math.ceil(lavs/rooms));
+  const needUrinalAccess=urinals>=2;
+  const needDFBoth=true;
+
+  let gridHtml='';
+  const items=[
+    {lbl:'Accessible WC Stalls Required',val:minAccessibleWC+' per restroom',ok:true},
+    {lbl:'Accessible Lavatories Required',val:minAccessibleLav+' per restroom',ok:true},
+    {lbl:'Accessible Urinal (if ≥2)',val:needUrinalAccess?'1 accessible required':'N/A',ok:true},
+    {lbl:'Drinking Fountain',val:'1 accessible + 1 standing',ok:true},
+    {lbl:'Door Hardware',val:'Lever / auto-open required',ok:true},
+    {lbl:'Turn Radius Clear Space',val:'60" diameter min in restroom',ok:true}
+  ];
+  items.forEach(it=>{
+    gridHtml+=`<div style="background:#0F1629;border-radius:8px;padding:8px 10px;margin-top:6px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:.72rem;color:#94A3B8">${esc(it.lbl)}</span>
+      <span style="font-size:.72rem;font-weight:700;color:${it.ok?'#22C55E':'#EF4444'}">${esc(it.val)}</span>
+    </div>`;
+  });
+  document.getElementById('ada-grid').innerHTML=gridHtml;
+  document.getElementById('ada-notes').innerHTML='<div class="alert alert-blue" style="margin-top:10px">ℹ️ ADA 2010 §233 and FL Building Code Chapter 11 apply simultaneously. New construction must meet both. Alterations: areas of primary function must include an accessible path.</div>';
+  document.getElementById('ada-result').classList.add('show');
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['calc','ada','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+updateOccupancy();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+<!-- fl-plumbing-seo: commercial fixture count FPC table-403.1 ADA 2010 DBPR restaurant office retail gym school warehouse hospital florida plumbing code occupancy fixture ratio -->
+
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**143 interactive cost calculators** for Florida homeowners.
+**146 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -20,6 +20,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Booster Pump Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/booster-pump/fl_booster_pump.html)
 - [FL Cast Iron Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/cast-iron-drain/fl_cast_iron_drain.html)
 - [FL Code Violations Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/code-violations/fl_code_violations.html)
+- [FL Commercial Fixture Count Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-fixture-count/fl_commercial_fixture_count.html)
 - [FL Commercial Kitchen Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-kitchen/fl_commercial_kitchen.html)
 - [FL Commercial Plumbing Code Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-plumbing-code/fl_commercial_plumbing_code.html)
 - [FL Commercial Restroom Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/commercial-restroom-calc/fl_commercial_restroom_calc.html)
@@ -111,6 +112,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Sewer Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-line/fl_sewer_line_guide.html)
 - [FL Sewer Root Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewer-root-inspection/fl_sewer_root_inspection.html)
 - [FL Shower Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-leak/fl_shower_leak.html)
+- [FL Shower Pan Waterproofing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-pan-waterproofing/fl_shower_pan_waterproofing.html)
 - [FL Shower Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-remodel/fl_shower_remodel.html)
 - [FL Shower Valve Antiscald Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-valve-antiscald/fl_shower_valve_antiscald.html)
 - [FL Shower Valve Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-valve/fl_shower_valve.html)
@@ -118,6 +120,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Slab Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-repair/fl_slab_repair.html)
 - [FL Solar Hpwh Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/solar-hpwh/fl_solar_hpwh.html)
 - [FL Stormwater Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/stormwater-drain/fl_stormwater_drain.html)
+- [FL Supply Pressure Loss Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/supply-pressure-loss/fl_supply_pressure_loss.html)
 - [FL Tankless Error Codes Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-error-codes/fl_tankless_error_codes.html)
 - [FL Tankless Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-sizing/fl_tankless_water_heater.html)
 - [FL Tankless Venting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-venting/fl_tankless_venting.html)

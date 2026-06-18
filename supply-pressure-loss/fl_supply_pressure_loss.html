@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Supply Pressure Loss Calculator | Hazen-Williams Pipe Friction | FPC Compliance</title>
+<meta name="description" content="Calculate pipe friction loss using the Hazen-Williams formula for Florida plumbing systems. Velocity check (FPC max 8 fps), minimum pressure at fixture (15 psi), booster pump sizing, and FL water pressure guide for all 67 counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A0E1A;color:#E2E8F0;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.3rem;font-weight:700;color:#fff;line-height:1.3}
+header p{font-size:.8rem;color:#94A3B8;margin-top:6px}
+.badge{display:inline-block;background:#00B4FF;color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:8px;letter-spacing:.5px}
+.tabs{display:flex;gap:4px;margin:16px 0 0;border-bottom:1px solid #1E293B}
+.tab{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;text-align:center;cursor:pointer;color:#94A3B8;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.active{color:#00B4FF;border-bottom-color:#00B4FF}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border:1px solid #1E293B;border-radius:12px;padding:16px;margin:14px 0}
+.card-title{font-size:.8rem;font-weight:700;color:#00B4FF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+label{display:block;font-size:.75rem;color:#94A3B8;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+select,input[type=number]{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none}
+select:focus,input[type=number]:focus{border-color:#00B4FF}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:14px;transition:.2s}
+.btn-primary{background:#00B4FF;color:#0A0E1A}
+.btn-primary:hover{background:#0090cc}
+.result-box{background:#141929;border:1px solid #00B4FF;border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result-box.show{display:block}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.metric{background:#0F1629;border-radius:8px;padding:10px;text-align:center}
+.metric .mv{font-size:1.4rem;font-weight:800}
+.metric .ml{font-size:.65rem;color:#94A3B8;margin-top:2px}
+.metric .ms{font-size:.7rem;margin-top:2px}
+.metric.pass .mv{color:#22C55E}
+.metric.fail .mv{color:#EF4444}
+.metric.warn .mv{color:#F97316}
+.metric.info .mv{color:#00B4FF}
+.alert{border-radius:8px;padding:10px 12px;font-size:.75rem;line-height:1.5;margin-top:10px}
+.alert-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.4);color:#F97316}
+.alert-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22C55E}
+.alert-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#EF4444}
+.alert-blue{background:rgba(0,180,255,.12);border:1px solid rgba(0,180,255,.4);color:#00B4FF}
+.section-title{font-size:.8rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.info-block{background:#141929;border-radius:8px;padding:12px;margin-top:8px}
+.info-block p{font-size:.75rem;color:#94A3B8;line-height:1.6}
+.info-block strong{color:#E2E8F0}
+.pipe-table{width:100%;border-collapse:collapse;margin-top:8px}
+.pipe-table th{font-size:.65rem;color:#94A3B8;text-align:left;padding:5px 8px;border-bottom:1px solid #1E293B;text-transform:uppercase}
+.pipe-table td{font-size:.72rem;color:#E2E8F0;padding:6px 8px;border-bottom:1px solid #0F1629}
+.pipe-table tr:hover td{background:#141929}
+.pipe-table .warn td{color:#F97316}
+.pipe-table .ok td{color:#22C55E}
+.pipe-table .header-row td{font-weight:700;color:#00B4FF;background:#0F1629;font-size:.7rem}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:.2s;margin:4px 0}
+.checklist-item:hover{background:#141929}
+.check-box{width:20px;height:20px;border:2px solid #1E293B;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:.2s}
+.check-box.checked{background:#00B4FF;border-color:#00B4FF}
+.check-box.checked::after{content:'✓';font-size:.75rem;color:#fff;font-weight:700}
+.check-text{font-size:.75rem;color:#E2E8F0;line-height:1.5}
+.check-sub{font-size:.67rem;color:#94A3B8;margin-top:2px;display:block}
+.score-bar{background:#141929;border-radius:999px;height:8px;margin-top:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:999px;background:#00B4FF;transition:width .4s}
+.quote-form input,.quote-form select,.quote-form textarea{width:100%;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:.85rem;padding:9px 12px;outline:none;resize:none}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:#00B4FF}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.85rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.booster-card{background:#141929;border:1px solid #1E293B;border-radius:8px;padding:12px;margin-top:8px}
+.booster-card.rec{border-color:#F4B942}
+.booster-title{font-size:.78rem;font-weight:700;color:#E2E8F0;margin-bottom:4px}
+.booster-desc{font-size:.7rem;color:#94A3B8;line-height:1.5}
+.fitting-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1E293B}
+.fitting-row:last-child{border-bottom:none}
+.fitting-row span:first-child{font-size:.73rem;color:#E2E8F0}
+.fitting-row .stepper{display:flex;align-items:center;gap:8px}
+.step-btn{width:24px;height:24px;border:1px solid #1E293B;border-radius:6px;background:#0F1629;color:#E2E8F0;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.step-btn:hover{border-color:#00B4FF;color:#00B4FF}
+.step-val{font-size:.85rem;font-weight:700;color:#00B4FF;min-width:20px;text-align:center}
+.velocity-bar{background:#141929;border-radius:4px;height:12px;overflow:hidden;margin-top:4px}
+.velocity-fill{height:100%;border-radius:4px;transition:width .4s,background .4s}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>💧 FL Supply Pressure Loss Calculator</h1>
+  <p>Hazen-Williams friction loss, velocity check (FPC max 8 fps), and booster pump sizing</p>
+  <span class="badge">FPC 604 + AWWA COMPLIANT</span>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('calc')">Pressure Calc</div>
+  <div class="tab" onclick="showTab('velocity')">Velocity Check</div>
+  <div class="tab" onclick="showTab('code')">FL Code</div>
+  <div class="tab" onclick="showTab('quote')">Quote</div>
+</div>
+
+<!-- TAB 1: PRESSURE CALCULATOR -->
+<div id="tab-calc" class="panel active">
+  <div class="card">
+    <div class="card-title">⚙️ Hazen-Williams Friction Loss</div>
+
+    <label>Pipe Material</label>
+    <select id="pipe-mat" onchange="updateC()">
+      <option value="150">Copper (Type K/L/M) — C=150</option>
+      <option value="140">PEX-A / PEX-B — C=140</option>
+      <option value="150">CPVC — C=150</option>
+      <option value="140">PVC Schedule 40/80 — C=140</option>
+      <option value="120">Galvanized Steel — C=120</option>
+      <option value="100">Cast Iron — C=100</option>
+      <option value="130">Ductile Iron — C=130</option>
+      <option value="145">Stainless Steel — C=145</option>
+    </select>
+
+    <div class="row2">
+      <div>
+        <label>C Factor Override</label>
+        <input type="number" id="c-factor" value="150" min="50" max="160" step="1">
+      </div>
+      <div>
+        <label>Nominal Pipe Size</label>
+        <select id="pipe-size">
+          <option value="0.622">½" (ID 0.622")</option>
+          <option value="0.824">¾" (ID 0.824")</option>
+          <option value="1.049" selected>1" (ID 1.049")</option>
+          <option value="1.38">1¼" (ID 1.380")</option>
+          <option value="1.61">1½" (ID 1.610")</option>
+          <option value="2.067">2" (ID 2.067")</option>
+          <option value="2.469">2½" (ID 2.469")</option>
+          <option value="3.068">3" (ID 3.068")</option>
+          <option value="4.026">4" (ID 4.026")</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div>
+        <label>Flow Rate (GPM)</label>
+        <input type="number" id="flow-gpm" value="10" min="0.1" max="500" step="0.1">
+      </div>
+      <div>
+        <label>Pipe Run Length (ft)</label>
+        <input type="number" id="pipe-length" value="100" min="1" max="5000">
+      </div>
+    </div>
+
+    <label>Equivalent Fitting Length (ft) — or use Fitting Adder below</label>
+    <input type="number" id="fitting-len" value="20" min="0" max="2000">
+
+    <div class="row2">
+      <div>
+        <label>Supply Pressure (psi)</label>
+        <input type="number" id="supply-psi" value="65" min="10" max="150">
+      </div>
+      <div>
+        <label>Elevation Change (ft)</label>
+        <input type="number" id="elevation" value="0" min="-200" max="200" placeholder="+up / -down">
+      </div>
+    </div>
+
+    <label>Minimum Fixture Pressure Required (psi)</label>
+    <select id="min-psi">
+      <option value="15">15 psi — FPC minimum (all fixtures)</option>
+      <option value="20">20 psi — Standard residential</option>
+      <option value="25">25 psi — Dishwasher / ice maker</option>
+      <option value="30">30 psi — Commercial fixtures</option>
+      <option value="45">45 psi — Tankless water heater minimum</option>
+      <option value="60">60 psi — High-demand system</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcPressure()">Calculate Pressure Loss</button>
+
+    <div class="result-box" id="pressure-result">
+      <div style="font-size:.85rem;font-weight:700;color:#00B4FF;margin-bottom:4px">Pressure Analysis</div>
+      <div class="metrics-grid" id="press-metrics"></div>
+      <div id="press-status"></div>
+      <div id="booster-rec"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔧 Fitting Equivalent Length Adder</div>
+    <p style="font-size:.72rem;color:#94A3B8;margin-bottom:10px">Count your fittings — equivalent lengths added to pipe run for H-W calc</p>
+    <div id="fittings-list"></div>
+    <div style="margin-top:10px;padding:8px;background:#141929;border-radius:8px;display:flex;justify-content:space-between">
+      <span style="font-size:.78rem;color:#94A3B8">Total Equivalent Length Added</span>
+      <span style="font-size:.9rem;font-weight:700;color:#00B4FF" id="total-equiv">0 ft</span>
+    </div>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="applyFittings()">Apply to Calculation</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📐 H-W Formula Reference</div>
+    <div class="info-block">
+      <p><strong>Hazen-Williams Friction Loss (psi per 100 ft):</strong></p>
+      <p style="margin-top:6px;font-family:monospace;color:#00B4FF;font-size:.8rem">hf = 0.2083 × (100/C)^1.852 × Q^1.852 / D^4.8655</p>
+      <p style="margin-top:8px">Where: <strong>C</strong> = roughness coefficient, <strong>Q</strong> = flow (GPM), <strong>D</strong> = internal diameter (inches)</p>
+      <p style="margin-top:6px"><strong>Velocity:</strong> v = Q / (2.449 × A) where A = π/4 × D²</p>
+      <p style="margin-top:6px"><strong>Elevation correction:</strong> 1 psi = 2.31 ft of head</p>
+      <p style="margin-top:6px"><strong>FPC limit:</strong> Max 8 ft/sec (FPC 604.8.1)</p>
+      <p style="margin-top:6px"><strong>Min fixture pressure:</strong> 15 psi (FPC 604.5)</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: VELOCITY CHECK -->
+<div id="tab-velocity" class="panel">
+  <div class="card">
+    <div class="card-title">⚡ Multi-Pipe Velocity Check</div>
+    <p style="font-size:.72rem;color:#94A3B8;margin-bottom:12px">FPC 604.8.1 — Maximum 8 fps velocity in supply piping. Exceeding this causes erosion, water hammer, and noise.</p>
+
+    <label>Flow Rate to Check (GPM)</label>
+    <input type="number" id="vel-gpm" value="10" min="0.1" max="500" step="0.5">
+
+    <button class="btn btn-primary" onclick="checkVelocity()">Check All Pipe Sizes</button>
+
+    <div class="result-box" id="velocity-result">
+      <div style="font-size:.85rem;font-weight:700;color:#00B4FF;margin-bottom:8px">Velocity by Pipe Size</div>
+      <div id="vel-table"></div>
+      <div id="vel-recommend" class="alert alert-blue" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💥 Water Hammer & Pressure Surge</div>
+    <div class="section-title">Water Hammer Calculator</div>
+
+    <label>Flow Rate (GPM)</label>
+    <input type="number" id="wh-gpm" value="8" min="0.1" max="200" step="0.1">
+
+    <div class="row2">
+      <div>
+        <label>Pipe ID (inches)</label>
+        <input type="number" id="wh-id" value="0.824" min="0.3" max="6" step="0.001">
+      </div>
+      <div>
+        <label>Valve Close Time (sec)</label>
+        <input type="number" id="wh-time" value="0.1" min="0.01" max="5" step="0.01">
+      </div>
+    </div>
+
+    <label>Pipe Material</label>
+    <select id="wh-mat">
+      <option value="2340000">Copper</option>
+      <option value="2200000">PVC Schedule 40</option>
+      <option value="1800000" selected>PEX</option>
+      <option value="2500000">CPVC</option>
+      <option value="4300000">Steel / galvanized</option>
+    </select>
+
+    <button class="btn btn-primary" onclick="calcWH()">Calculate Pressure Surge</button>
+
+    <div class="result-box" id="wh-result">
+      <div style="font-size:.85rem;font-weight:700;color:#00B4FF;margin-bottom:8px">Pressure Surge Analysis</div>
+      <div class="metrics-grid" id="wh-metrics"></div>
+      <div id="wh-notes"></div>
+    </div>
+
+    <div class="section-title">Water Hammer Prevention</div>
+    <div class="info-block">
+      <p>• <strong>Air chambers:</strong> Vertical pipe stub ≥12" long, same size as supply pipe; install at each fixture</p>
+      <p>• <strong>Water hammer arrestors:</strong> ASSE 1010 certified; size A–F based on fixture count; install within 6 pipe diameters of solenoid valve</p>
+      <p>• <strong>Pressure reducing valve (PRV):</strong> FPC 604.8.2 — PRV required when supply exceeds 80 psi; set to 60–65 psi</p>
+      <p>• <strong>Slow-close valves:</strong> Eliminate most water hammer in residential systems; required on washing machines and dishwashers in many FL jurisdictions</p>
+      <p>• <strong>Expansion tank:</strong> Required in closed systems with PRV — FPC 607.3.4</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FL CODE -->
+<div id="tab-code" class="panel">
+  <div class="card">
+    <div class="card-title">📋 FPC Water Supply Pressure & Velocity</div>
+
+    <div class="section-title">FPC Section 604 — Supply Pipe Sizing</div>
+    <div class="info-block">
+      <p><strong>FPC 604.3 — Water Service Pipe:</strong> Minimum ¾" pipe from street main to building shutoff. Minimum ½" for branches serving individual fixtures.</p>
+      <p style="margin-top:6px"><strong>FPC 604.5 — Minimum Pressure:</strong> All plumbing fixtures shall have a minimum supply pressure of 15 psi at the point of use during peak demand conditions. Minimum 20 psi for flush valve closet tanks.</p>
+      <p style="margin-top:6px"><strong>FPC 604.8 — Maximum Pressure:</strong> Supply pressure shall not exceed 80 psi at any point in the system. A pressure-reducing valve (PRV) shall be installed when street pressure exceeds 80 psi.</p>
+      <p style="margin-top:6px"><strong>FPC 604.8.1 — Maximum Velocity:</strong> Water velocity in supply piping shall not exceed 8 ft/sec. Velocity greater than 8 fps causes erosion, noise, and water hammer. Design pipe size to stay below this limit.</p>
+      <p style="margin-top:6px"><strong>FPC 604.9 — Booster Pumps:</strong> Where water pressure is insufficient to supply the minimum required flow, a booster pump shall be installed. Pump discharge to supply system requires a check valve and pressure tank.</p>
+      <p style="margin-top:6px"><strong>FPC 604.10 — Pressure Reducing Valves:</strong> PRVs shall be set to deliver pressure not exceeding 60 psi downstream. Shall include a bypass if system requires higher pressure for fire suppression or industrial processes.</p>
+    </div>
+
+    <div class="section-title">Florida Pipe Material — FPC Chapter 6</div>
+    <div class="info-block">
+      <p><strong>Approved cold water supply materials:</strong></p>
+      <p>• Copper (Type K, L, M) — ASTM B88</p>
+      <p>• PEX-A, PEX-B, PEX-C — ASTM F876/F877 (no PEX in direct sunlight per FPC)</p>
+      <p>• CPVC — ASTM D2846 (domestic water) or ASTM F441 (SDR)</p>
+      <p>• PVC (cold water only, not hot) — ASTM D1785 Schedule 40/80</p>
+      <p>• Galvanized steel — ASTM A53 (existing systems only in FL — not permitted new)</p>
+      <p style="margin-top:8px"><strong>HVHZ (Miami-Dade/Broward):</strong> All materials must be product-approval listed per FL Building Code 1714.5. PEX requires NOA in HVHZ counties — verify product listing before installation.</p>
+    </div>
+
+    <div class="section-title">FL Utility Supply Pressure by County</div>
+    <table class="pipe-table">
+      <thead>
+        <tr><th>County / Utility</th><th>Typical Static PSI</th><th>PRV Required?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Miami-Dade (WASD)</td><td>60–80 psi</td><td>Often yes</td></tr>
+        <tr><td>Broward (various munis)</td><td>55–75 psi</td><td>Sometimes</td></tr>
+        <tr><td>Palm Beach (PBCWUD)</td><td>60–80 psi</td><td>Often yes</td></tr>
+        <tr><td>Hillsborough (Tampa Water)</td><td>50–70 psi</td><td>Sometimes</td></tr>
+        <tr><td>Orange (OUC)</td><td>55–75 psi</td><td>Sometimes</td></tr>
+        <tr><td>Pinellas (Pinellas County Utilities)</td><td>45–65 psi</td><td>Rarely</td></tr>
+        <tr><td>Duval (JEA)</td><td>50–70 psi</td><td>Sometimes</td></tr>
+        <tr><td>Lee / Collier (wells common)</td><td>40–60 psi</td><td>Rarely</td></tr>
+        <tr><td>Sarasota / Manatee</td><td>50–70 psi</td><td>Sometimes</td></tr>
+        <tr><td>Volusia (DeLand / Daytona)</td><td>45–65 psi</td><td>Rarely</td></tr>
+        <tr><td>Brevard (Melbourne / Titusville)</td><td>40–60 psi</td><td>Rarely</td></tr>
+        <tr><td>Alachua (Gainesville / GRU)</td><td>50–65 psi</td><td>Sometimes</td></tr>
+        <tr><td>Leon (Tallahassee)</td><td>45–65 psi</td><td>Rarely</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Pressure Loss Compliance Checklist</div>
+    <div id="code-checklist">
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Static pressure verified at meter — within 15–80 psi FPC range <span class="check-sub">FPC 604.5–604.8 — verify at peak demand, not static reading only</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">PRV installed if street pressure exceeds 80 psi <span class="check-sub">FPC 604.8 — PRV set to ≤60 psi; expansion tank required in closed system (FPC 607.3.4)</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Velocity at peak demand ≤8 fps in all supply branches <span class="check-sub">FPC 604.8.1 — size pipe up if velocity exceeds limit; use H-W calculator to verify</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Minimum 15 psi confirmed at farthest/highest fixture during peak flow <span class="check-sub">FPC 604.5 — calculate total friction loss from meter to fixture; include elevation loss</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Pipe material approved for FL building code and local AHJ <span class="check-sub">FPC Chapter 6 — HVHZ (Miami-Dade/Broward) requires product-approval NOA for PEX</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Water hammer arrestors installed at solenoid-operated fixtures <span class="check-sub">ASSE 1010 certified; required at washing machine, dishwasher, quick-closing valves</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Booster pump sized with proper tank and check valve (if needed) <span class="check-sub">FPC 604.9 — diaphragm tank required; pump permit from local building department</span></div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">Water service pipe minimum ¾" from meter to building <span class="check-sub">FPC 604.3 — verify with utility — many FL utilities require 1" service for new single family</span></div>
+      </div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="check-score" style="width:0%"></div></div>
+    <div style="font-size:.72rem;color:#94A3B8;margin-top:4px;text-align:right" id="check-pct">0 / 8 items checked</div>
+  </div>
+</div>
+
+<!-- TAB 4: QUOTE -->
+<div id="tab-quote" class="panel">
+  <div class="card quote-form">
+    <div class="card-title">📞 Get a Pressure & Supply System Quote</div>
+
+    <label>Name</label>
+    <input type="text" id="q-name" placeholder="Your name">
+
+    <label>Phone</label>
+    <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+
+    <label>Email</label>
+    <input type="email" id="q-email" placeholder="you@email.com">
+
+    <label>FL County</label>
+    <select id="q-county">
+      <option value="">Select county...</option>
+      <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+      <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+      <option>Duval</option><option>Lee</option><option>Sarasota</option>
+      <option>Collier</option><option>Volusia</option><option>Manatee</option>
+      <option>Brevard</option><option>Polk</option><option>Seminole</option>
+      <option>Other</option>
+    </select>
+
+    <label>Issue / Project Type</label>
+    <select id="q-type">
+      <option>Low water pressure at fixtures</option>
+      <option>Pressure too high — need PRV</option>
+      <option>Water hammer / pipe banging</option>
+      <option>Booster pump installation</option>
+      <option>New supply pipe sizing</option>
+      <option>Pressure loss diagnosis</option>
+      <option>Water service upgrade</option>
+    </select>
+
+    <label>Measured Pressure at Meter (psi)</label>
+    <input type="number" id="q-psi" placeholder="e.g. 55">
+
+    <label>Pipe Material (if known)</label>
+    <select id="q-mat">
+      <option>Unknown</option>
+      <option>Copper</option>
+      <option>Galvanized steel</option>
+      <option>PVC</option>
+      <option>PEX</option>
+      <option>CPVC</option>
+      <option>Other</option>
+    </select>
+
+    <label>Additional Notes</label>
+    <textarea id="q-notes" rows="3" placeholder="Describe your pressure problem or project..."></textarea>
+
+    <button class="btn btn-primary" onclick="submitQuote()">Request Free Assessment</button>
+
+    <div class="info-block" style="margin-top:14px">
+      <p style="font-size:.72rem;text-align:center;color:#94A3B8">📍 Serving all 67 FL counties | Licensed FL Plumbing Contractor | FL Lic. #CFC1234567</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! 💧</div>
+
+<!-- Hidden SEO data -->
+<div style="display:none" aria-hidden="true" id="kw-data">
+florida supply pressure loss calculator, hazen williams pipe friction loss florida, water pressure calculation florida plumbing, FPC 604 water pressure florida, pipe velocity check florida, maximum water velocity florida plumbing code, 8 fps velocity limit florida, water pressure loss calculator florida, booster pump sizing florida, low water pressure florida plumbing, pressure reducing valve florida, PRV required florida 80 psi, water hammer florida plumbing, pipe friction loss copper PVC PEX florida, hazen williams coefficient florida, supply pipe sizing florida, minimum water pressure fixture florida 15 psi, FPC 604.5 minimum pressure, FPC 604.8 maximum pressure 80 psi, FPC 604.8.1 velocity limit, water service pipe sizing florida, pressure booster pump florida, expansion tank florida closed system, water hammer arrestor florida, ASSE 1010 water hammer arrestor, florida plumbing water supply code, HVHZ plumbing florida miami-dade broward, PEX approval florida hvhz, florida pipe material code
+Hazen-Williams formula: hf = 0.2083 x (100/C)^1.852 x Q^1.852 / D^4.8655 where hf is friction head loss per 100 feet, C is roughness coefficient (copper 150, PEX 140, galvanized 120, PVC 140, CPVC 150, ductile iron 130), Q is flow in GPM, D is internal diameter in inches
+Common C factors: Copper Type K/L/M = 150; PEX-A PEX-B = 140; CPVC = 150; PVC Schedule 40/80 = 140; Galvanized steel = 120; Cast iron = 100; Ductile iron = 130; Stainless steel = 145
+Velocity calculation: v fps = Q x 0.408 / D^2 where Q is GPM and D is ID in inches; FPC 604.8.1 maximum 8 fps; velocity over 8 fps causes erosion, noise, and water hammer
+Equivalent lengths for common fittings (1 inch pipe): 90-degree elbow = 2.5 ft; 45-degree elbow = 1.2 ft; tee branch = 4 ft; tee thru = 0.6 ft; gate valve fully open = 0.4 ft; ball valve fully open = 0.25 ft; check valve = 6 ft; PRV = 12 ft; water meter = 15 ft; backflow preventer = 20 ft
+Florida water pressure: Miami-Dade WASD typical 60-80 psi; Broward municipalities 55-75 psi; Palm Beach PBCWUD 60-80 psi; Hillsborough Tampa Water 50-70 psi; Orange OUC 55-75 psi; Pinellas 45-65 psi; JEA Jacksonville 50-70 psi; Lee and Collier well systems 40-60 psi; Sarasota Manatee 50-70 psi; Volusia 45-65 psi; Brevard 40-60 psi
+Booster pump sizing: required when residual pressure at furthest fixture falls below 15 psi FPC 604.5 or below 20 psi FPC 604.4 flush valves; typical residential booster 1/2 HP handles 5-15 GPM at 20-40 psi boost; commercial variable speed booster pump maintains constant pressure; diaphragm pressure tank required with booster per FPC 604.9; check valve required on discharge
+</div>
+
+<script>
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+// FITTINGS DATA [name, equiv length per nominal size: 0.5", 0.75", 1", 1.25", 1.5", 2", 2.5", 3", 4"]
+const FITTINGS=[
+  ['90° Elbow (standard)',[1.5,2,2.5,3.5,4,5.5,6.5,8,11]],
+  ['90° Elbow (long-radius)',[0.8,1,1.2,1.8,2,2.8,3.3,4,5.5]],
+  ['45° Elbow',[0.8,1,1.2,1.5,2,2.5,3,4,5]],
+  ['Tee (branch flow)',[3,4.5,5.5,7,8.5,11,13,16,21]],
+  ['Tee (straight thru)',[0.4,0.6,0.7,0.9,1,1.4,1.7,2.1,2.7]],
+  ['Gate Valve (open)',[0.25,0.35,0.45,0.6,0.7,0.9,1.1,1.3,1.8]],
+  ['Ball Valve (open)',[0.15,0.2,0.25,0.35,0.4,0.5,0.6,0.75,1]],
+  ['Check Valve (swing)',[4,5.5,7,9,10,13,15,19,25]],
+  ['PRV / Pressure Regulator',[7,10,13,16,19,25,30,37,50]],
+  ['Water Meter',[10,14,18,22,26,35,42,52,70]],
+  ['Backflow Preventer',[12,17,22,28,33,43,52,65,87]],
+  ['Strainer / Y-Filter',[5,7,9,11,13,17,21,26,34]],
+];
+const PIPE_SIZES=['½"','¾"','1"','1¼"','1½"','2"','2½"','3"','4"'];
+const PIPE_IDS=[0.622,0.824,1.049,1.380,1.610,2.067,2.469,3.068,4.026];
+let fittingCounts=new Array(FITTINGS.length).fill(0);
+
+function buildFittings(){
+  const sizeIdx=PIPE_SIZES.indexOf(document.getElementById('pipe-size').options[document.getElementById('pipe-size').selectedIndex].text.split(' ')[0])||2;
+  let html='';
+  FITTINGS.forEach((f,i)=>{
+    html+=`<div class="fitting-row"><span>${esc(f[0])}</span>
+    <div class="stepper">
+      <div class="step-btn" onclick="adjFit(${i},-1)">−</div>
+      <div class="step-val" id="fv-${i}">${fittingCounts[i]}</div>
+      <div class="step-btn" onclick="adjFit(${i},1)">+</div>
+    </div></div>`;
+  });
+  document.getElementById('fittings-list').innerHTML=html;
+  updateTotalEquiv();
+}
+
+function adjFit(i,d){
+  fittingCounts[i]=Math.max(0,fittingCounts[i]+d);
+  document.getElementById('fv-'+i).textContent=fittingCounts[i];
+  updateTotalEquiv();
+}
+
+function updateTotalEquiv(){
+  const sizeSelText=document.getElementById('pipe-size').options[document.getElementById('pipe-size').selectedIndex].text;
+  const sizeIdx=PIPE_SIZES.findIndex(s=>sizeSelText.startsWith(s));
+  const idx=sizeIdx>=0?sizeIdx:2;
+  let total=0;
+  FITTINGS.forEach((f,i)=>{total+=fittingCounts[i]*f[1][idx];});
+  document.getElementById('total-equiv').textContent=total.toFixed(1)+' ft';
+  return total;
+}
+
+function applyFittings(){
+  const total=updateTotalEquiv();
+  document.getElementById('fitting-len').value=total.toFixed(0);
+}
+
+function updateC(){
+  const sel=document.getElementById('pipe-mat');
+  document.getElementById('c-factor').value=sel.value;
+}
+
+function hwFrictionPSI(Q,ID,C,totalLen){
+  // returns friction loss in PSI
+  const hf100 = 0.2083 * Math.pow(100/C,1.852) * Math.pow(Q,1.852) / Math.pow(ID,4.8655);
+  return hf100 * totalLen / 100;
+}
+
+function velocityFPS(Q,ID){
+  const area=Math.PI/4*Math.pow(ID/12,2); // sq ft
+  const qCFS=Q/449; // GPM to CFS
+  return qCFS/area;
+}
+
+function calcPressure(){
+  const Q=parseFloat(document.getElementById('flow-gpm').value)||10;
+  const ID=parseFloat(document.getElementById('pipe-size').value)||1.049;
+  const C=parseFloat(document.getElementById('c-factor').value)||150;
+  const L=parseFloat(document.getElementById('pipe-length').value)||100;
+  const FL=parseFloat(document.getElementById('fitting-len').value)||0;
+  const supply=parseFloat(document.getElementById('supply-psi').value)||65;
+  const elev=parseFloat(document.getElementById('elevation').value)||0;
+  const minPSI=parseFloat(document.getElementById('min-psi').value)||15;
+
+  const totalLen=L+FL;
+  const frictionPSI=hwFrictionPSI(Q,ID,C,totalLen);
+  const elevPSI=elev/2.31; // positive = uphill = pressure loss
+  const residual=supply-frictionPSI-elevPSI;
+  const vel=velocityFPS(Q,ID);
+  const deficit=minPSI-residual;
+
+  const velOK=vel<=8;
+  const presOK=residual>=minPSI;
+
+  const metrics=[
+    {val:frictionPSI.toFixed(1),lbl:'Friction Loss (psi)',cls:frictionPSI>20?'warn':frictionPSI>10?'warn':'info',sub:'H-W calc'},
+    {val:Math.abs(elevPSI).toFixed(1),lbl:'Elevation Loss (psi)',cls:'info',sub:(elev>0?'Uphill loss':'Downhill gain')},
+    {val:residual.toFixed(1),lbl:'Residual Pressure (psi)',cls:presOK?'pass':'fail',sub:presOK?'✓ Above minimum':'✗ Below minimum'},
+    {val:vel.toFixed(1),lbl:'Velocity (fps)',cls:velOK?'pass':'fail',sub:velOK?'✓ Under 8 fps FPC':'✗ Exceeds 8 fps FPC'}
+  ];
+
+  let metricsHtml='';
+  metrics.forEach(m=>{
+    metricsHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div><div class="ms">${esc(m.sub)}</div></div>`;
+  });
+  document.getElementById('press-metrics').innerHTML=metricsHtml;
+
+  let statusHtml='';
+  if(!presOK){
+    statusHtml+=`<div class="alert alert-red" style="margin-top:10px">🚨 Residual pressure ${residual.toFixed(1)} psi is below the ${minPSI} psi minimum. Deficit: ${Math.abs(deficit).toFixed(1)} psi. Booster pump or pipe upsizing required.</div>`;
+  } else {
+    statusHtml+=`<div class="alert alert-ok" style="margin-top:10px">✅ Pressure adequate — ${residual.toFixed(1)} psi residual with ${(residual-minPSI).toFixed(1)} psi margin above ${minPSI} psi minimum.</div>`;
+  }
+  if(!velOK){
+    statusHtml+=`<div class="alert alert-warn" style="margin-top:6px">⚠️ Velocity ${vel.toFixed(1)} fps exceeds FPC 604.8.1 maximum of 8 fps. Upsize pipe to reduce velocity and erosion risk.</div>`;
+  }
+  document.getElementById('press-status').innerHTML=statusHtml;
+
+  // Booster recommendations
+  let boosterHtml='';
+  if(!presOK){
+    const boostNeeded=minPSI-residual+10; // +10 for safety
+    boosterHtml=`<div style="margin-top:12px;font-size:.78rem;font-weight:700;color:#F4B942">💡 Booster Pump Recommendation</div>`;
+    const boosters=[
+      {title:'Grundfos CM5-A / CM3-A (Residential)',desc:`1/2–3/4 HP; 10–25 GPM at 20–45 psi boost; typical FL residential well and municipal boost; variable speed available`,rec:Q<=15&&boostNeeded<=45},
+      {title:'Grundfos CM10-A / CM5-5 (Commercial Light)',desc:`3/4–1 HP; 15–40 GPM at 25–60 psi boost; suitable for small commercial or multi-family residential`,rec:Q>15&&Q<=40},
+      {title:'Variable Speed Pressure Booster System',desc:`1–5 HP VFD drive; maintains constant setpoint pressure; best for large commercial or multi-story buildings; quiet operation`,rec:Q>40||boostNeeded>50},
+    ];
+    boosters.forEach(b=>{
+      boosterHtml+=`<div class="booster-card${b.rec?' rec':''}">
+        <div class="booster-title">${b.rec?'⭐ Recommended: ':''} ${esc(b.title)}</div>
+        <div class="booster-desc">${esc(b.desc)}</div>
+      </div>`;
+    });
+    boosterHtml+=`<div class="alert alert-blue" style="margin-top:8px">Required boost pressure: ~${boostNeeded.toFixed(0)} psi. Required flow: ${Q} GPM. Pressure tank and check valve required per FPC 604.9.</div>`;
+  }
+  document.getElementById('booster-rec').innerHTML=boosterHtml;
+  document.getElementById('pressure-result').classList.add('show');
+}
+
+function checkVelocity(){
+  const Q=parseFloat(document.getElementById('vel-gpm').value)||10;
+  let tableHtml='<table class="pipe-table"><thead><tr><th>Size</th><th>ID (in)</th><th>Velocity (fps)</th><th>Status</th></tr></thead><tbody>';
+  let recommended='';
+  PIPE_IDS.forEach((id,i)=>{
+    const v=velocityFPS(Q,id);
+    const ok=v<=8;
+    const warn=v>6&&v<=8;
+    const cls=!ok?'warn':warn?'':ok?'ok':'';
+    tableHtml+=`<tr class="${cls}"><td>${esc(PIPE_SIZES[i])}</td><td>${id}"</td><td>${v.toFixed(2)} fps</td><td>${ok?(warn?'⚠ Near limit':'✓ OK'):'✗ Exceeds 8fps'}</td></tr>`;
+    if(ok&&!recommended){recommended=PIPE_SIZES[i];}
+  });
+  tableHtml+='</tbody></table>';
+  document.getElementById('vel-table').innerHTML=tableHtml;
+  document.getElementById('vel-recommend').innerHTML=`ℹ️ For ${Q} GPM flow, minimum pipe size recommendation: <strong>${esc(recommended)||'Check values'}</strong> (to stay under 8 fps FPC limit). Consider upsizing one step for noise and longevity.`;
+  document.getElementById('velocity-result').classList.add('show');
+}
+
+function calcWH(){
+  const Q=parseFloat(document.getElementById('wh-gpm').value)||8;
+  const ID=parseFloat(document.getElementById('wh-id').value)||0.824;
+  const tc=parseFloat(document.getElementById('wh-time').value)||0.1;
+  const E=parseFloat(document.getElementById('wh-mat').value)||1800000;
+  const v=velocityFPS(Q,ID); // fps
+  const a=Math.sqrt(E*32.2/62.4); // pressure wave speed approx ft/s
+  // Joukowsky equation: deltaP = rho * a * deltaV (psi)
+  const rho=62.4/32.2; // slugs/ft3
+  const deltaP=rho*a*(Q<=0?0:v)/144; // psi
+  const totalPressure=65+deltaP; // assume 65 psi supply
+
+  const metrics=[
+    {val:v.toFixed(1),lbl:'Flow Velocity (fps)',cls:v<=8?'pass':'fail'},
+    {val:Math.round(a),lbl:'Wave Speed (ft/s)',cls:'info'},
+    {val:deltaP.toFixed(0),lbl:'Surge Pressure (psi)',cls:deltaP>50?'fail':deltaP>25?'warn':'pass'},
+    {val:totalPressure.toFixed(0),lbl:'Peak Total (psi)',cls:totalPressure>150?'fail':totalPressure>100?'warn':'pass'}
+  ];
+
+  let mHtml='';
+  metrics.forEach(m=>{
+    mHtml+=`<div class="metric ${m.cls}"><div class="mv">${esc(m.val)}</div><div class="ml">${esc(m.lbl)}</div></div>`;
+  });
+  document.getElementById('wh-metrics').innerHTML=mHtml;
+
+  let notesHtml='';
+  if(deltaP>50){
+    notesHtml='<div class="alert alert-red" style="margin-top:8px">🚨 High surge pressure. Install ASSE 1010 water hammer arrestors and consider slow-close valves.</div>';
+  } else if(deltaP>25){
+    notesHtml='<div class="alert alert-warn" style="margin-top:8px">⚠️ Moderate surge. Water hammer arrestors recommended at solenoid-operated fixtures.</div>';
+  } else {
+    notesHtml='<div class="alert alert-ok" style="margin-top:8px">✅ Low surge pressure. Standard slow-close valves should be sufficient.</div>';
+  }
+  document.getElementById('wh-notes').innerHTML=notesHtml;
+  document.getElementById('wh-result').classList.add('show');
+}
+
+function showTab(t){
+  document.querySelectorAll('.panel,.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  const tabs=['calc','velocity','code','quote'];
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(tabs[i]===t)el.classList.add('active');});
+}
+
+function toggleCheck(el){
+  el.querySelector('.check-box').classList.toggle('checked');
+  const total=document.querySelectorAll('#code-checklist .check-box').length;
+  const checked=document.querySelectorAll('#code-checklist .check-box.checked').length;
+  document.getElementById('check-score').style.width=(checked/total*100)+'%';
+  document.getElementById('check-pct').textContent=checked+' / '+total+' items checked';
+}
+
+function submitQuote(){
+  if(!document.getElementById('q-name').value.trim()){alert('Please enter your name.');return;}
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+buildFittings();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+<!-- fl-plumbing-seo: supply pressure loss hazen-williams pipe friction velocity FPC 604 8fps minimum pressure booster pump PRV water-hammer florida plumbing calculator -->
+
+</div>
+</body>
+</html>
