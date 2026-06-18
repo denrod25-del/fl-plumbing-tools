@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Florida Water Heater Troubleshooter | No Hot Water Diagnostic</title>
+<meta name="description" content="Interactive water heater troubleshooter for Florida. Diagnose no hot water, not enough hot water, leaking, strange noises. Gas, electric, heat pump, tankless. FL repair vs replace guide.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:12px}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#EF4444;line-height:1.2}
+header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.75rem;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:500;line-height:1.2}
+.tab.active{background:#EF4444;color:#fff;font-weight:700}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:14px}
+.card-red{background:#141929;border:1px solid rgba(239,68,68,.25)}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:4px;font-weight:500}
+select,input{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:0.95rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#EF4444}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:13px;background:#EF4444;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn:hover{opacity:.9}
+h2{font-size:1rem;font-weight:700;color:#EF4444;margin-bottom:10px}
+.diag-box{background:#141929;border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:14px;margin-bottom:12px;display:none}
+.diag-title{font-size:1rem;font-weight:700;color:#EF4444;margin-bottom:6px}
+.diag-cause{font-size:0.85rem;color:#E2E8F0;margin-bottom:10px;line-height:1.5}
+.step-list{list-style:none;padding:0;margin:0}
+.step-list li{padding:7px 0;border-bottom:1px solid #1E293B;font-size:0.82rem;color:#94A3B8;padding-left:20px;position:relative}
+.step-list li:last-child{border-bottom:none}
+.step-list li::before{content:counter(step-counter);counter-increment:step-counter;position:absolute;left:0;top:7px;width:16px;height:16px;background:#EF4444;color:#fff;border-radius:50%;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:16px;text-align:center}
+.step-list{counter-reset:step-counter}
+.urgency-badge{display:inline-block;padding:3px 10px;border-radius:5px;font-size:0.72rem;font-weight:700;margin-bottom:10px}
+.urg-emergency{background:rgba(239,68,68,.2);color:#EF4444;border:1px solid rgba(239,68,68,.4)}
+.urg-soon{background:rgba(244,185,66,.2);color:#F4B942;border:1px solid rgba(244,185,66,.4)}
+.urg-monitor{background:rgba(34,197,94,.2);color:#22C55E;border:1px solid rgba(34,197,94,.4)}
+.cost-box{background:#0A0E1A;border-radius:8px;padding:10px;margin-top:10px}
+.cost-label{font-size:0.7rem;color:#94A3B8}
+.cost-val{font-size:1.1rem;font-weight:700;color:#EF4444}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th{background:#0A0E1A;padding:8px 10px;text-align:left;font-size:0.72rem;color:#94A3B8;font-weight:600}
+td{padding:8px 10px;border-top:1px solid #1E293B;font-size:0.8rem}
+td:first-child{color:#E2E8F0;font-weight:500}
+td:not(:first-child){color:#EF4444;font-weight:600}
+.alert{border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:0.82rem;line-height:1.5}
+.alert-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#E2E8F0}
+.alert-gold{background:rgba(244,185,66,.1);border:1px solid rgba(244,185,66,.3);color:#E2E8F0}
+.alert-green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#E2E8F0}
+.code-ref{font-family:monospace;font-size:0.75rem;background:#0A0E1A;padding:2px 6px;border-radius:4px;color:#EF4444}
+.tip{font-size:0.78rem;color:#94A3B8;margin-top:8px;line-height:1.5}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E293B;font-size:0.82rem}
+.info-row:last-child{border-bottom:none}
+.info-key{color:#94A3B8;flex-shrink:0;margin-right:8px}
+.info-val{color:#E2E8F0;font-weight:500;text-align:right}
+.section-title{font-size:0.75rem;font-weight:700;color:#EF4444;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+.repair-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #EF4444}
+.repair-name{font-weight:700;font-size:0.9rem;color:#E2E8F0}
+.repair-applies{font-size:0.72rem;color:#94A3B8;margin-bottom:6px}
+.repair-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}
+.repair-item{background:#0A0E1A;border-radius:6px;padding:8px;text-align:center}
+.repair-item-label{font-size:0.6rem;color:#94A3B8;margin-bottom:2px}
+.repair-item-val{font-size:0.85rem;font-weight:700;color:#EF4444}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#EF4444;color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:0.9rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🔥 Florida Water Heater<br>Troubleshooter</h1>
+    <p>No hot water &middot; Not enough heat &middot; Leaks &middot; Noises &mdash; Gas, Electric, Heat Pump &amp; Tankless</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('diag',this)">Diagnose</button>
+    <button class="tab" onclick="showTab('repairs',this)">Repair Costs</button>
+    <button class="tab" onclick="showTab('flcode',this)">FL Code</button>
+    <button class="tab" onclick="showTab('quote',this)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: DIAGNOSTIC -->
+  <div id="diag" class="panel active">
+    <div class="card">
+      <h2>What Type of Water Heater?</h2>
+      <div style="margin-bottom:12px">
+        <label>Water Heater Type</label>
+        <select id="wh-type">
+          <option value="">-- Select type --</option>
+          <option value="gas-tank">Gas Tank (most FL homes)</option>
+          <option value="elec-tank">Electric Tank</option>
+          <option value="hpwh">Heat Pump Water Heater</option>
+          <option value="gas-tankless">Gas Tankless</option>
+          <option value="elec-tankless">Electric Tankless</option>
+        </select>
+      </div>
+      <div class="row2" style="margin-bottom:12px">
+        <div>
+          <label>Unit Age (years)</label>
+          <select id="wh-age">
+            <option value="new">0&ndash;3 years</option>
+            <option value="mid">4&ndash;8 years</option>
+            <option value="old" selected>9&ndash;12 years</option>
+            <option value="veryold">13+ years</option>
+          </select>
+        </div>
+        <div>
+          <label>FL Water Type</label>
+          <select id="water-type">
+            <option value="hard">Hard (most FL)</option>
+            <option value="vhard">Very Hard (S. FL)</option>
+            <option value="soft">Softened</option>
+            <option value="well">Well Water</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Symptom / Problem</label>
+        <select id="symptom">
+          <option value="">-- Select symptom --</option>
+          <option value="no-hot">No hot water at all</option>
+          <option value="not-enough">Not enough hot water / runs out fast</option>
+          <option value="too-hot">Water is scalding / too hot</option>
+          <option value="leak-base">Leaking from base / floor puddle</option>
+          <option value="leak-top">Leaking from top / pipes</option>
+          <option value="tprv">T&amp;P valve dripping or open</option>
+          <option value="noise-pop">Popping / rumbling sounds</option>
+          <option value="noise-hiss">Hissing / sizzling sounds</option>
+          <option value="smell">Hot water smells like rotten egg</option>
+          <option value="discolor">Rusty / discolored hot water</option>
+          <option value="pilot">Pilot light keeps going out (gas)</option>
+          <option value="error">Error code on display (tankless)</option>
+        </select>
+      </div>
+      <button class="btn" onclick="runDiag()">Run Diagnostic</button>
+    </div>
+
+    <div id="diag-result" class="diag-box">
+      <div id="diag-urgency"></div>
+      <div class="diag-title" id="diag-title"></div>
+      <div class="diag-cause" id="diag-cause"></div>
+      <div class="section-title">Diagnostic Steps</div>
+      <ol class="step-list" id="diag-steps"></ol>
+      <div class="cost-box" id="diag-cost-box">
+        <div class="cost-label">Estimated Repair Cost</div>
+        <div class="cost-val" id="diag-cost"></div>
+      </div>
+      <p class="tip" id="diag-tip" style="margin-top:12px"></p>
+    </div>
+
+    <div class="card">
+      <h2>FL Repair vs. Replace Guide</h2>
+      <div class="alert alert-gold">
+        Florida hard water (8&ndash;20+ GPG) accelerates scale buildup and anode rod depletion. Storage tank lifespan in FL is typically 8&ndash;12 years &mdash; 20&ndash;30% shorter than the national average.
+      </div>
+      <div class="info-row"><span class="info-key">Age 0&ndash;5 yrs, in warranty</span><span class="info-val" style="color:#22C55E">Repair &mdash; call manufacturer</span></div>
+      <div class="info-row"><span class="info-key">Age 5&ndash;9 yrs, minor repair</span><span class="info-val" style="color:#22C55E">Repair cost-effective</span></div>
+      <div class="info-row"><span class="info-key">Age 9&ndash;12 yrs, major part</span><span class="info-val" style="color:#F4B942">Repair or replace (your call)</span></div>
+      <div class="info-row"><span class="info-key">Age 12+ yrs, any issue</span><span class="info-val" style="color:#EF4444">Replace &mdash; near end of life</span></div>
+      <div class="info-row"><span class="info-key">Tank corrosion / inner rust</span><span class="info-val" style="color:#EF4444">Replace immediately</span></div>
+      <div class="info-row"><span class="info-key">Repair cost &gt; 50% of new</span><span class="info-val" style="color:#EF4444">Replace &mdash; better ROI</span></div>
+      <div class="info-row"><span class="info-key">New unit cost (40-gal gas)</span><span class="info-val">$900&ndash;$1,600 installed</span></div>
+      <div class="info-row"><span class="info-key">New unit cost (50-gal elec)</span><span class="info-val">$850&ndash;$1,450 installed</span></div>
+      <div class="info-row"><span class="info-key">New heat pump WH</span><span class="info-val">$1,400&ndash;$2,800 installed</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: REPAIR COSTS -->
+  <div id="repairs" class="panel">
+    <div class="card">
+      <h2>FL Water Heater Repair Cost Guide</h2>
+      <p style="color:#94A3B8;font-size:0.82rem;margin-bottom:12px">Repair costs include FL labor. DIY parts only for reference &mdash; many repairs require a licensed FL plumber.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Thermocouple / Thermopile Replacement</div>
+      <div class="repair-applies">Gas tank water heaters &mdash; pilot won't stay lit</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Part</div><div class="repair-item-val">$10&ndash;$35</div></div>
+        <div class="repair-item"><div class="repair-item-label">Pro Labor</div><div class="repair-item-val">$80&ndash;$175</div></div>
+        <div class="repair-item"><div class="repair-item-label">Total FL</div><div class="repair-item-val">$95&ndash;$210</div></div>
+      </div>
+      <p class="tip">FL humidity corrodes thermocouples faster than dry climates. If pilot relights but won't stay lit after 30 sec, thermocouple is almost certainly the cause.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Gas Control Valve / Thermostatic Valve</div>
+      <div class="repair-applies">Gas tank water heaters &mdash; no heat or pilot issues</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Part</div><div class="repair-item-val">$75&ndash;$175</div></div>
+        <div class="repair-item"><div class="repair-item-label">Pro Labor</div><div class="repair-item-val">$125&ndash;$250</div></div>
+        <div class="repair-item"><div class="repair-item-label">Total FL</div><div class="repair-item-val">$200&ndash;$425</div></div>
+      </div>
+      <p class="tip">If repair cost exceeds $300 and unit is 10+ years old, replacement may offer better value. New 40-gal gas unit installed = $900&ndash;$1,600.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Heating Element Replacement</div>
+      <div class="repair-applies">Electric tank water heaters &mdash; no hot water or lukewarm</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Part</div><div class="repair-item-val">$15&ndash;$45</div></div>
+        <div class="repair-item"><div class="repair-item-label">Pro Labor</div><div class="repair-item-val">$100&ndash;$200</div></div>
+        <div class="repair-item"><div class="repair-item-label">Total FL</div><div class="repair-item-val">$115&ndash;$245</div></div>
+      </div>
+      <p class="tip">FL hard water (common 10&ndash;20 GPG) causes scale buildup on elements, reducing efficiency and lifespan. Curved/screw-in elements designed for hard water last longer. FL attic installs make element access harder &mdash; adds $50&ndash;$100 labor.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Thermostat Replacement (Electric)</div>
+      <div class="repair-applies">Electric tank &mdash; no hot water, tripping breaker, scalding</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Part</div><div class="repair-item-val">$15&ndash;$35</div></div>
+        <div class="repair-item"><div class="repair-item-label">Pro Labor</div><div class="repair-item-val">$75&ndash;$150</div></div>
+        <div class="repair-item"><div class="repair-item-label">Total FL</div><div class="repair-item-val">$90&ndash;$185</div></div>
+      </div>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">T&amp;P (Temperature &amp; Pressure) Relief Valve</div>
+      <div class="repair-applies">All types &mdash; dripping, discharging, or open T&amp;P valve</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Part</div><div class="repair-item-val">$15&ndash;$55</div></div>
+        <div class="repair-item"><div class="repair-item-label">Pro Labor</div><div class="repair-item-val">$85&ndash;$175</div></div>
+        <div class="repair-item"><div class="repair-item-label">Total FL</div><div class="repair-item-val">$100&ndash;$230</div></div>
+      </div>
+      <p class="tip">⚠️ T&amp;P valve discharging is a safety event. Could indicate overpressure (no expansion tank), overheating thermostat, or T&amp;P valve failure. Do NOT plug or cap the T&amp;P valve &mdash; it can cause a tank explosion. FL code requires discharge pipe terminating within 6 inches of floor or draining to exterior.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Anode Rod Replacement</div>
+      <div class="repair-applies">All tank types &mdash; rotten egg smell, rust, extending tank life</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Part</div><div class="repair-item-val">$25&ndash;$65</div></div>
+        <div class="repair-item"><div class="repair-item-label">Pro Labor</div><div class="repair-item-val">$75&ndash;$150</div></div>
+        <div class="repair-item"><div class="repair-item-label">Total FL</div><div class="repair-item-val">$100&ndash;$215</div></div>
+      </div>
+      <p class="tip">FL hard water depletes anode rods 2&ndash;3x faster than soft water areas. Replace every 2&ndash;3 years in S. FL vs 4&ndash;6 years nationally. Magnesium rods cause H2S odor when sulfur-reducing bacteria is present &mdash; switch to aluminum/zinc in that case.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Dip Tube Replacement</div>
+      <div class="repair-applies">Gas and electric tank &mdash; suddenly not enough hot water, plastic bits in water</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Part</div><div class="repair-item-val">$10&ndash;$30</div></div>
+        <div class="repair-item"><div class="repair-item-label">Pro Labor</div><div class="repair-item-val">$85&ndash;$175</div></div>
+        <div class="repair-item"><div class="repair-item-label">Total FL</div><div class="repair-item-val">$95&ndash;$205</div></div>
+      </div>
+      <p class="tip">Broken dip tube allows cold incoming water to mix with hot at top of tank &mdash; causes sudden drop in hot water capacity. White plastic bits in aerators confirm dip tube failure.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Tank Flush &amp; Delime / Descale</div>
+      <div class="repair-applies">All FL tank water heaters &mdash; popping/rumbling sounds, efficiency loss</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY</div><div class="repair-item-val">$15&ndash;$35</div></div>
+        <div class="repair-item"><div class="repair-item-label">Pro Service</div><div class="repair-item-val">$100&ndash;$200</div></div>
+        <div class="repair-item"><div class="repair-item-label">Tankless</div><div class="repair-item-val">$150&ndash;$300</div></div>
+      </div>
+      <p class="tip">FL hard water creates 1&ndash;2 inches of sediment in 5&ndash;8 years. Annual flushing recommended in S. FL. Tankless units need descaling every 1&ndash;2 years in hard water areas &mdash; scale is the #1 cause of premature tankless failure in Florida.</p>
+    </div>
+
+    <div class="card">
+      <h2>FL Water Heater Replacement Costs</h2>
+      <table>
+        <tr><th>Unit Type</th><th>Unit Cost</th><th>Installed FL</th></tr>
+        <tr><td>40-gal Gas Tank</td><td>$450&ndash;$900</td><td>$900&ndash;$1,600</td></tr>
+        <tr><td>50-gal Gas Tank</td><td>$550&ndash;$1,100</td><td>$1,050&ndash;$1,800</td></tr>
+        <tr><td>40-gal Electric Tank</td><td>$350&ndash;$750</td><td>$750&ndash;$1,350</td></tr>
+        <tr><td>50-gal Electric Tank</td><td>$400&ndash;$850</td><td>$850&ndash;$1,500</td></tr>
+        <tr><td>Heat Pump WH (50-gal)</td><td>$900&ndash;$1,600</td><td>$1,400&ndash;$2,800</td></tr>
+        <tr><td>Gas Tankless (whole-house)</td><td>$700&ndash;$1,400</td><td>$2,000&ndash;$4,500</td></tr>
+        <tr><td>Electric Tankless (whole-house)</td><td>$500&ndash;$1,100</td><td>$1,800&ndash;$3,800</td></tr>
+      </table>
+      <p class="tip">FL attic installations add $150&ndash;$400 to labor costs. Attics require drip pans, float-activated shut-off valves per FL Plumbing Code &sect;504.7. Expansion tanks required in all FL closed systems per FPC &sect;607.3.</p>
+    </div>
+  </div>
+
+  <!-- TAB 3: FL CODE -->
+  <div id="flcode" class="panel">
+    <div class="card">
+      <h2>FL Water Heater Code Requirements</h2>
+      <div class="alert alert-red">
+        <strong>Permit Required:</strong> FL requires a permit for all water heater replacements (not just new installations). An unlicensed installation can void your homeowner's insurance and trigger a stop-work order.
+      </div>
+
+      <div class="section-title">Governing Codes</div>
+      <div class="info-row"><span class="info-key"><span class="code-ref">FPC &sect;501</span></span><span class="info-val">General water heater requirements</span></div>
+      <div class="info-row"><span class="info-key"><span class="code-ref">FPC &sect;504.6</span></span><span class="info-val">T&amp;P valve discharge requirements</span></div>
+      <div class="info-row"><span class="info-key"><span class="code-ref">FPC &sect;504.7</span></span><span class="info-val">Attic &amp; elevated installations</span></div>
+      <div class="info-row"><span class="info-key"><span class="code-ref">FPC &sect;607.3</span></span><span class="info-val">Expansion tank requirement</span></div>
+      <div class="info-row"><span class="info-key"><span class="code-ref">FL Energy Code &sect;R404.1</span></span><span class="info-val">Water heater efficiency standards</span></div>
+      <div class="info-row"><span class="info-key"><span class="code-ref">NFPA 54 &sect;7.13</span></span><span class="info-val">Gas water heater venting</span></div>
+      <div class="info-row"><span class="info-key"><span class="code-ref">NEC 422.11</span></span><span class="info-val">Electric water heater disconnect</span></div>
+      <div class="info-row"><span class="info-key"><span class="code-ref">FS 489.105</span></span><span class="info-val">CFC license required</span></div>
+    </div>
+
+    <div class="card">
+      <h2>FL-Specific Code Items</h2>
+      <div class="info-row"><span class="info-key">Permit Required?</span><span class="info-val" style="color:#EF4444">Yes &mdash; for all replacements</span></div>
+      <div class="info-row"><span class="info-key">Licensed Contractor</span><span class="info-val">CFC or plumbing license required</span></div>
+      <div class="info-row"><span class="info-key">T&amp;P Valve Discharge</span><span class="info-val">Within 6" of floor or to exterior</span></div>
+      <div class="info-row"><span class="info-key">Expansion Tank</span><span class="info-val" style="color:#F4B942">Required in all closed systems</span></div>
+      <div class="info-row"><span class="info-key">Attic Install Drip Pan</span><span class="info-val">Required with float shut-off</span></div>
+      <div class="info-row"><span class="info-key">Seismic Straps</span><span class="info-val" style="color:#22C55E">Not required in FL</span></div>
+      <div class="info-row"><span class="info-key">Gas Sediment Trap</span><span class="info-val">Required on gas supply line</span></div>
+      <div class="info-row"><span class="info-key">Min Efficiency (elec tank)</span><span class="info-val">EF 0.90+ for &lt;55 gal</span></div>
+      <div class="info-row"><span class="info-key">Min Efficiency (gas tank)</span><span class="info-val">EF 0.62+ for &lt;55 gal</span></div>
+      <div class="info-row"><span class="info-key">Inspection Required?</span><span class="info-val">Yes &mdash; before closing walls</span></div>
+    </div>
+
+    <div class="card">
+      <h2>FL Permit Costs by County</h2>
+      <table>
+        <tr><th>County</th><th>Permit Fee</th></tr>
+        <tr><td>Miami-Dade</td><td>$150&ndash;$350</td></tr>
+        <tr><td>Broward</td><td>$100&ndash;$250</td></tr>
+        <tr><td>Palm Beach</td><td>$100&ndash;$225</td></tr>
+        <tr><td>Hillsborough</td><td>$95&ndash;$200</td></tr>
+        <tr><td>Orange</td><td>$85&ndash;$185</td></tr>
+        <tr><td>Pinellas</td><td>$85&ndash;$175</td></tr>
+        <tr><td>Duval</td><td>$75&ndash;$150</td></tr>
+        <tr><td>Other FL County</td><td>$65&ndash;$175</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>FL Attic Water Heater Requirements</h2>
+      <div class="alert alert-gold">Over 40% of Florida homes have water heaters installed in the attic. FL Plumbing Code &sect;504.7 has specific requirements for these installations.</div>
+      <div class="info-row"><span class="info-key">Drip Pan Required?</span><span class="info-val" style="color:#EF4444">Yes &mdash; must drain to exterior</span></div>
+      <div class="info-row"><span class="info-key">Pan Drain Line</span><span class="info-val">Min 3/4" to exterior or drain</span></div>
+      <div class="info-row"><span class="info-key">Float Shut-off Valve</span><span class="info-val">Required in pan drain</span></div>
+      <div class="info-row"><span class="info-key">Secondary Drain Pan</span><span class="info-val">Recommended for insurance</span></div>
+      <div class="info-row"><span class="info-key">Access Clearance</span><span class="info-val">Min 30" x 30" working space</span></div>
+      <div class="info-row"><span class="info-key">Attic Install Labor Add</span><span class="info-val">$150&ndash;$400 extra</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: QUOTE -->
+  <div id="quote" class="panel">
+    <div class="card card-red">
+      <h2>Get a Free Water Heater Quote</h2>
+      <p style="color:#94A3B8;font-size:0.85rem;margin-bottom:16px">Same-day emergency service &mdash; repairs, replacement, permit filing. FL-licensed plumbers serving all South Florida counties.</p>
+      <div style="margin-bottom:12px">
+        <label>Your Name</label>
+        <input type="text" id="q-name" placeholder="First &amp; Last Name">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Phone Number</label>
+        <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Service Needed</label>
+        <select id="q-service">
+          <option>Emergency &mdash; no hot water right now</option>
+          <option>Water heater leaking</option>
+          <option>Repair / diagnosis needed</option>
+          <option>Replace water heater</option>
+          <option>Upgrade to tankless or heat pump</option>
+          <option>Permit &amp; inspection assistance</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px">
+        <label>County</label>
+        <select id="q-county">
+          <option>Miami-Dade</option>
+          <option>Broward</option>
+          <option>Palm Beach</option>
+          <option>Hillsborough</option>
+          <option>Sarasota</option>
+          <option>Pinellas</option>
+          <option>Orange</option>
+          <option>Other FL County</option>
+        </select>
+      </div>
+      <button class="btn" onclick="submitQuote()">Request Free Quote</button>
+    </div>
+    <div class="card">
+      <h2>Why Call a FL-Licensed Plumber?</h2>
+      <div class="info-row"><span class="info-key">FL License Required?</span><span class="info-val">Yes &mdash; CFC or plumbing CPC</span></div>
+      <div class="info-row"><span class="info-key">Permit Pulled?</span><span class="info-val">Yes &mdash; we file for you</span></div>
+      <div class="info-row"><span class="info-key">Inspection Scheduled?</span><span class="info-val">Yes &mdash; we arrange it</span></div>
+      <div class="info-row"><span class="info-key">Same-Day Availability?</span><span class="info-val">Yes &mdash; for emergencies</span></div>
+      <div class="info-row"><span class="info-key">Hard Water Expertise</span><span class="info-val">Anode, delime, scale protection</span></div>
+      <div class="info-row"><span class="info-key">Phone</span><span class="info-val">(561) 555-PIPE</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+};
+
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+var DIAGS = {
+  'gas-tank': {
+    'no-hot': {
+      title: 'Gas Supply or Pilot Issue',
+      urgency: 'emergency',
+      cause: 'No hot water on a gas tank water heater is most commonly caused by an extinguished pilot light, failed thermocouple, tripped gas valve, or interrupted gas supply. FL humidity and salt air accelerate thermocouple corrosion.',
+      steps: ['Check that the gas supply valve behind the water heater is fully open (handle parallel to pipe).', 'Look through the pilot window &mdash; is the pilot flame visible? If not, follow the relight instructions on the unit label.', 'After relighting, hold the pilot button 30&ndash;60 seconds. If pilot won\'t stay lit, thermocouple is likely failed.', 'Check gas meter at exterior &mdash; is it on? Call your gas utility if no gas to the house.', 'Look for the Status LED on newer units &mdash; count blinks and compare to the diagnostic chart on the label.', 'If pilot stays lit but burner won\'t fire, gas control valve is likely failed.'],
+      cost: '$95&ndash;$425 (thermocouple to gas valve replacement)',
+      tip: 'FL tip: Thermocouple failure is the #1 cause of no-hot-water in gas tank units in FL. Salt air and humidity corrode the tip. Average lifespan in coastal FL: 3&ndash;6 years vs. 8&ndash;10 years nationally.'
+    },
+    'not-enough': {
+      title: 'Sediment Buildup or Dip Tube Failure',
+      urgency: 'soon',
+      cause: 'Running out of hot water quickly in a gas tank unit is almost always sediment buildup from FL hard water (10&ndash;20+ GPG), a failed dip tube, or a thermostat set too low.',
+      steps: ['Check thermostat setting &mdash; it should be 120&deg;F. Turn up slightly if set below 115&deg;F.', 'Listen for popping or rumbling when the burner fires &mdash; this confirms heavy sediment.', 'Connect a hose to the drain valve and flush 5&ndash;10 gallons to check for heavy sediment (milky or brown water).', 'Check for white plastic bits in your faucet aerators &mdash; confirms dip tube failure.', 'If tank is 8+ years old with no sediment flushing history in S. FL, schedule professional flush or evaluate replacement.'],
+      cost: '$100&ndash;$250 (flush, delime, or dip tube replacement)',
+      tip: 'FL hard water deposits 1&ndash;2 inches of scale in 5&ndash;8 years. Annual flushing prevents this. Once sediment is severe, flushing can actually trigger leaks in old tanks by disturbing corroded areas.'
+    },
+    'pilot': {
+      title: 'Thermocouple or Thermopile Failure',
+      urgency: 'soon',
+      cause: 'A pilot that relights but won\'t stay lit almost always points to a failed thermocouple (on standing pilot units) or thermopile (on electronic ignition units). FL salt air corrodes the tip of the thermocouple.',
+      steps: ['Relight the pilot following the label instructions. Hold the button in for a full 60 seconds.', 'After releasing, does the pilot stay lit? If not for even 30 seconds, thermocouple is bad.', 'Check the thermocouple tip &mdash; it should be in the hottest part of the pilot flame. Adjust the bracket if needed.', 'Check that the thermocouple lead wire is not kinked or damaged.', 'Replace thermocouple (universal units available at hardware stores for $12&ndash;$35). Professional install: $95&ndash;$210.'],
+      cost: '$95&ndash;$210 (thermocouple replacement)',
+      tip: 'This is the most common gas water heater repair in Florida. A DIY-capable homeowner can replace a thermocouple in about 30 minutes with basic tools. However, if you smell gas at any point, leave immediately and call 911.'
+    },
+    'leak-base': {
+      title: 'Tank Corrosion &mdash; Internal Failure',
+      urgency: 'emergency',
+      cause: 'Water pooling at the base of a gas tank water heater almost always means the inner tank has corroded through. FL hard water and humidity accelerate internal corrosion. This cannot be repaired &mdash; the tank must be replaced.',
+      steps: ['Immediately turn off the gas supply valve (clockwise to close).', 'Turn off the cold water supply valve at the top of the unit.', 'Connect a garden hose to the drain valve and drain the tank.', 'Call a licensed FL plumber for emergency replacement. Do not attempt to continue using a leaking tank.', 'Take photos for homeowner\'s insurance documentation.'],
+      cost: '$900&ndash;$1,800 (full replacement, installed)',
+      tip: '⚠️ EMERGENCY: A leaking tank cannot be repaired. In FL attic installations, a leaking tank can cause catastrophic ceiling damage within hours. If this is an attic unit, the float shut-off in the drip pan should have already cut the water supply.'
+    },
+    'noise-pop': {
+      title: 'Sediment / Scale Buildup',
+      urgency: 'monitor',
+      cause: 'Popping, rumbling, or cracking sounds from a gas water heater are caused by water trapped under a layer of sediment (calcium carbonate scale from FL hard water) boiling and breaking through. This is a maintenance issue, not an immediate emergency.',
+      steps: ['Flush the tank: attach a garden hose to the drain valve, open a hot water faucet upstairs, then open the drain valve. Let run until water is clear.', 'For severe buildup, a professional delime service uses acid flush ($125&ndash;$200).', 'If noise continues after flushing, scale is fused to the tank walls &mdash; replacement is likely the next step.', 'Add annual flushing to your maintenance schedule &mdash; critical in S. FL.'],
+      cost: '$100&ndash;$200 (flush/delime)',
+      tip: 'FL hard water deposits roughly 1/4" to 1/2" of scale per year without treatment. A water softener or whole-house scale inhibitor can extend tank life by 3&ndash;5 years and save significantly on energy bills.'
+    },
+    'smell': {
+      title: 'Anode Rod / Sulfur Bacteria Reaction',
+      urgency: 'soon',
+      cause: 'Rotten egg or sulfur smell in hot water (but not cold) is caused by sulfate-reducing bacteria reacting with the magnesium anode rod. Common in FL homes with well water or after extended non-use.',
+      steps: ['Confirm smell is only in HOT water, not cold. If cold also smells, it\'s the water supply, not the heater.', 'Flush the tank completely to remove bacteria-laden water.', 'Replace the magnesium anode rod with an aluminum/zinc anode rod, which does not react with sulfur bacteria.', 'Optionally treat tank with a dilute hydrogen peroxide flush (1&ndash;2 cups of 3% H2O2) before refilling.', 'For persistent odor, a whole-house chlorination or UV treatment may be needed for well water.'],
+      cost: '$100&ndash;$215 (anode rod replacement)',
+      tip: 'FL well water commonly contains hydrogen sulfide. If your water smells like rotten eggs even when cold, you may need a whole-house H2S filter. This is a separate issue from the anode rod.'
+    },
+    'tprv': {
+      title: 'T&P Valve Discharging &mdash; Pressure or Temperature Issue',
+      urgency: 'emergency',
+      cause: 'A T&P (Temperature and Pressure Relief) valve that is dripping or discharging indicates either: (1) the valve has failed and needs replacement, (2) water pressure in the system is too high (above 150 psi), or (3) the water temperature is exceeding 210&deg;F due to a thermostat failure.',
+      steps: ['Do NOT cap, plug, or zip-tie the T&P discharge pipe. This is a safety device.', 'Check if a pressure reducing valve (PRV) is installed. FL code requires expansion tanks in closed systems.', 'Test the T&P valve by briefly lifting the lever to see if it flows and reseats. If it continues to drip after testing, replace it.', 'Check water pressure with a gauge at a hose bib. Should be 40&ndash;80 psi. Above 80 psi: adjust PRV.', 'If pressure is normal and T&P still discharges, thermostat overheating is possible &mdash; call a plumber.'],
+      cost: '$100&ndash;$230 (T&P valve replacement) + expansion tank if missing ($150&ndash;$300)',
+      tip: '⚠️ SAFETY: A properly functioning T&P valve is your last line of defense against a water heater explosion. In FL, the discharge pipe must terminate within 6 inches of the floor or drain to the exterior per FPC &sect;504.6.'
+    }
+  },
+  'elec-tank': {
+    'no-hot': {
+      title: 'Tripped Breaker or Failed Heating Element',
+      urgency: 'soon',
+      cause: 'No hot water on an electric tank heater is most commonly caused by a tripped circuit breaker, failed upper heating element, tripped ECO (high-limit) reset, or failed thermostat. FL hard water accelerates element failure.',
+      steps: ['Go to your electrical panel. Find the 240V breaker for the water heater (usually a double-pole 30A breaker). Is it tripped? Reset it once.', 'If breaker trips again immediately, there is a short in the elements or wiring &mdash; do not reset again. Call a plumber/electrician.', 'Press the red ECO reset button on the upper thermostat (behind the upper access panel). If this fires the heater, check why it tripped (sediment, failing element, or thermostat).', 'After 2 hours with no hot water: an element has likely failed. Upper element failure = no hot water at all. Lower element failure = runs out quickly.', 'Test elements with a multimeter for continuity. Open-circuit (infinite resistance) = failed element.'],
+      cost: '$115&ndash;$245 (element replacement per element)',
+      tip: 'FL hard water scale forms on elements, causing hot spots that burn out the element. Low-watt-density (LWD) elements tolerate scale much better. When replacing, always upgrade to LWD elements in FL hard water areas.'
+    },
+    'not-enough': {
+      title: 'Lower Element Failure or Sediment',
+      urgency: 'soon',
+      cause: 'Getting some hot water but running out very quickly on an electric tank heater usually means the lower heating element has failed (only the upper is working), or heavy sediment is reducing the effective tank capacity.',
+      steps: ['Access the lower element panel (lower access door). Check that the thermostat reset has not tripped.', 'Test the lower element with a multimeter &mdash; should show ~10&ndash;20 ohms (not open/infinite).', 'Flush the tank to check sediment level.', 'Replacing just the lower element is usually a cost-effective repair on units under 10 years old.'],
+      cost: '$115&ndash;$245 (lower element + thermostat if needed)',
+      tip: 'Always replace both the element AND the thermostat behind it when servicing. The thermostat often fails shortly after a burned-out element due to the same root cause (scale/overheating).'
+    },
+    'discolor': {
+      title: 'Anode Rod Depletion &mdash; Tank Corrosion Possible',
+      urgency: 'soon',
+      cause: 'Rust-colored or brown hot water indicates either a depleted anode rod allowing inner tank corrosion, or sediment being stirred up. If the discoloration is persistent after running water, internal corrosion has begun.',
+      steps: ['Run cold water from a faucet. If it is also discolored, the issue is your supply line, not the water heater.', 'Flush the tank completely and check if water clears. If it does not clear, internal rusting has begun.', 'Check the anode rod. If it is less than 1/2" thick or heavily coated, replace it.', 'In FL hard water areas, anode rods should be inspected every 2&ndash;3 years.', 'If rust persists after anode replacement and flushing, the tank is failing. Plan for replacement.'],
+      cost: '$100&ndash;$215 (anode replacement) or $850&ndash;$1,500 (tank replacement if corroded)',
+      tip: 'Once the inner glass lining is compromised and the steel tank begins to corrode, replacement is the only option. Anode rods are the sacrificial protection for this liner.'
+    }
+  },
+  'hpwh': {
+    'no-hot': {
+      title: 'Compressor Issue or Defrost Mode',
+      urgency: 'soon',
+      cause: 'Heat pump water heaters heat water by extracting heat from surrounding air. No hot water can mean the compressor has failed, the unit is in defrost/lockout mode, or ambient temperature is too low (below 40&deg;F &mdash; rare in FL but possible in attic during winter).',
+      steps: ['Check the display for error codes &mdash; heat pump WHs have detailed diagnostics. Consult the manual for your error code.', 'The unit has a "Hybrid" mode that uses both the heat pump and electric backup. Check it is not set to "Efficiency Only" (which disables the backup element in cold conditions).', 'Check air filter on the unit &mdash; a clogged filter restricts airflow and causes compressor lockout.', 'Ensure ambient temperature around the unit is above 40&deg;F. FL attics can get cold in winter nights.', 'If compressor is making grinding or rattling sounds, the compressor may be failing. This repair usually approaches replacement cost.'],
+      cost: '$150&ndash;$500 (filter, controls, minor repairs) or $1,400&ndash;$2,800 (replacement)',
+      tip: 'FL is ideal for heat pump water heaters due to warm ambient air year-round. They typically save $350&ndash;$550/year on electricity vs. standard electric tanks. FL rebates: FPL, Duke Energy, and TECO offer $150&ndash;$400 rebates.'
+    }
+  },
+  'gas-tankless': {
+    'no-hot': {
+      title: 'Flow Sensor, Scale, or Gas Supply Issue',
+      urgency: 'emergency',
+      cause: 'Gas tankless water heaters require adequate flow (minimum 0.5&ndash;0.75 GPM) to activate and adequate gas pressure (typically 4&ndash;11" WC). In FL, hard water scale on the heat exchanger is the #1 cause of premature failure.',
+      steps: ['Check for an error code on the display &mdash; Navien, Rinnai, Noritz all have specific codes (E10, 11, 12 etc. correspond to specific faults).', 'Check gas supply valve is fully open. Check that other gas appliances work.', 'Verify adequate water flow &mdash; open a hot water faucet fully. Minimum 0.5 GPM needed to activate.', 'Check inlet filter screen &mdash; sediment can block it and prevent activation.', 'Schedule annual descaling if you have not done so in the past 12 months. FL hard water can clog the heat exchanger in 1&ndash;2 years without treatment.'],
+      cost: '$150&ndash;$350 (descale, filter, minor repair) or $2,000&ndash;$4,500 (replacement)',
+      tip: 'FL tankless water heaters fail 2&ndash;4x faster without descaling than in soft-water regions. A whole-house water softener or scale inhibitor (like a TAC/NuvoH2O system) upstream of the tankless unit is the best long-term protection.'
+    },
+    'error': {
+      title: 'Manufacturer Error Code &mdash; Specific Fault',
+      urgency: 'soon',
+      cause: 'Tankless units have detailed self-diagnostic systems. Error codes are specific to the manufacturer and model.',
+      steps: ['Write down the exact error code from the display.', 'Navien common codes: E003 (ignition fail), E010 (overheat), E012 (flame fail), E515 (gas pressure low).', 'Rinnai common codes: 11 (no ignition), 12 (flame fail), 25 (cold weather), 32 (outlet thermistor).', 'Noritz common codes: 11 (ignition fail), 16 (high temperature), 29 (heat exchanger scale).', 'Most codes require a licensed tech to diagnose. Attempt a manual reset (power cycle) first.', 'For code 16, 29, or any "scale" related code on Noritz/Navien: immediate descaling required.'],
+      cost: '$150&ndash;$400 (most error code repairs)',
+      tip: 'Annual descaling is the single most important maintenance task for FL tankless units. Many manufacturers void warranties if a FL hard water installation does not have scale protection or annual service records.'
+    }
+  },
+  'elec-tankless': {
+    'no-hot': {
+      title: 'Insufficient Electrical Supply or Element Failure',
+      urgency: 'emergency',
+      cause: 'Whole-house electric tankless units in FL typically require 150&ndash;200 amps of dedicated service. No hot water usually means a tripped breaker, failed heating module, or inadequate panel capacity.',
+      steps: ['Check all breakers for the tankless unit at the panel. These often use 2&ndash;4 dual-pole breakers.', 'Reset any tripped breakers. If they trip again, do not force them &mdash; call an electrician.', 'Check the display for error codes.', 'Electric tankless units have individual heating modules. A failed module causes partial heating.', 'Check inlet water pressure &mdash; must be above 30 psi minimum for activation.'],
+      cost: '$200&ndash;$600 (module replacement, electrical fix)',
+      tip: 'Whole-house electric tankless units require very high electrical capacity. Many FL homes built before 1990 do not have sufficient panel amperage. A 200A service upgrade costs $1,500&ndash;$3,500 and is often needed alongside installation.'
+    }
+  }
+};
+
+var URGENCY_HTML = {
+  emergency: '<span class="urgency-badge urg-emergency">EMERGENCY &mdash; Act Now</span>',
+  soon: '<span class="urgency-badge urg-soon">Schedule Within 48 Hours</span>',
+  monitor: '<span class="urgency-badge urg-monitor">Monitor &mdash; Schedule Maintenance</span>'
+};
+
+function runDiag() {
+  var type    = document.getElementById('wh-type').value;
+  var symptom = document.getElementById('symptom').value;
+  var age     = document.getElementById('wh-age').value;
+  var water   = document.getElementById('water-type').value;
+
+  var box = document.getElementById('diag-result');
+
+  if (!type || !symptom) {
+    alert('Please select both a water heater type and a symptom.');
+    return;
+  }
+
+  var typeData = DIAGS[type];
+  var d = typeData ? typeData[symptom] : null;
+
+  if (!d) {
+    d = {
+      title: 'Diagnosis Needed By a Licensed FL Plumber',
+      urgency: 'soon',
+      cause: 'This combination of water heater type and symptom requires hands-on diagnosis by a licensed Florida plumber. The issue could range from a simple component failure to a safety concern.',
+      steps: ['Do NOT attempt to repair gas components if you are not licensed.', 'Turn off the cold water supply to the unit.', 'For gas units: turn off the gas supply valve if you smell gas. Leave the building and call 911.', 'For electric units: turn off the circuit breaker if water is leaking near electrical components.', 'Call a licensed FL plumber for diagnosis. (561) 555-PIPE'],
+      cost: 'Varies by diagnosis &mdash; request a free estimate',
+      tip: 'FL requires a licensed plumber (CFC) to legally repair water heater gas lines, electrical connections, and pressure relief systems. DIY repairs can void insurance coverage and violate permit requirements.'
+    };
+  }
+
+  var ageWarning = '';
+  if (age === 'veryold') {
+    ageWarning = ' Note: At 13+ years, this unit is past expected FL lifespan (8–12 years in hard water). Even if this specific repair is inexpensive, plan for replacement within 1–2 years.';
+  } else if (age === 'old' && (water === 'hard' || water === 'vhard')) {
+    ageWarning = ' Note: At 9–12 years with FL hard water, this unit is nearing end of life. Weigh repair cost against a replacement investment.';
+  }
+
+  document.getElementById('diag-urgency').innerHTML = URGENCY_HTML[d.urgency] || '';
+  document.getElementById('diag-title').textContent = d.title;
+  document.getElementById('diag-cause').textContent = d.cause + ageWarning;
+
+  var stepsList = document.getElementById('diag-steps');
+  stepsList.innerHTML = '';
+  d.steps.forEach(function(step) {
+    var li = document.createElement('li');
+    li.textContent = step;
+    stepsList.appendChild(li);
+  });
+
+  document.getElementById('diag-cost').textContent = d.cost;
+  document.getElementById('diag-tip').textContent = d.tip || '';
+
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function submitQuote() {
+  var name  = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) {
+    alert('Please enter your name and phone number.');
+    return;
+  }
+  var toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+<!-- fl-plumbing-seo: water heater not working florida no hot water troubleshoot gas electric heat pump tankless pilot light thermocouple element thermostat florida plumbing repair cost estimate -->
+
+</div>
+</body>
+</html>

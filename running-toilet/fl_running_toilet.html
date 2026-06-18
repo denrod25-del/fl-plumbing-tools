@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Florida Running Toilet Water Waste Calculator | Repair Cost Guide</title>
+<meta name="description" content="Calculate how much a running toilet costs you each month in Florida. FL water rates, leak diagnosis, repair costs for flapper, fill valve, flush valve. Phantom flush diagnosis.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:12px}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#14B8A6;line-height:1.2}
+header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#0F1629;border-radius:10px;padding:4px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.75rem;border-radius:7px;cursor:pointer;transition:all .2s;font-weight:500;line-height:1.2}
+.tab.active{background:#14B8A6;color:#fff;font-weight:700}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:14px}
+.card-teal{background:#141929;border:1px solid rgba(20,184,166,.25)}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:4px;font-weight:500}
+select,input{width:100%;padding:10px 12px;background:#141929;border:1px solid #1E293B;border-radius:8px;color:#E2E8F0;font-size:0.95rem;outline:none;appearance:none;-webkit-appearance:none}
+select:focus,input:focus{border-color:#14B8A6}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:13px;background:#14B8A6;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn:hover{opacity:.9}
+h2{font-size:1rem;font-weight:700;color:#14B8A6;margin-bottom:10px}
+.result-box{background:#141929;border:1px solid rgba(20,184,166,.3);border-radius:10px;padding:16px;margin-top:16px;display:none}
+.big-num{font-size:2.2rem;font-weight:800;color:#14B8A6;line-height:1}
+.big-label{font-size:0.72rem;color:#94A3B8;margin-top:4px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.stat-box{background:#0A0E1A;border-radius:8px;padding:10px;text-align:center}
+.stat-val{font-size:1.2rem;font-weight:700;color:#14B8A6}
+.stat-label{font-size:0.65rem;color:#94A3B8;margin-top:2px}
+.alert{border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:0.82rem;line-height:1.5}
+.alert-teal{background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.3);color:#E2E8F0}
+.alert-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#E2E8F0}
+.alert-gold{background:rgba(244,185,66,.1);border:1px solid rgba(244,185,66,.3);color:#E2E8F0}
+.alert-green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#E2E8F0}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E293B;font-size:0.82rem}
+.info-row:last-child{border-bottom:none}
+.info-key{color:#94A3B8;flex-shrink:0;margin-right:8px}
+.info-val{color:#E2E8F0;font-weight:500;text-align:right}
+.section-title{font-size:0.75rem;font-weight:700;color:#14B8A6;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th{background:#0A0E1A;padding:8px 10px;text-align:left;font-size:0.72rem;color:#94A3B8;font-weight:600}
+td{padding:8px 10px;border-top:1px solid #1E293B;font-size:0.8rem}
+td:first-child{color:#E2E8F0;font-weight:500}
+td:not(:first-child){color:#14B8A6;font-weight:600}
+.repair-card{background:#141929;border-radius:10px;padding:12px;margin-bottom:10px;border-left:3px solid #14B8A6}
+.repair-name{font-weight:700;font-size:0.9rem;color:#E2E8F0;margin-bottom:4px}
+.repair-applies{font-size:0.72rem;color:#94A3B8;margin-bottom:8px}
+.repair-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.repair-item{background:#0A0E1A;border-radius:6px;padding:8px;text-align:center}
+.repair-item-label{font-size:0.6rem;color:#94A3B8;margin-bottom:2px}
+.repair-item-val{font-size:0.85rem;font-weight:700;color:#14B8A6}
+.step-list{list-style:none;padding:0;margin:0;counter-reset:step-counter}
+.step-list li{padding:7px 0;border-bottom:1px solid #1E293B;font-size:0.82rem;color:#94A3B8;padding-left:22px;position:relative}
+.step-list li:last-child{border-bottom:none}
+.step-list li::before{content:counter(step-counter);counter-increment:step-counter;position:absolute;left:0;top:7px;width:16px;height:16px;background:#14B8A6;color:#fff;border-radius:50%;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:16px;text-align:center}
+.diag-card{background:#141929;border:1px solid rgba(20,184,166,.25);border-radius:10px;padding:14px;margin-bottom:10px}
+.diag-title{font-weight:700;color:#14B8A6;margin-bottom:6px;font-size:0.95rem}
+.diag-body{font-size:0.82rem;color:#94A3B8;line-height:1.5}
+.tip{font-size:0.78rem;color:#94A3B8;margin-top:8px;line-height:1.5}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:700;margin-bottom:6px}
+.badge-easy{background:rgba(34,197,94,.2);color:#22C55E}
+.badge-mod{background:rgba(244,185,66,.2);color:#F4B942}
+.badge-hard{background:rgba(239,68,68,.2);color:#EF4444}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#14B8A6;color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:0.9rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>💧 Florida Running Toilet<br>Water Waste Calculator</h1>
+    <p>Calculate your monthly water waste &bull; Diagnose the problem &bull; Repair costs by FL county</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calc',this)">Waste Calc</button>
+    <button class="tab" onclick="showTab('diag',this)">Diagnose</button>
+    <button class="tab" onclick="showTab('repair',this)">Repair Guide</button>
+    <button class="tab" onclick="showTab('quote',this)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: WASTE CALCULATOR -->
+  <div id="calc" class="panel active">
+    <div class="card">
+      <h2>Calculate Your Monthly Water Waste</h2>
+      <div style="margin-bottom:12px">
+        <label>Leak Severity / Leak Type</label>
+        <select id="leak-type">
+          <option value="">-- Select leak type --</option>
+          <option value="slow">Slow drip &mdash; barely noticeable (30&ndash;200 gal/day)</option>
+          <option value="phantom">Phantom flush &mdash; refills on its own (100&ndash;500 gal/day)</option>
+          <option value="medium">Constant slow run &mdash; hissing sound (200&ndash;1,000 gal/day)</option>
+          <option value="fast">Constant fast run &mdash; water visible in bowl (1,000&ndash;4,000 gal/day)</option>
+        </select>
+      </div>
+      <div class="row2" style="margin-bottom:12px">
+        <div>
+          <label>FL Water Utility / County</label>
+          <select id="county">
+            <option value="0.0054">Miami-Dade ($0.0054/gal)</option>
+            <option value="0.0048">Broward ($0.0048/gal)</option>
+            <option value="0.0052">Palm Beach ($0.0052/gal)</option>
+            <option value="0.0039">Hillsborough ($0.0039/gal)</option>
+            <option value="0.0043">Orange / Orlando ($0.0043/gal)</option>
+            <option value="0.0045">Pinellas ($0.0045/gal)</option>
+            <option value="0.0035">Duval / Jacksonville ($0.0035/gal)</option>
+            <option value="0.0041">Sarasota ($0.0041/gal)</option>
+            <option value="0.0050">Other FL Average ($0.0050/gal)</option>
+          </select>
+        </div>
+        <div>
+          <label>How Many Toilets Running?</label>
+          <select id="toilet-count">
+            <option value="1">1 toilet</option>
+            <option value="2">2 toilets</option>
+            <option value="3">3 toilets</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="calcWaste()">Calculate Waste Cost</button>
+
+      <div class="result-box" id="result-box">
+        <div class="big-num" id="monthly-cost"></div>
+        <div class="big-label">Wasted on water bills per month</div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-val" id="daily-gal"></div>
+            <div class="stat-label">Gallons / Day</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="monthly-gal"></div>
+            <div class="stat-label">Gallons / Month</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="annual-cost"></div>
+            <div class="stat-label">Annual Waste Cost</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="repair-roi"></div>
+            <div class="stat-label">Repair Pays Off In</div>
+          </div>
+        </div>
+        <p class="tip" id="waste-tip" style="margin-top:12px"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Florida Leak Context</h2>
+      <div class="alert alert-gold">
+        Florida's reuse water mandate means most FL utilities charge tiered rates &mdash; the more you use, the more expensive each gallon. A running toilet can push you into a higher tier, multiplying the effective cost per gallon.
+      </div>
+      <div class="info-row"><span class="info-key">Avg FL household water use</span><span class="info-val">6,000&ndash;10,000 gal/month</span></div>
+      <div class="info-row"><span class="info-key">Running toilet "fast leak" adds</span><span class="info-val">30,000&ndash;120,000 gal/mo</span></div>
+      <div class="info-row"><span class="info-key">FL WaterSense toilet rebate</span><span class="info-val">$50&ndash;$100 at select utilities</span></div>
+      <div class="info-row"><span class="info-key">FPL Gallons saved = lower bill</span><span class="info-val">Also reduces sewer fees</span></div>
+      <div class="info-row"><span class="info-key">Miami-Dade 1.0 gal/flush rule</span><span class="info-val">Dual-flush required in some new builds</span></div>
+      <div class="info-row"><span class="info-key">Sewer fees (usually also billed)</span><span class="info-val">Often $0.004&ndash;$0.006/gal extra</span></div>
+    </div>
+
+    <div class="card">
+      <h2>FL County Water Rates (2025)</h2>
+      <table>
+        <tr><th>County / Utility</th><th>Tier 1 ($/kgal)</th><th>Est $/gal</th></tr>
+        <tr><td>Miami-Dade Water &amp; Sewer</td><td>$5.39&ndash;$6.50</td><td>$0.0054</td></tr>
+        <tr><td>Broward County Water</td><td>$4.75&ndash;$5.80</td><td>$0.0048</td></tr>
+        <tr><td>Palm Beach County Utilities</td><td>$5.15&ndash;$6.20</td><td>$0.0052</td></tr>
+        <tr><td>Tampa Bay Water / Hillsborough</td><td>$3.85&ndash;$4.70</td><td>$0.0039</td></tr>
+        <tr><td>Orange County Utilities</td><td>$4.20&ndash;$5.10</td><td>$0.0043</td></tr>
+        <tr><td>Pinellas County Utilities</td><td>$4.45&ndash;$5.40</td><td>$0.0045</td></tr>
+        <tr><td>JEA (Duval / Jacksonville)</td><td>$3.45&ndash;$4.20</td><td>$0.0035</td></tr>
+        <tr><td>Sarasota County Utilities</td><td>$4.05&ndash;$4.95</td><td>$0.0041</td></tr>
+      </table>
+      <p class="tip">Note: Combined water + sewer fees often double the effective cost per gallon. Rates shown are water-only averages. Sewer fees for excess usage may add 80&ndash;120% more.</p>
+    </div>
+  </div>
+
+  <!-- TAB 2: DIAGNOSE -->
+  <div id="diag" class="panel">
+    <div class="card">
+      <h2>The Dye Test (Confirm a Leak in 5 Minutes)</h2>
+      <div class="alert alert-teal">
+        <strong>Easy field test:</strong> Drop a few drops of food coloring (or a dye tablet) into the toilet tank. Do NOT flush. Wait 15 minutes. If color appears in the bowl without flushing, water is escaping through the flapper. This is the most common running toilet cause.
+      </div>
+      <ol class="step-list" style="counter-reset:step-counter">
+        <li>Lift the tank lid. Add 5&ndash;10 drops of food coloring (any dark color).</li>
+        <li>Do NOT flush. Wait exactly 15 minutes without disturbing the toilet.</li>
+        <li>Look at the bowl water &mdash; did color appear? If YES: flapper is leaking.</li>
+        <li>If no color in bowl but toilet still sounds like it runs: the fill valve is leaking water over the overflow tube.</li>
+        <li>To confirm fill valve overflow: remove tank lid and look at the overflow tube. Water level should be 1" below the top. If water is spilling over the tube, the fill valve is the problem.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Diagnose by Symptom</h2>
+      <div class="diag-card">
+        <div class="badge badge-easy">DIY Fix</div>
+        <div class="diag-title">🟦 Phantom Flush (Refills on Its Own)</div>
+        <div class="diag-body">
+          Toilet randomly refills even though nobody used it &mdash; a gurgling or running sound that starts and stops. This is almost always a leaking flapper allowing tank water to slowly drain into the bowl until the fill valve activates.<br><br>
+          <strong>Confirm:</strong> Dye test (above) &mdash; color will appear in bowl within 15 minutes.<br><br>
+          <strong>Typical cause:</strong> Flapper worn, warped by FL hard water minerals, or buildup on flapper seat preventing full seal.<br><br>
+          <strong>Fix:</strong> Replace flapper. Universal flappers ($5&ndash;15) fit most toilets. Toto and Kohler recommends brand-specific flappers for better fit in FL hard water.
+        </div>
+      </div>
+
+      <div class="diag-card">
+        <div class="badge badge-easy">DIY Fix</div>
+        <div class="diag-title">🟦 Constant Hissing / Running Sound</div>
+        <div class="diag-body">
+          Toilet hisses continuously. Usually means water is entering faster than it drains, or the fill valve is not shutting off completely.<br><br>
+          <strong>Possible causes:</strong>
+          (1) Fill valve worn and not closing fully &mdash; hear hiss at tank, not bowl.
+          (2) Float set too high &mdash; water level at or above overflow tube.
+          (3) Fill valve debris from FL sediment blocking shut-off.<br><br>
+          <strong>Fix:</strong> Adjust float to lower water level. If that doesn't stop the hiss, replace the fill valve ($10&ndash;$25 part, 20-minute install).
+        </div>
+      </div>
+
+      <div class="diag-card">
+        <div class="badge badge-mod">May Need Plumber</div>
+        <div class="diag-title">🟨 Water Visible Running Into Bowl</div>
+        <div class="diag-body">
+          Can see water visibly moving at the back of the bowl even at rest. High-volume leak, 500&ndash;4,000+ gal/day.<br><br>
+          <strong>Most likely cause:</strong> Severely worn flapper, cracked flush valve seat, or fill valve fully stuck open.<br><br>
+          <strong>Check:</strong> Flush valve seat for cracks or mineral buildup. Run finger around the seat rim. If rough, it needs to be sanded (Fluidmaster seat grinder) or the entire flush valve assembly replaced.<br><br>
+          <strong>Fix:</strong> Flush valve seat repair ($8 kit) or full flush valve replacement ($15&ndash;$45 part + $175&ndash;$275 plumber labor).
+        </div>
+      </div>
+
+      <div class="diag-card">
+        <div class="badge badge-hard">Plumber Recommended</div>
+        <div class="diag-title">🟥 Fill Valve Runs After Full Tank</div>
+        <div class="diag-body">
+          Tank fills but the running sound continues. Water level is below the overflow tube.<br><br>
+          <strong>Likely cause:</strong> Fill valve diaphragm or seal worn. Common in FL hard water as mineral deposits damage the diaphragm seat. The valve cannot fully close.<br><br>
+          <strong>Fix:</strong> Replace fill valve. Korky or Fluidmaster fill valves designed for FL hard water are available at hardware stores. DIY: $10&ndash;$25. Plumber: $150&ndash;$225 total.
+        </div>
+      </div>
+
+      <div class="diag-card">
+        <div class="badge badge-easy">DIY Check</div>
+        <div class="diag-title">🟦 Toilet Rocks or Base Leaks After Flush</div>
+        <div class="diag-body">
+          Not a running toilet, but a water leak at the base after flushing indicates a failed wax ring. This is separate from internal running toilet issues and should not be ignored &mdash; it can cause subfloor damage and drain odors.<br><br>
+          <strong>Signs:</strong> Water on floor after flushing, rocking toilet, sewer odor at base, stained caulk.<br><br>
+          <strong>Fix:</strong> Wax ring replacement by a plumber ($175&ndash;$350). Do not DIY unless you are comfortable with toilet removal and resetting.
+        </div>
+      </div>
+
+      <div class="diag-card">
+        <div class="badge badge-mod">FL Hard Water Issue</div>
+        <div class="diag-title">🟨 Flapper Deteriorates Every 1&ndash;2 Years</div>
+        <div class="diag-body">
+          If you replace your flapper frequently (every 1&ndash;2 years), FL hard water is destroying the rubber. FL water averages 10&ndash;20 GPG hardness (very hard), and the calcium carbonate attacks rubber flappers.<br><br>
+          <strong>Long-term fix:</strong> Switch to a Fluidmaster 501, Korky 100BP, or Toto Flapperless system designed for hard water. Consider a tank tablet water softener insert or a whole-house water softener upstream.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: REPAIR GUIDE -->
+  <div id="repair" class="panel">
+    <div class="card">
+      <h2>FL Running Toilet Repair Cost Guide</h2>
+      <p style="color:#94A3B8;font-size:0.82rem;margin-bottom:12px">FL plumber labor runs $85&ndash;$175/hr. Most toilet repairs are 30&ndash;90 minutes. DIY repair is often straightforward &mdash; parts available at any hardware store.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Flapper Replacement</div>
+      <div class="repair-applies">Most common fix &mdash; phantom flush, dye test positive, toilet runs</div>
+      <div class="badge badge-easy" style="margin-bottom:8px">Easiest DIY</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Parts</div><div class="repair-item-val">$5&ndash;$15</div></div>
+        <div class="repair-item"><div class="repair-item-label">Plumber Total</div><div class="repair-item-val">$100&ndash;$175</div></div>
+        <div class="repair-item"><div class="repair-item-label">Time (DIY)</div><div class="repair-item-val">15 min</div></div>
+      </div>
+      <p class="tip">Turn off water supply valve (clockwise). Flush to empty tank. Unhook old flapper from pegs and disconnect chain. Snap on new flapper and adjust chain length (about 1/2" slack). Turn water back on. In FL: use a chlorine-resistant flapper as FL water treatment degrades standard rubber faster. Fluidmaster 502 or Korky 100BP are top picks.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Fill Valve Replacement</div>
+      <div class="repair-applies">Hissing sound, water level at overflow tube, fill valve won't shut off</div>
+      <div class="badge badge-easy" style="margin-bottom:8px">Easy DIY</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Parts</div><div class="repair-item-val">$10&ndash;$25</div></div>
+        <div class="repair-item"><div class="repair-item-label">Plumber Total</div><div class="repair-item-val">$125&ndash;$225</div></div>
+        <div class="repair-item"><div class="repair-item-label">Time (DIY)</div><div class="repair-item-val">20&ndash;30 min</div></div>
+      </div>
+      <p class="tip">Turn off supply valve. Disconnect supply line. Unscrew old fill valve locknut (counterclockwise). Adjust new fill valve to correct height before installing. Reconnect and test. Fluidmaster 400A or 400AH is the industry standard universal fill valve that works in nearly all toilets.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Flush Valve / Seat Replacement</div>
+      <div class="repair-applies">Flush valve seat cracked or pitted; water visible running into bowl constantly</div>
+      <div class="badge badge-mod" style="margin-bottom:8px">Moderate DIY</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Parts</div><div class="repair-item-val">$15&ndash;$45</div></div>
+        <div class="repair-item"><div class="repair-item-label">Plumber Total</div><div class="repair-item-val">$175&ndash;$275</div></div>
+        <div class="repair-item"><div class="repair-item-label">Time (DIY)</div><div class="repair-item-val">45&ndash;90 min</div></div>
+      </div>
+      <p class="tip">Requires draining and removing the tank to access the flush valve assembly on the tank bottom. The flush valve nut is inside the tank. A flapper seat grinder kit (Fluidmaster 555C, $8) can repair minor seat pitting without replacing the full flush valve.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Complete Toilet Rebuild Kit</div>
+      <div class="repair-applies">Older toilet with multiple parts failing; most cost-effective combined repair</div>
+      <div class="badge badge-easy" style="margin-bottom:8px">Good Value</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">DIY Kit</div><div class="repair-item-val">$20&ndash;$45</div></div>
+        <div class="repair-item"><div class="repair-item-label">Plumber Total</div><div class="repair-item-val">$175&ndash;$300</div></div>
+        <div class="repair-item"><div class="repair-item-label">Saves</div><div class="repair-item-val">vs. multiple repairs</div></div>
+      </div>
+      <p class="tip">Fluidmaster 400AKRP10 and Korky 4010PK are complete kits including fill valve, flapper, and supply line. If your toilet is 8+ years old and having issues, a full rebuild is more economical than fixing one part at a time. Florida hard water wears everything evenly.</p>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name">Full Toilet Replacement</div>
+      <div class="repair-applies">Toilet 15+ years old; cracked porcelain; constantly needing repairs</div>
+      <div class="badge badge-hard" style="margin-bottom:8px">Professional Install</div>
+      <div class="repair-grid">
+        <div class="repair-item"><div class="repair-item-label">Toilet Cost</div><div class="repair-item-val">$150&ndash;$600</div></div>
+        <div class="repair-item"><div class="repair-item-label">Install Labor</div><div class="repair-item-val">$175&ndash;$350</div></div>
+        <div class="repair-item"><div class="repair-item-label">Total FL</div><div class="repair-item-val">$325&ndash;$950</div></div>
+      </div>
+      <p class="tip">A new WaterSense-certified toilet uses 1.28 gpf vs. older 3.5&ndash;7 gpf models, saving 20,000+ gallons/year in FL. Some FL utilities offer $50&ndash;$100 rebate for WaterSense toilet installation. Toto Drake II, American Standard Cadet Pro, and Kohler Cimarron are top-rated for FL hard water performance.</p>
+    </div>
+
+    <div class="card">
+      <h2>WaterSense Rebates in Florida</h2>
+      <table>
+        <tr><th>Utility / County</th><th>Rebate</th><th>Qualifier</th></tr>
+        <tr><td>Miami-Dade Water &amp; Sewer</td><td>$100</td><td>WaterSense ≤1.28 gpf</td></tr>
+        <tr><td>Broward County Water</td><td>$75&ndash;$100</td><td>WaterSense certified</td></tr>
+        <tr><td>Palm Beach County</td><td>$50&ndash;$100</td><td>WaterSense certified</td></tr>
+        <tr><td>Tampa Bay Water</td><td>$75</td><td>Dual-flush or ≤1.28 gpf</td></tr>
+        <tr><td>Orange County Utilities</td><td>$50&ndash;$75</td><td>WaterSense certified</td></tr>
+        <tr><td>Sarasota County</td><td>$50</td><td>WaterSense certified</td></tr>
+      </table>
+      <p class="tip">Availability and amounts vary by year and program funding. Check with your water utility directly before purchasing. Most rebates require a licensed plumber's invoice and the toilet manufacturer certificate.</p>
+    </div>
+  </div>
+
+  <!-- TAB 4: QUOTE -->
+  <div id="quote" class="panel">
+    <div class="card card-teal">
+      <h2>Get a Free Toilet Repair Quote</h2>
+      <p style="color:#94A3B8;font-size:0.85rem;margin-bottom:16px">Same-day repairs available &mdash; flapper, fill valve, flush valve, full toilet replacement. FL-licensed plumbers serving all South Florida counties.</p>
+      <div style="margin-bottom:12px">
+        <label>Your Name</label>
+        <input type="text" id="q-name" placeholder="First &amp; Last Name">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Phone Number</label>
+        <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Service Needed</label>
+        <select id="q-service">
+          <option>Running toilet &mdash; needs diagnosis and repair</option>
+          <option>Phantom flush (toilet cycles on its own)</option>
+          <option>Constant running / hissing sound</option>
+          <option>Water at base of toilet</option>
+          <option>Full toilet replacement</option>
+          <option>Multiple toilets with problems</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px">
+        <label>County</label>
+        <select id="q-county">
+          <option>Miami-Dade</option>
+          <option>Broward</option>
+          <option>Palm Beach</option>
+          <option>Hillsborough</option>
+          <option>Sarasota</option>
+          <option>Pinellas</option>
+          <option>Orange</option>
+          <option>Other FL County</option>
+        </select>
+      </div>
+      <button class="btn" onclick="submitQuote()">Request Free Quote</button>
+    </div>
+    <div class="card">
+      <h2>Quick Reference: Running Toilet Costs</h2>
+      <div class="info-row"><span class="info-key">Phantom flush (flapper replacement)</span><span class="info-val">$100&ndash;$175</span></div>
+      <div class="info-row"><span class="info-key">Constant run (fill valve replacement)</span><span class="info-val">$125&ndash;$225</span></div>
+      <div class="info-row"><span class="info-key">Flush valve seat repair</span><span class="info-val">$175&ndash;$275</span></div>
+      <div class="info-row"><span class="info-key">Full toilet rebuild kit (plumber)</span><span class="info-val">$175&ndash;$300</span></div>
+      <div class="info-row"><span class="info-key">Full toilet replacement (installed)</span><span class="info-val">$325&ndash;$950</span></div>
+      <div class="info-row"><span class="info-key">Wax ring replacement</span><span class="info-val">$175&ndash;$350</span></div>
+      <div class="info-row"><span class="info-key">Phone</span><span class="info-val">(561) 555-PIPE</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+};
+
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+var LEAK_DATA = {
+  slow:    { label: 'Slow Drip',          lo: 30,   hi: 200,   midMult: 0.5 },
+  phantom: { label: 'Phantom Flush',       lo: 100,  hi: 500,   midMult: 0.5 },
+  medium:  { label: 'Constant Slow Run',   lo: 200,  hi: 1000,  midMult: 0.5 },
+  fast:    { label: 'Constant Fast Run',   lo: 1000, hi: 4000,  midMult: 0.5 }
+};
+
+function calcWaste() {
+  var leakType = document.getElementById('leak-type').value;
+  var ratePerGal = parseFloat(document.getElementById('county').value);
+  var numToilets = parseInt(document.getElementById('toilet-count').value, 10);
+
+  if (!leakType) {
+    alert('Please select a leak type.');
+    return;
+  }
+
+  var ld = LEAK_DATA[leakType];
+  var midGalDay = Math.round((ld.lo + ld.hi) / 2);
+  var totalGalDay = midGalDay * numToilets;
+  var totalGalMonth = totalGalDay * 30;
+  var monthlyCost = totalGalMonth * ratePerGal;
+  var sewerMult = 1.9;
+  var totalMonthlyCost = monthlyCost * sewerMult;
+  var annualCost = totalMonthlyCost * 12;
+
+  var avgRepair = 200;
+  var roiMonths = avgRepair / totalMonthlyCost;
+  var roiStr = roiMonths < 1 ? 'Less than 1 month' : (roiMonths < 2 ? '1&ndash;2 months' : Math.round(roiMonths) + ' months');
+
+  document.getElementById('monthly-cost').textContent = '$' + totalMonthlyCost.toFixed(0);
+  document.getElementById('daily-gal').textContent = totalGalDay.toLocaleString();
+  document.getElementById('monthly-gal').textContent = totalGalMonth.toLocaleString();
+  document.getElementById('annual-cost').textContent = '$' + annualCost.toFixed(0);
+  document.getElementById('repair-roi').innerHTML = roiStr;
+
+  var tips = {
+    slow: 'A slow drip is easy to ignore but adds up quickly in FL. At Miami-Dade water rates with sewer fees, even a minor leak can cost $15&ndash;$30/month.',
+    phantom: 'Phantom flush (toilet refills randomly) is almost always a worn flapper. A $5&ndash;$15 DIY flapper replacement typically pays for itself within days in FL water rates.',
+    medium: 'A constant hissing toilet is wasting 6,000&ndash;30,000 gallons per month &mdash; enough to fill a large above-ground pool. FL tiered water rates make this especially costly.',
+    fast: 'A fast-running toilet is a water bill emergency in Florida. At current FL rates (with sewer fees), this could add $150&ndash;$600/month to your water bill. Call a plumber today.'
+  };
+  document.getElementById('waste-tip').textContent = tips[leakType] || '';
+
+  var rb = document.getElementById('result-box');
+  rb.style.display = 'block';
+  rb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function submitQuote() {
+  var name  = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) {
+    alert('Please enter your name and phone number.');
+    return;
+  }
+  var toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+<!-- fl-plumbing-seo: running toilet florida water waste calculator phantom flush flapper fill valve flush valve repair cost florida water bill gallon waste toilet diagnosis rotten egg water heater anode -->
+
+</div>
+</body>
+</html>

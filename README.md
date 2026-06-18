@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**160 interactive cost calculators** for Florida homeowners.
+**163 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -32,6 +32,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Drain Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-cost/fl_drain_cost.html)
 - [FL Drain Field Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-field/fl_drain_field.html)
 - [FL Drain Health Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-health/fl_drain_health.html)
+- [FL Drain Odor Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-odor/fl_drain_odor.html)
 - [FL Drain Vent Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-vent/fl_drain_vent.html)
 - [FL Dwv Drain Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/dwv-drain-sizing/fl_dwv_drain_sizing.html)
 - [FL Emergency Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/emergency-plumbing/fl_emergency_plumbing.html)
@@ -110,6 +111,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Repiping Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping-cost/fl_repiping_cost.html)
 - [FL Repiping Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping/fl_repiping.html)
 - [FL Rough In Calculator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rough-in-calculator/fl_rough_in_calculator.html)
+- [FL Running Toilet Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/running-toilet/fl_running_toilet.html)
 - [FL Rv Dock Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rv-dock-plumbing/fl_rv_dock_plumbing.html)
 - [FL Septic Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-guide/fl_septic_guide.html)
 - [FL Septic System Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-system/fl_septic_system.html)
@@ -153,6 +155,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Heater Maintenance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-maintenance/fl_water_heater_maintenance.html)
 - [FL Water Heater Permit Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-permit/fl_water_heater_permit.html)
 - [FL Water Heater Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-sizing/fl_water_heater_sizing.html)
+- [FL Water Heater Troubleshooter Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-troubleshooter/fl_water_heater_troubleshooter.html)
 - [FL Water Heater Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater/fl_water_heater.html)
 - [FL Water Meter Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-meter-leak/fl_water_meter_leak.html)
 - [FL Water Meter Shutoff Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-meter-shutoff/fl_water_meter_shutoff.html)
