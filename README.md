@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**177 interactive cost calculators** for Florida homeowners.
+**180 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -47,6 +47,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Fire Sprinkler Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fire-sprinkler/fl_fire_sprinkler.html)
 - [FL Fixture Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fixture-cost/fl_fixture_cost.html)
 - [FL Fixture Rough In Heights Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fixture-rough-in-heights/fl_fixture_rough_in_heights.html)
+- [FL Fixture Unit Calculator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/fixture-unit-calculator/fl_fixture_unit_calc.html)
 - [FL Flood Zone Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/flood-zone-plumbing/fl_flood_zone_plumbing.html)
 - [FL Floor Drain Install Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/floor-drain-install/fl_floor_drain_install.html)
 - [FL Food Truck Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/food-truck-plumbing/fl_food_truck_plumbing.html)
@@ -74,6 +75,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Hvac Condensate Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hvac-condensate-drain/fl_hvac_condensate_drain.html)
 - [FL Hydro Jetting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/hydro-jetting/fl_hydro_jetting.html)
 - [FL Inspector Prep Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/inspector-prep/fl_inspector_prep.html)
+- [FL Irrigation Backflow Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/irrigation-backflow-guide/fl_irrigation_backflow.html)
 - [FL Irrigation Compliance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/irrigation-compliance/fl_irrigation_compliance.html)
 - [FL Irrigation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/irrigation/fl_irrigation_guide.html)
 - [FL Kitchen Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/kitchen-cost/fl_kitchen_cost.html)
@@ -166,6 +168,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Filtration Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-filtration/fl_water_filtration.html)
 - [FL Water Hammer Arrestor Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-hammer-arrestor/fl_water_hammer_arrestor.html)
 - [FL Water Heater Efficiency Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-efficiency/fl_water_heater_efficiency.html)
+- [FL Water Heater Energy Comparison Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-energy-comparison/fl_wh_energy_comparison.html)
 - [FL Water Heater Maintenance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-maintenance/fl_water_heater_maintenance.html)
 - [FL Water Heater Permit Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-permit/fl_water_heater_permit.html)
 - [FL Water Heater Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-sizing/fl_water_heater_sizing.html)

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Fixture Unit Load Calculator | Pipe Sizing FPC §604 §702 | Plumbing Supply &amp; DWV</title>
+<meta name="description" content="Calculate Florida plumbing fixture unit loads per FPC 2023 §604 and §702. Size water supply mains, drain stacks, and vent pipes for residential and commercial projects. Miami-Dade, Broward, Hillsborough commercial notes.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);border-bottom:3px solid #22C55E;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#22C55E;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#22C55E22;color:#22C55E;border:1px solid #22C55E44;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.72rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#22C55E;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#22C55E;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#22C55E}
+.btn{width:100%;padding:14px;background:#22C55E;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-sm{padding:8px 14px;background:#22C55E22;color:#22C55E;border:1px solid #22C55E44;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn-sm:hover{background:#22C55E33}
+.btn-danger{background:#EF444422;color:#EF4444;border:1px solid #EF444433;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;padding:6px 12px;margin-left:8px}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.stat-card{background:#141929;border-radius:8px;padding:12px;text-align:center;border:1px solid #1E2A45}
+.stat-num{font-size:1.2rem;font-weight:800;color:#22C55E}
+.stat-label{font-size:0.7rem;color:#94A3B8;margin-top:3px}
+.code-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:8px}
+.code-table th{background:#141929;color:#22C55E;padding:8px 6px;text-align:left;font-size:0.71rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table td{padding:7px 6px;border-bottom:1px solid #1E2A45;color:#E2E8F0;vertical-align:top}
+.code-table tr:last-child td{border-bottom:none}
+.highlight-row td{background:#22C55E11;color:#22C55E;font-weight:700}
+.section-label{font-size:0.76rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+.tip-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#22C55E}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#22C55E;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #22C55E55}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fixture-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1E2A45}
+.fixture-row:last-child{border-bottom:none}
+.fixture-name{flex:1;font-size:0.8rem;color:#E2E8F0}
+.fixture-wsfu{font-size:0.72rem;color:#94A3B8;width:50px;text-align:center}
+.fixture-dfu{font-size:0.72rem;color:#94A3B8;width:50px;text-align:center}
+.fixture-qty{width:60px}
+.fixture-qty input{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:6px;color:#E2E8F0;padding:6px 8px;font-size:0.82rem;outline:none;text-align:center}
+.fixture-qty input:focus{border-color:#22C55E}
+.total-row{display:flex;justify-content:space-between;padding:10px 0;font-size:0.88rem;font-weight:700;border-top:2px solid #22C55E;margin-top:6px}
+.col-header{display:flex;align-items:center;gap:8px;padding:6px 0;margin-bottom:4px;font-size:0.72rem;color:#94A3B8;font-weight:700}
+.pipe-result{background:#22C55E11;border:1px solid #22C55E33;border-radius:10px;padding:14px;margin-top:10px}
+.pipe-size{font-size:1.5rem;font-weight:800;color:#22C55E;text-align:center;margin-bottom:4px}
+.pipe-label{font-size:0.8rem;color:#94A3B8;text-align:center}
+.pipe-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.pipe-card{background:#141929;border-radius:8px;padding:10px;text-align:center;border:1px solid #1E2A45}
+.pipe-val{font-size:1rem;font-weight:800;color:#22C55E}
+.pipe-lbl{font-size:0.68rem;color:#94A3B8;margin-top:3px;line-height:1.3}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🔧</div>
+  <h1>FL Fixture Unit Calculator</h1>
+  <p>FPC §604 supply sizing &amp; §702 DWV sizing — residential &amp; commercial</p>
+  <span class="badge">Florida Plumbing Code 2023</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('supply',event)">Supply Sizing</button>
+    <button class="tab" onclick="showTab('dwv',event)">DWV Sizing</button>
+    <button class="tab" onclick="showTab('code',event)">FL Code</button>
+    <button class="tab" onclick="showTab('quote',event)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: Supply Sizing (WSFU) -->
+  <div id="supply" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>💧</span>Water Supply Fixture Units (WSFU)</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Enter the quantity of each fixture. WSFU values per FPC 2023 Table 604.3. The calculator totals WSFUs and recommends minimum supply pipe sizes per FPC §604.</div>
+      <label>Building type</label>
+      <select id="supplyBldgType">
+        <option value="residential">Residential (private use)</option>
+        <option value="commercial">Commercial / public use</option>
+      </select>
+      <div style="margin-top:12px">
+        <div class="col-header">
+          <span style="flex:1">Fixture</span>
+          <span style="width:50px;text-align:center">WSFU</span>
+          <span style="width:60px;text-align:center">Qty</span>
+        </div>
+        <div id="supplyFixtures"></div>
+      </div>
+      <div class="total-row">
+        <span>Total WSFU</span>
+        <span id="totalWSFU" style="color:#22C55E">0</span>
+      </div>
+      <button class="btn" onclick="calcSupply()">Get Supply Pipe Size</button>
+      <div id="supplyResult" class="result-box">
+        <div id="supplyBreakdown"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>WSFU Reference — FPC Table 604.3</div>
+      <table class="code-table">
+        <tr><th>Fixture</th><th>Private (WSFU)</th><th>Public (WSFU)</th></tr>
+        <tr><td>Toilet (flush tank)</td><td>2.5</td><td>5.0</td></tr>
+        <tr><td>Toilet (flushometer)</td><td>6.0</td><td>10.0</td></tr>
+        <tr><td>Lavatory / bathroom sink</td><td>1.0</td><td>2.0</td></tr>
+        <tr><td>Bathtub (with shower)</td><td>2.0</td><td>4.0</td></tr>
+        <tr><td>Shower stall</td><td>2.0</td><td>4.0</td></tr>
+        <tr><td>Kitchen sink</td><td>1.5</td><td>3.0</td></tr>
+        <tr><td>Dishwasher (domestic)</td><td>1.5</td><td>—</td></tr>
+        <tr><td>Laundry tray</td><td>1.5</td><td>3.0</td></tr>
+        <tr><td>Washing machine</td><td>3.0</td><td>—</td></tr>
+        <tr><td>Hose bib (sillcock)</td><td>2.5</td><td>5.0</td></tr>
+        <tr><td>Urinal (flush tank)</td><td>—</td><td>3.0</td></tr>
+        <tr><td>Service sink</td><td>3.0</td><td>3.0</td></tr>
+        <tr><td>Bar sink</td><td>1.0</td><td>2.0</td></tr>
+        <tr><td>Ice maker</td><td>0.5</td><td>1.0</td></tr>
+        <tr><td>Water softener</td><td>1.0</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📏</span>Supply Pipe Sizing — FPC Table 604.4</div>
+      <table class="code-table">
+        <tr><th>Total WSFU</th><th>Min Pipe Size</th><th>Typical Use</th></tr>
+        <tr><td>Up to 3</td><td>1/2 inch</td><td>Single fixture branch</td></tr>
+        <tr><td>4–6</td><td>3/4 inch</td><td>Small bath group</td></tr>
+        <tr><td>7–15</td><td>3/4 inch</td><td>Small residence</td></tr>
+        <tr><td>16–30</td><td>1 inch</td><td>Medium home</td></tr>
+        <tr><td>31–60</td><td>1-1/4 inch</td><td>Large home / small commercial</td></tr>
+        <tr><td>61–100</td><td>1-1/2 inch</td><td>Multi-bath commercial</td></tr>
+        <tr><td>101–180</td><td>2 inch</td><td>Medium commercial</td></tr>
+        <tr><td>181–300</td><td>2-1/2 inch</td><td>Large commercial</td></tr>
+        <tr><td>301+</td><td>3 inch +</td><td>Large commercial / multi-family</td></tr>
+      </table>
+      <div class="tip-box"><strong>FL note:</strong> Water pressure in FL averages 65–75 PSI at the meter. Homes with PRV (Pressure Reducing Valve) at 70–80 PSI: use standard table values. Homes with street pressure under 50 PSI (common in older South FL neighborhoods): pipe one size up from table minimum to compensate for pressure loss at peak demand.</div>
+    </div>
+  </div>
+
+  <!-- TAB 2: DWV Sizing -->
+  <div id="dwv" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🚿</span>Drain-Waste-Vent Fixture Units (DFU)</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Enter fixture quantities. DFU values per FPC 2023 Table 702.1. The calculator totals DFUs and recommends drain, stack, and vent pipe sizes per FPC §702 and §906.</div>
+      <div style="margin-top:8px">
+        <div class="col-header">
+          <span style="flex:1">Fixture</span>
+          <span style="width:50px;text-align:center">DFU</span>
+          <span style="width:60px;text-align:center">Qty</span>
+        </div>
+        <div id="dwvFixtures"></div>
+      </div>
+      <div class="total-row">
+        <span>Total DFU</span>
+        <span id="totalDFU" style="color:#22C55E">0</span>
+      </div>
+      <label>Installation type</label>
+      <select id="dwvType">
+        <option value="horiz">Horizontal drain branch</option>
+        <option value="stack">Vertical drain stack</option>
+        <option value="building">Building drain (main)</option>
+      </select>
+      <label>Slope (horizontal drains only)</label>
+      <select id="dwvSlope">
+        <option value="0.25">1/4" per foot (standard)</option>
+        <option value="0.125">1/8" per foot (long runs)</option>
+        <option value="0.5">1/2" per foot (short steep runs)</option>
+      </select>
+      <button class="btn" onclick="calcDWV()">Get DWV Pipe Size</button>
+      <div id="dwvResult" class="result-box">
+        <div id="dwvBreakdown"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>DFU Reference — FPC Table 702.1</div>
+      <table class="code-table">
+        <tr><th>Fixture</th><th>DFU Value</th><th>Trap Size</th></tr>
+        <tr><td>Toilet</td><td>4</td><td>3"</td></tr>
+        <tr><td>Lavatory / sink</td><td>1</td><td>1-1/4"</td></tr>
+        <tr><td>Bathtub</td><td>2</td><td>1-1/2"</td></tr>
+        <tr><td>Shower stall</td><td>2</td><td>2"</td></tr>
+        <tr><td>Kitchen sink</td><td>2</td><td>1-1/2"</td></tr>
+        <tr><td>Dishwasher</td><td>2</td><td>(connects to KS)</td></tr>
+        <tr><td>Washing machine</td><td>3</td><td>2"</td></tr>
+        <tr><td>Laundry tray</td><td>2</td><td>1-1/2"</td></tr>
+        <tr><td>Floor drain</td><td>2</td><td>2"</td></tr>
+        <tr><td>Urinal (wall hung)</td><td>4</td><td>2"</td></tr>
+        <tr><td>Service sink</td><td>3</td><td>3"</td></tr>
+        <tr><td>Bar / prep sink</td><td>1</td><td>1-1/2"</td></tr>
+        <tr><td>Roof drain</td><td>Per GPM</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📏</span>Drain Pipe Sizing — FPC Table 702.3</div>
+      <div class="section-label">Horizontal Branch Drains (1/4" per foot slope)</div>
+      <table class="code-table">
+        <tr><th>Pipe Size</th><th>Max DFU (Horiz)</th><th>Max DFU (Stack)</th><th>Max DFU (Building)</th></tr>
+        <tr><td>1-1/4"</td><td>1</td><td>2</td><td>—</td></tr>
+        <tr><td>1-1/2"</td><td>3</td><td>4</td><td>—</td></tr>
+        <tr><td>2"</td><td>6</td><td>10</td><td>—</td></tr>
+        <tr><td>2-1/2"</td><td>12</td><td>20</td><td>—</td></tr>
+        <tr><td>3"</td><td>20</td><td>48</td><td>36</td></tr>
+        <tr><td>4"</td><td>160</td><td>240</td><td>216</td></tr>
+        <tr><td>5"</td><td>360</td><td>540</td><td>480</td></tr>
+        <tr><td>6"</td><td>620</td><td>960</td><td>840</td></tr>
+      </table>
+      <div class="section-label">Vent Pipe Sizing — FPC Table 906.1</div>
+      <table class="code-table">
+        <tr><th>Drain Pipe Size</th><th>Min Vent Size</th><th>Max Vent Length</th></tr>
+        <tr><td>1-1/4"</td><td>1-1/4"</td><td>45 ft</td></tr>
+        <tr><td>1-1/2"</td><td>1-1/4"</td><td>60 ft</td></tr>
+        <tr><td>2"</td><td>1-1/2"</td><td>120 ft</td></tr>
+        <tr><td>3"</td><td>2"</td><td>180 ft</td></tr>
+        <tr><td>4"</td><td>3"</td><td>212 ft</td></tr>
+        <tr><td>6"</td><td>4"</td><td>300 ft</td></tr>
+      </table>
+      <div class="warn-box"><strong>FL slab homes note:</strong> Most FL homes are slab-on-grade — DWV under-slab runs are cast before the pour and cannot be easily changed after construction. When sizing drain lines for a FL renovation, verify the existing under-slab drain sizes before adding fixtures. Adding a bathroom to a FL slab home is a significant job because the slab must be saw-cut and broken to run new drains.</div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FL Code -->
+  <div id="code" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📜</span>FPC 2023 — Key Sizing Code Sections</div>
+      <table class="code-table">
+        <tr><th>Section</th><th>Topic</th><th>Key Rule</th></tr>
+        <tr><td>§604.1</td><td>Supply sizing general</td><td>Size all supply pipe per WSFU Table 604.3 for velocity max 8 ft/sec</td></tr>
+        <tr><td>§604.3</td><td>Fixture unit table</td><td>WSFU values by fixture type and private vs public use</td></tr>
+        <tr><td>§604.4</td><td>Supply pipe sizing table</td><td>Pipe diameter by total WSFU demand</td></tr>
+        <tr><td>§604.6</td><td>Velocity limits</td><td>Max 8 ft/sec in supply; max 4 ft/sec at final branch</td></tr>
+        <tr><td>§604.8</td><td>Pipe support</td><td>Copper horizontal: 6 ft max; vertical: 10 ft max</td></tr>
+        <tr><td>§701.1</td><td>DWV general</td><td>All drainage by gravity unless approved ejector</td></tr>
+        <tr><td>§702.1</td><td>DFU fixture table</td><td>Fixture unit values by fixture type</td></tr>
+        <tr><td>§702.3</td><td>Drain pipe sizing</td><td>Pipe diameter by DFU for horizontal, vertical, and building drains</td></tr>
+        <tr><td>§706.3</td><td>Drain slope</td><td>Min 1/4" per foot for 3" and smaller; 1/8" acceptable for 4"+ with approval</td></tr>
+        <tr><td>§708.1</td><td>Cleanout access</td><td>Required at base of each stack and each 100 ft of horizontal drain</td></tr>
+        <tr><td>§906.1</td><td>Vent pipe sizing</td><td>Min vent by drain served; max vent length table per §906</td></tr>
+        <tr><td>§912.1</td><td>Wet venting</td><td>Permitted in residential — limits on fixture type and count</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚠️</span>Most Common FL Pipe Sizing Violations</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ❌ <strong style="color:#EF4444">3/4" supply main to full house:</strong> Many 1970s–1990s FL homes have undersized 3/4" copper mains. Acceptable then, but adding fixtures now triggers sizing upgrades per FPC.<br><br>
+        ❌ <strong style="color:#EF4444">S-traps:</strong> Widely used before 1990 in FL, S-traps are prohibited. Self-siphon risk. Inspector will flag during any WH or repipe permit.<br><br>
+        ❌ <strong style="color:#EF4444">2" drain for 3 toilets:</strong> Each toilet is 4 DFUs; a 2" horizontal drain maxes at 6 DFUs. Three toilets (12 DFUs) require a 4" drain — very common miscalculation in FL additions.<br><br>
+        ❌ <strong style="color:#EF4444">No cleanout at stack base:</strong> FPC §708 requires a cleanout at the base of each stack within 2 feet of where it changes from vertical to horizontal. Often missing in FL homes where the stack base is under the slab.<br><br>
+        ❌ <strong style="color:#EF4444">ABS pipe:</strong> ABS is prohibited in Florida — PVC Schedule 40 or DWV is required. ABS is legal in other states but FL inspectors will reject it.<br><br>
+        ❌ <strong style="color:#EF4444">Vent too small or missing:</strong> Each fixture branch must be properly vented. In FL slab homes, venting is often inadequate because adding vents requires going through the slab. Wet venting per §912 offers a workaround.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🏛️</span>Commercial — County-Specific Notes</div>
+      <table class="code-table">
+        <tr><th>County</th><th>Commercial Notes</th></tr>
+        <tr><td>Miami-Dade</td><td>Requires structural engineer-stamped plans for commercial plumbing over $25K; separate MEP review from building structural; water department approval for mains &gt;2"</td></tr>
+        <tr><td>Broward</td><td>Fire suppression and plumbing must be submitted together for new construction; grease interceptor sizing requires Health Dept sign-off for food service</td></tr>
+        <tr><td>Hillsborough</td><td>Tampa Water Dept approval required for backflow on commercial mains; permits issued through HCBCC building portal; plan review 10–14 days standard</td></tr>
+        <tr><td>Orange</td><td>Orange County requires separate plumbing plan submittal for commercial; OC Utilities must approve tap for new water service above 1"</td></tr>
+        <tr><td>Palm Beach</td><td>Commercial WH and supply pipe require licensed Mechanical and Plumbing Engineer of Record stamp for new buildings</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🏠</span>Typical FL Residential Fixture Unit Loads</div>
+      <table class="code-table">
+        <tr><th>Home Type</th><th>Typical WSFUs</th><th>Typical DFUs</th><th>Min Supply Main</th></tr>
+        <tr><td>2BR/1BA condo</td><td>12–16</td><td>14–18</td><td>3/4"</td></tr>
+        <tr><td>3BR/2BA single family</td><td>20–28</td><td>22–32</td><td>1"</td></tr>
+        <tr><td>4BR/3BA single family</td><td>28–40</td><td>30–45</td><td>1–1-1/4"</td></tr>
+        <tr><td>5BR/4BA large home</td><td>40–60</td><td>45–65</td><td>1-1/4–1-1/2"</td></tr>
+        <tr><td>Duplex (each unit)</td><td>20–30</td><td>22–35</td><td>1" per unit</td></tr>
+        <tr><td>Small commercial (1 restroom)</td><td>20–35</td><td>25–40</td><td>1–1-1/4"</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 4: Free Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📞</span>Get a Free Pipe Sizing Consultation</div>
+      <div style="font-size:0.82rem;color:#94A3B8;margin-bottom:14px;line-height:1.6">Adding fixtures? Building an addition? Our licensed CFC plumbers will size your supply and DWV system per FPC 2023, pull the permit, and handle all inspections.</div>
+      <label>Your name</label>
+      <input type="text" id="qName" placeholder="First &amp; last name">
+      <div class="form-row">
+        <div>
+          <label>Phone number</label>
+          <input type="tel" id="qPhone" placeholder="(561) 555-PIPE">
+        </div>
+        <div>
+          <label>County</label>
+          <select id="qCounty">
+            <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+            <option>Hillsborough</option><option>Pinellas</option><option>Orange</option>
+            <option>Lee</option><option>Collier</option><option>Duval</option>
+            <option>Sarasota</option><option>Volusia</option><option>Brevard</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <label>Project type</label>
+      <select id="qProject">
+        <option>Bathroom addition (new fixtures)</option>
+        <option>Whole-house repipe — need sizing review</option>
+        <option>Commercial build-out — MEP sizing</option>
+        <option>Kitchen remodel — adding fixtures</option>
+        <option>ADU / in-law suite plumbing</option>
+        <option>New construction sizing review</option>
+        <option>Existing system undersized — need upsizing</option>
+      </select>
+      <label>Building type</label>
+      <select id="qBldg">
+        <option>Residential single-family</option>
+        <option>Condo / townhome</option>
+        <option>Duplex / triplex</option>
+        <option>Commercial (retail / office)</option>
+        <option>Restaurant / food service</option>
+        <option>Medical / dental office</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Request Pipe Sizing Consult</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>✅</span>What Our Sizing Review Covers</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ Total WSFU and DFU calculation per your fixture list<br>
+        ✅ Supply main and branch sizing per FPC §604<br>
+        ✅ DWV drain, stack, and vent sizing per FPC §702 + §906<br>
+        ✅ Existing system review — is current pipe undersized?<br>
+        ✅ Slab penetration plan (FL slab-on-grade homes)<br>
+        ✅ PRV sizing and pressure loss analysis<br>
+        ✅ Permit drawings and plan submittal<br>
+        ✅ County-specific commercial MEP coordination
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! 🔧</div>
+<!-- fl-plumbing-seo: florida fixture unit calculator FPC 604 supply pipe sizing florida FPC 702 DWV drain pipe sizing florida WSFU water supply fixture units florida DFU drain fixture units florida plumbing pipe sizing calculator residential commercial florida plumbing code 2023 fixture units bathroom addition pipe sizing florida slab home DWV sizing florida fixture unit table florida PVC drain size florida commercial plumbing fixture count florida supply pipe size calculator florida plumbing addition sizing florida -->
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+var SUPPLY_FIXTURES = [
+  {name:'Toilet (flush tank)',        priv:2.5, pub:5.0},
+  {name:'Lavatory / bathroom sink',  priv:1.0, pub:2.0},
+  {name:'Bathtub (with shower)',      priv:2.0, pub:4.0},
+  {name:'Shower stall',              priv:2.0, pub:4.0},
+  {name:'Kitchen sink',              priv:1.5, pub:3.0},
+  {name:'Dishwasher (domestic)',     priv:1.5, pub:0  },
+  {name:'Washing machine',           priv:3.0, pub:0  },
+  {name:'Laundry tray',             priv:1.5, pub:3.0},
+  {name:'Hose bib (sillcock)',       priv:2.5, pub:5.0},
+  {name:'Ice maker',                priv:0.5, pub:1.0},
+  {name:'Bar / prep sink',          priv:1.0, pub:2.0},
+  {name:'Urinal (flush tank)',       priv:0,   pub:3.0},
+  {name:'Service sink',             priv:3.0, pub:3.0},
+  {name:'Water softener',           priv:1.0, pub:0  }
+];
+var DWV_FIXTURES = [
+  {name:'Toilet',              dfu:4},
+  {name:'Lavatory / sink',    dfu:1},
+  {name:'Bathtub',            dfu:2},
+  {name:'Shower stall',       dfu:2},
+  {name:'Kitchen sink',       dfu:2},
+  {name:'Dishwasher',         dfu:2},
+  {name:'Washing machine',    dfu:3},
+  {name:'Laundry tray',       dfu:2},
+  {name:'Floor drain',        dfu:2},
+  {name:'Bar / prep sink',    dfu:1},
+  {name:'Urinal (wall hung)', dfu:4},
+  {name:'Service sink',       dfu:3}
+];
+var SUPPLY_TABLE = [
+  {wsfu:3,   size:'1/2"',   desc:'Single fixture branch'},
+  {wsfu:6,   size:'3/4"',   desc:'Small bath group'},
+  {wsfu:15,  size:'3/4"',   desc:'Small residence'},
+  {wsfu:30,  size:'1"',     desc:'Medium home'},
+  {wsfu:60,  size:'1-1/4"', desc:'Large home / small commercial'},
+  {wsfu:100, size:'1-1/2"', desc:'Multi-bath commercial'},
+  {wsfu:180, size:'2"',     desc:'Medium commercial'},
+  {wsfu:300, size:'2-1/2"', desc:'Large commercial'},
+  {wsfu:9999,size:'3"+',    desc:'Large commercial / engineer required'}
+];
+var DWV_HORIZ = [
+  {dfu:1, size:'1-1/4"'},{dfu:3, size:'1-1/2"'},{dfu:6, size:'2"'},{dfu:12, size:'2-1/2"'},
+  {dfu:20, size:'3"'},{dfu:160, size:'4"'},{dfu:360, size:'5"'},{dfu:9999, size:'6"'}
+];
+var DWV_STACK = [
+  {dfu:2, size:'1-1/4"'},{dfu:4, size:'1-1/2"'},{dfu:10, size:'2"'},{dfu:20, size:'2-1/2"'},
+  {dfu:48, size:'3"'},{dfu:240, size:'4"'},{dfu:540, size:'5"'},{dfu:9999, size:'6"'}
+];
+var DWV_BLDG = [
+  {dfu:36, size:'3"'},{dfu:216, size:'4"'},{dfu:480, size:'5"'},{dfu:9999, size:'6"'}
+];
+function buildSupplyFixtures() {
+  var html = '';
+  var isComm = document.getElementById('supplyBldgType').value === 'commercial';
+  SUPPLY_FIXTURES.forEach(function(f, i) {
+    var wsfu = isComm ? f.pub : f.priv;
+    if (wsfu === 0) return;
+    html += '<div class="fixture-row"><span class="fixture-name">' + esc(f.name) + '</span>';
+    html += '<span class="fixture-wsfu">' + wsfu + '</span>';
+    html += '<div class="fixture-qty"><input type="number" id="sf' + i + '" min="0" max="99" value="0" onchange="updateWSFU()" oninput="updateWSFU()"></div></div>';
+  });
+  document.getElementById('supplyFixtures').innerHTML = html;
+}
+document.getElementById('supplyBldgType').addEventListener('change', function() {
+  buildSupplyFixtures(); updateWSFU();
+});
+function updateWSFU() {
+  var isComm = document.getElementById('supplyBldgType').value === 'commercial';
+  var total = 0;
+  SUPPLY_FIXTURES.forEach(function(f, i) {
+    var wsfu = isComm ? f.pub : f.priv;
+    if (wsfu === 0) return;
+    var qty = parseInt(document.getElementById('sf' + i) ? document.getElementById('sf' + i).value : 0) || 0;
+    total += qty * wsfu;
+  });
+  document.getElementById('totalWSFU').textContent = Math.round(total * 10) / 10;
+}
+function calcSupply() {
+  var total = parseFloat(document.getElementById('totalWSFU').textContent) || 0;
+  var size = '1/2"'; var desc = 'Insufficient data';
+  for (var i = 0; i < SUPPLY_TABLE.length; i++) {
+    if (total <= SUPPLY_TABLE[i].wsfu) { size = SUPPLY_TABLE[i].size; desc = SUPPLY_TABLE[i].desc; break; }
+  }
+  var box = document.getElementById('supplyResult');
+  box.style.display = 'block';
+  var html = '<div class="pipe-result"><div class="pipe-size">' + esc(size) + '</div><div class="pipe-label">Minimum supply main size — ' + esc(total) + ' WSFU total</div>';
+  html += '<div class="pipe-grid">';
+  html += '<div class="pipe-card"><div class="pipe-val">' + esc(Math.round(total * 10)/10) + '</div><div class="pipe-lbl">Total WSFU</div></div>';
+  html += '<div class="pipe-card"><div class="pipe-val">' + esc(size) + '</div><div class="pipe-lbl">Min main size</div></div>';
+  html += '<div class="pipe-card"><div class="pipe-val">3/4"</div><div class="pipe-lbl">Branch to fixture</div></div>';
+  html += '</div></div>';
+  if (total > 100) {
+    html += '<div class="warn-box" style="margin-top:8px"><strong>Engineer required:</strong> Projects over 100 WSFU in commercial applications typically require a licensed PE (Mechanical or Plumbing Engineer) to stamp the pipe sizing calculations for permit submittal in FL.</div>';
+  } else {
+    html += '<div class="tip-box" style="margin-top:8px"><strong>FL note:</strong> Size determined per FPC Table 604.4. Verify street pressure with utility — homes with &lt;50 PSI street pressure should upsize one increment for peak demand.</div>';
+  }
+  document.getElementById('supplyBreakdown').innerHTML = html;
+}
+function buildDWVFixtures() {
+  var html = '';
+  DWV_FIXTURES.forEach(function(f, i) {
+    html += '<div class="fixture-row"><span class="fixture-name">' + esc(f.name) + '</span>';
+    html += '<span class="fixture-dfu">' + f.dfu + '</span>';
+    html += '<div class="fixture-qty"><input type="number" id="df' + i + '" min="0" max="99" value="0" onchange="updateDFU()" oninput="updateDFU()"></div></div>';
+  });
+  document.getElementById('dwvFixtures').innerHTML = html;
+}
+function updateDFU() {
+  var total = 0;
+  DWV_FIXTURES.forEach(function(f, i) {
+    var qty = parseInt(document.getElementById('df' + i) ? document.getElementById('df' + i).value : 0) || 0;
+    total += qty * f.dfu;
+  });
+  document.getElementById('totalDFU').textContent = total;
+}
+function calcDWV() {
+  var total = parseInt(document.getElementById('totalDFU').textContent) || 0;
+  var dtype = document.getElementById('dwvType').value;
+  var table = dtype === 'horiz' ? DWV_HORIZ : dtype === 'stack' ? DWV_STACK : DWV_BLDG;
+  var size = table[table.length-1].size;
+  for (var i = 0; i < table.length; i++) {
+    if (total <= table[i].dfu) { size = table[i].size; break; }
+  }
+  var ventMap = {'1-1/4"':'1-1/4"','1-1/2"':'1-1/4"','2"':'1-1/2"','2-1/2"':'1-1/2"','3"':'2"','4"':'3"','5"':'4"','6"':'4"'};
+  var ventSize = ventMap[size] || '2"';
+  var box = document.getElementById('dwvResult');
+  box.style.display = 'block';
+  var typeLabel = dtype==='horiz'?'Horizontal Branch':dtype==='stack'?'Vertical Stack':'Building Drain';
+  var html = '<div class="pipe-result"><div class="pipe-size">' + esc(size) + '</div><div class="pipe-label">Minimum ' + esc(typeLabel) + ' size — ' + total + ' DFU total</div>';
+  html += '<div class="pipe-grid">';
+  html += '<div class="pipe-card"><div class="pipe-val">' + total + '</div><div class="pipe-lbl">Total DFU</div></div>';
+  html += '<div class="pipe-card"><div class="pipe-val">' + esc(size) + '</div><div class="pipe-lbl">Min drain pipe</div></div>';
+  html += '<div class="pipe-card"><div class="pipe-val">' + esc(ventSize) + '</div><div class="pipe-lbl">Min vent pipe</div></div>';
+  html += '</div></div>';
+  if (dtype === 'horiz') {
+    html += '<div class="tip-box" style="margin-top:8px"><strong>Slope:</strong> 1/4" per foot required for 3" and smaller drains (FPC §706.3). Never slope more than 1/2" per foot on 3" or larger — solids are left behind at excessive slope. Under FL slabs, slope is set at pour time and cannot be changed without cutting.</div>';
+  }
+  document.getElementById('dwvBreakdown').innerHTML = html;
+}
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  if (e && e.target) e.target.classList.add('active');
+  if (id === 'supply' && !document.getElementById('supplyFixtures').innerHTML) { buildSupplyFixtures(); }
+  if (id === 'dwv' && !document.getElementById('dwvFixtures').innerHTML) { buildDWVFixtures(); }
+}
+buildSupplyFixtures();
+buildDWVFixtures();
+function submitQuote() {
+  var name = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){ t.style.display = 'none'; }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida florida fixture unit calculator WSFU supply pipe sizing DFU DWV drain pipe sizing FPC 604 FPC 702 plumbing fixture units florida residential commercial pipe sizing calculator water supply fixture units drain fixture units florida bathroom addition pipe sizing florida 
+</div>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Water Heater Energy Efficiency Comparison | Heat Pump vs Tankless vs Storage | FPL TECO Duke Rebates</title>
+<meta name="description" content="Compare Florida water heater energy efficiency: storage, tankless, heat pump. Annual cost calculator with FPL, TECO, Duke Energy rates. ENERGY STAR rebates, IRA tax credits, FL suitability guide.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);border-bottom:3px solid #F97316;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#F97316;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#F9731622;color:#F97316;border:1px solid #F9731644;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.72rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#F97316;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#F97316;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#F97316}
+.btn{width:100%;padding:14px;background:#F97316;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.9}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.stat-card{background:#141929;border-radius:8px;padding:12px;text-align:center;border:1px solid #1E2A45}
+.stat-num{font-size:1.2rem;font-weight:800;color:#F97316}
+.stat-label{font-size:0.7rem;color:#94A3B8;margin-top:3px}
+.wh-card{border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.wh-card-title{font-size:0.88rem;font-weight:700;margin-bottom:6px}
+.wh-spec{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1E2A4522;font-size:0.78rem}
+.wh-spec:last-child{border-bottom:none}
+.wh-val{font-weight:600;text-align:right;max-width:55%}
+.code-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:8px}
+.code-table th{background:#141929;color:#F97316;padding:8px 6px;text-align:left;font-size:0.71rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table td{padding:7px 6px;border-bottom:1px solid #1E2A45;color:#E2E8F0;vertical-align:top}
+.code-table tr:last-child td{border-bottom:none}
+.section-label{font-size:0.76rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+.tip-box{background:#F9731611;border:1px solid #F9731633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#F97316}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.cost-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:0.82rem}
+.cost-row:last-child{border-bottom:none}
+.cost-val{color:#F97316;font-weight:700}
+.rebate-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45}
+.rebate-title{font-size:0.82rem;font-weight:700;color:#22C55E;margin-bottom:5px}
+.rebate-body{font-size:0.78rem;color:#94A3B8;line-height:1.55}
+.rebate-amt{font-size:1rem;font-weight:800;color:#22C55E;margin-top:4px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F97316;color:#fff;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #F9731655}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cost-bar-wrap{margin:8px 0}
+.cost-bar-label{font-size:0.75rem;color:#94A3B8;margin-bottom:3px;display:flex;justify-content:space-between}
+.cost-bar{height:10px;border-radius:5px;background:#1E2A45}
+.cost-bar-fill{height:100%;border-radius:5px;transition:width .5s}
+.winner-badge{display:inline-block;background:#22C55E22;color:#22C55E;border:1px solid #22C55E44;border-radius:8px;font-size:0.68rem;padding:1px 8px;font-weight:700;margin-left:8px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">⚡</div>
+  <h1>FL Water Heater Energy Comparison</h1>
+  <p>Storage vs tankless vs heat pump — FL costs, rebates &amp; savings</p>
+  <span class="badge">FPL · TECO · Duke · FPUC Rates</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('compare',event)">Compare</button>
+    <button class="tab" onclick="showTab('cost',event)">Annual Cost</button>
+    <button class="tab" onclick="showTab('rebates',event)">FL Rebates</button>
+    <button class="tab" onclick="showTab('quote',event)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: Compare -->
+  <div id="compare" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>📊</span>FL Quick Comparison</div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num">3.5–4.5</div><div class="stat-label">Heat pump UEF (best)</div></div>
+        <div class="stat-card"><div class="stat-num">0.59–0.70</div><div class="stat-label">Storage UEF (typical)</div></div>
+        <div class="stat-card"><div class="stat-num">$400–600</div><div class="stat-label">Heat pump annual savings vs storage</div></div>
+        <div class="stat-card"><div class="stat-num">4–6 yrs</div><div class="stat-label">Heat pump payback in FL</div></div>
+      </div>
+      <div class="tip-box" style="margin-top:12px"><strong>Why heat pump WHs win in Florida:</strong> FL's warm climate is ideal for heat pump water heaters — they pull heat from ambient air, and FL's year-round warm temperatures mean the compressor never has to work hard. Unlike northern states where heat pumps struggle in cold garages, a FL garage stays 70°F+ year-round. Heat pump WHs use 60–70% less electricity than standard electric storage — the single biggest energy win available for most FL homeowners.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🔥</span>Storage Electric Water Heater</div>
+      <div class="wh-card" style="background:#141929">
+        <div class="wh-card-title" style="color:#94A3B8">Standard Electric Storage — 40/50 gallon</div>
+        <div class="wh-spec"><span>UEF rating</span><span class="wh-val" style="color:#E2E8F0">0.59–0.70 (poor efficiency)</span></div>
+        <div class="wh-spec"><span>Annual energy cost (FL avg)</span><span class="wh-val" style="color:#EF4444">$520–680</span></div>
+        <div class="wh-spec"><span>Upfront cost installed</span><span class="wh-val" style="color:#E2E8F0">$600–1,100</span></div>
+        <div class="wh-spec"><span>Typical lifespan</span><span class="wh-val" style="color:#E2E8F0">8–12 years</span></div>
+        <div class="wh-spec"><span>FL suitability</span><span class="wh-val" style="color:#F97316">Fair — works everywhere</span></div>
+        <div class="wh-spec"><span>Recovery rate (GPH)</span><span class="wh-val" style="color:#E2E8F0">18–22 GPH</span></div>
+        <div class="wh-spec"><span>Citizens Insurance</span><span class="wh-val" style="color:#22C55E">✅ No age flag under 10 yrs</span></div>
+        <div class="wh-spec"><span>Space required</span><span class="wh-val" style="color:#E2E8F0">Minimal — drop-in replacement</span></div>
+      </div>
+      <div class="tip-box"><strong>FL use case:</strong> Best for budget-conscious replacements, rentals, and homes where space or venting limits other options. Standard 240V circuit. FL code: must be elevated 18" in garage. Citizens Insurance flags WHs over 10 years old.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>💧</span>Tankless / On-Demand Water Heater</div>
+      <div class="wh-card" style="background:#141929">
+        <div class="wh-card-title" style="color:#00B4FF">Tankless Electric or Gas On-Demand</div>
+        <div class="wh-spec"><span>UEF rating</span><span class="wh-val" style="color:#E2E8F0">0.87–0.99 (electric); 0.82–0.96 (gas)</span></div>
+        <div class="wh-spec"><span>Annual energy cost (FL avg)</span><span class="wh-val" style="color:#F97316">$240–420 electric; $180–320 gas</span></div>
+        <div class="wh-spec"><span>Upfront cost installed</span><span class="wh-val" style="color:#E2E8F0">$800–1,800 electric; $1,200–2,500 gas</span></div>
+        <div class="wh-spec"><span>Typical lifespan</span><span class="wh-val" style="color:#22C55E">15–25 years</span></div>
+        <div class="wh-spec"><span>FL suitability</span><span class="wh-val" style="color:#22C55E">Excellent — warm groundwater</span></div>
+        <div class="wh-spec"><span>Flow rate</span><span class="wh-val" style="color:#E2E8F0">2–5 GPM whole-house electric; 6–10 GPM gas</span></div>
+        <div class="wh-spec"><span>Citizens Insurance</span><span class="wh-val" style="color:#22C55E">✅ Preferred — no age flags</span></div>
+        <div class="wh-spec"><span>Electric service upgrade</span><span class="wh-val" style="color:#EF4444">Often required (200A panel)</span></div>
+      </div>
+      <div class="tip-box"><strong>FL advantage:</strong> FL groundwater enters at 70–75°F (vs 40°F up north), so tankless units rarely need to raise temp more than 30°F — meaning a single electric unit handles whole-house demand that would require two units in Minnesota. Gas tankless provides the highest flow rate for large FL homes.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🌡️</span>Heat Pump Water Heater <span class="winner-badge">FL BEST VALUE</span></div>
+      <div class="wh-card" style="background:#141929">
+        <div class="wh-card-title" style="color:#22C55E">Heat Pump / Hybrid Electric Water Heater</div>
+        <div class="wh-spec"><span>UEF rating</span><span class="wh-val" style="color:#22C55E">3.45–4.50 (best in class)</span></div>
+        <div class="wh-spec"><span>Annual energy cost (FL avg)</span><span class="wh-val" style="color:#22C55E">$130–200</span></div>
+        <div class="wh-spec"><span>Upfront cost installed</span><span class="wh-val" style="color:#E2E8F0">$1,400–2,400</span></div>
+        <div class="wh-spec"><span>Typical lifespan</span><span class="wh-val" style="color:#22C55E">12–15 years</span></div>
+        <div class="wh-spec"><span>FL suitability</span><span class="wh-val" style="color:#22C55E">Excellent — warm ambient air year-round</span></div>
+        <div class="wh-spec"><span>Space required</span><span class="wh-val" style="color:#F97316">1,000 cu ft ambient air minimum</span></div>
+        <div class="wh-spec"><span>Citizens Insurance</span><span class="wh-val" style="color:#22C55E">✅ Preferred — qualifies for rebates</span></div>
+        <div class="wh-spec"><span>IRA Federal Tax Credit</span><span class="wh-val" style="color:#22C55E">30% up to $2,000</span></div>
+      </div>
+      <div class="ok-box"><strong>🏆 FL winner:</strong> Heat pump WHs are the #1 energy upgrade for most FL homeowners. At 3.5–4.5 UEF vs 0.65 for standard electric, they use 60–70% less electricity. Annual savings of $350–$500 vs standard electric storage pays back the premium in 4–6 years — and the IRA federal tax credit (30%, up to $2,000) accelerates payback to 2–4 years for many FL homeowners.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📋</span>Full Comparison Table</div>
+      <table class="code-table">
+        <tr><th>Factor</th><th>Storage</th><th>Tankless</th><th>Heat Pump</th></tr>
+        <tr><td>UEF Rating</td><td>0.59–0.70</td><td>0.87–0.99</td><td>3.45–4.50</td></tr>
+        <tr><td>Annual FL Cost</td><td>$520–680</td><td>$200–420</td><td>$130–200</td></tr>
+        <tr><td>Installed Cost</td><td>$600–1,100</td><td>$800–2,500</td><td>$1,400–2,400</td></tr>
+        <tr><td>Lifespan</td><td>8–12 yrs</td><td>15–25 yrs</td><td>12–15 yrs</td></tr>
+        <tr><td>FL Suitability</td><td>Fair</td><td>Excellent</td><td>Excellent</td></tr>
+        <tr><td>ENERGY STAR</td><td>Some models</td><td>Many models</td><td>All qualify</td></tr>
+        <tr><td>IRA Tax Credit</td><td>❌</td><td>❌ (most)</td><td>✅ 30% / $2,000</td></tr>
+        <tr><td>Utility Rebate</td><td>Rare</td><td>FPL/TECO</td><td>FPL/TECO/Duke</td></tr>
+        <tr><td>Panel Upgrade?</td><td>No</td><td>Often (240V)</td><td>Usually not</td></tr>
+        <tr><td>Noise</td><td>Silent</td><td>Silent</td><td>55–65 dB</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: Annual Cost -->
+  <div id="cost" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🧮</span>FL Annual Energy Cost Calculator</div>
+      <label>Electric utility provider</label>
+      <select id="utility">
+        <option value="fpl">Florida Power &amp; Light (FPL) — ~$0.125/kWh</option>
+        <option value="teco">Tampa Electric (TECO) — ~$0.132/kWh</option>
+        <option value="duke">Duke Energy Florida — ~$0.138/kWh</option>
+        <option value="fpuc">Florida Public Utilities — ~$0.142/kWh</option>
+        <option value="gulf">Gulf Power / NextEra — ~$0.130/kWh</option>
+        <option value="custom">Enter custom rate</option>
+      </select>
+      <div id="customRateRow" style="display:none">
+        <label>Your rate ($/kWh)</label>
+        <input type="number" id="customRate" placeholder="e.g. 0.128" step="0.001" min="0.05" max="0.40">
+      </div>
+      <label>Household size</label>
+      <select id="hhSize">
+        <option value="1">1 person (solo / small)</option>
+        <option value="2">2 people (couple)</option>
+        <option value="3" selected>3–4 people (typical FL family)</option>
+        <option value="4">5–6 people (large family)</option>
+        <option value="5">7+ people / heavy use</option>
+      </select>
+      <label>Current / existing water heater type</label>
+      <select id="currentWH">
+        <option value="storage-elec">Standard electric storage</option>
+        <option value="storage-gas">Natural gas storage</option>
+        <option value="tankless-elec">Electric tankless</option>
+        <option value="tankless-gas">Gas tankless</option>
+        <option value="hpwh">Heat pump / hybrid</option>
+      </select>
+      <button class="btn" onclick="calcCost()">Calculate Annual Costs</button>
+      <div id="costResult" class="result-box">
+        <div id="costBreakdown"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>💡</span>FL Energy Efficiency Ratings Explained</div>
+      <div class="section-label">UEF — Uniform Energy Factor</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.6;margin-bottom:10px">The UEF (Uniform Energy Factor) replaced the older EF (Energy Factor) rating in 2017. It measures how efficiently a water heater converts energy input to hot water output under standardized test conditions. Higher UEF = more efficient = lower operating cost.</div>
+      <table class="code-table">
+        <tr><th>UEF Range</th><th>WH Type</th><th>Efficiency Level</th></tr>
+        <tr><td>0.59–0.70</td><td>Standard electric storage</td><td>Low</td></tr>
+        <tr><td>0.58–0.70</td><td>Standard gas storage</td><td>Low–Medium</td></tr>
+        <tr><td>0.82–0.99</td><td>Gas tankless</td><td>High</td></tr>
+        <tr><td>0.87–0.99</td><td>Electric tankless</td><td>High</td></tr>
+        <tr><td>2.00–2.50</td><td>Heat pump (basic)</td><td>Very High</td></tr>
+        <tr><td>3.45–4.50</td><td>Heat pump (ENERGY STAR)</td><td>Exceptional</td></tr>
+      </table>
+      <div class="tip-box"><strong>FL sizing note:</strong> In Florida, hot water demand is typically 20% lower than northern states — FL residents use more cool showers, shorter hot water runs, and have smaller temperature rise requirements. A 50-gallon heat pump WH can comfortably handle a 4-person FL household that might need a 65-gallon unit in Michigan.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📅</span>Citizens Insurance — WH Age Requirements</div>
+      <table class="code-table">
+        <tr><th>WH Age</th><th>Citizens Action</th><th>Other FL Insurers</th></tr>
+        <tr><td>Under 10 years</td><td>✅ No issue</td><td>✅ Usually no issue</td></tr>
+        <tr><td>10–14 years</td><td>⚠️ May require inspection</td><td>⚠️ Varies by insurer</td></tr>
+        <tr><td>15–20 years</td><td>❌ Likely non-renewal</td><td>❌ Most flag at 15</td></tr>
+        <tr><td>20+ years</td><td>❌ Cancellation risk</td><td>❌ High cancellation risk</td></tr>
+      </table>
+      <div class="warn-box"><strong>⚠️ 2024 FL insurance update:</strong> Following the FL insurance crisis, Citizens and many private carriers now require documentation of WH age during policy renewal. A water heater approaching 10 years old can affect insurability. Proactive replacement (especially with a heat pump WH) signals lower risk to underwriters and can prevent non-renewal.</div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FL Rebates -->
+  <div id="rebates" class="panel">
+    <div class="card">
+      <div class="card-title"><span>💰</span>Available FL Water Heater Rebates &amp; Credits</div>
+      <div class="rebate-card">
+        <div class="rebate-title">🏛️ IRA Federal Tax Credit — Heat Pump WH</div>
+        <div class="rebate-body">The Inflation Reduction Act provides a 30% federal tax credit for ENERGY STAR certified heat pump water heaters. Applies to equipment and installation costs. Income limits do not apply for this credit (25C credit).</div>
+        <div class="rebate-amt">30% of cost, up to $2,000/year</div>
+        <div class="rebate-body" style="margin-top:6px;font-size:0.73rem">Applies to: Heat pump water heaters only. Claim on IRS Form 5695. Unused credit carries forward to next tax year.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-title">⚡ Florida Power &amp; Light (FPL) Rebate</div>
+        <div class="rebate-body">FPL offers rebates for ENERGY STAR certified heat pump water heaters installed in existing FL homes. Available to residential FPL customers. Rebate submitted by contractor at time of installation.</div>
+        <div class="rebate-amt">Up to $400 rebate</div>
+        <div class="rebate-body" style="margin-top:6px;font-size:0.73rem">Program: FPL Home Energy Survey + rebate portal. Must use ENERGY STAR certified unit. Rebate paid as bill credit. Check current availability at FPL.com/rebates.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-title">⚡ Tampa Electric (TECO) Rebate</div>
+        <div class="rebate-body">TECO offers water heater rebates for Hillsborough, Polk, and surrounding county customers. Heat pump WHs receive the highest rebate tier. Requires ENERGY STAR certification and licensed installation.</div>
+        <div class="rebate-amt">$200–350 rebate</div>
+        <div class="rebate-body" style="margin-top:6px;font-size:0.73rem">Program: TECO Power Moves. Must submit within 90 days of installation. Available at tampaelectric.com/save.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-title">⚡ Duke Energy Florida Rebate</div>
+        <div class="rebate-body">Duke Energy FL (formerly Progress Energy FL) offers smart water heater and heat pump WH rebates for residential customers in their service territory (central FL, Pinellas, Pasco, Citrus counties).</div>
+        <div class="rebate-amt">$100–250 rebate</div>
+        <div class="rebate-body" style="margin-top:6px;font-size:0.73rem">Program: Duke Energy Home Energy Improvement. Submit at duke-energy.com/home/products/water-heating.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-title">🏠 IRA HOMES Act — Income-Qualified Rebates</div>
+        <div class="rebate-body">For FL households at 80–150% of area median income (AMI), the IRA HOMES Act provides point-of-sale rebates through participating FL utilities and the FL Department of Agriculture. Higher amounts for lower-income households.</div>
+        <div class="rebate-amt">$1,750–$4,000 (income-qualified)</div>
+        <div class="rebate-body" style="margin-top:6px;font-size:0.73rem">Status: FL program rollout ongoing. Check Florida HOMES rebate portal for current availability in your county.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-title">🌞 FL Solar Water Heater Incentive</div>
+        <div class="rebate-body">FL sales tax exemption on ENERGY STAR solar water heating systems. Combined with the federal 30% ITC (Investment Tax Credit), solar WHs can be cost-effective for FL pool/home applications.</div>
+        <div class="rebate-amt">FL sales tax exempt + 30% federal ITC</div>
+        <div class="rebate-body" style="margin-top:6px;font-size:0.73rem">Florida Statute 212.08(7)(hh) exempts solar energy systems from FL sales tax. Works best for pool heating and supplemental domestic hot water in FL.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🧮</span>Rebate &amp; Payback Summary</div>
+      <table class="code-table">
+        <tr><th>Scenario</th><th>Net Cost</th><th>Annual Savings</th><th>Payback</th></tr>
+        <tr><td>HPWH w/ IRA credit + FPL rebate</td><td>~$700–1,000</td><td>$350–500/yr</td><td>1.5–3 yrs</td></tr>
+        <tr><td>HPWH w/ IRA credit only</td><td>~$1,000–1,400</td><td>$350–500/yr</td><td>2–4 yrs</td></tr>
+        <tr><td>HPWH no incentives</td><td>~$1,400–2,400</td><td>$350–500/yr</td><td>4–6 yrs</td></tr>
+        <tr><td>Gas tankless (no incentive)</td><td>~$1,200–2,500</td><td>$200–350/yr</td><td>5–8 yrs</td></tr>
+        <tr><td>Electric tankless (no incentive)</td><td>~$800–1,800</td><td>$200–350/yr</td><td>3–6 yrs</td></tr>
+      </table>
+      <div class="ok-box"><strong>Best FL play:</strong> Install a heat pump WH, claim the 30% IRA federal tax credit (up to $2,000), stack a utility rebate ($200–$400), and enjoy $350–$500/year in electricity savings. In most cases this is the fastest-payback water heater upgrade available in Florida.</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Free Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📞</span>Get a Free Water Heater Upgrade Quote</div>
+      <div style="font-size:0.82rem;color:#94A3B8;margin-bottom:14px;line-height:1.6">Our licensed FL plumbers install all water heater types — we'll tell you which unit maximizes your rebates, saves the most long-term, and meets FL code requirements including the Citizens Insurance documentation package.</div>
+      <label>Your name</label>
+      <input type="text" id="qName" placeholder="First &amp; last name">
+      <div class="form-row">
+        <div>
+          <label>Phone number</label>
+          <input type="tel" id="qPhone" placeholder="(561) 555-PIPE">
+        </div>
+        <div>
+          <label>County</label>
+          <select id="qCounty">
+            <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+            <option>Hillsborough</option><option>Pinellas</option><option>Orange</option>
+            <option>Lee</option><option>Collier</option><option>Duval</option>
+            <option>Sarasota</option><option>Volusia</option><option>Brevard</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <label>Current water heater type &amp; age</label>
+      <select id="qCurrent">
+        <option>Standard electric storage — under 8 years</option>
+        <option>Standard electric storage — 8–12 years</option>
+        <option>Standard electric storage — 12+ years</option>
+        <option>Gas storage — any age</option>
+        <option>Electric tankless</option>
+        <option>Gas tankless</option>
+        <option>Heat pump — looking to upgrade</option>
+      </select>
+      <label>Primary goal</label>
+      <select id="qGoal">
+        <option>Maximize rebates and lowest cost</option>
+        <option>Lowest energy bills long-term</option>
+        <option>Like-for-like replacement (simple &amp; fast)</option>
+        <option>Citizens Insurance compliance</option>
+        <option>Home sale — need documentation</option>
+        <option>Upgrade before FL insurance renewal</option>
+      </select>
+      <label>Electric utility</label>
+      <select id="qUtility">
+        <option>FPL (Florida Power &amp; Light)</option>
+        <option>TECO (Tampa Electric)</option>
+        <option>Duke Energy Florida</option>
+        <option>Florida Public Utilities</option>
+        <option>Other / Unknown</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Get My Free Quote</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>✅</span>What Our Quote Includes</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ Side-by-side comparison of best units for your home<br>
+        ✅ Net cost after all available rebates and IRA credit<br>
+        ✅ Annual operating cost projection by FL utility rate<br>
+        ✅ Payback period calculation<br>
+        ✅ Panel upgrade assessment (required for some units)<br>
+        ✅ Citizens Insurance compliance letter<br>
+        ✅ Permit pulled and inspection scheduled<br>
+        ✅ Same-day or next-day installation in most FL counties
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! 🔧</div>
+<!-- fl-plumbing-seo: florida water heater energy efficiency comparison heat pump water heater florida FPL rebate TECO rebate Duke Energy rebate heat pump vs tankless florida storage water heater annual cost florida IRA tax credit heat pump water heater 2024 2025 ENERGY STAR water heater florida UEF rating comparison florida water heater upgrade citizens insurance water heater age florida best water heater florida home heat pump water heater garage florida florida water heater rebate program water heater replacement cost florida energy efficient water heater florida tankless water heater florida annual energy cost -->
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+var RATES = { fpl:0.125, teco:0.132, duke:0.138, fpuc:0.142, gulf:0.130, custom:0 };
+var HH_KWH = { '1':2800, '2':3800, '3':5200, '4':6800, '5':8500 };
+var TYPE_EFFICIENCY = {
+  'storage-elec': { uef:0.65, fuel:'elec', name:'Standard Electric Storage' },
+  'storage-gas':  { uef:0.65, fuel:'gas',  name:'Natural Gas Storage' },
+  'tankless-elec':{ uef:0.94, fuel:'elec', name:'Electric Tankless' },
+  'tankless-gas': { uef:0.90, fuel:'gas',  name:'Gas Tankless' },
+  'hpwh':         { uef:3.75, fuel:'elec', name:'Heat Pump Water Heater' }
+};
+document.getElementById('utility').addEventListener('change', function() {
+  document.getElementById('customRateRow').style.display = this.value === 'custom' ? 'block' : 'none';
+});
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  if (e && e.target) e.target.classList.add('active');
+}
+function calcCost() {
+  var utilKey = document.getElementById('utility').value;
+  var rate = utilKey === 'custom' ? (parseFloat(document.getElementById('customRate').value) || 0.13) : RATES[utilKey];
+  var hhKey = document.getElementById('hhSize').value;
+  var curKey = document.getElementById('currentWH').value;
+  var baseKwh = HH_KWH[hhKey];
+  var GAS_RATE = 1.25;
+  function annualCost(typeKey) {
+    var t = TYPE_EFFICIENCY[typeKey];
+    var kwh = baseKwh / t.uef;
+    if (t.fuel === 'gas') {
+      var therms = (kwh * 0.0341) / t.uef;
+      return Math.round(therms * GAS_RATE * 10) / 10;
+    }
+    return Math.round(kwh * rate);
+  }
+  var costs = {
+    'storage-elec': annualCost('storage-elec'),
+    'tankless-elec': annualCost('tankless-elec'),
+    'tankless-gas': annualCost('tankless-gas'),
+    'hpwh': annualCost('hpwh')
+  };
+  var cur = annualCost(curKey);
+  var maxCost = Math.max(...Object.values(costs));
+  var html = '<div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px">Estimated annual water heating cost — <strong style="color:#F97316">' + esc(TYPE_EFFICIENCY[curKey].name) + '</strong> household of ' + esc(document.getElementById('hhSize').selectedOptions[0].text.split(' ')[0]) + ' at $' + rate.toFixed(3) + '/kWh</div>';
+  var types = [
+    ['storage-elec','Standard Electric Storage','#94A3B8'],
+    ['tankless-elec','Electric Tankless','#00B4FF'],
+    ['tankless-gas','Gas Tankless','#14B8A6'],
+    ['hpwh','Heat Pump WH','#22C55E']
+  ];
+  types.forEach(function(t) {
+    var c = costs[t[0]];
+    var pct = Math.round(c / maxCost * 100);
+    var savings = cur - c;
+    var isCur = t[0] === curKey;
+    html += '<div class="cost-bar-wrap"><div class="cost-bar-label"><span>' + esc(t[1]) + (isCur ? ' <span style="color:#F97316">(current)</span>' : '') + '</span><span style="color:' + esc(t[2]) + ';font-weight:700">$' + c.toLocaleString() + '/yr</span></div><div class="cost-bar"><div class="cost-bar-fill" style="width:' + pct + '%;background:' + esc(t[2]) + '"></div></div>';
+    if (!isCur && savings > 50) {
+      html += '<div style="font-size:0.72rem;color:#22C55E;margin-top:2px">Save ~$' + Math.round(savings).toLocaleString() + '/yr vs your current WH</div>';
+    }
+    html += '</div>';
+  });
+  var hpSavings = cur - costs['hpwh'];
+  if (hpSavings > 100) {
+    html += '<div class="ok-box" style="margin-top:10px"><strong>Heat pump WH saves you ~$' + Math.round(hpSavings).toLocaleString() + '/year.</strong> After the IRA 30% tax credit ($' + Math.round(1800*0.3) + '+ savings) and FPL/TECO rebate (~$' + (utilKey==='fpl'?'400':utilKey==='teco'?'300':'200') + '), typical payback is 2–5 years in FL.</div>';
+  }
+  var box = document.getElementById('costResult');
+  box.style.display = 'block';
+  document.getElementById('costBreakdown').innerHTML = html;
+}
+function submitQuote() {
+  var name = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){ t.style.display = 'none'; }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida florida water heater energy comparison FPL TECO Duke heat pump water heater HPWH tankless electric gas savings IRA rebate utility rebate florida water heater efficiency UEF ENERGY STAR water heater upgrade florida 
+</div>
+</body>
+</html>
