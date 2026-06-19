@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**189 interactive cost calculators** for Florida homeowners.
+**192 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -104,6 +104,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pipe Insulation Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-insulation-calc/fl_pipe_insulation_calc.html)
 - [FL Pipe Life Expectancy Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-life-expectancy/fl_pipe_life_expectancy.html)
 - [FL Pipe Lining Vs Bursting Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-lining-vs-bursting/fl_pipe_repair_comparison.html)
+- [FL Pipe Material Comparison Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-material-comparison/fl_pipe_material_comparison.html)
 - [FL Pipe Material Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-material-guide/fl_pipe_material_guide.html)
 - [FL Plumbing Emergency Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-emergency/fl_plumbing_emergency.html)
 - [FL Plumbing Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-inspection/fl_plumbing_inspection.html)
@@ -114,6 +115,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Pool Equipment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-equipment/fl_pool_equipment.html)
 - [FL Pool Heater Gas Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-heater-gas/fl_pool_heater_gas.html)
 - [FL Pool Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-leak/fl_pool_leak.html)
+- [FL Pool Plumbing Calculator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-plumbing-calculator/fl_pool_plumbing_calculator.html)
 - [FL Pool Pump Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-pump-sizing/fl_pool_pump_sizing.html)
 - [FL Presale Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/presale-inspection/fl_presale_inspection.html)
 - [FL Prv Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/prv-replacement/fl_prv_replacement.html)
@@ -132,6 +134,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Septic Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-guide/fl_septic_guide.html)
 - [FL Septic Pumping Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-pumping-calc/fl_septic_pumping_calc.html)
 - [FL Septic System Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-system/fl_septic_system.html)
+- [FL Septic Tank Calculator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-tank-calculator/fl_septic_tank_calculator.html)
 - [FL Septic To Sewer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic-to-sewer/fl_septic_to_sewer.html)
 - [FL Septic Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/septic/fl_septic.html)
 - [FL Sewage Ejector Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sewage-ejector/fl_sewage_ejector.html)

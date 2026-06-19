@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Pipe Material Comparison Calculator | PEX vs CPVC vs Copper | Florida Repipe</title>
+<meta name="description" content="Compare PEX-A, PEX-B, CPVC, and copper pipe for Florida homes. Cost per linear foot, lifespan, corrosion resistance, FL insurance impact. Palm Beach, Broward, Miami-Dade repipe cost estimator. FPC §605 compliance guide.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1400 0%,#1a1700 100%);border-bottom:3px solid #F4B942;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#F4B942;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#F4B94222;color:#F4B942;border:1px solid #F4B94244;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#F4B942;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#F4B942;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#F4B942}
+.btn{width:100%;padding:14px;background:#F4B942;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #F4B94255}
+.tip-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#F4B942}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.info-box{background:#00B4FF11;border:1px solid #00B4FF33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.info-box strong{color:#00B4FF}
+.mat-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.mat-title{font-size:0.88rem;font-weight:800;color:#F4B942;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.mat-sub{font-size:0.72rem;color:#94A3B8;margin-bottom:10px}
+.mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.mat-stat{background:#0F1629;border-radius:6px;padding:8px 10px}
+.mat-stat-label{font-size:0.68rem;color:#94A3B8;margin-bottom:2px}
+.mat-stat-val{font-size:0.82rem;font-weight:700;color:#E2E8F0}
+.mat-stat-val.gold{color:#F4B942}
+.mat-stat-val.green{color:#22C55E}
+.mat-stat-val.red{color:#EF4444}
+.mat-stat-val.orange{color:#F97316}
+.rating-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1E2A4530;font-size:0.75rem}
+.rating-row:last-child{border-bottom:none}
+.rating-label{color:#94A3B8;flex:1}
+.rating-dots{display:flex;gap:3px}
+.dot{width:8px;height:8px;border-radius:50%;background:#1E2A45}
+.dot.fill{background:#F4B942}
+.dot.fill-green{background:#22C55E}
+.dot.fill-red{background:#EF4444}
+.badge-tag{display:inline-block;font-size:0.62rem;font-weight:700;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0}
+.badge-good{background:#22C55E22;color:#22C55E;border:1px solid #22C55E33}
+.badge-warn{background:#F4B94222;color:#F4B942;border:1px solid #F4B94233}
+.badge-bad{background:#EF444422;color:#EF4444;border:1px solid #EF444433}
+.badge-info{background:#00B4FF22;color:#00B4FF;border:1px solid #00B4FF33}
+.compare-table{width:100%;border-collapse:collapse;font-size:0.72rem;margin-top:8px}
+.compare-table th{background:#141929;color:#F4B942;padding:8px 5px;text-align:center;font-size:0.68rem;font-weight:700;border-bottom:1px solid #1E2A45;border-right:1px solid #1E2A45}
+.compare-table th:first-child{text-align:left}
+.compare-table td{padding:7px 5px;border-bottom:1px solid #1E2A4530;border-right:1px solid #1E2A4530;color:#E2E8F0;text-align:center;vertical-align:middle}
+.compare-table td:first-child{text-align:left;color:#94A3B8;font-weight:600}
+.compare-table tr:last-child td{border-bottom:none}
+.result-hero{background:#F4B94211;border:1px solid #F4B94233;border-radius:12px;padding:16px;margin-top:10px;text-align:center}
+.result-range{font-size:1.5rem;font-weight:900;color:#F4B942}
+.result-label{font-size:0.8rem;color:#94A3B8;margin-top:3px}
+.cost-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.cost-row:last-child{border-bottom:none}
+.cost-label{color:#94A3B8;flex:1}
+.cost-val{font-weight:700;color:#E2E8F0;min-width:90px;text-align:right}
+.cost-val.gold{color:#F4B942}
+.step-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45;display:flex;gap:10px;align-items:flex-start}
+.step-num{background:#F4B942;color:#0A0E1A;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;margin-top:1px}
+.step-content{flex:1}
+.step-title{font-size:0.82rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.step-body{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.winner-badge{background:#F4B942;color:#0A0E1A;font-size:0.62rem;font-weight:800;padding:2px 8px;border-radius:4px;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🔧</div>
+  <h1>FL Pipe Material Comparison Calculator</h1>
+  <p>PEX-A · PEX-B · CPVC · Copper · FL water chemistry · Insurance impact · Cost estimator</p>
+  <span class="badge">FPC §605 · South FL Corrosion Guide · Repipe Cost Calculator</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('compare',event)">Material Comparison</button>
+    <button class="tab" onclick="showTab('cost',event)">Cost Calculator</button>
+    <button class="tab" onclick="showTab('lifespan',event)">Lifespan &amp; Warranty</button>
+    <button class="tab" onclick="showTab('quote',event)">Get a Repipe Quote</button>
+  </div>
+
+  <!-- TAB 1: Material Comparison -->
+  <div id="compare" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>🏆</span>FL Pipe Material Ratings at a Glance</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Florida's unique combination of aggressive water chemistry (chloramines, dissolved oxygen, variable pH) and high humidity makes pipe material selection critical. This guide reflects real-world FL performance — not just manufacturer specs.</div>
+      <div class="warn-box"><strong>⚠️ FL-Specific Alert:</strong> South Florida water (Palm Beach, Broward, Miami-Dade) is especially aggressive to copper pipe. Homes with Type M copper and aggressive water have experienced pinhole leaks in as few as 8–12 years. FL homeowners insurers are increasingly surcharging or non-renewing copper-piped homes.</div>
+    </div>
+
+    <!-- PEX-A -->
+    <div class="mat-card">
+      <div class="mat-title">
+        <span>PEX-A (Cross-Linked Polyethylene)</span>
+        <span class="winner-badge">FL TOP PICK</span>
+      </div>
+      <div class="mat-sub">Brands: Uponor/Wirsbo, Rehau · FPC §605.4 Approved</div>
+      <div class="mat-grid">
+        <div class="mat-stat"><div class="mat-stat-label">Material Cost / LF</div><div class="mat-stat-val gold">$0.60–$1.10</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Labor / LF</div><div class="mat-stat-val">$1.80–$3.20</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">FL Lifespan</div><div class="mat-stat-val green">50+ years</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Warranty (typical)</div><div class="mat-stat-val">25 years</div></div>
+      </div>
+      <div class="rating-row"><span class="rating-label">FL Corrosion Resistance</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div></div></div>
+      <div class="rating-row"><span class="rating-label">Hurricane / Thermal Flex</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div></div></div>
+      <div class="rating-row"><span class="rating-label">FL Insurance Impact</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot"></div></div></div>
+      <div class="rating-row"><span class="rating-label">Installation Ease (FL contractors)</span><div class="rating-dots"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div></div></div>
+      <div style="margin-top:8px">
+        <span class="badge-good">✓ Immune to FL water chemistry</span>
+        <span class="badge-good">✓ Freeze-expandable</span>
+        <span class="badge-good">✓ FL insurer preferred</span>
+        <span class="badge-good">✓ No solder joints inside walls</span>
+        <span class="badge-warn">⚠ UV sensitive — no outdoor use</span>
+        <span class="badge-warn">⚠ Expansion tool required</span>
+      </div>
+      <div class="tip-box" style="margin-top:8px"><strong>FL Pro Note:</strong> PEX-A is the most flexible PEX grade and handles thermal expansion from FL's temperature swings (+85°F days to +30°F cold snaps in North FL) better than any rigid pipe. The Uponor Wirsbo expansion system creates joints that actually get stronger over time.</div>
+    </div>
+
+    <!-- PEX-B -->
+    <div class="mat-card">
+      <div class="mat-title">PEX-B (Crosslinked Polyethylene — Silane Method)</div>
+      <div class="mat-sub">Brands: SharkBite, Apollo, IPEX · FPC §605.4 Approved</div>
+      <div class="mat-grid">
+        <div class="mat-stat"><div class="mat-stat-label">Material Cost / LF</div><div class="mat-stat-val gold">$0.45–$0.85</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Labor / LF</div><div class="mat-stat-val">$1.60–$2.90</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">FL Lifespan</div><div class="mat-stat-val green">40–50 years</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Warranty (typical)</div><div class="mat-stat-val">10–25 years</div></div>
+      </div>
+      <div class="rating-row"><span class="rating-label">FL Corrosion Resistance</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div></div></div>
+      <div class="rating-row"><span class="rating-label">Hurricane / Thermal Flex</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot"></div></div></div>
+      <div class="rating-row"><span class="rating-label">FL Insurance Impact</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot"></div></div></div>
+      <div style="margin-top:8px">
+        <span class="badge-good">✓ Lowest-cost PEX option</span>
+        <span class="badge-good">✓ Widely available at FL suppliers</span>
+        <span class="badge-good">✓ Crimp fittings — DIY-friendly</span>
+        <span class="badge-warn">⚠ Less flexible than PEX-A</span>
+        <span class="badge-warn">⚠ UV sensitive — indoor/sleeve use only</span>
+      </div>
+    </div>
+
+    <!-- CPVC -->
+    <div class="mat-card">
+      <div class="mat-title">CPVC (Chlorinated Polyvinyl Chloride)</div>
+      <div class="mat-sub">Brands: FlowGuard Gold, Blazemaster · FPC §605.4 Approved</div>
+      <div class="mat-grid">
+        <div class="mat-stat"><div class="mat-stat-label">Material Cost / LF</div><div class="mat-stat-val gold">$0.55–$1.00</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Labor / LF</div><div class="mat-stat-val">$1.50–$2.80</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">FL Lifespan</div><div class="mat-stat-val green">50–75 years</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Warranty (typical)</div><div class="mat-stat-val">10 years</div></div>
+      </div>
+      <div class="rating-row"><span class="rating-label">FL Corrosion Resistance</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div></div></div>
+      <div class="rating-row"><span class="rating-label">Hurricane / Thermal Flex</span><div class="rating-dots"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div><div class="dot"></div></div></div>
+      <div class="rating-row"><span class="rating-label">FL Insurance Impact</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot"></div></div></div>
+      <div style="margin-top:8px">
+        <span class="badge-good">✓ UV-stable — outdoor use OK</span>
+        <span class="badge-good">✓ Reclaimed water approved (most FL jurisdictions)</span>
+        <span class="badge-good">✓ 50+ year FL track record</span>
+        <span class="badge-warn">⚠ Brittle — can crack if struck</span>
+        <span class="badge-warn">⚠ Thermal expansion offsets required</span>
+        <span class="badge-bad">✗ Poor freeze resistance (minor FL concern)</span>
+      </div>
+      <div class="tip-box" style="margin-top:8px"><strong>FL Note:</strong> CPVC has been installed in South Florida homes since the 1980s. FlowGuard Gold is chlorine-resistant by design and handles FL water chemistry well. A good choice when outdoor lines or reclaimed water compatibility is needed.</div>
+    </div>
+
+    <!-- Copper L -->
+    <div class="mat-card">
+      <div class="mat-title">
+        <span>Type L Copper (Medium Wall)</span>
+      </div>
+      <div class="mat-sub">Identified by blue stripe · FPC §605.4 Approved · High cost, FL corrosion risk</div>
+      <div class="mat-grid">
+        <div class="mat-stat"><div class="mat-stat-label">Material Cost / LF</div><div class="mat-stat-val orange">$3.50–$6.50</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Labor / LF</div><div class="mat-stat-val">$4.00–$7.00</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">FL Lifespan</div><div class="mat-stat-val orange">30–50 years</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Warranty</div><div class="mat-stat-val">None (material)</div></div>
+      </div>
+      <div class="rating-row"><span class="rating-label">FL Corrosion Resistance</span><div class="rating-dots"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div><div class="dot"></div></div></div>
+      <div class="rating-row"><span class="rating-label">Hurricane / Thermal Flex</span><div class="rating-dots"><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div><div class="dot fill-green"></div></div></div>
+      <div class="rating-row"><span class="rating-label">FL Insurance Impact</span><div class="rating-dots"><div class="dot fill"></div><div class="dot fill"></div><div class="dot fill"></div><div class="dot"></div><div class="dot"></div></div></div>
+      <div style="margin-top:8px">
+        <span class="badge-good">✓ Structurally rigid and durable</span>
+        <span class="badge-good">✓ Outdoor use approved</span>
+        <span class="badge-warn">⚠ 3–5x cost of PEX</span>
+        <span class="badge-bad">✗ FL water chemistry causes pitting over time</span>
+        <span class="badge-bad">✗ FL insurer concerns for aging copper</span>
+      </div>
+    </div>
+
+    <!-- Copper M -->
+    <div class="mat-card">
+      <div class="mat-title">
+        <span>Type M Copper (Thin Wall)</span>
+        <span class="badge-bad" style="font-size:0.62rem;padding:2px 8px;border-radius:4px">NOT RECOMMENDED IN FL</span>
+      </div>
+      <div class="mat-sub">Identified by red stripe · FPC §605.4 Technically Permitted · High FL failure risk</div>
+      <div class="mat-grid">
+        <div class="mat-stat"><div class="mat-stat-label">Material Cost / LF</div><div class="mat-stat-val orange">$2.80–$5.50</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Labor / LF</div><div class="mat-stat-val">$4.00–$7.00</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">FL Lifespan</div><div class="mat-stat-val red">15–25 years</div></div>
+        <div class="mat-stat"><div class="mat-stat-label">Warranty</div><div class="mat-stat-val">None</div></div>
+      </div>
+      <div class="rating-row"><span class="rating-label">FL Corrosion Resistance</span><div class="rating-dots"><div class="dot fill-red"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      <div class="rating-row"><span class="rating-label">FL Insurance Impact</span><div class="rating-dots"><div class="dot fill-red"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      <div style="margin-top:8px">
+        <span class="badge-bad">✗ High FL pinhole leak risk (8–20 yrs)</span>
+        <span class="badge-bad">✗ FL insurers surcharging/non-renewing</span>
+        <span class="badge-bad">✗ Chloramines accelerate pitting</span>
+        <span class="badge-good">✓ Recyclable</span>
+      </div>
+      <div class="warn-box" style="margin-top:8px"><strong>⚠ FL Homeowner Alert:</strong> If your home was built between 1970–2000 with copper, have a plumber assess your pipe wall thickness. Type M copper in South FL's water frequently fails prematurely. Many FL insurance companies now require disclosure of copper pipe age and material type.</div>
+    </div>
+
+    <!-- Galvanized -->
+    <div class="mat-card">
+      <div class="mat-title">
+        <span>Galvanized Steel</span>
+        <span class="badge-bad" style="font-size:0.62rem;padding:2px 8px;border-radius:4px">REPLACE IMMEDIATELY</span>
+      </div>
+      <div class="mat-sub">Legacy material · Pre-1990s construction only · Not permitted for new FL work</div>
+      <div class="warn-box"><strong>🚨 Critical:</strong> Galvanized steel pipe in Florida is at or past end-of-life. FL's humidity and water chemistry causes severe internal rust, flow restriction, and pipe failure. FL homeowners insurers routinely deny claims or issue non-renewals for homes with galvanized supply pipe. Replace with PEX or CPVC immediately.</div>
+    </div>
+
+    <!-- Quick Compare Table -->
+    <div class="card">
+      <div class="card-title"><span>📊</span>Quick Comparison Table</div>
+      <div style="overflow-x:auto">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;min-width:80px">Criteria</th>
+              <th>PEX-A</th>
+              <th>PEX-B</th>
+              <th>CPVC</th>
+              <th>L Copper</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>FL Water Resistance</td><td style="color:#22C55E">Excellent</td><td style="color:#22C55E">Excellent</td><td style="color:#22C55E">Excellent</td><td style="color:#F4B942">Fair</td></tr>
+            <tr><td>Outdoor Use</td><td style="color:#EF4444">No</td><td style="color:#EF4444">No</td><td style="color:#22C55E">Yes</td><td style="color:#22C55E">Yes</td></tr>
+            <tr><td>Reclaimed Water</td><td style="color:#F4B942">Check AHJ</td><td style="color:#F4B942">Check AHJ</td><td style="color:#22C55E">Yes</td><td style="color:#22C55E">Yes</td></tr>
+            <tr><td>Material Cost/LF</td><td style="color:#22C55E">$0.60–$1.10</td><td style="color:#22C55E">$0.45–$0.85</td><td style="color:#22C55E">$0.55–$1.00</td><td style="color:#EF4444">$3.50–$6.50</td></tr>
+            <tr><td>FL Insurance</td><td style="color:#22C55E">Preferred</td><td style="color:#22C55E">Favorable</td><td style="color:#22C55E">Neutral+</td><td style="color:#F4B942">Fair</td></tr>
+            <tr><td>FL Lifespan</td><td style="color:#22C55E">50+ yrs</td><td style="color:#22C55E">40–50 yrs</td><td style="color:#22C55E">50–75 yrs</td><td style="color:#F4B942">30–50 yrs</td></tr>
+            <tr><td>FL Code Status</td><td style="color:#22C55E">Approved</td><td style="color:#22C55E">Approved</td><td style="color:#22C55E">Approved</td><td style="color:#22C55E">Approved</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Cost Calculator -->
+  <div id="cost" class="panel">
+    <div class="card">
+      <div class="card-title"><span>💰</span>Repipe Cost Estimator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Estimate your total repipe cost based on home size, pipe material, and FL county. Includes materials, labor, wall patching, and permit fees.</div>
+      <label>Home size</label>
+      <select id="homeSize">
+        <option value="">Select home size...</option>
+        <option value="small">Small home — under 1,200 sq ft</option>
+        <option value="medium">Medium home — 1,200–2,000 sq ft</option>
+        <option value="large">Large home — 2,000–3,000 sq ft</option>
+        <option value="xlarge">Large home — 3,000–4,500 sq ft</option>
+        <option value="estate">Estate — 4,500+ sq ft</option>
+      </select>
+      <label>Number of bathrooms</label>
+      <select id="bathCount">
+        <option value="1">1 bathroom</option>
+        <option value="2" selected>2 bathrooms</option>
+        <option value="3">3 bathrooms</option>
+        <option value="4">4 bathrooms</option>
+        <option value="5">5+ bathrooms</option>
+      </select>
+      <label>Pipe material for repipe</label>
+      <select id="pipemat">
+        <option value="pex_a">PEX-A (Uponor/Wirsbo) — Best FL option</option>
+        <option value="pex_b">PEX-B (SharkBite/Apollo) — Budget PEX</option>
+        <option value="cpvc">CPVC (FlowGuard Gold) — FL proven</option>
+        <option value="copper_l">Type L Copper — Premium, highest cost</option>
+      </select>
+      <label>Florida county / region</label>
+      <select id="flCounty">
+        <option value="pbc">Palm Beach County</option>
+        <option value="broward">Broward County</option>
+        <option value="mdade">Miami-Dade County</option>
+        <option value="hillsborough">Hillsborough County (Tampa)</option>
+        <option value="orange">Orange County (Orlando)</option>
+        <option value="pinellas">Pinellas County (St. Pete / Clearwater)</option>
+        <option value="lee">Lee County (Fort Myers)</option>
+        <option value="collier">Collier County (Naples)</option>
+        <option value="duval">Duval County (Jacksonville)</option>
+        <option value="sarasota">Sarasota County</option>
+        <option value="other">Other FL County</option>
+      </select>
+      <label>Current pipe material being replaced</label>
+      <select id="currentPipe">
+        <option value="copper_m">Type M Copper (red stripe) — most common issue</option>
+        <option value="copper_l">Type L Copper (blue stripe)</option>
+        <option value="galvanized">Galvanized Steel — urgent replacement</option>
+        <option value="cpvc_old">CPVC (older brittle)</option>
+        <option value="poly">Polybutylene (gray plastic) — recall pipe</option>
+        <option value="pex_old">PEX (old install, unknown brand)</option>
+        <option value="other">Other / Unknown</option>
+      </select>
+      <button class="btn" onclick="calcRepipe()">Estimate Repipe Cost</button>
+      <div class="result-box" id="repipeResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📋</span>Cost Breakdown by Scope</div>
+      <div class="tip-box"><strong>FL Repipe Cost Components:</strong> A complete FL home repipe includes several line items beyond pipe material. Understanding each helps you compare contractor bids fairly.</div>
+      <div style="margin-top:12px">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Pipe &amp; Fittings Material</div>
+            <div class="step-body">PEX: $0.45–$1.10/LF material + expansion/crimp fittings. CPVC: $0.55–$1.00/LF material + solvent-weld fittings. Copper L: $3.50–$6.50/LF material + solder fittings. Typical home uses 150–400 LF of supply pipe.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Labor — Rough-In Installation</div>
+            <div class="step-body">PEX labor runs $1.60–$3.20/LF installed. Copper labor runs $4.00–$7.00/LF (requires open flame, more skill). Most FL repiping crews complete a 3/2 home in 1–2 days for PEX, 2–3 days for copper.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Wall Access &amp; Drywall Patching</div>
+            <div class="step-body">Accessing existing supply lines requires cutting drywall in strategic locations. Patching adds $800–$2,500 to a typical repipe. PEX flex routing often requires fewer wall cuts than copper.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">FL Plumbing Permit</div>
+            <div class="step-body">FL requires a permit for full repiping. Permit cost: $150–$1,200+ depending on county and home value. Palm Beach County: $350–$1,200. Broward: $300–$900. Miami-Dade: $400–$1,500. Always verify permit is pulled — unlicensed repipes create insurance and resale issues.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Water Heater &amp; Appliance Connections</div>
+            <div class="step-body">Connecting water heater, washing machine, dishwasher, ice maker, and exterior hose bibs. Add $200–$600 depending on count and accessibility.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-title">Cleanup &amp; Water Restoration</div>
+            <div class="step-body">After rough-in and inspection, restoring water service, pressure testing, and verifying all fixtures. Typically included in repipe quotes from reputable FL contractors.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🏦</span>FL Insurance Savings from Repiping</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Many FL homeowners see significant insurance savings after repiping from copper to PEX or CPVC. Actual savings vary by insurer and county.</div>
+      <div class="ok-box"><strong>Reported FL Insurance Benefits After PEX Repipe:</strong><br>• Annual premium reduction: $200–$800/year (varies widely by insurer)<br>• Avoidance of non-renewal for copper pipe<br>• Lower deductibles for water damage claims<br>• Improved insurability for resale<br><br>At $500/year savings, a $6,500 repipe pays back in about 13 years — while also protecting against catastrophic water damage losses that can run $20,000–$80,000+.</div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Lifespan & Warranty -->
+  <div id="lifespan" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📅</span>FL Pipe Lifespan Guide</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Pipe lifespans in Florida are significantly affected by water chemistry, humidity, and UV exposure. These estimates reflect real-world FL performance, not lab specs.</div>
+
+      <div style="font-size:0.8rem;font-weight:700;color:#F4B942;margin-bottom:8px">PEX-A / PEX-B (Modern Standard)</div>
+      <div class="cost-row"><span class="cost-label">Expected FL service life</span><span class="cost-val gold">50–70 years</span></div>
+      <div class="cost-row"><span class="cost-label">Manufacturer warranty (typical)</span><span class="cost-val">25 years</span></div>
+      <div class="cost-row"><span class="cost-label">FL water chemistry impact</span><span class="cost-val green">None — immune to chloramine/pH</span></div>
+      <div class="cost-row"><span class="cost-label">FL humidity impact</span><span class="cost-val green">None — no external corrosion</span></div>
+      <div class="cost-row"><span class="cost-label">UV degradation</span><span class="cost-val red">Significant — must be sleeved outdoors</span></div>
+      <div class="cost-row"><span class="cost-label">First failure mode in FL</span><span class="cost-val">Fitting joint (not pipe body)</span></div>
+      <div class="cost-row"><span class="cost-label">End-of-life indicator</span><span class="cost-val">Fitting discoloration, slight flex loss</span></div>
+      <div class="tip-box"><strong>Uponor (PEX-A) Warranty Note:</strong> Uponor offers a 25-year system warranty on their AquaPEX pipe and ProPEX fittings when installed by an Uponor registered contractor. This covers the entire piping system — one of the best warranties in the industry.</div>
+
+      <div style="font-size:0.8rem;font-weight:700;color:#F4B942;margin-bottom:8px;margin-top:16px">CPVC (FlowGuard Gold)</div>
+      <div class="cost-row"><span class="cost-label">Expected FL service life</span><span class="cost-val gold">50–75 years</span></div>
+      <div class="cost-row"><span class="cost-label">Manufacturer warranty</span><span class="cost-val">10 years</span></div>
+      <div class="cost-row"><span class="cost-label">FL water chemistry impact</span><span class="cost-val green">None — chlorine resistant</span></div>
+      <div class="cost-row"><span class="cost-label">UV degradation</span><span class="cost-val green">Minimal — UV stable</span></div>
+      <div class="cost-row"><span class="cost-label">Brittleness concern</span><span class="cost-val orange">Yes — avoid impact, cold temps</span></div>
+      <div class="cost-row"><span class="cost-label">Chemical compatibility</span><span class="cost-val orange">Avoid certain solvents/cleaners near pipe</span></div>
+      <div class="cost-row"><span class="cost-label">First failure mode in FL</span><span class="cost-val">Impact crack, poor solvent joint</span></div>
+
+      <div style="font-size:0.8rem;font-weight:700;color:#F4B942;margin-bottom:8px;margin-top:16px">Type L Copper</div>
+      <div class="cost-row"><span class="cost-label">Expected FL service life</span><span class="cost-val orange">30–50 years</span></div>
+      <div class="cost-row"><span class="cost-label">Warranty</span><span class="cost-val">None (material warranty only)</span></div>
+      <div class="cost-row"><span class="cost-label">South FL water impact</span><span class="cost-val orange">Moderate — pitting over time</span></div>
+      <div class="cost-row"><span class="cost-label">Chloramine sensitivity</span><span class="cost-val red">High — accelerates internal corrosion</span></div>
+      <div class="cost-row"><span class="cost-label">First failure mode in FL</span><span class="cost-val">Pinhole leak at pitting site</span></div>
+
+      <div style="font-size:0.8rem;font-weight:700;color:#F4B942;margin-bottom:8px;margin-top:16px">Type M Copper</div>
+      <div class="cost-row"><span class="cost-label">Expected FL service life</span><span class="cost-val red">10–25 years</span></div>
+      <div class="cost-row"><span class="cost-label">South FL water impact</span><span class="cost-val red">Severe — pinhole leaks common in 10–15 yrs</span></div>
+      <div class="cost-row"><span class="cost-label">Insurance status</span><span class="cost-val red">Surcharge / non-renewal risk</span></div>
+      <div class="cost-row"><span class="cost-label">Recommendation</span><span class="cost-val red">Replace — do not repair holes</span></div>
+      <div class="warn-box" style="margin-top:8px"><strong>When to Replace vs. Repair M Copper in FL:</strong> If you have Type M copper with a pinhole leak in South Florida, repair is a band-aid. The same water chemistry attacking one spot is attacking the entire system. Get a full repipe quote — multiple repairs over 2–3 years often cost more than a complete PEX repipe.</div>
+
+      <div style="font-size:0.8rem;font-weight:700;color:#EF4444;margin-bottom:8px;margin-top:16px">Galvanized Steel (Legacy)</div>
+      <div class="cost-row"><span class="cost-label">Typical FL install era</span><span class="cost-val">Pre-1970 to early 1980s</span></div>
+      <div class="cost-row"><span class="cost-label">Current status</span><span class="cost-val red">At or past end of life</span></div>
+      <div class="cost-row"><span class="cost-label">FL water impact</span><span class="cost-val red">Severe internal rust buildup</span></div>
+      <div class="cost-row"><span class="cost-label">Insurance status</span><span class="cost-val red">High non-renewal / claim denial risk</span></div>
+      <div class="cost-row"><span class="cost-label">Signs of failure</span><span class="cost-val">Low pressure, brown/rust-colored water, slow drains from sediment</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🏠</span>FL FPC §605 Pipe Code Reference</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:8px;line-height:1.5">The Florida Plumbing Code (FPC) Chapter 6 governs pipe material selection. Key provisions for supply pipe:</div>
+      <div class="step-card">
+        <div class="step-num" style="background:#F4B942;color:#0A0E1A">§</div>
+        <div class="step-content">
+          <div class="step-title">FPC §605.1 — Water Service Pipe</div>
+          <div class="step-body">Water service pipe from the meter to the building must be rated for the pressure and buried depth. Approved materials include PEX, CPVC, copper, and ductile iron. Polybutylene (gray flexible plastic) was recalled and is not permitted.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num" style="background:#F4B942;color:#0A0E1A">§</div>
+        <div class="step-content">
+          <div class="step-title">FPC §605.3 — Water Distribution Pipe</div>
+          <div class="step-body">Interior distribution pipe must meet ASTM standards by material: PEX (ASTM F876/F877), CPVC (ASTM D2846), Copper (ASTM B88). All connections must use listed fittings compatible with the pipe material — do not mix copper and CPVC without transition fittings.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num" style="background:#F4B942;color:#0A0E1A">§</div>
+        <div class="step-content">
+          <div class="step-title">FPC §605.4 — Fittings &amp; Listed Status</div>
+          <div class="step-body">All pipe fittings must be listed by a recognized testing lab (NSF, IAPMO). For PEX: use manufacturer-matched fittings (expansion fittings for PEX-A, crimp/clamp for PEX-B). Mixing PEX-A expansion fittings with PEX-B pipe is not code-compliant.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num" style="background:#F4B942;color:#0A0E1A">§</div>
+        <div class="step-content">
+          <div class="step-title">FPC §605.9 — Joints and Connections</div>
+          <div class="step-body">Mechanical joints (push-fit, compression) are permitted for most pipe types. Solvent-weld joints require listed solvent cement for CPVC. Solder joints for copper require lead-free solder per EPA requirements — all FL plumbing must use lead-free materials per FPC §605.2.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Get a Repipe Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📞</span>Get Your Free Repipe Quote</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">Get a same-day quote from a licensed FL plumbing contractor. We'll assess your current pipe condition, recommend the best material for your water chemistry and insurance situation, and provide a detailed written estimate.</div>
+      <div class="ok-box"><strong>✅ What's included in our free assessment:</strong><br>• Pipe material identification and age estimate<br>• Water chemistry test (hard water, pH, chloramine levels)<br>• Insurance impact review for your FL county<br>• Written line-item repipe quote<br>• Permit fee estimate for your jurisdiction</div>
+      <label>Your name</label>
+      <input type="text" id="qName" placeholder="Full name">
+      <label>Phone number</label>
+      <input type="tel" id="qPhone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div>
+          <label>Home ZIP code</label>
+          <input type="text" id="qZip" placeholder="33401">
+        </div>
+        <div>
+          <label>Home age (approx.)</label>
+          <select id="qAge">
+            <option value="">Year built</option>
+            <option value="pre1980">Before 1980</option>
+            <option value="1980_1995">1980–1995</option>
+            <option value="1996_2005">1996–2005</option>
+            <option value="2006_2015">2006–2015</option>
+            <option value="post2015">2015 or newer</option>
+          </select>
+        </div>
+      </div>
+      <label>Current pipe material (if known)</label>
+      <select id="qPipe">
+        <option value="">Select if known</option>
+        <option value="copper_m">Copper — Type M (thin wall, red stripe)</option>
+        <option value="copper_l">Copper — Type L (medium wall, blue stripe)</option>
+        <option value="galvanized">Galvanized steel — rusty water / low pressure</option>
+        <option value="cpvc">CPVC (cream/tan colored plastic)</option>
+        <option value="polybutylene">Polybutylene (gray flexible plastic)</option>
+        <option value="pex">PEX (red/blue flexible plastic)</option>
+        <option value="unknown">Unknown / need assessment</option>
+      </select>
+      <label>Primary concern</label>
+      <select id="qConcern">
+        <option value="pinhole">Pinhole leaks in copper</option>
+        <option value="insurance">Insurance non-renewal or surcharge</option>
+        <option value="lowpressure">Low water pressure / rusty water</option>
+        <option value="preventive">Preventive repipe before problems start</option>
+        <option value="selling">Preparing home for sale</option>
+        <option value="remodel">Remodel / addition requires repipe</option>
+        <option value="other">Other</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Request Free Repipe Assessment</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚡</span>Emergency Leak Response</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Active pinhole leak or pipe burst? We offer emergency plumbing response 24/7 across Palm Beach, Broward, and Miami-Dade counties.</div>
+      <div class="warn-box"><strong>Active leak steps:</strong> (1) Shut off water at main valve (typically near meter at street). (2) Turn off water heater breaker or gas valve. (3) Open lowest faucet to drain pressure. (4) Call us immediately — do not attempt copper repairs without turning off the water supply first.</div>
+      <div style="text-align:center;margin-top:14px">
+        <div style="font-size:1.4rem;font-weight:900;color:#F4B942">(561) 555-PIPE</div>
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:4px">24/7 Emergency · Licensed &amp; Insured · All FL Counties</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+function showTab(id,e){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  e.target.classList.add('active');
+}
+
+var COST_DATA = {
+  pex_a:    {mat:[0.60,1.10], labor:[1.80,3.20], name:'PEX-A'},
+  pex_b:    {mat:[0.45,0.85], labor:[1.60,2.90], name:'PEX-B'},
+  cpvc:     {mat:[0.55,1.00], labor:[1.50,2.80], name:'CPVC'},
+  copper_l: {mat:[3.50,6.50], labor:[4.00,7.00], name:'Type L Copper'}
+};
+
+var LF_DATA = {
+  small:  [100,180, 'Under 1,200 sq ft'],
+  medium: [180,280, '1,200–2,000 sq ft'],
+  large:  [280,400, '2,000–3,000 sq ft'],
+  xlarge: [400,550, '3,000–4,500 sq ft'],
+  estate: [550,800, '4,500+ sq ft']
+};
+
+var COUNTY_MULT = {
+  pbc:1.15, broward:1.18, mdade:1.22, hillsborough:1.05,
+  orange:1.00, pinellas:1.05, lee:1.02, collier:1.20,
+  duval:0.95, sarasota:1.05, other:1.00
+};
+
+var PERMIT_DATA = {
+  pbc:'$350–$1,200', broward:'$300–$900', mdade:'$400–$1,500',
+  hillsborough:'$200–$800', orange:'$200–$700', pinellas:'$200–$750',
+  lee:'$150–$600', collier:'$400–$1,400', duval:'$150–$500',
+  sarasota:'$200–$650', other:'$150–$900'
+};
+
+var BATH_ADDER = {1:0, 2:800, 3:1600, 4:2500, 5:3500};
+
+function calcRepipe(){
+  var sz = document.getElementById('homeSize').value;
+  var baths = document.getElementById('bathCount').value;
+  var mat = document.getElementById('pipemat').value;
+  var county = document.getElementById('flCounty').value;
+  var curPipe = document.getElementById('currentPipe').value;
+  if(!sz||!mat){alert('Please select home size and pipe material.');return;}
+  var lfd = LF_DATA[sz];
+  var cd = COST_DATA[mat];
+  var mult = COUNTY_MULT[county]||1.0;
+  var bathAdd = BATH_ADDER[baths]||3500;
+  var loLF = lfd[0]; var hiLF = lfd[1];
+  var loMat = loLF*cd.mat[0]; var hiMat = hiLF*cd.mat[1];
+  var loLab = loLF*cd.labor[0]; var hiLab = hiLF*cd.labor[1];
+  var loWall = 600; var hiWall = 2500;
+  var loTotal = Math.round((loMat+loLab+loWall+bathAdd)*mult/100)*100;
+  var hiTotal = Math.round((hiMat+hiLab+hiWall+bathAdd)*mult/100)*100;
+  var permitStr = PERMIT_DATA[county]||'$150–$900';
+  var urgencyMsg = '';
+  if(curPipe==='galvanized'){urgencyMsg = '<div class="warn-box" style="margin-top:10px"><strong>🚨 Galvanized Alert:</strong> Galvanized pipe is a serious FL insurance and safety concern. Most FL insurers require full replacement. Get quotes from multiple contractors and start the permit process ASAP.</div>';}
+  else if(curPipe==='copper_m'){urgencyMsg = '<div class="warn-box" style="margin-top:10px"><strong>⚠ Type M Copper Alert:</strong> Type M copper in South FL water is high-risk. If you have existing pinhole leaks, full repipe is more cost-effective than repeated repairs. FL insurers are increasingly surcharging or non-renewing copper-piped homes.</div>';}
+  else if(curPipe==='poly'){urgencyMsg = '<div class="warn-box" style="margin-top:10px"><strong>⚠ Polybutylene Alert:</strong> Polybutylene pipe was subject to a national recall. FL insurers often will not insure homes with poly pipe. Replace immediately.</div>';}
+  var html = '<div class="result-hero"><div class="result-range">$'+loTotal.toLocaleString()+' – $'+hiTotal.toLocaleString()+'</div><div class="result-label">Total estimated repipe cost ('+cd.name+') · '+lfd[2]+' · '+baths+' bath</div></div>';
+  html += '<div style="margin-top:14px">';
+  html += '<div class="cost-row"><span class="cost-label">Pipe material ('+loLF+'–'+hiLF+' LF × $'+cd.mat[0]+'–$'+cd.mat[1]+'/LF)</span><span class="cost-val">$'+Math.round(loMat).toLocaleString()+' – $'+Math.round(hiMat).toLocaleString()+'</span></div>';
+  html += '<div class="cost-row"><span class="cost-label">Labor — rough-in installation</span><span class="cost-val">$'+Math.round(loLab).toLocaleString()+' – $'+Math.round(hiLab).toLocaleString()+'</span></div>';
+  html += '<div class="cost-row"><span class="cost-label">Wall cuts &amp; drywall patching</span><span class="cost-val">$600 – $2,500</span></div>';
+  html += '<div class="cost-row"><span class="cost-label">Bathroom &amp; fixture connections</span><span class="cost-val">$'+bathAdd.toLocaleString()+'</span></div>';
+  html += '<div class="cost-row"><span class="cost-label">FL permit ('+county.toUpperCase()+' — paid separately)</span><span class="cost-val gold">'+permitStr+'</span></div>';
+  html += '<div class="cost-row"><span class="cost-label">County labor adjustment (×'+mult.toFixed(2)+')</span><span class="cost-val">Applied above</span></div>';
+  html += '<div class="cost-row"><span class="cost-label"><strong>ESTIMATED TOTAL (ex. permit)</strong></span><span class="cost-val gold"><strong>$'+loTotal.toLocaleString()+' – $'+hiTotal.toLocaleString()+'</strong></span></div>';
+  html += '</div>';
+  html += '<div class="tip-box" style="margin-top:10px"><strong>Get multiple quotes:</strong> Repipe pricing varies significantly between contractors. Get at least 3 written quotes. Ensure each quote specifies: pipe brand/grade, fitting type, wall patching scope, warranty terms, and whether permit is included.</div>';
+  html += urgencyMsg;
+  var rb = document.getElementById('repipeResult');
+  rb.innerHTML = html;
+  rb.style.display = 'block';
+}
+
+function submitQuote(){
+  var name = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  showToast('We\'ll call you within 2 hours!');
+}
+
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply pipe-material-comparison PEX-A PEX-B CPVC copper repipe plumbing Florida PBC Broward Miami-Dade Palm Beach County plumber repiping cost calculator FL FPC Section 605 corrosion hurricane insurance savings pipe material lifespan warranty plumbing permit South Florida water supply 
+</div>
+</body>
+</html>

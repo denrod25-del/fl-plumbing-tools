@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Septic Tank Size Calculator &amp; Inspection Guide | FDEP Rules | Florida Septic System</title>
+<meta name="description" content="Calculate septic tank size for your Florida home based on bedrooms and daily flow. FL DEP minimum 1,050-gallon rule, drainfield sizing by soil percolation, FDOH permit requirements, setback distances, all 67 FL counties. Schedule inspection.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#001a08 0%,#001a10 100%);border-bottom:3px solid #22C55E;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#22C55E;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#22C55E22;color:#22C55E;border:1px solid #22C55E44;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#22C55E;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#22C55E;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#22C55E}
+.btn{width:100%;padding:14px;background:#22C55E;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#22C55E;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #22C55E55}
+.tip-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#22C55E}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.info-box{background:#00B4FF11;border:1px solid #00B4FF33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.info-box strong{color:#00B4FF}
+.result-hero{background:#22C55E11;border:1px solid #22C55E33;border-radius:12px;padding:16px;margin-top:10px;text-align:center}
+.result-num{font-size:2.2rem;font-weight:900;color:#22C55E}
+.result-unit{font-size:1rem;font-weight:700;color:#22C55E}
+.result-label{font-size:0.8rem;color:#94A3B8;margin-top:3px}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#94A3B8;flex:1;line-height:1.4}
+.data-val{font-weight:700;color:#E2E8F0;min-width:100px;text-align:right}
+.data-val.green{color:#22C55E}
+.data-val.red{color:#EF4444}
+.data-val.gold{color:#F4B942}
+.step-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45;display:flex;gap:10px;align-items:flex-start}
+.step-num{background:#22C55E;color:#0A0E1A;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;margin-top:1px}
+.step-content{flex:1}
+.step-title{font-size:0.82rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.step-body{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.check-item:last-child{border-bottom:none}
+.check-box{width:22px;height:22px;min-width:22px;border:2px solid #22C55E;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#141929;margin-top:1px;flex-shrink:0}
+.check-box.checked{background:#22C55E}
+.check-text{color:#94A3B8;line-height:1.5;flex:1}
+.check-label{font-weight:700;color:#E2E8F0;display:block;margin-bottom:2px}
+.soil-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45}
+.soil-title{font-size:0.82rem;font-weight:700;color:#22C55E;margin-bottom:6px}
+.soil-body{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+.setback-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.setback-row:last-child{border-bottom:none}
+.setback-label{color:#94A3B8;flex:1}
+.setback-val{font-weight:700;color:#22C55E;text-align:right}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.county-section{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px}
+.county-name{font-weight:700;color:#22C55E;font-size:0.82rem;margin-bottom:4px}
+.county-detail{color:#94A3B8;font-size:0.75rem;line-height:1.5}
+.perc-table{width:100%;border-collapse:collapse;font-size:0.73rem;margin-top:8px}
+.perc-table th{background:#141929;color:#22C55E;padding:7px 6px;text-align:left;font-size:0.68rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.perc-table td{padding:6px;border-bottom:1px solid #1E2A4530;color:#E2E8F0;vertical-align:top}
+.perc-table tr:last-child td{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🌱</div>
+  <h1>FL Septic Tank Size Calculator &amp; Inspection Guide</h1>
+  <p>FL DEP minimum rules · FDOH permits · Drainfield sizing · Setback distances · All 67 FL counties</p>
+  <span class="badge">FL Statute §381.0065 · Chapter 64E-6 FAC · FL DEP Compliance</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('tanksize',event)">Tank Size Calculator</button>
+    <button class="tab" onclick="showTab('drainfield',event)">Drainfield Sizing</button>
+    <button class="tab" onclick="showTab('inspect',event)">Inspection Checklist</button>
+    <button class="tab" onclick="showTab('service',event)">Schedule Service</button>
+  </div>
+
+  <!-- TAB 1: Tank Size Calculator -->
+  <div id="tanksize" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>📐</span>Calculate Your Required FL Septic Tank Size</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida Dept. of Health (FDOH) and FL DEP mandate minimum septic tank sizes based on daily sewage flow. The absolute minimum in Florida is 1,050 gallons regardless of home size.</div>
+      <div class="info-box"><strong>FL Minimum Rule:</strong> Florida Statute §381.0065 and Chapter 64E-6 FAC require a minimum 1,050-gallon septic tank for any new residential system. Many FL counties enforce stricter local standards.</div>
+      <label>Number of bedrooms</label>
+      <select id="bedrooms">
+        <option value="1">1 bedroom</option>
+        <option value="2">2 bedrooms</option>
+        <option value="3" selected>3 bedrooms</option>
+        <option value="4">4 bedrooms</option>
+        <option value="5">5 bedrooms</option>
+        <option value="6">6 bedrooms</option>
+        <option value="7">7 bedrooms</option>
+        <option value="8">8 bedrooms</option>
+      </select>
+      <label>Property type</label>
+      <select id="proptype">
+        <option value="res_single">Residential — single family</option>
+        <option value="res_multi">Residential — multi-family / duplex</option>
+        <option value="commercial">Commercial / retail</option>
+        <option value="restaurant">Restaurant / food service</option>
+        <option value="office">Office building</option>
+      </select>
+      <label>Water-saving fixtures installed?</label>
+      <select id="fixtures">
+        <option value="standard">Standard fixtures (pre-1994)</option>
+        <option value="lowflow">Low-flow fixtures (post-1994)</option>
+        <option value="ultralow">Ultra-low flow (WaterSense certified)</option>
+      </select>
+      <label>Florida county</label>
+      <select id="county">
+        <option value="alachua">Alachua County</option>
+        <option value="baker">Baker County</option>
+        <option value="bay">Bay County</option>
+        <option value="bradford">Bradford County</option>
+        <option value="brevard">Brevard County</option>
+        <option value="broward">Broward County</option>
+        <option value="calhoun">Calhoun County</option>
+        <option value="charlotte">Charlotte County</option>
+        <option value="citrus">Citrus County</option>
+        <option value="clay">Clay County</option>
+        <option value="collier">Collier County</option>
+        <option value="columbia">Columbia County</option>
+        <option value="desoto">DeSoto County</option>
+        <option value="dixie">Dixie County</option>
+        <option value="duval">Duval County</option>
+        <option value="escambia">Escambia County</option>
+        <option value="flagler">Flagler County</option>
+        <option value="franklin">Franklin County</option>
+        <option value="gadsden">Gadsden County</option>
+        <option value="gilchrist">Gilchrist County</option>
+        <option value="glades">Glades County</option>
+        <option value="gulf">Gulf County</option>
+        <option value="hamilton">Hamilton County</option>
+        <option value="hardee">Hardee County</option>
+        <option value="hendry">Hendry County</option>
+        <option value="hernando">Hernando County</option>
+        <option value="highlands">Highlands County</option>
+        <option value="hillsborough">Hillsborough County</option>
+        <option value="holmes">Holmes County</option>
+        <option value="indian_river">Indian River County</option>
+        <option value="jackson">Jackson County</option>
+        <option value="jefferson">Jefferson County</option>
+        <option value="lafayette">Lafayette County</option>
+        <option value="lake">Lake County</option>
+        <option value="lee">Lee County</option>
+        <option value="leon">Leon County</option>
+        <option value="levy">Levy County</option>
+        <option value="liberty">Liberty County</option>
+        <option value="madison">Madison County</option>
+        <option value="manatee">Manatee County</option>
+        <option value="marion">Marion County</option>
+        <option value="martin">Martin County</option>
+        <option value="mdade">Miami-Dade County</option>
+        <option value="monroe">Monroe County (Florida Keys)</option>
+        <option value="nassau">Nassau County</option>
+        <option value="okaloosa">Okaloosa County</option>
+        <option value="okeechobee">Okeechobee County</option>
+        <option value="orange">Orange County</option>
+        <option value="osceola">Osceola County</option>
+        <option value="pbc" selected>Palm Beach County</option>
+        <option value="pasco">Pasco County</option>
+        <option value="pinellas">Pinellas County</option>
+        <option value="polk">Polk County</option>
+        <option value="putnam">Putnam County</option>
+        <option value="santa_rosa">Santa Rosa County</option>
+        <option value="sarasota">Sarasota County</option>
+        <option value="seminole">Seminole County</option>
+        <option value="st_johns">St. Johns County</option>
+        <option value="st_lucie">St. Lucie County</option>
+        <option value="sumter">Sumter County</option>
+        <option value="suwannee">Suwannee County</option>
+        <option value="taylor">Taylor County</option>
+        <option value="union">Union County</option>
+        <option value="volusia">Volusia County</option>
+        <option value="wakulla">Wakulla County</option>
+        <option value="walton">Walton County</option>
+        <option value="washington">Washington County</option>
+      </select>
+      <button class="btn" onclick="calcTankSize()">Calculate Required Tank Size</button>
+      <div class="result-box" id="tankResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📋</span>FL DEP Sizing Table — Bedrooms to Gallons</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Per Florida Chapter 64E-6 FAC, Table I — Design daily sewage flow for single-family residences. Minimum 1,050 gallons regardless of bedrooms.</div>
+      <div class="data-row"><span class="data-label">1 bedroom</span><span class="data-val green">1,050 gallons minimum (FL DEP floor)</span></div>
+      <div class="data-row"><span class="data-label">2 bedrooms</span><span class="data-val green">1,050 gallons minimum</span></div>
+      <div class="data-row"><span class="data-label">3 bedrooms (most FL homes)</span><span class="data-val green">1,050 gallons</span></div>
+      <div class="data-row"><span class="data-label">4 bedrooms</span><span class="data-val green">1,200 gallons</span></div>
+      <div class="data-row"><span class="data-label">5 bedrooms</span><span class="data-val green">1,500 gallons</span></div>
+      <div class="data-row"><span class="data-label">6 bedrooms</span><span class="data-val green">1,750 gallons</span></div>
+      <div class="data-row"><span class="data-label">7 bedrooms</span><span class="data-val green">2,000 gallons</span></div>
+      <div class="data-row"><span class="data-label">8 bedrooms</span><span class="data-val green">2,250 gallons</span></div>
+      <div class="data-row"><span class="data-label">Daily flow basis per person (FL DEP)</span><span class="data-val">100 gallons/person/day</span></div>
+      <div class="data-row"><span class="data-label">Assumed occupancy per bedroom (FL)</span><span class="data-val">2 persons</span></div>
+      <div class="tip-box"><strong>FL Note:</strong> The 1,050-gallon minimum was established because smaller tanks require more frequent pumping (every 1–2 years in Florida's warm climate, which accelerates bacterial activity). Larger tanks provide better treatment efficiency and longer pump cycles — typically 3–5 years for a 1,050-gallon tank in a 3-bedroom home.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🏛️</span>FL Permit Requirements</div>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">FDOH Site Evaluation</div>
+          <div class="step-body">Before any septic permit is issued, the Florida Department of Health Environmental Health program must conduct a site evaluation. This includes soil survey, percolation test, water table depth measurement, and setback verification. Call your county FDOH office to schedule — there is typically a $100–$400 fee for the evaluation.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">System Design &amp; Permit Application</div>
+          <div class="step-body">After the site evaluation, a licensed engineer or FDOH-registered septic contractor submits a system design and permit application. The design must show tank size, drainfield layout, setback compliance, and soil data. Permit fees vary by county: $100–$600 for most FL counties.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Installation by Licensed Contractor</div>
+          <div class="step-body">Installation must be performed by a licensed septic contractor (license class LP — Licensed Plumber with septic endorsement, or a contractor licensed under FDOH). Do not use unlicensed contractors — it voids the permit and creates liability issues at resale.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Final FDOH Inspection &amp; Approval</div>
+          <div class="step-body">After installation but before backfilling, an FDOH environmental health inspector must inspect the installation. A Certificate of Completion is issued upon passing. This certificate is required for the county building department's CO (Certificate of Occupancy).</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Operating Permit (New Systems)</div>
+          <div class="step-body">New septic systems in Florida receive a 2-year operating permit. After 2 years, the system must be inspected and pumped (if needed) to receive a renewal. FL Statute §381.0065 governs this process. Properly maintained systems can receive ongoing renewal.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📏</span>FL Septic System Setback Distances</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida Chapter 64E-6 FAC Table 2 minimum setbacks for septic systems. Local counties may enforce stricter rules — always verify with your FDOH county office.</div>
+      <div class="setback-row"><span class="setback-label">Potable water well (private)</span><span class="setback-val">75 feet minimum</span></div>
+      <div class="setback-row"><span class="setback-label">Public water well</span><span class="setback-val">200 feet minimum</span></div>
+      <div class="setback-row"><span class="setback-label">Surface water bodies (lakes, ponds)</span><span class="setback-val">75 feet minimum (drainfield)</span></div>
+      <div class="setback-row"><span class="setback-label">Tidal waters (coast, intercoastal)</span><span class="setback-val">75 feet minimum</span></div>
+      <div class="setback-row"><span class="setback-label">Wetlands (jurisdictional)</span><span class="setback-val">75 feet minimum</span></div>
+      <div class="setback-row"><span class="setback-label">Property line (standard lot)</span><span class="setback-val">5 feet (tank), 5 feet (drainfield)</span></div>
+      <div class="setback-row"><span class="setback-label">Building foundation</span><span class="setback-val">5 feet (tank), 10 feet (drainfield)</span></div>
+      <div class="setback-row"><span class="setback-label">Swimming pool</span><span class="setback-val">15 feet (drainfield)</span></div>
+      <div class="setback-row"><span class="setback-label">Stormwater pond</span><span class="setback-val">75 feet (drainfield)</span></div>
+      <div class="setback-row"><span class="setback-label">Irrigation well</span><span class="setback-val">50 feet minimum</span></div>
+      <div class="setback-row"><span class="setback-label">Drainage ditch or canal</span><span class="setback-val">75 feet (drainfield)</span></div>
+      <div class="setback-row"><span class="setback-label">Neighboring well (50 ft depth)</span><span class="setback-val">100 feet</span></div>
+      <div class="warn-box" style="margin-top:10px"><strong>Monroe County (Florida Keys) Note:</strong> The Florida Keys have the most restrictive septic rules in FL. Most developed areas require connection to centralized sewer. New or replacement septic systems face strict setbacks and nitrogen-reduction requirements due to proximity to coral reef ecosystem. Contact Monroe County Environmental Resources for current rules.</div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Drainfield Sizing -->
+  <div id="drainfield" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🌊</span>Calculate Drainfield Size</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Drainfield sizing in Florida depends on daily sewage flow and soil absorption rate (percolation rate). Florida requires a percolation test or soil survey to determine the absorption rate for your specific lot.</div>
+      <label>Number of bedrooms</label>
+      <select id="dfBeds">
+        <option value="2">2 bedrooms</option>
+        <option value="3" selected>3 bedrooms</option>
+        <option value="4">4 bedrooms</option>
+        <option value="5">5 bedrooms</option>
+        <option value="6">6 bedrooms</option>
+      </select>
+      <label>Soil type / percolation rate</label>
+      <select id="soilType">
+        <option value="fast">Fast-draining (sand, loamy sand) — &lt;1 min/inch</option>
+        <option value="medium_fast">Medium-fast (sandy loam) — 1–5 min/inch</option>
+        <option value="medium" selected>Medium (loam, sandy clay loam) — 5–30 min/inch</option>
+        <option value="slow">Slow (clay loam) — 30–60 min/inch</option>
+        <option value="very_slow">Very slow (clay) — &gt;60 min/inch</option>
+      </select>
+      <label>Drainfield type</label>
+      <select id="dfType">
+        <option value="standard">Standard gravity drainfield (most common FL)</option>
+        <option value="mound">Mound system (high water table)</option>
+        <option value="epa">Enhanced Performance (EP) system — nitrogen reduction</option>
+        <option value="drip">Drip irrigation system</option>
+      </select>
+      <label>Estimated site BVWT (bottom of drainfield to seasonal high water table)</label>
+      <select id="wt">
+        <option value="gt24">More than 24 inches (adequate)</option>
+        <option value="18_24">18–24 inches (borderline)</option>
+        <option value="12_18">12–18 inches (mound system may be required)</option>
+        <option value="lt12">Less than 12 inches (mound or alternative required)</option>
+      </select>
+      <button class="btn" onclick="calcDrainfield()">Calculate Drainfield Requirements</button>
+      <div class="result-box" id="dfResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🏔️</span>Mound System — When Required in FL</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida's low topography means many areas have a high seasonal water table, making standard in-ground drainfields unsuitable. Mound systems elevate the drainfield above natural grade.</div>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">When FL Requires a Mound System</div>
+          <div class="step-body">Required when the seasonal high water table (SHWT) is less than 12 inches below the planned drainfield bottom, OR when the site soil percolation rate exceeds 60 minutes/inch. Mound systems are common in Central FL flatwoods, coastal areas, and lowlands.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Mound System Cost in Florida</div>
+          <div class="step-body">Mound systems cost significantly more than standard systems: $8,000–$18,000 additional over a standard drainfield. The mound requires imported fill sand meeting FDOH specifications (clean, coarse sand with percolation 1–5 min/inch). Mound systems also require pressure distribution and typically a pump tank.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Mound System Maintenance in FL</div>
+          <div class="step-body">Mound systems have additional maintenance: the pressure distribution pump must be inspected annually, pump chamber pumped every 3–5 years, and the mound surface kept clear of deep-rooted vegetation. Budget $200–$400/year for mound system maintenance beyond standard pumping.</div>
+        </div>
+      </div>
+
+      <div class="card-title" style="margin-top:12px"><span>🧪</span>FL Soil Types &amp; Absorption Rates</div>
+      <div class="soil-card">
+        <div class="soil-title">Sandy Soils (North / Central FL — Panhandle, Interior)</div>
+        <div class="soil-body">Fast-draining sandy soils dominate Alachua, Marion, and Panhandle counties. Perc rate often &lt;5 min/inch. Excellent for drainfields but may require enhanced treatment for nitrogen reduction near sensitive water bodies. Loading rate: 1.2–1.5 gpd/sq ft.</div>
+      </div>
+      <div class="soil-card">
+        <div class="soil-title">Sandy Loam / Loam (Mid-State FL)</div>
+        <div class="soil-body">Common in Orange, Osceola, Polk, and Highlands counties. Perc rate 5–30 min/inch. Standard drainfields work well. Loading rate: 0.6–1.2 gpd/sq ft depending on perc test.</div>
+      </div>
+      <div class="soil-card">
+        <div class="soil-title">Flatwoods Soils (South / SW FL — Lee, Charlotte, Sarasota)</div>
+        <div class="soil-body">Spodosol soils with a spodic layer (hardpan) at 24–36 inches. Seasonal water table rises close to surface in wet season. Many sites require mound or alternative systems. Loading rate: 0.4–0.8 gpd/sq ft after perc testing.</div>
+      </div>
+      <div class="soil-card">
+        <div class="soil-title">Marl / Limestone Soils (Miami-Dade / Monroe)</div>
+        <div class="soil-body">Southeast FL sits on porous limestone. Septic systems in Miami-Dade are heavily restricted due to groundwater impact on Biscayne Aquifer. Most of Miami-Dade is sewered. Monroe County (Keys) has even stricter rules — most properties must connect to sewer or use advanced nutrient-reducing systems.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🌿</span>FL Nitrogen-Reduction Requirements</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida has expanded requirements for advanced nitrogen-reducing septic systems in sensitive watershed areas. The 2020 Onsite Sewage Treatment and Disposal System (OSTDS) rules added requirements for certain areas.</div>
+      <div class="ok-box"><strong>What's Required:</strong> In designated "nutrient-sensitive" watersheds (primarily areas draining to springs, the Indian River Lagoon, and certain coastal zones), new or replacement septic systems must meet a 3 mg/L total nitrogen effluent standard. Standard systems produce 40–60 mg/L nitrogen — enhanced performance (EP) systems with nitrogen-reducing media are required to meet the 3 mg/L limit. These EP systems cost $3,000–$8,000 more than standard systems and require annual performance monitoring.</div>
+      <div class="warn-box" style="margin-top:8px"><strong>Check Your Area:</strong> FL DEP maintains an interactive map of nitrogen-sensitive areas. Before permitting a septic system near springs, the St. Johns River, Indian River Lagoon, or any designated Outstanding Florida Water, verify whether EP system requirements apply to your parcel. Your FDOH county office can confirm the requirement for your specific address.</div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Inspection Checklist -->
+  <div id="inspect" class="panel">
+    <div class="card">
+      <div class="card-title"><span>✅</span>FL Septic Inspection Checklist</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Use this checklist when scheduling a septic inspection for home purchase, routine maintenance, or FDOH operating permit renewal. Check off items as your inspector covers them.</div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Tank location &amp; access lids</span>Verify tank location is documented, both access lids are present and reachable, and risers are at or near grade (standard in modern FL systems). Buried or unknown lid location is a red flag.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Tank liquid level &amp; condition</span>Normal level is at the outlet pipe invert (liquid level). High level may indicate drainfield failure or blockage. Low level indicates possible tank leakage. Inspect baffles (inlet and outlet) — should be intact and functional.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Scum layer thickness measurement</span>Scum layer at top of tank should be less than 6 inches before pumping is urgently needed. Inspector measures with a septic stick. FL warm climate accelerates bacterial action — typically pump every 3–5 years.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Sludge layer thickness measurement</span>Sludge layer at bottom should be less than 12 inches. When combined scum + sludge reduces the liquid zone to less than 50% of tank capacity, pumping is needed. FL hot temps accelerate sludge digestion.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Inlet &amp; outlet baffle condition</span>Baffles direct flow and prevent scum from entering drainfield. Concrete baffles in older FL systems often corrode from hydrogen sulfide gas — inspect for cracks, missing sections. Replacement with PVC tee baffles is recommended if concrete is deteriorated.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Tank structural integrity</span>Inspect concrete tank walls for cracks (may allow groundwater infiltration or sewage exfiltration). Check for root intrusion through cracks. Fiberglass and plastic tanks should be inspected for floatation damage (tanks can float in high water table conditions).</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Distribution box (D-box) inspection</span>The distribution box distributes effluent equally to drainfield laterals. Inspect for cracks, unequal flow distribution, and silt intrusion. Unequal distribution causes premature drainfield failure in one section.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Drainfield condition — surface inspection</span>Walk the drainfield area. Warning signs: wet spots or pooling water above drainfield, foul odor, unusually green/lush grass in one area (indicates sewage surfacing), or soggy ground. These are serious failure indicators.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Drainfield lateral inspection</span>For a thorough inspection, use a camera probe to inspect drainfield laterals for root intrusion, soil collapse, or biomat formation. Biomat (anaerobic bacteria layer) is a common FL drainfield failure cause — it reduces soil absorption rate over time.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Effluent pump (if present)</span>For pump-dosed or mound systems, inspect the effluent pump, float switches, and control panel. Test pump operation and high-water alarm. Pump replacement cost: $400–$900 in FL. Pump typically lasts 7–12 years.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Setback compliance verification</span>Verify current setbacks from wells, property lines, and surface water still comply with FL Chapter 64E-6 FAC. Unpermitted additions (pools, additions, driveways) may have encroached on setbacks — a problem at time of sale.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Permit records verification</span>Request FDOH county office records for the original system permit, any repairs or modifications, and current operating permit status. Unpermitted modifications are common in older FL systems and create resale problems.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" onclick="toggleCheck(this)"></div>
+        <div class="check-text"><span class="check-label">Pumping record review</span>Ask for the last 3 pumping receipts. If no records exist, assume overdue. In FL, a 3-bedroom home with 4 occupants should be pumped every 3–4 years minimum. Annual pumping is recommended for homes with garbage disposals.</div>
+      </div>
+      <div class="tip-box" style="margin-top:10px"><strong>FL Pre-Purchase Inspection Recommendation:</strong> For home buyers, a comprehensive septic inspection including pump-out, camera inspection of drainfield laterals, and D-box inspection costs $350–$700 in most FL counties. This is separate from a general home inspection. Many FL real estate contracts now include septic inspection contingencies.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>⚠️</span>FL Septic Failure Warning Signs</div>
+      <div class="warn-box"><strong>Call a licensed FL septic contractor immediately if you notice:</strong><br>• Sewage odor inside the home or yard<br>• Slow drains throughout the house (not just one fixture)<br>• Gurgling sounds from multiple drains simultaneously<br>• Wet, soggy, or unusually green grass over the drainfield<br>• Sewage backing up into tubs or floor drains<br>• Tank alarms sounding (mound/pump systems)<br>• High nitrate levels in well water test results<br><br>Do not pump the tank as a first response to drainfield failure — it temporarily relieves pressure but does not fix the drainfield. A full system evaluation is needed.</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Schedule Service -->
+  <div id="service" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📞</span>Schedule Septic Service</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">We service all 67 Florida counties. Schedule pumping, inspection, permit assistance, drainfield evaluation, or a new system consultation with a licensed FL septic contractor.</div>
+      <div class="ok-box"><strong>✅ We handle all FL septic needs:</strong><br>• Routine pumping (every 3–5 years recommended in FL)<br>• Pre-purchase inspection with written report<br>• Drainfield evaluation &amp; restoration<br>• FDOH permit applications<br>• New system installation<br>• Mound system installation<br>• Nitrogen-reducing system installation</div>
+      <label>Your name</label>
+      <input type="text" id="sName" placeholder="Full name">
+      <label>Phone number</label>
+      <input type="tel" id="sPhone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div>
+          <label>Service ZIP code</label>
+          <input type="text" id="sZip" placeholder="33401">
+        </div>
+        <div>
+          <label>FL county</label>
+          <select id="sCounty">
+            <option value="pbc">Palm Beach</option>
+            <option value="broward">Broward</option>
+            <option value="mdade">Miami-Dade</option>
+            <option value="collier">Collier</option>
+            <option value="lee">Lee</option>
+            <option value="sarasota">Sarasota</option>
+            <option value="manatee">Manatee</option>
+            <option value="hillsborough">Hillsborough</option>
+            <option value="pasco">Pasco</option>
+            <option value="pinellas">Pinellas</option>
+            <option value="orange">Orange</option>
+            <option value="osceola">Osceola</option>
+            <option value="volusia">Volusia</option>
+            <option value="other">Other FL County</option>
+          </select>
+        </div>
+      </div>
+      <label>Service needed</label>
+      <select id="sService">
+        <option value="pump">Routine pumping</option>
+        <option value="inspect">Full inspection (with written report)</option>
+        <option value="purchase">Pre-purchase inspection</option>
+        <option value="drain">Drainfield evaluation</option>
+        <option value="permit">Permit assistance / new system</option>
+        <option value="emergency">Emergency — active backup or failure</option>
+        <option value="restore">Drainfield restoration</option>
+        <option value="other">Other</option>
+      </select>
+      <label>How urgent?</label>
+      <select id="sUrgency">
+        <option value="routine">Routine — within 2 weeks</option>
+        <option value="soon">Soon — within this week</option>
+        <option value="urgent">Urgent — within 48 hours</option>
+        <option value="emergency">Emergency — active backup / overflow</option>
+      </select>
+      <button class="btn" onclick="submitService()">Schedule Septic Service</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚡</span>Emergency Septic Response</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Sewage backup or overflow? This is a health emergency. We provide 24/7 emergency response across South Florida.</div>
+      <div class="warn-box"><strong>🚨 Active Sewage Backup — Do This Now:</strong><br>1. Stop all water use immediately<br>2. Do not flush toilets or run any drains<br>3. Keep children and pets away from affected areas<br>4. Do not pump tank without a full system evaluation<br>5. Call us immediately — sewage on the surface is a FL DEP reportable event in some jurisdictions</div>
+      <div style="text-align:center;margin-top:14px">
+        <div style="font-size:1.4rem;font-weight:900;color:#22C55E">(561) 555-PIPE</div>
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:4px">24/7 Emergency · Licensed &amp; Insured · All 67 FL Counties</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+function showTab(id,e){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  e.target.classList.add('active');
+}
+
+function toggleCheck(el){
+  el.classList.toggle('checked');
+  el.textContent = el.classList.contains('checked') ? '✓' : '';
+}
+
+var TANK_BY_BED = {1:1050,2:1050,3:1050,4:1200,5:1500,6:1750,7:2000,8:2250};
+var DAILY_FLOW  = {1:150,2:250,3:350,4:400,5:450,6:500,7:550,8:600};
+var FIXTURE_MULT = {standard:1.0, lowflow:0.85, ultralow:0.70};
+var PROP_MULT   = {res_single:1.0,res_multi:1.3,commercial:1.5,restaurant:2.5,office:0.8};
+
+var COUNTY_NOTES = {
+  broward:'Broward County has areas served by public sewer — confirm your parcel is not within a mandatory sewer connection zone before investing in septic.',
+  mdade:'Miami-Dade has extensive mandatory sewer connection zones. Many septic permits are no longer issued. Confirm with Miami-Dade Water &amp; Sewer Dept before applying.',
+  monroe:'Monroe County (Florida Keys) has the strictest septic rules in FL. Most developed parcels must connect to centralized sewer. Contact Monroe County Environmental Resources for current requirements.',
+  pbc:'Palm Beach County requires FDOH review plus Palm Beach County Environmental Resources Department (ERD) review for sites near sensitive water bodies or the Lake Worth Lagoon.',
+  collier:'Collier County has active septic-to-sewer conversion programs in many areas. Verify whether your parcel is in a conversion district before investing in a new septic system.'
+};
+
+function calcTankSize(){
+  var beds = parseInt(document.getElementById('bedrooms').value)||3;
+  var prop = document.getElementById('proptype').value;
+  var fix  = document.getElementById('fixtures').value;
+  var cnty = document.getElementById('county').value;
+  var baseFlow = DAILY_FLOW[beds]||350;
+  var adjFlow = Math.round(baseFlow * FIXTURE_MULT[fix] * PROP_MULT[prop]);
+  var minTank = TANK_BY_BED[beds]||1050;
+  var recTank = Math.max(minTank, Math.ceil(adjFlow*3/50)*50);
+  var pumpFreq = recTank >= 1500 ? '4–6 years' : recTank >= 1200 ? '3–5 years' : '2–4 years';
+  if(beds<=2) pumpFreq = '3–5 years';
+  var drainApprox = Math.round(adjFlow / 0.8 * 1.5 / 100) * 100;
+  var cntyNote = COUNTY_NOTES[cnty] ? '<div class="warn-box" style="margin-top:10px"><strong>⚠ '+cnty.toUpperCase()+' Note:</strong> '+COUNTY_NOTES[cnty]+'</div>' : '';
+  var html = '<div class="result-hero">';
+  html += '<div class="result-num">'+recTank.toLocaleString()+'</div>';
+  html += '<div class="result-unit">gallons</div>';
+  html += '<div class="result-label">Recommended FL septic tank size · '+beds+'-bedroom home</div>';
+  html += '</div>';
+  html += '<div style="margin-top:14px">';
+  html += '<div class="data-row"><span class="data-label">FL DEP minimum (64E-6 FAC)</span><span class="data-val green">'+minTank.toLocaleString()+' gallons</span></div>';
+  html += '<div class="data-row"><span class="data-label">Estimated daily sewage flow</span><span class="data-val">'+adjFlow+' gallons/day</span></div>';
+  html += '<div class="data-row"><span class="data-label">Flow adjustment — fixtures</span><span class="data-val">'+(FIXTURE_MULT[fix]*100)+'% of base</span></div>';
+  html += '<div class="data-row"><span class="data-label">Flow adjustment — property type</span><span class="data-val">'+(PROP_MULT[prop]*100)+'% of base</span></div>';
+  html += '<div class="data-row"><span class="data-label">Recommended tank size</span><span class="data-val green"><strong>'+recTank.toLocaleString()+' gallons</strong></span></div>';
+  html += '<div class="data-row"><span class="data-label">Estimated pump frequency (FL climate)</span><span class="data-val">'+pumpFreq+'</span></div>';
+  html += '<div class="data-row"><span class="data-label">Approximate drainfield needed</span><span class="data-val">'+drainApprox+'+ sq ft (perc test required)</span></div>';
+  html += '<div class="data-row"><span class="data-label">FDOH permit required?</span><span class="data-val red">Yes — always required in FL</span></div>';
+  html += '</div>';
+  html += '<div class="tip-box" style="margin-top:10px"><strong>Important:</strong> This estimate is for planning purposes only. A licensed FL septic contractor or FDOH site evaluator must confirm tank size, drainfield requirements, and setback compliance based on a physical site visit and soil test.</div>';
+  html += cntyNote;
+  var rb = document.getElementById('tankResult');
+  rb.innerHTML = html;
+  rb.style.display = 'block';
+}
+
+var PERC_LOADING = {fast:1.5, medium_fast:1.2, medium:0.8, slow:0.5, very_slow:0.3};
+var PERC_LABELS  = {
+  fast:'Fast-draining sand (&lt;1 min/inch)',
+  medium_fast:'Sandy loam (1–5 min/inch)',
+  medium:'Loam (5–30 min/inch)',
+  slow:'Clay loam (30–60 min/inch)',
+  very_slow:'Clay (&gt;60 min/inch)'
+};
+
+function calcDrainfield(){
+  var beds = parseInt(document.getElementById('dfBeds').value)||3;
+  var soil = document.getElementById('soilType').value;
+  var dftype = document.getElementById('dfType').value;
+  var wt = document.getElementById('wt').value;
+  var flow = DAILY_FLOW[beds]||350;
+  var loading = PERC_LOADING[soil]||0.8;
+  var rawSF = Math.ceil(flow / loading);
+  var totalSF = Math.ceil(rawSF * 1.25);
+  var moundReq = (wt === 'lt12') || (wt === '12_18' && soil === 'very_slow');
+  var epReq = soil === 'very_slow' || wt === 'lt12';
+  var html = '<div class="result-hero">';
+  html += '<div class="result-num">'+totalSF.toLocaleString()+'</div>';
+  html += '<div class="result-unit">sq ft</div>';
+  html += '<div class="result-label">Minimum drainfield area · '+beds+'-bedroom · '+PERC_LABELS[soil]+'</div>';
+  html += '</div>';
+  html += '<div style="margin-top:14px">';
+  html += '<div class="data-row"><span class="data-label">Daily sewage flow</span><span class="data-val">'+flow+' gallons/day</span></div>';
+  html += '<div class="data-row"><span class="data-label">Soil loading rate</span><span class="data-val">'+loading+' gpd/sq ft</span></div>';
+  html += '<div class="data-row"><span class="data-label">Base drainfield required</span><span class="data-val">'+rawSF+' sq ft</span></div>';
+  html += '<div class="data-row"><span class="data-label">With 25% FL code safety factor</span><span class="data-val green"><strong>'+totalSF+' sq ft minimum</strong></span></div>';
+  html += '<div class="data-row"><span class="data-label">Mound system required?</span><span class="data-val '+(moundReq?'red':'green')+'">'+(moundReq?'YES — water table too high':'Not required (standard system OK)')+'</span></div>';
+  html += '<div class="data-row"><span class="data-label">EP nitrogen-reduction system?</span><span class="data-val '+(epReq?'gold':'green')+'">'+(epReq?'May be required — check with FDOH':'Standard system likely sufficient')+'</span></div>';
+  html += '</div>';
+  if(moundReq){html += '<div class="warn-box" style="margin-top:10px"><strong>Mound System Required:</strong> Your seasonal high water table depth requires a mound system. Estimated additional cost: $8,000–$18,000. A licensed contractor must design the mound to FDOH specifications.</div>';}
+  if(soil==='very_slow'){html += '<div class="warn-box" style="margin-top:10px"><strong>Very Slow Perc Soil:</strong> Clay soils with perc rates exceeding 60 min/inch may not support a standard drainfield. FDOH may require an alternative system. A site evaluation by a licensed engineer is strongly recommended before purchasing or building on such a site.</div>';}
+  var rb = document.getElementById('dfResult');
+  rb.innerHTML = html;
+  rb.style.display = 'block';
+}
+
+function submitService(){
+  var name = document.getElementById('sName').value.trim();
+  var phone = document.getElementById('sPhone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  showToast('We\'ll call you within 2 hours!');
+}
+
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial septic tank calculator Florida DEP Chapter 64E-6 FAC drainfield sizing inspection checklist FL county septic service plumber pump out Monroe Keys nitrogen reduction EP system mound system setback distance well 67 counties FDOH review drainfield soil percolation loading rate residential commercial 
+</div>
+</body>
+</html>

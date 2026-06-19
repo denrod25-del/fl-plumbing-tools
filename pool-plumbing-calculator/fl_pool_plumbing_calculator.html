@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Pool Plumbing &amp; Heater Sizing Calculator | Pool Volume | BTU Calculator | Florida Pool Code</title>
+<meta name="description" content="Calculate Florida pool volume, heater BTU sizing, pump flow rate, and pipe sizing. Gas vs heat pump pool heater comparison, FL FBC pool code compliance, FPC §608 backflow prevention, pool pipe sizing for circulation. Palm Beach, Broward, Miami-Dade pool plumbing.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a0800 0%,#1a0d00 100%);border-bottom:3px solid #F97316;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#F97316;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#F9731622;color:#F97316;border:1px solid #F9731644;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#F97316;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#F97316;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#F97316}
+.btn{width:100%;padding:14px;background:#F97316;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F97316;color:#fff;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #F9731655}
+.tip-box{background:#F9731611;border:1px solid #F9731633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#F97316}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.info-box{background:#00B4FF11;border:1px solid #00B4FF33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.info-box strong{color:#00B4FF}
+.result-hero{background:#F9731611;border:1px solid #F9731633;border-radius:12px;padding:16px;margin-top:10px;text-align:center}
+.result-num{font-size:2.2rem;font-weight:900;color:#F97316}
+.result-unit{font-size:1rem;font-weight:700;color:#F97316}
+.result-label{font-size:0.8rem;color:#94A3B8;margin-top:3px}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#94A3B8;flex:1;line-height:1.4}
+.data-val{font-weight:700;color:#E2E8F0;min-width:100px;text-align:right}
+.data-val.orange{color:#F97316}
+.data-val.green{color:#22C55E}
+.data-val.red{color:#EF4444}
+.data-val.gold{color:#F4B942}
+.data-val.blue{color:#00B4FF}
+.step-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45;display:flex;gap:10px;align-items:flex-start}
+.step-num{background:#F97316;color:#fff;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;margin-top:1px}
+.step-content{flex:1}
+.step-title{font-size:0.82rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.step-body{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+.heater-compare-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.heater-title{font-size:0.88rem;font-weight:800;margin-bottom:6px}
+.heater-title.gas{color:#F97316}
+.heater-title.hp{color:#00B4FF}
+.heater-title.elec{color:#F4B942}
+.heater-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.heater-stat{background:#0F1629;border-radius:6px;padding:8px 10px}
+.heater-stat-label{font-size:0.68rem;color:#94A3B8;margin-bottom:2px}
+.heater-stat-val{font-size:0.82rem;font-weight:700;color:#E2E8F0}
+.badge-good{display:inline-block;font-size:0.62rem;font-weight:700;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0;background:#22C55E22;color:#22C55E;border:1px solid #22C55E33}
+.badge-warn{display:inline-block;font-size:0.62rem;font-weight:700;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0;background:#F4B94222;color:#F4B942;border:1px solid #F4B94233}
+.badge-bad{display:inline-block;font-size:0.62rem;font-weight:700;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0;background:#EF444422;color:#EF4444;border:1px solid #EF444433}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pipe-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.pipe-row:last-child{border-bottom:none}
+.pipe-label{color:#94A3B8;flex:1}
+.pipe-val{font-weight:700;color:#F97316;text-align:right;min-width:80px}
+.code-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45}
+.code-section{font-size:0.82rem;font-weight:700;color:#F97316;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.code-body{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+.pool-shape-img{width:100%;height:80px;border-radius:8px;background:#141929;border:1px solid #1E2A45;display:flex;align-items:center;justify-content:center;font-size:0.78rem;color:#94A3B8;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🏊</div>
+  <h1>FL Pool Plumbing &amp; Heater Sizing Calculator</h1>
+  <p>Pool volume · Heater BTU sizing · Pump &amp; pipe sizing · Gas vs heat pump comparison · FL pool code</p>
+  <span class="badge">FL FBC Pool Code · FPC §608 Backflow · BTU Sizing Guide · All Pool Shapes</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('volume',event)">Pool Volume</button>
+    <button class="tab" onclick="showTab('heater',event)">Heater Sizing</button>
+    <button class="tab" onclick="showTab('pump',event)">Pump &amp; Pipe Sizing</button>
+    <button class="tab" onclick="showTab('quote',event)">Get a Quote</button>
+  </div>
+
+  <!-- TAB 1: Pool Volume Calculator -->
+  <div id="volume" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>📐</span>Calculate Your Pool Volume</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Pool volume determines heater BTU sizing, chemical dosing, pump turnover rate, and filter sizing. Select your pool shape and dimensions to calculate volume in gallons.</div>
+      <label>Pool shape</label>
+      <select id="poolShape" onchange="updateShapeFields()">
+        <option value="rect">Rectangular</option>
+        <option value="oval">Oval</option>
+        <option value="round">Round / Circular</option>
+        <option value="kidney">Kidney / Irregular (width varies)</option>
+        <option value="lshape">L-shaped</option>
+        <option value="freeform">Freeform (average width estimate)</option>
+      </select>
+      <div id="shapeFields">
+        <div class="form-row">
+          <div><label>Length (feet)</label><input type="number" id="pLen" value="30" min="5" max="200" step="1"></div>
+          <div><label>Width (feet)</label><input type="number" id="pWid" value="15" min="5" max="100" step="1"></div>
+        </div>
+        <div class="form-row">
+          <div><label>Shallow end depth (ft)</label><input type="number" id="pShallow" value="3.5" min="1" max="6" step="0.5"></div>
+          <div><label>Deep end depth (ft)</label><input type="number" id="pDeep" value="6.5" min="3" max="15" step="0.5"></div>
+        </div>
+      </div>
+      <div id="roundField" style="display:none">
+        <label>Diameter (feet)</label>
+        <input type="number" id="pDiam" value="20" min="5" max="60" step="1">
+        <div class="form-row">
+          <div><label>Shallow end depth (ft)</label><input type="number" id="pRShallow" value="3.5" min="1" max="6" step="0.5"></div>
+          <div><label>Deep end depth (ft)</label><input type="number" id="pRDeep" value="5" min="3" max="10" step="0.5"></div>
+        </div>
+      </div>
+      <div id="lshapeField" style="display:none">
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:8px;line-height:1.5">Enter dimensions of both rectangular sections of the L.</div>
+        <div class="form-row">
+          <div><label>Section A — Length (ft)</label><input type="number" id="pLA" value="25" min="5" max="100" step="1"></div>
+          <div><label>Section A — Width (ft)</label><input type="number" id="pWA" value="12" min="5" max="60" step="1"></div>
+        </div>
+        <div class="form-row">
+          <div><label>Section B — Length (ft)</label><input type="number" id="pLB" value="15" min="5" max="100" step="1"></div>
+          <div><label>Section B — Width (ft)</label><input type="number" id="pWB" value="10" min="5" max="60" step="1"></div>
+        </div>
+        <div class="form-row">
+          <div><label>Avg shallow depth (ft)</label><input type="number" id="pLShallow" value="3.5" min="1" max="6" step="0.5"></div>
+          <div><label>Avg deep depth (ft)</label><input type="number" id="pLDeep" value="6" min="3" max="15" step="0.5"></div>
+        </div>
+      </div>
+      <label>Spa / hot tub attached?</label>
+      <select id="spa">
+        <option value="none">No spa</option>
+        <option value="small">Small spa (300–400 gal)</option>
+        <option value="medium">Medium spa (400–600 gal)</option>
+        <option value="large">Large spa (600–900 gal)</option>
+      </select>
+      <label>Pool surface area (estimated — for cover/evaporation calc)</label>
+      <select id="pCover">
+        <option value="none">No cover — open evaporation</option>
+        <option value="solar">Solar cover (blanket)</option>
+        <option value="auto">Automatic pool cover</option>
+        <option value="screen">Screen enclosure (FL screened lanai)</option>
+      </select>
+      <button class="btn" onclick="calcVolume()">Calculate Pool Volume</button>
+      <div class="result-box" id="volResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📊</span>FL Pool Size Reference Table</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Common Florida residential pool sizes and approximate volumes. South FL pool designs tend to be elongated for lap swimming; Central FL pools tend toward freeform resort style.</div>
+      <div class="data-row"><span class="data-label">Small pool — 12×24 ft, avg 5 ft depth</span><span class="data-val orange">10,800 gallons</span></div>
+      <div class="data-row"><span class="data-label">Standard — 15×30 ft, avg 5 ft depth</span><span class="data-val orange">16,875 gallons</span></div>
+      <div class="data-row"><span class="data-label">Medium — 16×32 ft, avg 5 ft depth</span><span class="data-val orange">19,200 gallons</span></div>
+      <div class="data-row"><span class="data-label">Large — 18×36 ft, avg 5.5 ft depth</span><span class="data-val orange">26,730 gallons</span></div>
+      <div class="data-row"><span class="data-label">Resort — 20×40 ft, avg 6 ft depth</span><span class="data-val orange">36,000 gallons</span></div>
+      <div class="data-row"><span class="data-label">Lap pool — 10×40 ft, avg 4 ft depth</span><span class="data-val orange">12,000 gallons</span></div>
+      <div class="data-row"><span class="data-label">Attached spa (typical FL)</span><span class="data-val">+ 400–700 gallons</span></div>
+      <div class="data-row"><span class="data-label">FL screened enclosure evaporation savings</span><span class="data-val green">40–60% less vs. open pool</span></div>
+      <div class="tip-box"><strong>FL Evaporation Note:</strong> Florida's climate means significant pool water evaporation — 1–2 inches per week in summer for an open pool in South Florida. A screen enclosure reduces this by half. This affects both water bill and chemical costs. A solar cover further reduces evaporation by 90%.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🌡️</span>FL Pool Temperature Guide</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida's ambient temperature and outdoor water temperature affect heater sizing and operating costs significantly by region.</div>
+      <div class="data-row"><span class="data-label">South FL (PBC/Broward/Miami-Dade) — avg winter water temp without heater</span><span class="data-val blue">62–68°F (Jan/Feb)</span></div>
+      <div class="data-row"><span class="data-label">Central FL (Orlando/Tampa) — avg winter water temp without heater</span><span class="data-val blue">55–62°F (Jan/Feb)</span></div>
+      <div class="data-row"><span class="data-label">North FL (Jacksonville/Panhandle) — avg winter water temp without heater</span><span class="data-val blue">48–56°F (Jan/Feb)</span></div>
+      <div class="data-row"><span class="data-label">FL pool summer water temp (no heater)</span><span class="data-val blue">82–90°F (Jun–Sep)</span></div>
+      <div class="data-row"><span class="data-label">Comfortable swimming range</span><span class="data-val green">80–84°F</span></div>
+      <div class="data-row"><span class="data-label">Comfortable spa temperature</span><span class="data-val orange">100–104°F</span></div>
+      <div class="data-row"><span class="data-label">Recommended pool temp for seniors / therapy</span><span class="data-val green">86–92°F</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Heater Sizing -->
+  <div id="heater" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔥</span>Pool Heater BTU Sizing Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Size your pool heater correctly for Florida's climate. Undersized heaters run constantly without reaching temperature; oversized heaters cost more upfront and can short-cycle. Enter your pool details for a precise BTU recommendation.</div>
+      <label>Pool volume (gallons)</label>
+      <input type="number" id="hVol" value="18000" min="1000" max="200000" step="500">
+      <label>Desired pool temperature (°F)</label>
+      <input type="number" id="hTarget" value="82" min="70" max="95" step="1">
+      <label>Florida region (determines coldest design temp)</label>
+      <select id="hRegion">
+        <option value="south_fl">South FL — Palm Beach / Broward / Miami-Dade</option>
+        <option value="sw_fl">SW FL — Naples / Fort Myers / Sarasota</option>
+        <option value="central_fl">Central FL — Tampa / Orlando / Lakeland</option>
+        <option value="north_fl">North / NW FL — Jacksonville / Gainesville / Panhandle</option>
+      </select>
+      <label>Pool exposure</label>
+      <select id="hExposure">
+        <option value="screened">Screened enclosure (FL lanai) — most common</option>
+        <option value="open">Open to air — no screen or cover</option>
+        <option value="solar_cover">Open with solar cover</option>
+        <option value="shade">Shaded — trees or structure block sun</option>
+      </select>
+      <label>Heater type to size</label>
+      <select id="hType">
+        <option value="gas">Natural gas or propane heater</option>
+        <option value="hp">Heat pump (most popular in FL for pool)</option>
+        <option value="both">Show both gas and heat pump options</option>
+      </select>
+      <button class="btn" onclick="calcHeater()">Calculate Heater Size</button>
+      <div class="result-box" id="heaterResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>⚖️</span>Gas vs. Heat Pump — FL Pool Heater Comparison</div>
+      <div class="heater-compare-card">
+        <div class="heater-title gas">🔥 Gas Pool Heater (Natural Gas or Propane)</div>
+        <div style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px">Brands: Hayward H-Series, Pentair MasterTemp, Raypak</div>
+        <div class="heater-grid">
+          <div class="heater-stat"><div class="heater-stat-label">Heat-up time (20K gal pool, 20°F rise)</div><div class="heater-stat-val">4–8 hours</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Initial cost (installed)</div><div class="heater-stat-val">$2,000–$4,500</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Annual FL operating cost</div><div class="heater-stat-val">$800–$2,400/yr</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Efficiency (AFUE)</div><div class="heater-stat-val">80–96%</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Works in cold weather?</div><div class="heater-stat-val" style="color:#22C55E">Yes — any temp</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">FL expected lifespan</div><div class="heater-stat-val">7–12 years</div></div>
+        </div>
+        <div>
+          <span class="badge-good">✓ Best for quick heat-up (rare use / FL vacation homes)</span>
+          <span class="badge-good">✓ Works in any weather</span>
+          <span class="badge-good">✓ Good for spa heating</span>
+          <span class="badge-warn">⚠ Higher FL operating cost (gas prices)</span>
+          <span class="badge-warn">⚠ Requires gas line or propane tank</span>
+          <span class="badge-bad">✗ 10× higher annual energy cost vs. heat pump in FL</span>
+        </div>
+        <div class="tip-box" style="margin-top:8px"><strong>FL Gas Heater Note:</strong> Gas heaters are most cost-effective for FL vacation homes where the pool is heated occasionally (1–2×/month in winter) rather than maintained at a steady temperature year-round. If you use your pool year-round, a heat pump is dramatically cheaper to operate in FL's climate.</div>
+      </div>
+
+      <div class="heater-compare-card">
+        <div class="heater-title hp">🌀 Heat Pump Pool Heater (Air-Source)</div>
+        <div style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px">Brands: Hayward HeatPro, Pentair UltraTemp, AquaCal, Jandy JHP</div>
+        <div class="heater-grid">
+          <div class="heater-stat"><div class="heater-stat-label">Heat-up time (20K gal pool, 20°F rise)</div><div class="heater-stat-val">24–72 hours</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Initial cost (installed)</div><div class="heater-stat-val">$3,500–$7,500</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Annual FL operating cost</div><div class="heater-stat-val">$150–$600/yr</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">COP (efficiency ratio)</div><div class="heater-stat-val">5.0–7.0 in FL</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Works below 50°F?</div><div class="heater-stat-val" style="color:#F4B942">Some models yes (inverter)</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">FL expected lifespan</div><div class="heater-stat-val">10–15 years</div></div>
+        </div>
+        <div>
+          <span class="badge-good">✓ 5–10× lower operating cost vs. gas in FL</span>
+          <span class="badge-good">✓ FL climate is ideal (warm air = high COP)</span>
+          <span class="badge-good">✓ Best for year-round pool maintenance</span>
+          <span class="badge-warn">⚠ Slow to heat a cold pool from scratch</span>
+          <span class="badge-warn">⚠ Higher upfront cost than gas</span>
+          <span class="badge-bad">✗ Standard models struggle below 45°F (rare in South FL)</span>
+        </div>
+        <div class="ok-box" style="margin-top:8px"><strong>FL Heat Pump Recommendation:</strong> For most Florida homeowners who use their pool at least weekly, a heat pump saves $600–$1,800/year vs. gas. Payback period is typically 3–5 years, and modern inverter-drive heat pumps maintain efficiency even on North FL cold nights. AquaCal, Hayward HeatPro, and Pentair UltraTemp all have strong FL dealer networks.</div>
+      </div>
+
+      <div class="heater-compare-card">
+        <div class="heater-title elec">⚡ Electric Resistance (Immersion) Heater</div>
+        <div style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px">Typically for spas only — not recommended for full pool heating in FL</div>
+        <div class="heater-grid">
+          <div class="heater-stat"><div class="heater-stat-label">Annual FL operating cost</div><div class="heater-stat-val" style="color:#EF4444">$2,400–$5,000+/yr</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Efficiency</div><div class="heater-stat-val">100% (no heat loss)</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Best application</div><div class="heater-stat-val">Spas &lt;600 gal</div></div>
+          <div class="heater-stat"><div class="heater-stat-label">Initial cost (installed spa)</div><div class="heater-stat-val">$400–$1,200</div></div>
+        </div>
+        <div class="warn-box" style="margin-top:6px"><strong>Not recommended for FL pool heating</strong> — COP of 1.0 vs. heat pump COP of 5–7 means you pay 5–7× more for the same heat. Reserve for small spas only.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🌞</span>FL Solar Pool Heating</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Solar pool heating is ideal for South Florida — the abundant sunshine makes it one of the most cost-effective heating options for pools that don't need precise temperature control.</div>
+      <div class="data-row"><span class="data-label">Solar collector area needed (South FL)</span><span class="data-val orange">50–100% of pool surface area</span></div>
+      <div class="data-row"><span class="data-label">Typical installation cost</span><span class="data-val">$2,500–$6,500</span></div>
+      <div class="data-row"><span class="data-label">Annual operating cost (FL)</span><span class="data-val green">$50–$150 (pump electricity only)</span></div>
+      <div class="data-row"><span class="data-label">Expected lifespan (South FL)</span><span class="data-val">15–25 years</span></div>
+      <div class="data-row"><span class="data-label">Temperature maintenance (South FL winter)</span><span class="data-val">78–85°F without backup</span></div>
+      <div class="data-row"><span class="data-label">FL incentives</span><span class="data-val green">FL sales tax exemption on solar equipment</span></div>
+      <div class="tip-box"><strong>Solar + Heat Pump Combo:</strong> Many FL pool owners install solar as primary and a small heat pump for backup on cold fronts. This delivers year-round comfort with minimal operating cost — typically under $200/year total.</div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Pump & Pipe Sizing -->
+  <div id="pump" class="panel">
+    <div class="card">
+      <div class="card-title"><span>⚙️</span>Pool Pump &amp; Pipe Sizing Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Size your pool pump for the required turnover rate. FL code requires at least one full volume turnover per 8 hours for pools. Enter your pool volume and pipe run length for a complete sizing recommendation.</div>
+      <label>Pool volume (gallons)</label>
+      <input type="number" id="pumpVol" value="18000" min="1000" max="150000" step="500">
+      <label>Desired turnover rate</label>
+      <select id="turnover">
+        <option value="6">Every 6 hours (intensive use / commercial)</option>
+        <option value="8" selected>Every 8 hours (FL residential standard)</option>
+        <option value="10">Every 10 hours (light use / oversized pump)</option>
+        <option value="12">Every 12 hours (slow turnover — not recommended FL)</option>
+      </select>
+      <label>Main pipe run length (suction + return combined, feet)</label>
+      <input type="number" id="pipeLen" value="80" min="20" max="500" step="5">
+      <label>Number of returns</label>
+      <select id="numReturns">
+        <option value="2">2 return jets</option>
+        <option value="3">3 return jets</option>
+        <option value="4">4 return jets</option>
+        <option value="6">6 return jets</option>
+        <option value="8">8 return jets (large pool)</option>
+      </select>
+      <label>Pool features (add flow demand)</label>
+      <select id="features">
+        <option value="standard">Standard pool only</option>
+        <option value="spa">Pool + spa</option>
+        <option value="waterfall">Pool + waterfall / deck jets</option>
+        <option value="spa_water">Pool + spa + waterfall / features</option>
+        <option value="slide">Pool + water slide</option>
+      </select>
+      <button class="btn" onclick="calcPump()">Calculate Pump &amp; Pipe Size</button>
+      <div class="result-box" id="pumpResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🔧</span>Pool Pipe Sizing Reference — FL FBC</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida Building Code (FBC) and pool industry standards require minimum pipe diameters based on flow velocity. High flow velocity increases head loss, noise, and reduces pump efficiency.</div>
+      <div class="data-row"><span class="data-label">Max recommended flow velocity — suction side</span><span class="data-val orange">6 ft/sec (suction limits)</span></div>
+      <div class="data-row"><span class="data-label">Max recommended flow velocity — return side</span><span class="data-val orange">8 ft/sec</span></div>
+      <div class="data-row"><span class="data-label">Minimum suction pipe — residential FL pool</span><span class="data-val orange">2" diameter (min 50 GPM)</span></div>
+      <div class="data-row"><span class="data-label">Standard suction pipe — 15K–25K gal pool</span><span class="data-val orange">2.5" diameter</span></div>
+      <div class="data-row"><span class="data-label">Large pool / spa combo suction</span><span class="data-val orange">3" diameter</span></div>
+      <div class="data-row"><span class="data-label">Return lines — standard pool</span><span class="data-val orange">1.5" or 2" per return</span></div>
+      <div class="data-row"><span class="data-label">Main drain pipe — FL FBC minimum</span><span class="data-val orange">2" anti-entrapment compliant</span></div>
+      <div class="tip-box"><strong>FL VGBA Compliance:</strong> All Florida pool main drains must comply with the Virginia Graeme Baker Pool and Spa Safety Act (VGBA). This requires anti-entrapment main drain covers rated for the actual flow rate, and dual-drain configurations. Single-drain pools built before 2008 must be updated — verify VGBA compliance on any pool purchase.</div>
+
+      <div class="card-title" style="margin-top:14px"><span>📏</span>FL Pool Plumbing — Pipe Material Options</div>
+      <div class="pipe-row"><span class="pipe-label">PVC Schedule 40 (most common FL pool)</span><span class="pipe-val">Standard</span></div>
+      <div class="pipe-row"><span class="pipe-label">PVC Schedule 80 (equipment room connections)</span><span class="pipe-val">Heavier duty</span></div>
+      <div class="pipe-row"><span class="pipe-label">CPVC (heat exchange areas, heater connections)</span><span class="pipe-val">Heat-rated</span></div>
+      <div class="pipe-row"><span class="pipe-label">Flexible PVC (equipment manifolds, unions)</span><span class="pipe-val">Equipment connections</span></div>
+      <div class="pipe-row"><span class="pipe-label">Copper (not recommended for salt pools)</span><span class="pipe-val">Avoid salt systems</span></div>
+      <div class="warn-box" style="margin-top:8px"><strong>FL Salt Pool Warning:</strong> Saltwater pools corrode copper pipes and fittings rapidly. Use only PVC or CPVC for saltwater pool plumbing. Do not use copper unions, heater manifolds, or fittings with saltwater — even trace copper contamination can damage pool equipment and stain plaster.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🛡️</span>FPC §608 — Backflow Prevention for FL Pools</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida Plumbing Code §608 requires backflow prevention devices on all potable water connections to swimming pools and spas. This is a critical health and code requirement.</div>
+      <div class="code-card">
+        <div class="code-section"><span>§608.1</span>FL Pool Makeup Water Backflow</div>
+        <div class="code-body">Any potable water supply connection to a pool fill valve, autofill system, or hose bib used for pool filling must have an approved backflow preventer. Backflow of pool water (which contains chlorine, algaecides, and other chemicals) into the potable water supply is a serious health hazard.</div>
+      </div>
+      <div class="code-card">
+        <div class="code-section"><span>Required</span>Approved Backflow Prevention Devices for FL Pools</div>
+        <div class="code-body">• Atmospheric vacuum breaker (AVB) — for hose connection fill; must be installed at least 6 inches above pool flood rim<br>• Pressure vacuum breaker (PVB) — approved for pool autofill systems; must be installed 12 inches above highest discharge point<br>• Reduced pressure backflow preventer (RPZ) — required for pools connected directly to the water main; highest protection level<br><br>All backflow preventers must be tested annually by a certified FL backflow tester. Pool autofill valves without an approved BFP device fail the FL plumbing inspection.</div>
+      </div>
+      <div class="code-card">
+        <div class="code-section"><span>§608.17</span>FL Hose Connection Vacuum Breaker</div>
+        <div class="code-body">All hose bibs used for pool filling must have a hose connection vacuum breaker (HCVB). These screw directly onto the hose bib and are required by FL code. Cost: $10–$25 each. Do not fill a pool with an unprotected hose connection — this violates FL plumbing code and can contaminate your neighborhood potable water supply in a pressure loss event.</div>
+      </div>
+      <div class="code-card">
+        <div class="code-section"><span>FBC §424</span>FL Pool Construction Code — Key Requirements</div>
+        <div class="code-body">• All new FL pools require a building permit from the local building department<br>• FL FBC §424.1 — pools within 25 feet of a potable well require special review<br>• Pool fencing required per FBC §454.2.17 — 4-foot minimum barrier with self-closing, self-latching gate<br>• Pool electrical bonding — FBC §680.26 requires bonding of pool water, equipment, and nearby metal structures<br>• Pool drain anti-entrapment (VGBA) — required on all new pools and upgrades<br>• Pool light niches — must be listed wet-niche lighting at 12V or properly grounded line voltage</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>⚡</span>FL Variable Speed Pump Requirements</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida and the Florida Building Commission adopted Energy Star requirements for pool pumps that affect all residential pool pump replacements.</div>
+      <div class="ok-box"><strong>FL Variable Speed Pump Mandate:</strong> As of July 2021, Florida requires that any pool pump replacement in a residential pool over 1 horsepower must be a variable speed (VS) pump or approved equivalent. This aligns with DOE energy efficiency standards. Single-speed pumps over 1 HP are no longer permitted for replacement installations in FL residential pools.</div>
+      <div class="data-row" style="margin-top:10px"><span class="data-label">VS pump typical energy savings vs. single-speed</span><span class="data-val green">50–80% less electricity</span></div>
+      <div class="data-row"><span class="data-label">FL electricity rate (avg residential)</span><span class="data-val">$0.12–$0.16/kWh</span></div>
+      <div class="data-row"><span class="data-label">Annual FL savings (VS vs. single-speed)</span><span class="data-val green">$400–$900/year</span></div>
+      <div class="data-row"><span class="data-label">VS pump typical FL cost (installed)</span><span class="data-val">$900–$2,000</span></div>
+      <div class="data-row"><span class="data-label">Typical payback period</span><span class="data-val orange">1–3 years</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Get a Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📞</span>Get a Pool Plumbing Quote</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">We handle all Florida pool plumbing — new pool construction plumbing, heater installation, pump replacement, pipe repair, backflow preventer installation, and leak detection. Licensed &amp; insured across South Florida.</div>
+      <div class="ok-box"><strong>✅ We specialize in:</strong><br>• Pool heater installation (gas, heat pump, solar)<br>• Pool pipe repair &amp; repipe (PVC, CPVC)<br>• Variable speed pump installation &amp; upgrade<br>• Backflow preventer installation (FPC §608 compliant)<br>• Pool leak detection &amp; repair<br>• Salt chlorinator plumbing<br>• Pool &amp; spa equipment room plumbing<br>• New pool construction plumbing rough-in</div>
+      <label>Your name</label>
+      <input type="text" id="qName" placeholder="Full name">
+      <label>Phone number</label>
+      <input type="tel" id="qPhone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div>
+          <label>Property ZIP code</label>
+          <input type="text" id="qZip" placeholder="33401">
+        </div>
+        <div>
+          <label>Approx pool size</label>
+          <select id="qPoolSize">
+            <option value="small">Small (&lt;12,000 gal)</option>
+            <option value="medium" selected>Medium (12K–22K gal)</option>
+            <option value="large">Large (22K–40K gal)</option>
+            <option value="xl">Very large (40K+ gal)</option>
+          </select>
+        </div>
+      </div>
+      <label>Service needed</label>
+      <select id="qService">
+        <option value="heater_gas">Gas heater installation</option>
+        <option value="heater_hp">Heat pump installation</option>
+        <option value="heater_solar">Solar pool heating</option>
+        <option value="pump">Variable speed pump replacement</option>
+        <option value="backflow">Backflow preventer installation (code compliance)</option>
+        <option value="pipe">Pool pipe repair / leak</option>
+        <option value="repipe">Full pool plumbing repipe</option>
+        <option value="new">New pool plumbing (new construction)</option>
+        <option value="leak">Pool leak detection</option>
+        <option value="other">Other / multiple needs</option>
+      </select>
+      <label>Pool type</label>
+      <select id="qPoolType">
+        <option value="pool_only">Pool only</option>
+        <option value="pool_spa">Pool + spa combo</option>
+        <option value="commercial">Commercial / HOA pool</option>
+        <option value="saltwater">Saltwater pool</option>
+        <option value="other">Other</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Request Free Pool Plumbing Quote</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚡</span>Emergency Pool Plumbing</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Active pool pipe leak, equipment failure, or water loss? We respond within 2 hours across Palm Beach, Broward, and Miami-Dade Counties.</div>
+      <div style="text-align:center;margin-top:12px">
+        <div style="font-size:1.4rem;font-weight:900;color:#F97316">(561) 555-PIPE</div>
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:4px">24/7 Emergency · Licensed &amp; Insured · All FL Counties</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+function showTab(id,e){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  e.target.classList.add('active');
+}
+
+function updateShapeFields(){
+  var shape = document.getElementById('poolShape').value;
+  document.getElementById('shapeFields').style.display = (shape==='rect'||shape==='oval'||shape==='kidney'||shape==='freeform') ? 'block' : 'none';
+  document.getElementById('roundField').style.display  = (shape==='round') ? 'block' : 'none';
+  document.getElementById('lshapeField').style.display = (shape==='lshape') ? 'block' : 'none';
+}
+
+var SPA_GAL = {none:0, small:350, medium:500, large:750};
+var COVER_FACTOR = {none:1.0, solar:0.95, auto:0.95, screen:0.97};
+
+function calcVolume(){
+  var shape = document.getElementById('poolShape').value;
+  var spa   = document.getElementById('spa').value;
+  var cover = document.getElementById('pCover').value;
+  var gals  = 0;
+  var sqft  = 0;
+  if(shape==='rect'||shape==='oval'||shape==='kidney'||shape==='freeform'){
+    var L = parseFloat(document.getElementById('pLen').value)||30;
+    var W = parseFloat(document.getElementById('pWid').value)||15;
+    var Sh = parseFloat(document.getElementById('pShallow').value)||3.5;
+    var De = parseFloat(document.getElementById('pDeep').value)||6.5;
+    var avgD = (Sh + De) / 2;
+    var sf = shape==='oval' ? Math.PI/4*L*W : (shape==='kidney'||shape==='freeform') ? L*W*0.85 : L*W;
+    sqft = Math.round(sf);
+    gals = Math.round(sf * avgD * 7.48);
+  } else if(shape==='round'){
+    var D = parseFloat(document.getElementById('pDiam').value)||20;
+    var Sh = parseFloat(document.getElementById('pRShallow').value)||3.5;
+    var De = parseFloat(document.getElementById('pRDeep').value)||5;
+    var avgD = (Sh+De)/2;
+    var sf = Math.PI/4*D*D;
+    sqft = Math.round(sf);
+    gals = Math.round(sf * avgD * 7.48);
+  } else if(shape==='lshape'){
+    var LA = parseFloat(document.getElementById('pLA').value)||25;
+    var WA = parseFloat(document.getElementById('pWA').value)||12;
+    var LB = parseFloat(document.getElementById('pLB').value)||15;
+    var WB = parseFloat(document.getElementById('pWB').value)||10;
+    var Sh = parseFloat(document.getElementById('pLShallow').value)||3.5;
+    var De = parseFloat(document.getElementById('pLDeep').value)||6;
+    var avgD = (Sh+De)/2;
+    var sf = LA*WA + LB*WB;
+    sqft = Math.round(sf);
+    gals = Math.round(sf * avgD * 7.48);
+  }
+  gals += SPA_GAL[spa];
+  var turnover8 = Math.round(gals/8);
+  var chemChlorine = (gals/10000*3).toFixed(1);
+  var evapGalWeek = Math.round(sqft * 0.08 * COVER_FACTOR[cover]);
+  var html = '<div class="result-hero"><div class="result-num">'+gals.toLocaleString()+'</div><div class="result-unit">gallons</div><div class="result-label">Total pool volume'+( SPA_GAL[spa]>0 ? ' (including spa)':'' )+'</div></div>';
+  html += '<div style="margin-top:14px">';
+  html += '<div class="data-row"><span class="data-label">Pool surface area</span><span class="data-val">'+sqft.toLocaleString()+' sq ft</span></div>';
+  html += '<div class="data-row"><span class="data-label">Required pump flow — 8 hr turnover</span><span class="data-val orange">'+turnover8+' GPH ('+Math.round(turnover8/60)+' GPM)</span></div>';
+  html += '<div class="data-row"><span class="data-label">Chlorine shock dosing</span><span class="data-val">'+chemChlorine+' lbs Cal-Hypo per shock</span></div>';
+  html += '<div class="data-row"><span class="data-label">Est. evaporation / week (FL summer)</span><span class="data-val blue">~'+evapGalWeek+' gallons</span></div>';
+  html += '<div class="data-row"><span class="data-label">Heater BTU starting point</span><span class="data-val orange">See Heater Sizing tab</span></div>';
+  html += '</div>';
+  html += '<div class="tip-box" style="margin-top:10px"><strong>Take your volume to Heater Sizing:</strong> Enter '+gals.toLocaleString()+' gallons in the Heater Sizing tab for a complete BTU recommendation for your FL location.</div>';
+  var rb = document.getElementById('volResult');
+  rb.innerHTML = html;
+  rb.style.display = 'block';
+}
+
+var DESIGN_TEMP = {south_fl:45, sw_fl:42, central_fl:38, north_fl:30};
+var REGION_LABEL = {south_fl:'South FL (PBC/Broward/Miami-Dade)', sw_fl:'SW FL (Naples/Fort Myers)', central_fl:'Central FL (Tampa/Orlando)', north_fl:'North/NW FL (Jax/Panhandle)'};
+var EXPOSURE_LOSS = {screened:0.75, open:1.25, solar_cover:0.85, shade:1.0};
+
+function calcHeater(){
+  var vol   = parseFloat(document.getElementById('hVol').value)||18000;
+  var tgt   = parseFloat(document.getElementById('hTarget').value)||82;
+  var region= document.getElementById('hRegion').value;
+  var exp   = document.getElementById('hExposure').value;
+  var htype = document.getElementById('hType').value;
+  var designAir = DESIGN_TEMP[region];
+  var designWater = designAir + 5;
+  var tempRise = Math.max(0, tgt - designWater);
+  var rawBtu  = vol * 8.34 * tempRise / 8;
+  var adjBtu  = rawBtu * EXPOSURE_LOSS[exp];
+  var minBtu  = Math.ceil(adjBtu / 25000) * 25000;
+  var recBtu  = Math.ceil(adjBtu * 1.25 / 25000) * 25000;
+  var gasModel   = recBtu <= 150000 ? 'Hayward H150FDP or Pentair MasterTemp 140' : recBtu <= 200000 ? 'Hayward H200FDP or Pentair MasterTemp 200' : recBtu <= 250000 ? 'Hayward H250FDP or Pentair MasterTemp 250' : recBtu <= 300000 ? 'Hayward H300FDP or Pentair MasterTemp 300' : 'Hayward H400FDP or Pentair MasterTemp 400';
+  var hpTons  = recBtu / 12000;
+  var hpModel = hpTons <= 4 ? 'AquaCal HeatWave A55 or Hayward HeatPro 50K BTU' : hpTons <= 6 ? 'AquaCal HeatWave A75 or Hayward HeatPro 95K BTU' : 'AquaCal HeatWave A120 or Pentair UltraTemp 140K BTU';
+  var annGasCost = Math.round(recBtu / 100000 * 2.8 * 600);
+  var annHpCost  = Math.round(recBtu / 12000 * 0.12 * 400 / 5.5);
+  var html = '<div class="result-hero"><div class="result-num">'+recBtu.toLocaleString()+'</div><div class="result-unit">BTU/hr</div><div class="result-label">Recommended pool heater size · '+vol.toLocaleString()+' gal · '+tgt+'°F target · '+REGION_LABEL[region]+'</div></div>';
+  html += '<div style="margin-top:14px">';
+  html += '<div class="data-row"><span class="data-label">FL design air temp (coldest day sizing)</span><span class="data-val">'+designAir+'°F</span></div>';
+  html += '<div class="data-row"><span class="data-label">Estimated design water temp (no heater)</span><span class="data-val">'+designWater+'°F</span></div>';
+  html += '<div class="data-row"><span class="data-label">Required temperature rise</span><span class="data-val orange">'+tempRise+'°F</span></div>';
+  html += '<div class="data-row"><span class="data-label">Minimum BTU (calculated)</span><span class="data-val">'+minBtu.toLocaleString()+' BTU/hr</span></div>';
+  html += '<div class="data-row"><span class="data-label">Recommended BTU (with 25% FL safety factor)</span><span class="data-val orange"><strong>'+recBtu.toLocaleString()+' BTU/hr</strong></span></div>';
+  if(htype==='gas'||htype==='both'){
+    html += '<div class="data-row"><span class="data-label">Suggested gas heater model</span><span class="data-val orange">'+recBtu.toLocaleString()+' BTU — '+gasModel+'</span></div>';
+    html += '<div class="data-row"><span class="data-label">Est. annual gas heating cost (FL)</span><span class="data-val red">~$'+annGasCost.toLocaleString()+'/year</span></div>';
+  }
+  if(htype==='hp'||htype==='both'){
+    html += '<div class="data-row"><span class="data-label">Suggested heat pump model</span><span class="data-val blue">'+hpModel+'</span></div>';
+    html += '<div class="data-row"><span class="data-label">Est. annual heat pump cost (FL)</span><span class="data-val green">~$'+annHpCost.toLocaleString()+'/year</span></div>';
+  }
+  if(htype==='both'){html += '<div class="data-row"><span class="data-label"><strong>Annual savings — heat pump vs. gas</strong></span><span class="data-val green"><strong>~$'+(annGasCost-annHpCost).toLocaleString()+'/year</strong></span></div>';}
+  html += '</div>';
+  html += '<div class="tip-box" style="margin-top:10px"><strong>Heat-up time estimate:</strong> To raise '+vol.toLocaleString()+' gallons by '+tempRise+'°F using a '+recBtu.toLocaleString()+' BTU gas heater: approximately '+Math.round(vol*8.34*tempRise/recBtu)+' hours. Heat pump heat-up is 3–5× longer — run continuously on cold fronts rather than trying to heat from cold in one session.</div>';
+  var rb = document.getElementById('heaterResult');
+  rb.innerHTML = html;
+  rb.style.display = 'block';
+}
+
+var FEATURE_GPM = {standard:0, spa:20, waterfall:15, spa_water:35, slide:25};
+
+function calcPump(){
+  var vol  = parseFloat(document.getElementById('pumpVol').value)||18000;
+  var turn = parseFloat(document.getElementById('turnover').value)||8;
+  var plen = parseFloat(document.getElementById('pipeLen').value)||80;
+  var rets = parseInt(document.getElementById('numReturns').value)||3;
+  var feat = document.getElementById('features').value;
+  var baseGpm = Math.ceil(vol / (turn * 60));
+  var featGpm = FEATURE_GPM[feat]||0;
+  var totalGpm = baseGpm + featGpm;
+  var pipeSz = totalGpm <= 40 ? '2"' : totalGpm <= 65 ? '2.5"' : '3"';
+  var retSz  = '1.5" or 2" per return';
+  var pumpHP  = totalGpm <= 40 ? '0.75–1.0 HP VS pump' : totalGpm <= 65 ? '1.0–1.5 HP VS pump' : totalGpm <= 90 ? '1.5–2.0 HP VS pump' : '2.0–3.0 HP VS pump';
+  var filterSF = Math.ceil(totalGpm / 1.5 / 10) * 10;
+  var html = '<div class="result-hero"><div class="result-num">'+totalGpm+'</div><div class="result-unit">GPM</div><div class="result-label">Required pump flow rate · '+vol.toLocaleString()+' gal · '+turn+'-hour turnover</div></div>';
+  html += '<div style="margin-top:14px">';
+  html += '<div class="data-row"><span class="data-label">Base pool turnover flow</span><span class="data-val">'+baseGpm+' GPM</span></div>';
+  html += '<div class="data-row"><span class="data-label">Feature flow demand (spa/waterfall/etc)</span><span class="data-val">+'+featGpm+' GPM</span></div>';
+  html += '<div class="data-row"><span class="data-label"><strong>Total required flow</strong></span><span class="data-val orange"><strong>'+totalGpm+' GPM</strong></span></div>';
+  html += '<div class="data-row"><span class="data-label">Recommended suction/return pipe diameter</span><span class="data-val orange">'+pipeSz+'</span></div>';
+  html += '<div class="data-row"><span class="data-label">Return line size per jet</span><span class="data-val">'+retSz+'</span></div>';
+  html += '<div class="data-row"><span class="data-label">Recommended pump (FL VS mandate)</span><span class="data-val orange">'+pumpHP+'</span></div>';
+  html += '<div class="data-row"><span class="data-label">Minimum sand filter area (1.5 GPM/sq ft)</span><span class="data-val">'+filterSF+' sq in (≥ '+filterSF+' sq in rated)</span></div>';
+  html += '<div class="data-row"><span class="data-label">FL code pump compliance</span><span class="data-val green">Variable speed required (>1 HP in FL)</span></div>';
+  html += '</div>';
+  html += '<div class="tip-box" style="margin-top:10px"><strong>VS Pump Programming:</strong> Program your variable speed pump to run at 1,750–2,200 RPM for 8–10 hours/day for filtration, and boost to full speed only for vacuuming, backwashing, or running features. This maximizes FL energy savings while maintaining water quality.</div>';
+  var rb = document.getElementById('pumpResult');
+  rb.innerHTML = html;
+  rb.style.display = 'block';
+}
+
+function submitQuote(){
+  var name  = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return;}
+  showToast('We\'ll call you within 2 hours!');
+}
+
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain pool plumbing calculator Florida pool heater BTU sizing gas heat pump variable speed pump pipe sizing FPC 608 backflow prevention FL pool code FBC pool volume gallons evaporation solar cover screened enclosure heat pump COP AquaCal Hayward Pentair pool plumber South Florida Palm Beach Broward Miami-Dade VGBA anti-entrapment main drain 
+</div>
+</body>
+</html>
