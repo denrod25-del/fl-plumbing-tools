@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**180 interactive cost calculators** for Florida homeowners.
+**183 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -145,6 +145,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Slab Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-leak/fl_slab_leak.html)
 - [FL Slab Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-repair/fl_slab_repair.html)
 - [FL Solar Hpwh Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/solar-hpwh/fl_solar_hpwh.html)
+- [FL Solar Wh Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/solar-wh-sizing/fl_solar_wh_sizing.html)
 - [FL Stormwater Drain Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/stormwater-drain/fl_stormwater_drain.html)
 - [FL Sump Pump Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/sump-pump-sizing/fl_sump_pump_sizing.html)
 - [FL Supply Pressure Loss Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/supply-pressure-loss/fl_supply_pressure_loss.html)
@@ -167,6 +168,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Damage Claim Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-damage-claim/fl_water_damage_claim.html)
 - [FL Water Filtration Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-filtration/fl_water_filtration.html)
 - [FL Water Hammer Arrestor Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-hammer-arrestor/fl_water_hammer_arrestor.html)
+- [FL Water Heater Age Decoder Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-age-decoder/fl_wh_age_decoder.html)
 - [FL Water Heater Efficiency Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-efficiency/fl_water_heater_efficiency.html)
 - [FL Water Heater Energy Comparison Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-energy-comparison/fl_wh_energy_comparison.html)
 - [FL Water Heater Maintenance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater-maintenance/fl_water_heater_maintenance.html)
@@ -176,6 +178,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Water Heater Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-heater/fl_water_heater.html)
 - [FL Water Meter Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-meter-leak/fl_water_meter_leak.html)
 - [FL Water Meter Shutoff Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-meter-shutoff/fl_water_meter_shutoff.html)
+- [FL Water Pressure Loss Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-pressure-loss-calc/fl_water_pressure_loss.html)
 - [FL Water Pressure Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-pressure/fl_water_pressure.html)
 - [FL Water Safety Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-safety/fl_water_safety.html)
 - [FL Water Softener Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/water-softener-sizing/fl_water_softener_sizing.html)

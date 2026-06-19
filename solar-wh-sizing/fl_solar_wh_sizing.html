@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Solar Water Heater Sizing Calculator | ROI & Savings | IRA Tax Credit Florida</title>
+<meta name="description" content="Size a solar water heater system for your Florida home. Collector area calculator, storage tank sizing, 10-year ROI comparison, IRA 30% tax credit, FL property tax exemption, FPL and Duke Energy rebates. Solar hours by county: Miami-Dade, Broward, Palm Beach, Hillsborough, Collier, Lee.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);border-bottom:3px solid #14B8A6;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#14B8A6;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#14B8A622;color:#14B8A6;border:1px solid #14B8A644;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.72rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#14B8A6;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#14B8A6;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#14B8A6}
+.btn{width:100%;padding:14px;background:#14B8A6;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.code-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:8px}
+.code-table th{background:#141929;color:#14B8A6;padding:8px 6px;text-align:left;font-size:0.71rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table td{padding:7px 6px;border-bottom:1px solid #1E2A45;color:#E2E8F0;vertical-align:top}
+.code-table tr:last-child td{border-bottom:none}
+.code-table .highlight td{background:#14B8A611;color:#14B8A6;font-weight:700}
+.tip-box{background:#14B8A611;border:1px solid #14B8A633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#14B8A6}
+.warn-box{background:#F9731611;border:1px solid #F9731633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#F97316}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#14B8A6;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #14B8A655}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.stat-card{background:#0F1629;border-radius:8px;padding:12px;text-align:center;border:1px solid #1E2A45}
+.stat-num{font-size:1.1rem;font-weight:800;color:#14B8A6}
+.stat-label{font-size:0.7rem;color:#94A3B8;margin-top:3px}
+.result-hero{background:#14B8A611;border:1px solid #14B8A633;border-radius:12px;padding:16px;margin-top:10px}
+.result-headline{font-size:1.3rem;font-weight:800;text-align:center;margin-bottom:4px;color:#14B8A6}
+.result-sub{font-size:0.8rem;color:#94A3B8;text-align:center}
+.savings-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:0.8rem}
+.savings-row:last-child{border-bottom:none}
+.savings-bar{height:16px;background:#1E2A45;border-radius:8px;overflow:hidden;flex:1;margin:0 10px}
+.savings-fill{height:100%;border-radius:8px;background:#14B8A6;transition:width .6s}
+.rebate-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.rebate-amt{font-size:1.1rem;font-weight:800;color:#14B8A6}
+.rebate-label{font-size:0.78rem;color:#E2E8F0;font-weight:600;margin-top:3px}
+.rebate-note{font-size:0.72rem;color:#94A3B8;margin-top:6px;line-height:1.4}
+.progress-label{display:flex;justify-content:space-between;font-size:0.68rem;color:#94A3B8;margin-top:3px}
+.solar-icon{width:60px;height:60px;background:linear-gradient(135deg,#F4B942,#F97316);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 12px}
+.year-row{display:grid;grid-template-columns:2fr 3fr 3fr 3fr;gap:4px;padding:5px 0;border-bottom:1px solid #1E2A4520;font-size:0.7rem}
+.year-row.header-row{color:#14B8A6;font-weight:700;border-bottom:1px solid #1E2A45}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">☀️</div>
+  <h1>FL Solar Water Heater Sizing &amp; ROI Calculator</h1>
+  <p>Collector sizing, 10-year savings comparison, IRA 30% credit, and FL incentives</p>
+  <span class="badge">SRCC OG-300 · FL Solar Hours · IRA §25C · FL Prop Tax Exemption</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('sizer',event)">Size Calc</button>
+    <button class="tab" onclick="showTab('savings',event)">Savings</button>
+    <button class="tab" onclick="showTab('rebates',event)">Rebates</button>
+    <button class="tab" onclick="showTab('quote',event)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: Size Calc -->
+  <div id="sizer" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>📐</span>Solar Water Heater System Sizer</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">FL is the #1 solar water heating market in the US — high solar irradiance and high electricity rates make FL one of the strongest ROI states for solar water heating. Use this tool to size collector area and storage tank for your home.</div>
+      <label>Number of people in household</label>
+      <select id="hhSize">
+        <option value="1">1 person</option>
+        <option value="2">2 people</option>
+        <option value="3" selected>3 people</option>
+        <option value="4">4 people</option>
+        <option value="5">5 people</option>
+        <option value="6">6 people</option>
+        <option value="7">7+ people</option>
+      </select>
+      <label>Hot water usage pattern</label>
+      <select id="usage">
+        <option value="low">Low — short showers, no tub baths, minimal kitchen use</option>
+        <option value="medium" selected>Average — typical FL household</option>
+        <option value="high">High — long showers, frequent baths, large kitchen</option>
+      </select>
+      <label>FL county / region</label>
+      <select id="county">
+        <option value="6.3">Miami-Dade (6.3 peak sun hrs/day)</option>
+        <option value="6.2">Collier / Naples (6.2 peak sun hrs)</option>
+        <option value="6.1">Broward / Ft. Lauderdale (6.1 peak sun hrs)</option>
+        <option value="6.0">Palm Beach / Lee / Ft. Myers (6.0 peak sun hrs)</option>
+        <option value="5.7">Sarasota / Manatee (5.7 peak sun hrs)</option>
+        <option value="5.5">Hillsborough / Pinellas (5.5 peak sun hrs)</option>
+        <option value="5.4">Brevard / Space Coast (5.4 peak sun hrs)</option>
+        <option value="5.3">Orange / Osceola / Seminole (5.3 peak sun hrs)</option>
+        <option value="5.2">Volusia / Daytona (5.2 peak sun hrs)</option>
+        <option value="5.2">Polk / Highlands (5.2 peak sun hrs)</option>
+        <option value="5.0">Duval / Jacksonville (5.0 peak sun hrs)</option>
+        <option value="4.8">Alachua / Gainesville (4.8 peak sun hrs)</option>
+        <option value="4.7">Escambia / Pensacola (4.7 peak sun hrs)</option>
+      </select>
+      <label>Solar collector type</label>
+      <select id="collectorType">
+        <option value="flat" selected>Flat plate collector (most common in FL — SRCC OG-100 rated)</option>
+        <option value="evacuated">Evacuated tube (higher efficiency, better in cooler months)</option>
+        <option value="ics">ICS / Breadbox (passive — simplest, lowest cost, no freezing risk)</option>
+      </select>
+      <label>Existing water heater type (backup system)</label>
+      <select id="backupType">
+        <option value="electric">Electric storage (standard resistance)</option>
+        <option value="hpwh">Heat pump water heater (HPWH)</option>
+        <option value="gas">Natural gas storage</option>
+        <option value="propane">Propane storage</option>
+        <option value="tankless_elec">Electric tankless</option>
+      </select>
+      <button class="btn" onclick="calcSolar()">Size My Solar System</button>
+      <div id="solarResult" class="result-box">
+        <div id="solarContent"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>☀️</span>FL Solar Hours &amp; Solar Water Heater Potential by County</div>
+      <table class="code-table">
+        <tr><th>County</th><th>Peak Sun Hrs/Day</th><th>Annual Solar Hrs</th><th>Solar Fraction Achievable</th></tr>
+        <tr class="highlight"><td>Miami-Dade</td><td>6.3</td><td>2,300</td><td>85–95%</td></tr>
+        <tr class="highlight"><td>Collier / Naples</td><td>6.2</td><td>2,263</td><td>85–93%</td></tr>
+        <tr><td>Broward</td><td>6.1</td><td>2,227</td><td>83–92%</td></tr>
+        <tr><td>Palm Beach / Lee</td><td>6.0</td><td>2,190</td><td>82–91%</td></tr>
+        <tr><td>Sarasota / Manatee</td><td>5.7</td><td>2,081</td><td>80–89%</td></tr>
+        <tr><td>Hillsborough / Pinellas</td><td>5.5</td><td>2,008</td><td>77–87%</td></tr>
+        <tr><td>Brevard / Space Coast</td><td>5.4</td><td>1,971</td><td>75–85%</td></tr>
+        <tr><td>Orange / Osceola</td><td>5.3</td><td>1,935</td><td>74–84%</td></tr>
+        <tr><td>Volusia / Polk</td><td>5.2</td><td>1,898</td><td>73–83%</td></tr>
+        <tr><td>Duval / Jacksonville</td><td>5.0</td><td>1,825</td><td>70–80%</td></tr>
+        <tr><td>Alachua / Gainesville</td><td>4.8</td><td>1,752</td><td>67–77%</td></tr>
+        <tr><td>Escambia / Pensacola</td><td>4.7</td><td>1,716</td><td>65–75%</td></tr>
+      </table>
+      <div class="tip-box"><strong>Solar fraction explained:</strong> A 90% solar fraction means the solar collector supplies 90% of your annual hot water heating energy. The remaining 10% is covered by your backup heater (electric, gas, or HPWH). In Miami-Dade, a properly sized flat plate system can achieve 90%+ solar fraction year-round. In Pensacola, the same system achieves ~70% due to lower winter sun.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🔧</span>FL Solar Water Heater System Types</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        🌟 <strong style="color:#14B8A6">Active indirect (most common FL system):</strong> Flat plate collectors on roof + insulated storage tank in garage or utility room + circulation pump + non-toxic heat-transfer fluid (propylene glycol). Best for FL hard water — water never touches the collector, preventing scale. SRCC OG-300 certified systems qualify for IRA 25C credit. Cost: $4,500–$8,500 installed.<br><br>
+        ✅ <strong style="color:#14B8A6">ICS / Integrated Collector Storage (passive):</strong> No pump, no moving parts — water sits in insulated collector on the roof and flows by thermosiphon. Simplest, most reliable, lowest cost ($2,500–$4,500). Works well in South FL (no freezing risk). Does not work in North FL where freeze protection is needed.<br><br>
+        ✅ <strong style="color:#14B8A6">Active drainback:</strong> Uses water (not glycol) as the heat transfer fluid. When the pump stops, water drains back to a tank — provides freeze protection without chemicals. More complex than glycol systems but eliminates glycol maintenance. Cost: $5,000–$9,000 installed.<br><br>
+        ⚠️ <strong style="color:#F97316">Active direct (not recommended for FL):</strong> Water circulates directly through the roof collector. FL hard water causes rapid scale buildup in collectors, reducing efficiency dramatically within 2–3 years. We do not install direct-circulation systems in FL.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Savings -->
+  <div id="savings" class="panel">
+    <div class="card">
+      <div class="card-title"><span>💰</span>10-Year Cost Comparison Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Compare the 10-year total cost of solar water heating vs. conventional alternatives. Includes system purchase, installation, rebates, tax credits, and annual energy costs.</div>
+      <label>Household size</label>
+      <select id="svHH">
+        <option value="2">2 people</option>
+        <option value="3" selected>3 people</option>
+        <option value="4">4 people</option>
+        <option value="5">5 people</option>
+      </select>
+      <label>FL county / region</label>
+      <select id="svCounty">
+        <option value="6.3">Miami-Dade (6.3 sun hrs)</option>
+        <option value="6.1">Broward (6.1 sun hrs)</option>
+        <option value="6.0" selected>Palm Beach / Lee (6.0 sun hrs)</option>
+        <option value="5.5">Hillsborough / Pinellas (5.5 sun hrs)</option>
+        <option value="5.3">Orange / Orlando (5.3 sun hrs)</option>
+        <option value="5.0">Duval / Jacksonville (5.0 sun hrs)</option>
+      </select>
+      <label>Electric rate ($/kWh)</label>
+      <select id="svRate">
+        <option value="0.125">FPL: $0.125/kWh (South FL)</option>
+        <option value="0.132">Duke Energy FL: $0.132/kWh</option>
+        <option value="0.130">TECO / Tampa Electric: $0.130/kWh</option>
+        <option value="0.138">OUC / Orlando Utilities: $0.138/kWh</option>
+        <option value="0.142">FPUC / other: $0.142/kWh</option>
+      </select>
+      <button class="btn" onclick="calcSavings()">Calculate 10-Year ROI</button>
+      <div id="savingsResult" class="result-box">
+        <div id="savingsContent"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>Annual Solar WH vs. Conventional Savings — FL Average</div>
+      <table class="code-table">
+        <tr><th>Vs. backup system</th><th>Annual savings (3-person HH)</th><th>10-yr savings</th></tr>
+        <tr><td>vs. Standard electric storage</td><td>$380–$520/yr</td><td>$3,800–$5,200</td></tr>
+        <tr><td>vs. Electric tankless</td><td>$320–$440/yr</td><td>$3,200–$4,400</td></tr>
+        <tr><td>vs. Natural gas storage</td><td>$120–$200/yr</td><td>$1,200–$2,000</td></tr>
+        <tr><td>vs. Propane storage</td><td>$300–$480/yr</td><td>$3,000–$4,800</td></tr>
+        <tr><td>vs. Heat pump WH (HPWH)</td><td>$100–$180/yr</td><td>$1,000–$1,800</td></tr>
+      </table>
+      <div class="tip-box"><strong>Key insight:</strong> Solar water heating offers the biggest financial advantage vs. electric resistance storage — the most common FL system type. With an IRA 30% credit and FPL rebate, a $6,000 active indirect system can pay back in 5–8 years in South FL with $400+ annual electricity savings. North FL (Pensacola, Jacksonville) has lower solar fraction and longer payback periods of 8–12 years.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📈</span>Solar vs. HPWH — The FL Comparison</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        🏆 <strong style="color:#14B8A6">Heat pump WH (HPWH) wins on cost if you have the right setup:</strong> A HPWH costs $1,200–$1,800 installed (after IRA credit, $840–$1,260 net). Annual energy cost: $170–$250/yr. If you already have a HPWH, adding solar may not be cost-effective unless your energy costs are very high.<br><br>
+        ☀️ <strong style="color:#14B8A6">Solar wins in high-use households:</strong> For 4+ person households with high hot water demand, the solar fraction becomes increasingly valuable. At 200+ gallons/day usage, solar savings outpace HPWH benefits significantly.<br><br>
+        🔒 <strong style="color:#14B8A6">Solar wins for grid independence:</strong> HPWH requires electricity — during FL hurricane outages, a solar thermal system (especially passive ICS) continues producing hot water. For off-grid or backup-focused homes, solar water heating is unmatched.<br><br>
+        💡 <strong style="color:#14B8A6">Best FL combo:</strong> Solar flat plate collector + HPWH backup. The HPWH backup is so efficient that the 10–20% non-solar days cost very little. This combination achieves the lowest possible annual hot water cost of any FL system type.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Rebates -->
+  <div id="rebates" class="panel">
+    <div class="card">
+      <div class="card-title"><span>💸</span>FL Solar Water Heater Incentives — 2024–2025</div>
+      <div class="rebate-card">
+        <div class="rebate-amt">30% of cost, no upper limit</div>
+        <div class="rebate-label">🇺🇸 IRA Section 25C Federal Tax Credit</div>
+        <div class="rebate-note">Covers 30% of purchase price + installation cost for qualifying solar water heating systems. System must be SRCC OG-300 certified. At least 50% of the energy used to heat water must come from the sun (meets FL standards easily). Apply on IRS Form 5695 for the tax year of installation. Credit is non-refundable — you need tax liability to use it. Unused credit can be carried forward. Example: $7,000 system → $2,100 credit. Available through Dec 31, 2032.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-amt">100% property tax exemption</div>
+        <div class="rebate-label">🌴 FL Property Tax Exemption (FL §196.175)</div>
+        <div class="rebate-note">Solar water heating equipment does not increase your FL property tax assessment. A $7,000 solar water heater system installed on a home with $200,000 assessed value pays zero additional property tax on the system. File with county property appraiser. This exemption is permanent — it applies every year you own the home. Benefit value: varies, but saves $50–$200/yr in property taxes in most FL counties at typical millage rates.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-amt">Sales tax exempt</div>
+        <div class="rebate-label">🌴 FL Sales Tax Exemption (FL §212.08(7)(hh))</div>
+        <div class="rebate-note">Solar energy equipment sold for use in FL is exempt from the 6% FL state sales tax and most county surtaxes. On a $5,000 equipment purchase, this saves $300–$350 at the time of purchase. Your installing contractor should not charge sales tax on qualifying solar thermal equipment. If you are charged sales tax in error, request a correction before payment — refunds after the fact require filing with the FL DOR.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-amt">Up to $100–$350 rebate</div>
+        <div class="rebate-label">⚡ FPL On-Bill Financing &amp; Rebate Programs</div>
+        <div class="rebate-note">FPL does not currently offer a direct solar water heater equipment rebate (as of 2024–2025), but offers an on-bill financing program for qualifying energy efficiency upgrades including solar water heaters. FPL rebates are available for HPWH ($100–$350). For FPL customers, the solar sales tax exemption + IRA credit is the primary financial incentive stack. Check fpl.com/savings for current program status.</div>
+      </div>
+      <div class="rebate-card">
+        <div class="rebate-amt">Up to $200 rebate</div>
+        <div class="rebate-label">⚡ Duke Energy FL / TECO Programs</div>
+        <div class="rebate-note">Duke Energy Florida and TECO (Tampa Electric) offer rebates for energy-efficient water heating. Rebate amounts and availability vary — contact your utility directly or check duke-energy.com/home/products/home-energy-improvement. Duke residential customers who purchase SRCC-rated solar water heaters may qualify for additional program benefits. TECO's EnergyAdvantage program includes water heating upgrade incentives.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📋</span>SRCC OG-300 Certification — Why It Matters in FL</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ <strong style="color:#14B8A6">FL requires SRCC OG-300:</strong> Florida Statute §553.97 requires that solar water heaters sold and installed in FL meet SRCC (Solar Rating and Certification Corporation) OG-300 standards. Systems that are not OG-300 certified cannot receive the FL state incentives and may not be installed by licensed FL contractors.<br><br>
+        ✅ <strong style="color:#14B8A6">IRA credit requires SRCC OG-300:</strong> The IRS requires SRCC OG-300 certification for solar water heating systems claiming the 25C tax credit. Non-certified systems are ineligible — even if they function identically.<br><br>
+        ✅ <strong style="color:#14B8A6">How to verify:</strong> Visit solar-rating.org and search for the system or collector model. Your licensed FL solar contractor should provide the OG-300 certificate number with your installation documentation.<br><br>
+        📋 <strong style="color:#14B8A6">FL permit and inspection:</strong> Solar water heater installation requires a plumbing permit (for the water connections) and possibly a building permit (for roof penetrations / structural). Our licensed CFC plumbers handle the full permit package and ensure code-compliant installation.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🔢</span>Net Cost Calculator — IRA + FL Exemptions</div>
+      <div style="font-size:0.82rem;color:#94A3B8;margin-bottom:12px">Enter your expected system quote to see your net out-of-pocket cost after incentives:</div>
+      <label>Estimated system quote ($)</label>
+      <input type="number" id="quoteCost" value="6500" min="2000" max="25000">
+      <button class="btn" onclick="calcNetCost()">Calculate My Net Cost</button>
+      <div id="netResult" class="result-box">
+        <div id="netContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Free Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📞</span>Free Solar Water Heater Quote</div>
+      <div style="font-size:0.82rem;color:#94A3B8;margin-bottom:14px;line-height:1.6">Our licensed FL CFC plumbers are NABCEP-trained solar water heating specialists. We install SRCC OG-300 certified flat plate and ICS systems and help you claim your IRA tax credit and FL incentives.</div>
+      <label>Your name</label>
+      <input type="text" id="qName" placeholder="First &amp; last name">
+      <div class="form-row">
+        <div>
+          <label>Phone number</label>
+          <input type="tel" id="qPhone" placeholder="(561) 555-PIPE">
+        </div>
+        <div>
+          <label>County</label>
+          <select id="qCounty">
+            <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+            <option>Hillsborough</option><option>Pinellas</option><option>Orange</option>
+            <option>Lee</option><option>Collier</option><option>Duval</option>
+            <option>Sarasota</option><option>Volusia</option><option>Brevard</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <label>Number of people in home</label>
+      <select id="qPeople">
+        <option>1–2 people</option><option>3–4 people</option><option>5–6 people</option><option>7+ people</option>
+      </select>
+      <label>Current water heater type</label>
+      <select id="qWHType">
+        <option>Electric storage (standard)</option>
+        <option>Gas storage</option>
+        <option>Heat pump WH</option>
+        <option>Electric tankless</option>
+        <option>No existing WH (new construction)</option>
+      </select>
+      <label>Roof type</label>
+      <select id="qRoof">
+        <option>Flat tile (S-tile or flat cement tile)</option>
+        <option>Barrel tile (Spanish tile)</option>
+        <option>Asphalt shingle</option>
+        <option>Metal standing seam</option>
+        <option>Metal corrugated</option>
+        <option>Not sure</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Request Solar WH Quote</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>✅</span>Our Solar WH Service Includes</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ Free site assessment — roof orientation, shading, and structural review<br>
+        ✅ SRCC OG-300 certified flat plate and ICS systems<br>
+        ✅ Licensed CFC plumber installation — permit + inspection<br>
+        ✅ Roof weatherproofing — no leaks guaranteed<br>
+        ✅ IRA Form 5695 documentation provided<br>
+        ✅ FL property tax exemption documentation provided<br>
+        ✅ 10-year system warranty<br>
+        ✅ Annual inspection plan available
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! ☀️</div>
+<!-- fl-plumbing-seo: florida solar water heater sizing calculator solar water heater ROI Florida solar hot water collector area calculator florida IRA 25C tax credit solar water heater florida solar water heater rebate FPL Duke TECO florida SRCC OG-300 certified solar water heater florida solar water heater cost 2024 florida heat pump water heater vs solar florida solar fraction florida sun hours by county florida flat plate collector vs evacuated tube florida solar water heater permit CFC plumber florida property tax exemption solar florida sales tax exemption solar energy equipment florida active indirect drainback ICS solar water heater florida Miami Dade Broward Palm Beach Hillsborough Orange Lee Collier Jacksonville solar water heating -->
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+var HH_GPD = {1:20, 2:35, 3:50, 4:65, 5:80, 6:95, 7:110};
+var USAGE_MULT = {low:0.75, medium:1.0, high:1.3};
+var COLLECTOR_EFF = {flat:0.65, evacuated:0.78, ics:0.55};
+var COLLECTOR_AREA_PER_PERSON = {flat:12, evacuated:10, ics:14};
+var SOLAR_FRACTION = {
+  '6.3':0.92, '6.2':0.90, '6.1':0.88, '6.0':0.86,
+  '5.7':0.83, '5.5':0.80, '5.4':0.78, '5.3':0.76,
+  '5.2':0.74, '5.0':0.71, '4.8':0.68, '4.7':0.65
+};
+var BACKUP_KWH_PER_GAL = {electric:0.05, hpwh:0.015, gas:0.0, propane:0.0, tankless_elec:0.048};
+var BACKUP_COST_PER_GAL = {electric:null, hpwh:null, gas:0.0044, propane:0.0085, tankless_elec:null};
+function calcSolar() {
+  var hh = parseInt(document.getElementById('hhSize').value) || 3;
+  var usage = document.getElementById('usage').value || 'medium';
+  var sunHrs = parseFloat(document.getElementById('county').value) || 5.5;
+  var cType = document.getElementById('collectorType').value || 'flat';
+  var backup = document.getElementById('backupType').value || 'electric';
+  var gpd = HH_GPD[hh] * USAGE_MULT[usage];
+  var solarFrac = SOLAR_FRACTION[String(sunHrs)] || 0.78;
+  var collAreaPP = COLLECTOR_AREA_PER_PERSON[cType];
+  var collArea = Math.ceil(hh * collAreaPP * USAGE_MULT[usage]);
+  var numPanels = Math.ceil(collArea / 32);
+  var storageTank = Math.ceil(gpd * 1.5 / 10) * 10;
+  var storageTankMax = storageTank + 10;
+  var solarGPD = gpd * solarFrac;
+  var backupGPD = gpd * (1 - solarFrac);
+  var systemCostLow = cType === 'ics' ? 2500 : cType === 'evacuated' ? 6000 : 4500;
+  var systemCostHigh = cType === 'ics' ? 4500 : cType === 'evacuated' ? 9500 : 8500;
+  var midCost = (systemCostLow + systemCostHigh) / 2;
+  var iraCredit = Math.round(midCost * 0.30);
+  var netCost = midCost - iraCredit;
+  var box = document.getElementById('solarResult');
+  box.style.display = 'block';
+  var html = '<div class="result-hero"><div class="result-headline">' + collArea + ' sq ft Collector Area</div><div class="result-sub">' + numPanels + ' panel' + (numPanels > 1 ? 's' : '') + ' · ' + storageTank + '–' + storageTankMax + ' gal storage · ' + Math.round(solarFrac*100) + '% solar fraction</div></div>';
+  html += '<div class="stat-grid">';
+  html += '<div class="stat-card"><div class="stat-num">' + Math.round(gpd) + ' gal</div><div class="stat-label">Daily hot water demand</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + Math.round(solarFrac*100) + '%</div><div class="stat-label">Solar fraction achievable</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + collArea + ' sq ft</div><div class="stat-label">Collector area needed</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + storageTank + '–' + storageTankMax + ' gal</div><div class="stat-label">Storage tank size</div></div>';
+  html += '</div>';
+  html += '<div class="tip-box" style="margin-top:10px"><strong>System cost (installed):</strong> $' + systemCostLow.toLocaleString() + '–$' + systemCostHigh.toLocaleString() + '<br><strong>IRA 30% tax credit:</strong> ~$' + iraCredit.toLocaleString() + '<br><strong>Net cost after credit:</strong> ~$' + Math.round(netCost).toLocaleString() + '<br><strong>FL property tax:</strong> Zero additional tax on solar equipment</div>';
+  html += '<div class="ok-box" style="margin-top:8px"><strong>✅ FL solar water heating is ideal for your household.</strong> With ' + Math.round(solarFrac*100) + '% solar fraction in your county, you\'ll get roughly ' + Math.round(365 * solarFrac * gpd) + ' gallons of free solar-heated water per year.</div>';
+  document.getElementById('solarContent').innerHTML = html;
+}
+function calcSavings() {
+  var hh = parseInt(document.getElementById('svHH').value) || 3;
+  var sunHrs = parseFloat(document.getElementById('svCounty').value) || 6.0;
+  var rate = parseFloat(document.getElementById('svRate').value) || 0.125;
+  var solarFrac = SOLAR_FRACTION[String(sunHrs)] || 0.82;
+  var gpd = HH_GPD[hh] || 50;
+  var annualGal = gpd * 365;
+  var kwhPerGal = 0.05;
+  var annualKwh = annualGal * kwhPerGal;
+  var annualElecCost = annualKwh * rate;
+  var solarSaves = annualElecCost * solarFrac;
+  var netSolarCost = 6500 * 0.70;
+  var paybackYrs = Math.round(netSolarCost / solarSaves * 10) / 10;
+  var systemCost = 6500;
+  var box = document.getElementById('savingsResult');
+  box.style.display = 'block';
+  var html = '<div class="result-hero"><div class="result-headline">$' + Math.round(solarSaves) + '/yr Savings</div><div class="result-sub">vs. standard electric storage · ' + Math.round(solarFrac*100) + '% solar fraction in your county</div></div>';
+  html += '<div class="stat-grid">';
+  html += '<div class="stat-card"><div class="stat-num">$' + Math.round(solarSaves) + '</div><div class="stat-label">Annual savings (vs. electric)</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + paybackYrs + ' yrs</div><div class="stat-label">Simple payback (after IRA)</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">$' + Math.round(solarSaves * 10).toLocaleString() + '</div><div class="stat-label">10-year cumulative savings</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">$' + Math.round(solarSaves * 10 - netSolarCost).toLocaleString() + '</div><div class="stat-label">10-yr net gain (est.)</div></div>';
+  html += '</div>';
+  var yr10rows = '<div class="year-row header-row"><div>Year</div><div>Electric WH cost</div><div>Solar WH cost</div><div>Cumul. savings</div></div>';
+  var cumSave = 0;
+  for (var y = 1; y <= 10; y++) {
+    var elec = Math.round(annualElecCost * Math.pow(1.03, y));
+    var solarAnn = Math.round((annualElecCost * (1-solarFrac)) * 0.015 * Math.pow(1.03, y) + (y===1 ? netSolarCost : 0));
+    var save = elec - solarAnn;
+    cumSave += save;
+    yr10rows += '<div class="year-row"><div>' + y + '</div><div>$' + elec + '</div><div>$' + solarAnn + '</div><div>$' + Math.round(cumSave).toLocaleString() + '</div></div>';
+  }
+  html += '<div style="margin-top:12px;font-size:0.76rem;font-weight:700;color:#14B8A6;margin-bottom:6px">10-Year Projection (3% annual utility rate increase)</div>' + yr10rows;
+  document.getElementById('savingsContent').innerHTML = html;
+}
+function calcNetCost() {
+  var cost = parseFloat(document.getElementById('quoteCost').value) || 6500;
+  var ira = Math.round(cost * 0.30);
+  var net = cost - ira;
+  var stateSalesTax = Math.round(cost * 0.06);
+  var totalNet = net;
+  var box = document.getElementById('netResult');
+  box.style.display = 'block';
+  var html = '<div class="result-hero"><div class="result-headline">$' + Math.round(totalNet).toLocaleString() + ' Net Cost</div><div class="result-sub">After IRA 30% credit · $' + cost.toLocaleString() + ' gross system cost</div></div>';
+  html += '<div style="margin-top:12px;font-size:0.8rem">';
+  html += '<div class="savings-row"><span style="min-width:170px">System cost (gross)</span><span>+ $' + cost.toLocaleString() + '</span></div>';
+  html += '<div class="savings-row"><span style="min-width:170px">IRA 25C credit (30%)</span><span style="color:#22C55E">– $' + ira.toLocaleString() + '</span></div>';
+  html += '<div class="savings-row"><span style="min-width:170px">FL sales tax savings</span><span style="color:#22C55E">– $' + stateSalesTax.toLocaleString() + ' (not charged)</span></div>';
+  html += '<div class="savings-row"><span style="min-width:170px">FL property tax add (10 yrs)</span><span style="color:#22C55E">$0 (exempt)</span></div>';
+  html += '<div class="savings-row" style="font-weight:700;font-size:0.85rem"><span style="min-width:170px;color:#14B8A6">Net out-of-pocket</span><span style="color:#14B8A6">$' + Math.round(totalNet).toLocaleString() + '</span></div>';
+  html += '</div>';
+  document.getElementById('netContent').innerHTML = html;
+}
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  if (e && e.target) e.target.classList.add('active');
+}
+function submitQuote() {
+  var name = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){ t.style.display = 'none'; }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal florida solar water heater sizing calculator solar hot water collector area SRCC OG-300 certified flat plate evacuated tube ICS drainback florida solar water heater cost 2024 IRA 25C tax credit solar water heater florida property tax exemption solar sales tax exemption solar energy equipment florida FPL Duke TECO rebate solar water heater miami-dade broward palm beach hillsborough orange lee collier jacksonville sarasota solar fraction florida sun hours by county active indirect solar water heater florida heat pump water heater vs solar florida solar ROI payback florida licensed CFC plumber solar water heater installation florida NABCEP solar thermal 
+</div>
+</body>
+</html>

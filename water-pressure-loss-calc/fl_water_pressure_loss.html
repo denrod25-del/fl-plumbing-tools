@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Water Pressure Loss Calculator | Pipe Friction Head Loss | PRV & Booster Pump Sizing</title>
+<meta name="description" content="Calculate water pressure loss through Florida plumbing supply pipes. Hazen-Williams friction head loss by pipe length, diameter, and material. PRV sizing, booster pump recommendation, and FL street pressure by county. FPC §604 velocity limits.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);border-bottom:3px solid #06B6D4;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#06B6D4;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#06B6D422;color:#06B6D4;border:1px solid #06B6D444;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.72rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#06B6D4;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#06B6D4;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#06B6D4}
+.btn{width:100%;padding:14px;background:#06B6D4;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.code-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:8px}
+.code-table th{background:#141929;color:#06B6D4;padding:8px 6px;text-align:left;font-size:0.71rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table td{padding:7px 6px;border-bottom:1px solid #1E2A45;color:#E2E8F0;vertical-align:top}
+.code-table tr:last-child td{border-bottom:none}
+.highlight-row td{background:#06B6D411;color:#06B6D4;font-weight:700}
+.tip-box{background:#06B6D411;border:1px solid #06B6D433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#06B6D4}
+.warn-box{background:#F9731611;border:1px solid #F9731633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#F97316}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.danger-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.danger-box strong{color:#EF4444}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#06B6D4;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #06B6D455}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.section-label{font-size:0.76rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+.pressure-gauge{position:relative;height:140px;display:flex;align-items:center;justify-content:center;margin:10px 0}
+.gauge-ring{width:130px;height:130px;border-radius:50%;background:conic-gradient(from 225deg, #22C55E 0deg, #F4B942 120deg, #EF4444 180deg, #141929 180deg);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px #06B6D433}
+.gauge-inner{width:100px;height:100px;background:#141929;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge-val{font-size:1.4rem;font-weight:800;color:#06B6D4}
+.gauge-unit{font-size:0.7rem;color:#94A3B8}
+.pipe-vis{display:flex;align-items:center;gap:6px;margin:10px 0;font-size:0.8rem}
+.pipe-seg{height:18px;background:#06B6D422;border:1px solid #06B6D444;border-radius:3px;flex:1;position:relative;display:flex;align-items:center;justify-content:center;font-size:0.67rem;color:#06B6D4;font-weight:700}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.stat-card{background:#0F1629;border-radius:8px;padding:12px;text-align:center;border:1px solid #1E2A45}
+.stat-num{font-size:1.1rem;font-weight:800;color:#06B6D4}
+.stat-label{font-size:0.7rem;color:#94A3B8;margin-top:3px}
+.result-hero{background:#06B6D411;border:1px solid #06B6D433;border-radius:12px;padding:16px;margin-top:10px}
+.result-headline{font-size:1.3rem;font-weight:800;text-align:center;margin-bottom:4px}
+.result-sub{font-size:0.8rem;color:#94A3B8;text-align:center}
+.pressure-bar{height:20px;background:#1E2A45;border-radius:10px;overflow:hidden;margin:10px 0;position:relative}
+.pressure-fill{height:100%;border-radius:10px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:0.68rem;font-weight:700;color:#0A0E1A;transition:width .5s}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">💧</div>
+  <h1>FL Water Pressure Loss Calculator</h1>
+  <p>Hazen-Williams friction loss, PRV sizing &amp; booster pump recommendations for Florida</p>
+  <span class="badge">FPC §604 · Hazen-Williams Formula</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calc',event)">Pressure Calc</button>
+    <button class="tab" onclick="showTab('prv',event)">PRV Sizing</button>
+    <button class="tab" onclick="showTab('booster',event)">Booster Pump</button>
+    <button class="tab" onclick="showTab('quote',event)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: Pressure Calc -->
+  <div id="calc" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>📐</span>Pipe Friction Pressure Loss Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Uses the Hazen-Williams formula to calculate friction head loss through supply pipes. Enter your pipe specs and flow demand — the tool calculates pressure loss and residual pressure at the fixture.</div>
+      <div class="form-row">
+        <div>
+          <label>Street pressure (PSI)</label>
+          <input type="number" id="streetPSI" value="70" min="30" max="120">
+        </div>
+        <div>
+          <label>PRV set point (PSI)</label>
+          <input type="number" id="prvPSI" value="65" min="0" max="100" placeholder="0 if no PRV">
+        </div>
+      </div>
+      <label>Pipe material</label>
+      <select id="pipeMat">
+        <option value="150">PVC Schedule 40 (C=150)</option>
+        <option value="140" selected>PEX-A / PEX-B (C=140)</option>
+        <option value="130">Copper Type L (C=130)</option>
+        <option value="130">CPVC CTS (C=130)</option>
+        <option value="100">Galvanized steel (C=100)</option>
+        <option value="140">HDPE (C=140)</option>
+      </select>
+      <label>Pipe nominal diameter</label>
+      <select id="pipeDiam">
+        <option value="0.5">1/2" (actual ID ~0.622")</option>
+        <option value="0.75">3/4" (actual ID ~0.824")</option>
+        <option value="1.0" selected>1" (actual ID ~1.049")</option>
+        <option value="1.25">1-1/4" (actual ID ~1.380")</option>
+        <option value="1.5">1-1/2" (actual ID ~1.610")</option>
+        <option value="2.0">2" (actual ID ~2.067")</option>
+        <option value="2.5">2-1/2" (actual ID ~2.469")</option>
+        <option value="3.0">3" (actual ID ~3.068")</option>
+      </select>
+      <label>Total pipe length (feet)</label>
+      <input type="number" id="pipeLen" value="80" min="1" max="2000" placeholder="Include all horizontal + vertical runs">
+      <label>Elevation rise from meter to fixture (feet)</label>
+      <input type="number" id="elevRise" value="0" min="-50" max="100" placeholder="Negative if fixture is below meter">
+      <label>Number of fixtures running simultaneously</label>
+      <select id="fixtureCount">
+        <option value="1">1 fixture (3 GPM)</option>
+        <option value="2">2 fixtures (5 GPM)</option>
+        <option value="3" selected>3 fixtures (8 GPM)</option>
+        <option value="5">5 fixtures (11 GPM)</option>
+        <option value="8">8 fixtures (15 GPM)</option>
+        <option value="12">12 fixtures (20 GPM)</option>
+        <option value="16">16 fixtures (24 GPM)</option>
+        <option value="20">20 fixtures (28 GPM)</option>
+        <option value="30">30+ fixtures (35 GPM)</option>
+      </select>
+      <button class="btn" onclick="calcPressure()">Calculate Pressure Loss</button>
+      <div id="calcResult" class="result-box">
+        <div id="calcContent"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🗺️</span>Typical FL Street Water Pressure by County</div>
+      <table class="code-table">
+        <tr><th>County / Utility</th><th>Typical Range (PSI)</th><th>Notes</th></tr>
+        <tr><td>Miami-Dade (WASD)</td><td>65–80 PSI</td><td>Higher in urban cores; varies by zone</td></tr>
+        <tr><td>Broward (city utilities)</td><td>60–75 PSI</td><td>Ft. Lauderdale averages ~70 PSI at meter</td></tr>
+        <tr><td>Palm Beach (PBCWUD)</td><td>55–75 PSI</td><td>Western areas can reach 80+ PSI</td></tr>
+        <tr><td>Hillsborough / Tampa</td><td>50–70 PSI</td><td>Tampa Water averages ~60 PSI</td></tr>
+        <tr><td>Pinellas / St. Pete</td><td>55–70 PSI</td><td>Clearwater area ~65 PSI typical</td></tr>
+        <tr><td>Orange / Orlando</td><td>50–65 PSI</td><td>OUC supply ~55–60 PSI in most zones</td></tr>
+        <tr><td>Lee / Ft. Myers</td><td>45–65 PSI</td><td>Some rural Lee zones under 50 PSI</td></tr>
+        <tr><td>Collier / Naples</td><td>55–70 PSI</td><td>East Naples higher pressure zone</td></tr>
+        <tr><td>Duval / Jacksonville</td><td>50–65 PSI</td><td>JEA averages ~55 PSI</td></tr>
+        <tr><td>Sarasota / Venice</td><td>50–65 PSI</td><td>Variable by development age</td></tr>
+        <tr><td>Rural / Well water</td><td>40–60 PSI</td><td>Pressure tank setting; often 40/60 or 50/70</td></tr>
+      </table>
+      <div class="tip-box"><strong>FL tip:</strong> FPC §604.8 requires a Pressure Reducing Valve (PRV) when street pressure exceeds 80 PSI. In FL, PRVs are typically set to 55–65 PSI to protect fixtures and water heaters. High-rise buildings (3+ stories) often require booster pumps to overcome elevation pressure loss — each floor adds ~4.3 PSI of elevation loss.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>Friction Loss Reference — PSI per 100 Feet (Copper Type L)</div>
+      <table class="code-table">
+        <tr><th>Flow (GPM)</th><th>1/2" pipe</th><th>3/4" pipe</th><th>1" pipe</th><th>1-1/4" pipe</th><th>1-1/2" pipe</th></tr>
+        <tr><td>3 GPM</td><td>5.1</td><td>1.2</td><td>0.4</td><td>0.13</td><td>0.07</td></tr>
+        <tr><td>5 GPM</td><td>13.2</td><td>3.0</td><td>0.9</td><td>0.30</td><td>0.16</td></tr>
+        <tr><td>8 GPM</td><td>31.0</td><td>7.0</td><td>2.1</td><td>0.68</td><td>0.36</td></tr>
+        <tr><td>10 GPM</td><td>47.0</td><td>10.6</td><td>3.2</td><td>1.02</td><td>0.54</td></tr>
+        <tr><td>15 GPM</td><td>—</td><td>22.5</td><td>6.7</td><td>2.15</td><td>1.14</td></tr>
+        <tr><td>20 GPM</td><td>—</td><td>38.5</td><td>11.6</td><td>3.70</td><td>1.96</td></tr>
+        <tr><td>25 GPM</td><td>—</td><td>—</td><td>17.5</td><td>5.60</td><td>2.96</td></tr>
+        <tr><td>30 GPM</td><td>—</td><td>—</td><td>24.8</td><td>7.93</td><td>4.19</td></tr>
+      </table>
+      <div class="warn-box"><strong>FPC §604.6 velocity limit:</strong> Max 8 ft/sec in supply mains; max 4 ft/sec at final branch lines. Velocities above 8 ft/sec cause water hammer and accelerated pipe wear. High velocity in 1/2" copper is a common cause of pinhole leaks in older FL homes — especially in homes with high street pressure and no PRV.</div>
+    </div>
+  </div>
+
+  <!-- TAB 2: PRV Sizing -->
+  <div id="prv" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔧</span>PRV Sizing Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">A Pressure Reducing Valve (PRV) is required when street pressure exceeds 80 PSI (FPC §604.8). Enter your inlet pressure and required outlet pressure to get PRV sizing and model recommendations.</div>
+      <label>Street / inlet pressure (PSI)</label>
+      <input type="number" id="prvInlet" value="80" min="40" max="150">
+      <label>Required outlet pressure (PSI)</label>
+      <input type="number" id="prvOutlet" value="60" min="30" max="80">
+      <label>Peak flow demand (GPM)</label>
+      <select id="prvFlow">
+        <option value="5">Up to 5 GPM (1-bath condo)</option>
+        <option value="10">6–10 GPM (2–3 BR home)</option>
+        <option value="15" selected>11–15 GPM (3–4 BR home)</option>
+        <option value="20">16–20 GPM (5+ BR home / small commercial)</option>
+        <option value="30">21–30 GPM (large home / light commercial)</option>
+        <option value="50">31–50 GPM (commercial)</option>
+      </select>
+      <button class="btn" onclick="calcPRV()">Size My PRV</button>
+      <div id="prvResult" class="result-box">
+        <div id="prvContent"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📋</span>PRV Selection Guide — FL Residential</div>
+      <table class="code-table">
+        <tr><th>Flow Range</th><th>PRV Size</th><th>Common Model</th><th>Typical Install Cost (FL)</th></tr>
+        <tr><td>Up to 8 GPM</td><td>1/2"</td><td>Watts 25AUB, Wilkins 600</td><td>$180–$320</td></tr>
+        <tr><td>Up to 15 GPM</td><td>3/4"</td><td>Watts 25AUB-3/4, Wilkins 600-3/4</td><td>$220–$380</td></tr>
+        <tr><td>Up to 25 GPM</td><td>1"</td><td>Watts 25AUB-1, Caleffi 535</td><td>$280–$450</td></tr>
+        <tr><td>Up to 40 GPM</td><td>1-1/4"</td><td>Watts 25AUB-114, Caleffi 535</td><td>$380–$600</td></tr>
+        <tr><td>Up to 65 GPM</td><td>1-1/2"</td><td>Watts 25AUB-112</td><td>$500–$800</td></tr>
+        <tr><td>65–100 GPM</td><td>2"</td><td>Watts 25AUB-2</td><td>$700–$1,200</td></tr>
+      </table>
+      <div class="tip-box"><strong>FL note:</strong> PRV replacement is the most underdiagnosed cause of high water bills and fixture damage in FL. A worn PRV that allows pressure to creep back up to 90–100 PSI will cause: water hammer in pipes, TPR valve weeping, washing machine hose failures, and accelerated fixture wear. FL plumbers recommend testing PRV outlet pressure annually with a hose bib pressure gauge.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚠️</span>PRV Code Requirements — Florida</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ <strong style="color:#06B6D4">FPC §604.8:</strong> PRV required when street pressure exceeds 80 PSI at the meter connection.<br><br>
+        ✅ <strong style="color:#06B6D4">FPC §604.8.1:</strong> An expansion tank is required downstream of the PRV on closed water heater systems (all FL systems with a check valve at the meter). If you add a PRV, add an expansion tank.<br><br>
+        ✅ <strong style="color:#06B6D4">FPC §604.8.2:</strong> PRV must be accessible for inspection and replacement. Cannot be buried or enclosed in a wall without access panel.<br><br>
+        ⚠️ <strong style="color:#F97316">Permit required:</strong> PRV replacement requires a plumbing permit in most FL counties. Unpermitted PRV installs are flagged during resale inspections. Our licensed CFC plumbers pull the permit and schedule inspection.<br><br>
+        ⚠️ <strong style="color:#F97316">Combo valve note:</strong> Some FL utilities install a combination pressure gauge + PRV at the meter. These must be replaced by the utility or a licensed plumber — homeowners cannot legally replace a meter-side valve in FL.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Booster Pump -->
+  <div id="booster" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🚀</span>Booster Pump Sizing Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Use when residual pressure at the fixture is below 20 PSI or when building height reduces pressure below code minimum. FPC §604.5 requires a minimum 8 PSI at any fixture under peak demand.</div>
+      <label>Pressure at meter / pump inlet (PSI)</label>
+      <input type="number" id="bstInlet" value="45" min="10" max="100">
+      <label>Required pressure at highest fixture (PSI)</label>
+      <input type="number" id="bstRequired" value="55" min="20" max="80">
+      <label>Building height (number of floors above meter)</label>
+      <input type="number" id="bstFloors" value="2" min="1" max="20">
+      <label>Friction loss through building pipes (estimate PSI)</label>
+      <input type="number" id="bstFriction" value="10" min="0" max="50" placeholder="Use Pressure Calc tab first">
+      <label>Peak flow demand (GPM)</label>
+      <select id="bstFlow">
+        <option value="5">Up to 5 GPM</option>
+        <option value="10" selected>6–10 GPM</option>
+        <option value="15">11–15 GPM</option>
+        <option value="20">16–20 GPM</option>
+        <option value="30">21–30 GPM</option>
+      </select>
+      <button class="btn" onclick="calcBooster()">Size Booster Pump</button>
+      <div id="boosterResult" class="result-box">
+        <div id="boosterContent"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📋</span>When Do FL Homes Need a Booster Pump?</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ <strong style="color:#06B6D4">Two-story homes in low-pressure areas:</strong> Each floor = ~4.3 PSI of elevation loss. A 2-story home with 9 ft ceilings loses ~8.7 PSI getting water to the second floor — if street pressure is already low (&lt;50 PSI), fixtures may dribble at peak demand.<br><br>
+        ✅ <strong style="color:#06B6D4">Long supply runs:</strong> Rural FL properties with 200+ ft from meter to house lose 8–30 PSI in friction depending on pipe size. 3/4" galvanized at 200 ft can lose 20 PSI at 10 GPM — pushing residual below code minimum.<br><br>
+        ✅ <strong style="color:#06B6D4">Post-hurricane area:</strong> Many SW FL communities (Cape Coral, Fort Myers, Port Charlotte) experienced significant system pressure drops post-Ian as utilities rebuild infrastructure. Booster pumps bridged the gap.<br><br>
+        ✅ <strong style="color:#06B6D4">Commercial multi-tenant:</strong> FL code requires minimum 15 PSI at flush valve toilets and 8 PSI at all other fixtures (FPC §604.5). Multi-story commercial buildings almost always require booster pump systems.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>💰</span>Booster Pump Cost Guide — Florida</div>
+      <table class="code-table">
+        <tr><th>System Type</th><th>GPM Range</th><th>Installed Cost (FL)</th><th>Best For</th></tr>
+        <tr><td>Single-stage pump</td><td>5–15 GPM</td><td>$800–$1,600</td><td>1-bath, low-demand residential</td></tr>
+        <tr><td>Variable-speed pump</td><td>5–20 GPM</td><td>$1,200–$2,500</td><td>Residential — quiet, efficient</td></tr>
+        <tr><td>Constant pressure pump</td><td>10–25 GPM</td><td>$1,800–$3,500</td><td>Large homes, well water systems</td></tr>
+        <tr><td>Duplex booster system</td><td>20–60 GPM</td><td>$4,000–$9,000</td><td>Multi-family, light commercial</td></tr>
+        <tr><td>Commercial booster set</td><td>40–150 GPM</td><td>$8,000–$25,000</td><td>Commercial, multi-story</td></tr>
+      </table>
+      <div class="tip-box"><strong>FL efficiency tip:</strong> Variable-speed booster pumps (Grundfos CM-E, Goulds e-SV) are highly recommended for FL because they maintain constant pressure regardless of flow demand, run at low speed during off-peak hours, and can reduce energy use by 30–50% vs. fixed-speed pumps. Most FL utilities offer rebates for variable-speed pump systems.</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Free Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📞</span>Free Pressure Analysis &amp; Quote</div>
+      <div style="font-size:0.82rem;color:#94A3B8;margin-bottom:14px;line-height:1.6">Our licensed CFC plumbers measure your actual street pressure and pressure at fixtures, calculate system losses, and recommend the right solution — PRV replacement, pipe upsizing, or booster pump installation.</div>
+      <label>Your name</label>
+      <input type="text" id="qName" placeholder="First &amp; last name">
+      <div class="form-row">
+        <div>
+          <label>Phone number</label>
+          <input type="tel" id="qPhone" placeholder="(561) 555-PIPE">
+        </div>
+        <div>
+          <label>County</label>
+          <select id="qCounty">
+            <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+            <option>Hillsborough</option><option>Pinellas</option><option>Orange</option>
+            <option>Lee</option><option>Collier</option><option>Duval</option>
+            <option>Sarasota</option><option>Volusia</option><option>Brevard</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <label>Pressure problem</label>
+      <select id="qProblem">
+        <option>Low pressure at fixtures — especially second floor</option>
+        <option>High pressure — fixtures / WH leaking</option>
+        <option>PRV needs replacement or adjustment</option>
+        <option>Long supply run from meter to building</option>
+        <option>Booster pump needed or not working</option>
+        <option>Water hammer / banging pipes</option>
+        <option>Not sure — need a pressure analysis</option>
+      </select>
+      <label>Building type</label>
+      <select id="qBldg">
+        <option>Single-family home (1 story)</option>
+        <option>Single-family home (2+ stories)</option>
+        <option>Condo / townhome</option>
+        <option>Commercial — small (under 10 units)</option>
+        <option>Commercial — large</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Request Pressure Analysis</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>✅</span>Our Pressure Service Includes</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ Street pressure measurement at meter<br>
+        ✅ PRV outlet pressure check and calibration<br>
+        ✅ Pressure at all fixture locations (flow test)<br>
+        ✅ Hazen-Williams friction loss analysis for your pipes<br>
+        ✅ Written report with recommended pipe upgrades or PRV/pump solution<br>
+        ✅ PRV replacement — permit + inspection included<br>
+        ✅ Booster pump installation — variable-speed systems<br>
+        ✅ FPC §604 compliance verification
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! 💧</div>
+<!-- fl-plumbing-seo: florida water pressure loss calculator hazen-williams pipe friction loss florida supply pipe pressure drop calculator florida PRV sizing florida pressure reducing valve florida booster pump sizing florida low water pressure florida second floor pressure loss florida pipe pressure loss copper PEX CPVC galvanized florida street water pressure by county florida FPC 604 water pressure florida water hammer florida pressure reducing valve replacement florida booster pump installation florida constant pressure pump florida residential commercial water pressure -->
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+var FIXTURE_GPM = {1:3,2:5,3:8,5:11,8:15,12:20,16:24,20:28,30:35};
+var PIPE_ID = {0.5:0.622,0.75:0.824,1.0:1.049,1.25:1.38,1.5:1.61,2.0:2.067,2.5:2.469,3.0:3.068};
+var PIPE_NAMES = {0.5:'1/2"',0.75:'3/4"',1.0:'1"',1.25:'1-1/4"',1.5:'1-1/2"',2.0:'2"',2.5:'2-1/2"',3.0:'3"'};
+function hwFriction(L, Q, C, dIn) {
+  var d = dIn / 12;
+  var hFt = 4.727 * L * Math.pow(Q, 1.852) / (Math.pow(C, 1.852) * Math.pow(d, 4.871));
+  return hFt * 0.433;
+}
+function velocity(Q, dIn) {
+  var area = Math.PI * Math.pow(dIn/24, 2);
+  return (Q / 7.48) / 60 / area;
+}
+function calcPressure() {
+  var street = parseFloat(document.getElementById('streetPSI').value) || 70;
+  var prv = parseFloat(document.getElementById('prvPSI').value) || 0;
+  var C = parseFloat(document.getElementById('pipeMat').value) || 140;
+  var dNom = parseFloat(document.getElementById('pipeDiam').value) || 1.0;
+  var L = parseFloat(document.getElementById('pipeLen').value) || 80;
+  var elev = parseFloat(document.getElementById('elevRise').value) || 0;
+  var fcKey = parseInt(document.getElementById('fixtureCount').value) || 3;
+  var Q = FIXTURE_GPM[fcKey] || 8;
+  var dIn = PIPE_ID[dNom] || 1.049;
+  var inlet = (prv > 0 && prv < street) ? prv : street;
+  var frictionPSI = hwFriction(L, Q, C, dIn);
+  var elevPSI = elev * 0.433;
+  var totalLoss = frictionPSI + elevPSI;
+  var residual = inlet - totalLoss;
+  var vel = velocity(Q, dIn);
+  var pct = Math.min(100, Math.max(0, Math.round((residual / inlet) * 100)));
+  var color = residual < 8 ? '#EF4444' : residual < 20 ? '#F97316' : residual < 30 ? '#F4B942' : '#22C55E';
+  var statusText = residual < 8 ? 'BELOW CODE MINIMUM' : residual < 20 ? 'LOW — PROBLEMS LIKELY' : residual < 30 ? 'MARGINAL' : 'ADEQUATE';
+  var velColor = vel > 8 ? '#EF4444' : vel > 6 ? '#F97316' : '#22C55E';
+  var box = document.getElementById('calcResult');
+  box.style.display = 'block';
+  var html = '<div class="result-hero"><div class="result-headline" style="color:' + color + '">' + Math.round(residual * 10)/10 + ' PSI</div><div class="result-sub">Residual pressure at fixture · ' + esc(statusText) + '</div></div>';
+  html += '<div class="pressure-bar" style="margin-top:12px"><div class="pressure-fill" style="width:' + pct + '%;background:' + color + '">' + pct + '%</div></div>';
+  html += '<div style="display:flex;justify-content:space-between;font-size:0.68rem;color:#94A3B8;margin-top:3px"><span>0 PSI</span><span>Inlet: ' + Math.round(inlet) + ' PSI</span></div>';
+  html += '<div class="stat-grid">';
+  html += '<div class="stat-card"><div class="stat-num">' + Math.round(frictionPSI*10)/10 + ' PSI</div><div class="stat-label">Friction loss (' + Math.round(L) + ' ft)</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + Math.round(elevPSI*10)/10 + ' PSI</div><div class="stat-label">Elevation loss (' + elev + ' ft)</div></div>';
+  html += '<div class="stat-card"><div class="stat-num" style="color:' + velColor + '">' + Math.round(vel*10)/10 + ' fps</div><div class="stat-label">Pipe velocity (max 8 fps)</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + Q + ' GPM</div><div class="stat-label">Simultaneous flow</div></div>';
+  html += '</div>';
+  if (residual < 8) {
+    html += '<div class="danger-box" style="margin-top:10px"><strong>⛔ Below FPC §604.5 minimum:</strong> Residual pressure below 8 PSI violates FL code. Fixtures will not function properly. Solutions: upsize pipe, shorten run, or install a booster pump.</div>';
+  } else if (residual < 20) {
+    html += '<div class="warn-box" style="margin-top:10px"><strong>⚠️ Low pressure:</strong> Fixtures will have noticeably weak flow, especially if multiple are running simultaneously. Upsizing the pipe from ' + PIPE_NAMES[dNom] + ' to one size larger or installing a booster pump is recommended.</div>';
+  } else if (vel > 8) {
+    html += '<div class="danger-box" style="margin-top:10px"><strong>⛔ Velocity exceeds FPC §604.6 limit:</strong> ' + Math.round(vel*10)/10 + ' fps exceeds the 8 fps maximum. This causes water hammer, noise, and accelerated pipe wear. Upsize pipe to ' + (dNom < 1.0 ? '3/4"' : dNom < 1.5 ? '1"' : '1-1/4"') + ' at minimum.</div>';
+  } else {
+    html += '<div class="ok-box" style="margin-top:10px"><strong>✅ Adequate pressure:</strong> Residual pressure is sufficient for code compliance (FPC §604.5 minimum: 8 PSI general, 15 PSI for flushometer fixtures). Velocity is within the FPC §604.6 limit of 8 fps.</div>';
+  }
+  document.getElementById('calcContent').innerHTML = html;
+}
+function calcPRV() {
+  var inlet = parseFloat(document.getElementById('prvInlet').value) || 80;
+  var outlet = parseFloat(document.getElementById('prvOutlet').value) || 60;
+  var flow = parseFloat(document.getElementById('prvFlow').value) || 15;
+  var ratio = inlet / outlet;
+  var prvSize, models, cost;
+  if (flow <= 8) { prvSize = '1/2"'; models = 'Watts 25AUB-M1, Wilkins 600-1/2'; cost = '$180–$320'; }
+  else if (flow <= 15) { prvSize = '3/4"'; models = 'Watts 25AUB-M3, Wilkins 600-3/4'; cost = '$220–$380'; }
+  else if (flow <= 25) { prvSize = '1"'; models = 'Watts 25AUB-M10, Caleffi 535'; cost = '$280–$450'; }
+  else if (flow <= 40) { prvSize = '1-1/4"'; models = 'Watts 25AUB-M11, RMC'; cost = '$380–$600'; }
+  else if (flow <= 65) { prvSize = '1-1/2"'; models = 'Watts 25AUB-M12'; cost = '$500–$800'; }
+  else { prvSize = '2"'; models = 'Watts 25AUB-M20, Ames 114'; cost = '$700–$1,200'; }
+  var needed = inlet > 80;
+  var box = document.getElementById('prvResult');
+  box.style.display = 'block';
+  var html = '<div class="result-hero"><div class="result-headline" style="color:#06B6D4">' + prvSize + ' PRV</div><div class="result-sub">Size for ' + flow + ' GPM · ' + Math.round(inlet) + ' PSI → ' + Math.round(outlet) + ' PSI</div></div>';
+  html += '<div class="stat-grid">';
+  html += '<div class="stat-card"><div class="stat-num">' + prvSize + '</div><div class="stat-label">PRV body size</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + Math.round(inlet - outlet) + ' PSI</div><div class="stat-label">Pressure reduction</div></div>';
+  html += '</div>';
+  html += '<div class="tip-box" style="margin-top:10px"><strong>Recommended models:</strong> ' + esc(models) + '<br><strong>Installed cost range:</strong> ' + esc(cost) + ' (FL, licensed CFC)<br><strong>FPC required?</strong> ' + (needed ? '✅ YES — inlet exceeds 80 PSI threshold' : '⚠️ Not code-required at this inlet pressure, but recommended for fixture protection') + '</div>';
+  if (ratio > 2.5) {
+    html += '<div class="warn-box" style="margin-top:8px"><strong>High reduction ratio:</strong> A ' + Math.round(inlet) + '→' + Math.round(outlet) + ' PSI reduction (' + Math.round(ratio * 10)/10 + ':1 ratio) may require a two-stage PRV or a pilot-operated regulator for best stability at varying flows. Contact us for engineering guidance.</div>';
+  }
+  document.getElementById('prvContent').innerHTML = html;
+}
+function calcBooster() {
+  var inlet = parseFloat(document.getElementById('bstInlet').value) || 45;
+  var required = parseFloat(document.getElementById('bstRequired').value) || 55;
+  var floors = parseFloat(document.getElementById('bstFloors').value) || 2;
+  var friction = parseFloat(document.getElementById('bstFriction').value) || 10;
+  var flow = parseFloat(document.getElementById('bstFlow').value) || 10;
+  var elevLoss = (floors - 1) * 9 * 0.433;
+  var totalNeeded = required + elevLoss + friction;
+  var boost = Math.max(0, totalNeeded - inlet);
+  var hp, type, cost;
+  if (boost <= 15 && flow <= 10) { hp = '1/2 HP'; type = 'Single-stage variable-speed'; cost = '$1,200–$2,000'; }
+  else if (boost <= 25 && flow <= 15) { hp = '3/4 HP'; type = 'Variable-speed constant pressure'; cost = '$1,600–$2,800'; }
+  else if (boost <= 40 && flow <= 20) { hp = '1 HP'; type = 'Constant pressure pump'; cost = '$2,000–$3,500'; }
+  else if (boost <= 60 && flow <= 30) { hp = '1-1/2 HP'; type = 'Duplex booster set'; cost = '$3,500–$6,000'; }
+  else { hp = '2+ HP'; type = 'Commercial booster system'; cost = '$6,000–$15,000'; }
+  var box = document.getElementById('boosterResult');
+  box.style.display = 'block';
+  var html = '<div class="result-hero"><div class="result-headline" style="color:#06B6D4">+' + Math.round(boost) + ' PSI Boost</div><div class="result-sub">' + hp + ' · ' + esc(type) + '</div></div>';
+  html += '<div class="stat-grid">';
+  html += '<div class="stat-card"><div class="stat-num">' + Math.round(boost) + ' PSI</div><div class="stat-label">Pressure boost needed</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + Math.round(elevLoss*10)/10 + ' PSI</div><div class="stat-label">Elevation loss (' + floors + ' floors)</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + hp + '</div><div class="stat-label">Min motor HP</div></div>';
+  html += '<div class="stat-card"><div class="stat-num">' + esc(cost.split('–')[0]) + '+</div><div class="stat-label">Installed cost (FL)</div></div>';
+  html += '</div>';
+  html += '<div class="tip-box" style="margin-top:10px"><strong>Recommended:</strong> ' + esc(type) + ' · ' + hp + ' · ' + flow + ' GPM capacity<br><strong>Cost range:</strong> ' + esc(cost) + ' installed by licensed FL CFC plumber</div>';
+  document.getElementById('boosterContent').innerHTML = html;
+}
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  if (e && e.target) e.target.classList.add('active');
+}
+function submitQuote() {
+  var name = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){ t.style.display = 'none'; }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida florida water pressure loss calculator pipe friction hazen-williams prv sizing booster pump florida low water pressure supply pipe sizing FPC 604 velocity limit copper pex cpvc galvanized pipe pressure drop florida county water pressure miami-dade broward palm beach hillsborough orange lee collier duval sarasota volusia brevard pressure reducing valve replacement florida booster pump installation florida constant pressure pump variable speed pump florida water hammer pipe sizing residential commercial plumbing pressure analysis licensed CFC plumber florida 
+</div>
+</body>
+</html>
