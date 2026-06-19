@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**174 interactive cost calculators** for Florida homeowners.
+**177 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -90,6 +90,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Outdoor Kitchen Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/outdoor-kitchen/fl_outdoor_kitchen.html)
 - [FL Outdoor Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/outdoor-plumbing/fl_outdoor_plumbing.html)
 - [FL Outdoor Shower Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/outdoor-shower/fl_outdoor_shower.html)
+- [FL Permit Fee Estimator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/permit-fee-estimator/fl_permit_fee_estimator.html)
 - [FL Permit Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/permit-guide/fl_permit_guide.html)
 - [FL Permit Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/permit-guide/fl_plumbing_permit_guide.html)
 - [FL Pipe Burst Freeze Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pipe-burst-freeze/fl_pipe_burst_freeze.html)
@@ -115,6 +116,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Rental Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rental-plumbing/fl_rental_plumbing.html)
 - [FL Repipe Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repipe-cost/fl_repipe_cost.html)
 - [FL Repipe Estimator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repipe-estimator/fl_whole_house_repipe.html)
+- [FL Repipe Material Comparison Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repipe-material-comparison/fl_repipe_material.html)
 - [FL Repiping Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping-cost/fl_repiping_cost.html)
 - [FL Repiping Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/repiping/fl_repiping.html)
 - [FL Rough In Calculator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/rough-in-calculator/fl_rough_in_calculator.html)
@@ -152,6 +154,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Tankless Water Heater Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tankless-water-heater/fl_tankless_water_heater.html)
 - [FL Toilet Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/toilet-repair/fl_toilet_repair.html)
 - [FL Toilet Replacement Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/toilet-replacement/fl_toilet_replacement.html)
+- [FL Tpr Valve Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tpr-valve-guide/fl_tpr_valve_guide.html)
 - [FL Trenchless Lining Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/trenchless-lining/fl_trenchless_lining.html)
 - [FL Tub To Shower Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/tub-to-shower/fl_tub_to_shower.html)
 - [FL Utility Locating Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/utility-locating/fl_utility_locating.html)

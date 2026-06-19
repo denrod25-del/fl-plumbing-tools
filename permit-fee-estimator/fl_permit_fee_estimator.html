@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Plumbing Permit Fee Estimator | Timeline & Inspection Guide | Florida Counties</title>
+<meta name="description" content="Estimate Florida plumbing permit fees by county. Water heater, repipe, sewer, gas line, bathroom addition permit costs, timelines, inspection sequences. Miami-Dade, Broward, Palm Beach, Hillsborough and 9 more counties.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);border-bottom:3px solid #F4B942;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#F4B942;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#F4B94222;color:#F4B942;border:1px solid #F4B94244;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.72rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#F4B942;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#F4B942;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#F4B942}
+.btn{width:100%;padding:14px;background:#F4B942;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.stat-card{background:#141929;border-radius:8px;padding:12px;text-align:center;border:1px solid #1E2A45}
+.stat-num{font-size:1.25rem;font-weight:800;color:#F4B942}
+.stat-label{font-size:0.7rem;color:#94A3B8;margin-top:3px}
+.fee-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A45;font-size:0.82rem}
+.fee-row:last-child{border-bottom:none}
+.fee-val{color:#F4B942;font-weight:700}
+.fee-total{font-size:1.1rem;font-weight:800;color:#F4B942}
+.section-label{font-size:0.76rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+.code-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:8px}
+.code-table th{background:#141929;color:#F4B942;padding:8px 6px;text-align:left;font-size:0.71rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table td{padding:8px 6px;border-bottom:1px solid #1E2A45;color:#E2E8F0;vertical-align:top}
+.code-table tr:last-child td{border-bottom:none}
+.tip-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#F4B942}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #F4B94255}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.timeline-step{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #1E2A45}
+.timeline-step:last-child{border-bottom:none}
+.tl-dot{width:28px;height:28px;border-radius:50%;background:#F4B942;color:#0A0E1A;font-weight:800;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tl-body{flex:1}
+.tl-title{font-size:0.82rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.tl-desc{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+.tl-time{font-size:0.72rem;color:#F4B942;font-weight:600;margin-top:2px}
+.insp-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45}
+.insp-title{font-size:0.82rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.insp-list{font-size:0.78rem;color:#94A3B8;line-height:1.85}
+.county-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E2A45;font-size:0.8rem}
+.county-row:last-child{border-bottom:none}
+.county-val{font-weight:700;color:#F4B942;font-size:0.78rem}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">📋</div>
+  <h1>FL Plumbing Permit Fee Estimator</h1>
+  <p>County fees, timelines &amp; inspection sequences for Florida</p>
+  <span class="badge">12 FL Counties — 2025 Rates</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('fees',event)">Fee Calc</button>
+    <button class="tab" onclick="showTab('timeline',event)">Timeline</button>
+    <button class="tab" onclick="showTab('inspections',event)">Inspections</button>
+    <button class="tab" onclick="showTab('quote',event)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: Fee Calculator -->
+  <div id="fees" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>🏛️</span>County Fee Rates at a Glance</div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num">$55–$130</div><div class="stat-label">Base permit fee range</div></div>
+        <div class="stat-card"><div class="stat-num">0.75–1.5%</div><div class="stat-label">Valuation surcharge</div></div>
+        <div class="stat-card"><div class="stat-num">2–6 wks</div><div class="stat-label">Typical permit window</div></div>
+        <div class="stat-card"><div class="stat-num">12 FL</div><div class="stat-label">Counties in database</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🧮</span>Permit Fee Calculator</div>
+      <label>County</label>
+      <select id="county">
+        <option value="miami-dade">Miami-Dade County</option>
+        <option value="broward">Broward County</option>
+        <option value="palm-beach">Palm Beach County</option>
+        <option value="hillsborough">Hillsborough County</option>
+        <option value="pinellas">Pinellas County</option>
+        <option value="orange">Orange County</option>
+        <option value="duval">Duval County</option>
+        <option value="lee">Lee County</option>
+        <option value="collier">Collier County</option>
+        <option value="sarasota">Sarasota County</option>
+        <option value="volusia">Volusia County</option>
+        <option value="brevard">Brevard County</option>
+      </select>
+      <label>Project type</label>
+      <select id="projectType">
+        <option value="water-heater">Water heater replacement</option>
+        <option value="repipe">Whole-house repipe</option>
+        <option value="sewer">Sewer lateral replacement</option>
+        <option value="gas-line">Gas line installation / repair</option>
+        <option value="bathroom">Bathroom addition</option>
+        <option value="backflow">Backflow preventer installation</option>
+      </select>
+      <label>Estimated project value ($)</label>
+      <input type="number" id="projVal" placeholder="e.g. 5000" min="500" max="500000">
+      <label>Does project require plan review?</label>
+      <select id="planReview">
+        <option value="no">No — standard replacement</option>
+        <option value="yes">Yes — new installation or system change</option>
+        <option value="unsure">Unsure — estimate both</option>
+      </select>
+      <button class="btn" onclick="calcFee()">Estimate Permit Fee</button>
+      <div id="feeResult" class="result-box">
+        <div id="feeBreakdown"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>County Fee Quick Reference</div>
+      <table class="code-table">
+        <tr><th>County</th><th>Base Fee</th><th>% Valuation</th><th>Plan Review</th></tr>
+        <tr><td>Miami-Dade</td><td>$130</td><td>1.5%</td><td>$150+</td></tr>
+        <tr><td>Broward</td><td>$85</td><td>1.2%</td><td>$100+</td></tr>
+        <tr><td>Palm Beach</td><td>$75</td><td>1.0%</td><td>$90+</td></tr>
+        <tr><td>Hillsborough</td><td>$65</td><td>0.9%</td><td>$85+</td></tr>
+        <tr><td>Pinellas</td><td>$60</td><td>0.8%</td><td>$75+</td></tr>
+        <tr><td>Orange</td><td>$70</td><td>1.0%</td><td>$90+</td></tr>
+        <tr><td>Duval</td><td>$55</td><td>0.85%</td><td>$70+</td></tr>
+        <tr><td>Lee</td><td>$65</td><td>0.95%</td><td>$80+</td></tr>
+        <tr><td>Collier</td><td>$80</td><td>1.1%</td><td>$100+</td></tr>
+        <tr><td>Sarasota</td><td>$60</td><td>0.8%</td><td>$75+</td></tr>
+        <tr><td>Volusia</td><td>$50</td><td>0.75%</td><td>$65+</td></tr>
+        <tr><td>Brevard</td><td>$55</td><td>0.80%</td><td>$70+</td></tr>
+      </table>
+      <div class="tip-box"><strong>Note:</strong> All fees are estimates based on 2025 county schedules. Fees change annually. Always verify with your county's building department before pulling permits. Impact fees, technology surcharges, and state surcharges (typically $4–8) may apply on top of these rates.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚠️</span>When Is a Plumbing Permit Required in FL?</div>
+      <div class="section-label">Always Required (FL Building Code §105)</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ New water heater installation<br>
+        ✅ Whole-house or partial repipe<br>
+        ✅ Sewer lateral replacement<br>
+        ✅ Gas line installation, repair, or extension<br>
+        ✅ New bathroom / plumbing fixture addition<br>
+        ✅ Backflow preventer installation (commercial &amp; multi-family)<br>
+        ✅ Water service replacement (meter to house)<br>
+        ✅ Pool heater installation<br>
+        ✅ Sprinkler system installation
+      </div>
+      <div class="section-label">Generally NOT Required</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        🔧 Faucet / valve replacement (same location)<br>
+        🔧 Toilet replacement (like-for-like)<br>
+        🔧 Showerhead replacement<br>
+        🔧 Garbage disposal replacement<br>
+        🔧 Minor drain clearing (rooter service)<br>
+        🔧 Water heater element replacement (electric)
+      </div>
+      <div class="warn-box"><strong>⚠️ FL unpermitted work:</strong> Unpermitted plumbing work is a serious issue in Florida. Insurance claims can be denied if unpermitted work is involved. Home sales can fall through during inspection. Citizens Insurance now requires permit history for water heater installations. Always use a licensed CFC contractor who pulls the permit.</div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Timeline -->
+  <div id="timeline" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📅</span>Permit Timeline by Project Type</div>
+      <label>Project type</label>
+      <select id="tlProject">
+        <option value="water-heater">Water heater replacement</option>
+        <option value="repipe">Whole-house repipe</option>
+        <option value="sewer">Sewer lateral replacement</option>
+        <option value="gas-line">Gas line installation</option>
+        <option value="bathroom">Bathroom addition</option>
+        <option value="backflow">Backflow preventer</option>
+      </select>
+      <button class="btn" onclick="showTimeline()">Show Timeline</button>
+    </div>
+    <div id="timelineResult"></div>
+    <div class="card">
+      <div class="card-title"><span>⏱️</span>Common Permit Delays in Florida</div>
+      <div class="section-label">Top Reasons for Permit Delays</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ❌ <strong style="color:#EF4444">Incomplete applications:</strong> Missing scope of work, square footage, fixture count, or valuation<br>
+        ❌ <strong style="color:#EF4444">Missing contractor license #:</strong> FL requires CFC license number and qualifier signature on all plumbing permits<br>
+        ❌ <strong style="color:#EF4444">HOA approval pending:</strong> Many FL county portals flag HOA properties — approval letter required before permit can issue<br>
+        ❌ <strong style="color:#EF4444">Backlog at building dept:</strong> Miami-Dade, Broward, and Hillsborough frequently run 2–3x normal queue times after hurricanes<br>
+        ❌ <strong style="color:#EF4444">Failed first inspection:</strong> Re-inspection adds 5–10 business days to final close-out<br>
+        ❌ <strong style="color:#EF4444">Open permit from prior owner:</strong> Older unpermitted or unfinished work must be finalized before new permits issue
+      </div>
+      <div class="tip-box"><strong>Pro tip:</strong> Most FL counties now offer online permit portals. Miami-Dade uses iBuild, Broward uses MyPermitNow, Palm Beach uses MyGovHub. Licensed contractors can expedite review in most counties by applying with a complete, digital package. Ask your plumber if they use a permit expediting service.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🚨</span>Post-Hurricane Permit Surge — FL Reality</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.55">After major storms (Ian, Irma, Milton), FL county building departments are overwhelmed. Standard timelines can stretch 2–4x during these periods. Typical surge impacts:
+      </div>
+      <table class="code-table" style="margin-top:10px">
+        <tr><th>County</th><th>Normal</th><th>Post-Storm</th></tr>
+        <tr><td>Miami-Dade</td><td>7–10 days</td><td>3–6 weeks</td></tr>
+        <tr><td>Lee County</td><td>5–7 days</td><td>8–16 weeks (post-Ian)</td></tr>
+        <tr><td>Charlotte</td><td>5–7 days</td><td>10–20 weeks (post-Ian)</td></tr>
+        <tr><td>Broward</td><td>5–8 days</td><td>2–5 weeks</td></tr>
+        <tr><td>Hillsborough</td><td>5–7 days</td><td>2–4 weeks</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: Inspections -->
+  <div id="inspections" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔍</span>Inspection Guide by Phase</div>
+      <div class="insp-card">
+        <div class="insp-title">1. Rough-In Inspection</div>
+        <div class="insp-list">
+          <strong style="color:#E2E8F0">What inspector checks:</strong><br>
+          ✅ Pipe sizing per FPC §604 (supply) &amp; §704 (DWV)<br>
+          ✅ All connections accessible — walls open, no drywall<br>
+          ✅ Water supply pipe material (copper, PEX, CPVC)<br>
+          ✅ DWV slope: 1/4" per foot for horizontal drains<br>
+          ✅ Cleanout access per FPC §708<br>
+          ✅ Venting — minimum 2" vent stack, proper tie-ins<br>
+          ✅ Pipe supports per FPC §305 (every 6 ft horizontal)<br>
+          ✅ Anti-scald protection devices in showers (ASSE 1016)<br>
+          <div class="warn-box" style="margin-top:8px"><strong>Common failures:</strong> Missing cleanout access, DWV slope under 1/4", vent stack too small, PEX without approved manifold system in strict FL counties.</div>
+        </div>
+      </div>
+      <div class="insp-card">
+        <div class="insp-title">2. Pressure Test Inspection</div>
+        <div class="insp-list">
+          <strong style="color:#E2E8F0">What inspector checks:</strong><br>
+          ✅ Water supply pressure test: 100 PSI for 15 minutes<br>
+          ✅ No pressure drop during hold period<br>
+          ✅ All caps, plugs, and temporary connections visible<br>
+          ✅ Gas line test: 15 PSI air test for 15 minutes (where applicable)<br>
+          ✅ Inspector may require fill with water, not air, for supply test<br>
+          <div class="warn-box" style="margin-top:8px"><strong>Common failures:</strong> Pinhole leak from fitting not fully seated, compression fitting failure, slab penetrations leaking from thermal expansion during test.</div>
+        </div>
+      </div>
+      <div class="insp-card">
+        <div class="insp-title">3. DWV (Drain-Waste-Vent) Inspection</div>
+        <div class="insp-list">
+          <strong style="color:#E2E8F0">What inspector checks:</strong><br>
+          ✅ All drain lines properly sloped (1/4" per foot minimum)<br>
+          ✅ Trap size matches fixture unit count<br>
+          ✅ P-traps — no S-traps allowed in FL<br>
+          ✅ Vent pipes rise to roof — minimum 6" above roof deck<br>
+          ✅ Wet venting compliance (FPC §910)<br>
+          ✅ No hub connections or bare ABS (ABS not allowed in FL)<br>
+          ✅ PVC Schedule 40 or DWV grade throughout<br>
+          <div class="warn-box" style="margin-top:8px"><strong>Common failures:</strong> S-traps (not allowed under FPC), insufficient venting (especially in slab-on-grade FL homes), drain lines under slab without prior documentation.</div>
+        </div>
+      </div>
+      <div class="insp-card">
+        <div class="insp-title">4. Final / Certificate of Completion Inspection</div>
+        <div class="insp-list">
+          <strong style="color:#E2E8F0">What inspector checks:</strong><br>
+          ✅ All fixtures installed and operational<br>
+          ✅ Water heater connections complete — supply, discharge, pan, TPR<br>
+          ✅ All walls closed and finished<br>
+          ✅ Meter set by utility — water service active<br>
+          ✅ Pressure reducing valve (PRV) installed if needed (street &gt;80 PSI)<br>
+          ✅ All permits and inspections complete and signed off<br>
+          ✅ Plumber's final signature on permit card or digital sign-off<br>
+          <div class="ok-box" style="margin-top:8px"><strong>✅ After final:</strong> Certificate of Completion (CC) issued. Job is done. Keep your CC on file — needed for home sales, insurance renewals, and future permit applications.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📋</span>Inspection Requirements by Project Type</div>
+      <table class="code-table">
+        <tr><th>Project</th><th>Rough-In</th><th>Pressure</th><th>DWV</th><th>Final</th></tr>
+        <tr><td>Water heater</td><td>—</td><td>—</td><td>—</td><td>✅</td></tr>
+        <tr><td>Whole-house repipe</td><td>✅</td><td>✅</td><td>—</td><td>✅</td></tr>
+        <tr><td>Sewer lateral</td><td>✅</td><td>—</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Gas line</td><td>✅</td><td>✅ (air)</td><td>—</td><td>✅</td></tr>
+        <tr><td>Bathroom add</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Backflow</td><td>—</td><td>—</td><td>—</td><td>✅</td></tr>
+      </table>
+      <div class="tip-box"><strong>Scheduling tip:</strong> In FL, rough-in inspections must be called in by 4 PM the day before for a next-day slot. Most counties offer a 3-hour inspection window (AM or PM). Miami-Dade and Broward allow inspections via online portal. Never close walls before rough-in inspection is passed and documented.</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📱</span>How to Schedule Inspections in FL</div>
+      <table class="code-table">
+        <tr><th>County</th><th>Scheduling Method</th><th>Cutoff</th></tr>
+        <tr><td>Miami-Dade</td><td>iBuild online portal or (305) 375-2901</td><td>4 PM prior day</td></tr>
+        <tr><td>Broward</td><td>MyPermitNow portal or (954) 765-4400</td><td>4 PM prior day</td></tr>
+        <tr><td>Palm Beach</td><td>MyGovHub or (561) 233-5100</td><td>3 PM prior day</td></tr>
+        <tr><td>Hillsborough</td><td>PermitUs portal or (813) 272-5600</td><td>4 PM prior day</td></tr>
+        <tr><td>Pinellas</td><td>Online portal or (727) 464-3888</td><td>4 PM prior day</td></tr>
+        <tr><td>Orange</td><td>OrangeCountyFL.net or (407) 836-5550</td><td>3 PM prior day</td></tr>
+        <tr><td>Lee</td><td>LeeGov.com portal or (239) 533-8585</td><td>4 PM prior day</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 4: Free Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📞</span>Get Permit Help from a Licensed FL Plumber</div>
+      <div style="font-size:0.82rem;color:#94A3B8;margin-bottom:14px;line-height:1.6">Our licensed CFC plumbers pull permits in all major FL counties — we handle the application, fees, scheduling, and inspections so you don't have to deal with the building department.</div>
+      <label>Your name</label>
+      <input type="text" id="qName" placeholder="First &amp; last name">
+      <div class="form-row">
+        <div>
+          <label>Phone number</label>
+          <input type="tel" id="qPhone" placeholder="(561) 555-PIPE">
+        </div>
+        <div>
+          <label>County</label>
+          <select id="qCounty">
+            <option>Miami-Dade</option><option>Broward</option><option>Palm Beach</option>
+            <option>Hillsborough</option><option>Pinellas</option><option>Orange</option>
+            <option>Lee</option><option>Collier</option><option>Duval</option>
+            <option>Sarasota</option><option>Volusia</option><option>Brevard</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <label>Project type</label>
+      <select id="qProject">
+        <option>Water heater replacement</option>
+        <option>Whole-house repipe</option>
+        <option>Sewer lateral replacement</option>
+        <option>Gas line installation</option>
+        <option>Bathroom addition</option>
+        <option>Backflow preventer</option>
+        <option>Other plumbing work</option>
+      </select>
+      <label>Have you already had work done without a permit?</label>
+      <select id="qUnpermitted">
+        <option>No — starting fresh</option>
+        <option>Yes — need retroactive permit</option>
+        <option>Unsure — need inspection</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Request Permit Assistance</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>✅</span>What We Handle For You</div>
+      <div style="font-size:0.82rem;color:#94A3B8;line-height:1.9">
+        ✅ Application preparation and submittal<br>
+        ✅ Permit fee payment coordination<br>
+        ✅ Plan review response (if required)<br>
+        ✅ Inspection scheduling — rough-in, pressure, final<br>
+        ✅ On-site for all inspections (inspector talks to us, not you)<br>
+        ✅ Re-inspection if needed at no extra charge<br>
+        ✅ Certificate of Completion delivered digitally<br>
+        ✅ Retroactive permit assistance for unpermitted work
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>💡</span>FL Permit Cost FAQ</div>
+      <div class="fee-row"><span>Who pays the permit fee?</span><span class="county-val">Usually included in contractor quote</span></div>
+      <div class="fee-row"><span>Who owns the permit?</span><span class="county-val">The licensed contractor (CFC #)</span></div>
+      <div class="fee-row"><span>Can homeowner pull permit?</span><span class="county-val">Yes — with Owner-Builder Exemption</span></div>
+      <div class="fee-row"><span>Is permit fee tax deductible?</span><span class="county-val">Sometimes — consult CPA</span></div>
+      <div class="fee-row"><span>How long is permit valid?</span><span class="county-val">180 days from issue (FL standard)</span></div>
+      <div class="fee-row"><span>Can permit be extended?</span><span class="county-val">Yes — $25–75 extension fee</span></div>
+      <div class="tip-box"><strong>Owner-Builder warning:</strong> FL allows homeowners to act as their own contractor (Owner-Builder Exemption), but this transfers full liability to the homeowner. Insurance companies may deny claims if Owner-Builder work was done incorrectly. Always recommend using a licensed CFC contractor for safety and insurance protection.</div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! 🔧</div>
+<!-- fl-plumbing-seo: florida plumbing permit fee estimator miami-dade plumbing permit cost broward county plumbing permit palm beach plumbing permit hillsborough plumbing permit pinellas plumbing permit orange county plumbing permit florida water heater permit cost repipe permit florida sewer lateral permit florida gas line permit florida bathroom addition permit florida permit fee calculator florida building department plumbing inspection sequence rough-in pressure test DWV final inspection florida plumbing permit timeline florida contractor CFC permit pull florida unpermitted plumbing work retroactive permit florida citizens insurance plumbing permit required florida -->
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+var PERMIT_DATA = {
+  'miami-dade':   { base: 130, pct: 1.5, plan: 150 },
+  'broward':      { base: 85,  pct: 1.2, plan: 100 },
+  'palm-beach':   { base: 75,  pct: 1.0, plan: 90  },
+  'hillsborough': { base: 65,  pct: 0.9, plan: 85  },
+  'pinellas':     { base: 60,  pct: 0.8, plan: 75  },
+  'orange':       { base: 70,  pct: 1.0, plan: 90  },
+  'duval':        { base: 55,  pct: 0.85,plan: 70  },
+  'lee':          { base: 65,  pct: 0.95,plan: 80  },
+  'collier':      { base: 80,  pct: 1.1, plan: 100 },
+  'sarasota':     { base: 60,  pct: 0.8, plan: 75  },
+  'volusia':      { base: 50,  pct: 0.75,plan: 65  },
+  'brevard':      { base: 55,  pct: 0.80,plan: 70  }
+};
+var PROJECT_VALUATION = {
+  'water-heater': { typical: 1800, label: 'Water heater replacement' },
+  'repipe':       { typical: 12000, label: 'Whole-house repipe' },
+  'sewer':        { typical: 6500, label: 'Sewer lateral replacement' },
+  'gas-line':     { typical: 3500, label: 'Gas line installation' },
+  'bathroom':     { typical: 18000, label: 'Bathroom addition' },
+  'backflow':     { typical: 800, label: 'Backflow preventer' }
+};
+var TIMELINE_DATA = {
+  'water-heater': {
+    desc: 'Water heater permit and inspection',
+    steps: [
+      { label: 'Submit permit application', time: 'Day 1', desc: 'Contractor submits online or in-person with project value, WH specs, CFC license #.' },
+      { label: 'Permit issued', time: 'Day 1–3', desc: 'WH permits are typically over-the-counter or same-day online in most FL counties. Miami-Dade: 2–5 days.' },
+      { label: 'Water heater installed', time: 'Day 2–5', desc: 'Licensed CFC plumber installs WH per FPC §504. Permit card must be on-site.' },
+      { label: 'Final inspection', time: 'Day 3–10', desc: 'Inspector verifies connections, TPR valve, discharge pipe, pan drain, and elevation (garage). Schedule by 4 PM prior day.' },
+      { label: 'Certificate of Completion', time: 'Day 4–12', desc: 'CC issued same day as passed final inspection in most counties.' }
+    ],
+    total: '3–12 business days total',
+    delays: 'Most common delay: Contractor pulls permit but inspection not scheduled promptly. Citizens Insurance now requires CC for WH replacements — don\'t skip the final.'
+  },
+  'repipe': {
+    desc: 'Whole-house repipe permit and inspections',
+    steps: [
+      { label: 'Submit permit + scope of work', time: 'Day 1', desc: 'Submit fixture count, pipe material, square footage, contractor CFC #. Plan review may be required.' },
+      { label: 'Plan review (if required)', time: 'Day 2–10', desc: 'Counties requiring drawings add 5–10 business days. Orange, Miami-Dade, and Broward most commonly require plans for full repipes.' },
+      { label: 'Permit issued', time: 'Day 3–14', desc: 'Permit in hand — work can begin. Keep permit card on-site at all times.' },
+      { label: 'Work begins — walls open', time: 'Day 4–16', desc: 'Plumber opens walls, removes old pipe, installs new supply lines. Do NOT close walls until inspection passes.' },
+      { label: 'Rough-in inspection', time: 'Day 5–18', desc: 'All new pipe visible. Inspector checks material, sizing, supports, fittings. Schedule by 4 PM prior day.' },
+      { label: 'Pressure test inspection', time: 'Day 6–20', desc: '100 PSI water test held for 15 minutes. All connections must hold with zero drop.' },
+      { label: 'Walls repaired + final inspection', time: 'Day 8–25', desc: 'After passing pressure test, close walls, patch drywall, restore fixtures. Final inspection confirms complete installation.' },
+      { label: 'Certificate of Completion', time: 'Day 9–28', desc: 'CC issued. Required by most FL insurers and all mortgage lenders for repiped properties.' }
+    ],
+    total: '9–28 business days total (3–6 weeks typical)',
+    delays: 'Most common delay: Plan review required and plans not submitted with initial application. Failure at pressure test adds 5–10 days for re-inspection.'
+  },
+  'sewer': {
+    desc: 'Sewer lateral replacement permit and inspections',
+    steps: [
+      { label: 'Submit permit application', time: 'Day 1', desc: 'Include linear footage, pipe material (PVC SDR 35 standard), depth, utility markings (call 811 first).' },
+      { label: 'Utility marking (811)', time: 'Before Day 1', desc: 'Florida law requires 811 call 2+ business days before any excavation. This must be done before permit application in most counties.' },
+      { label: 'Permit issued', time: 'Day 2–7', desc: 'Sewer lateral permits typically issued within 3–7 days. Some counties require right-of-way permit separately.' },
+      { label: 'Excavation and pipe installation', time: 'Day 3–10', desc: 'Trench opened, old clay/cast-iron pipe removed, new PVC SDR 35 installed. Trench must remain open for inspection.' },
+      { label: 'Rough-in / DWV inspection', time: 'Day 4–12', desc: 'Inspector verifies slope, pipe size, connection to stack and clean-out access. Minimum 1/4" per foot slope required.' },
+      { label: 'Trench backfill + final', time: 'Day 5–15', desc: 'After passing, backfill trench in lifts, compact, restore surface. Final inspection confirms tie-in and access points.' },
+      { label: 'Certificate of Completion', time: 'Day 6–18', desc: 'CC issued. Utility connect-back authorized.' }
+    ],
+    total: '6–18 business days total (2–4 weeks typical)',
+    delays: 'Most common delay: 811 marking not done before permit application, or right-of-way permit required separately (adds 5–14 days in some FL municipalities).'
+  },
+  'gas-line': {
+    desc: 'Gas line installation permit and inspections',
+    steps: [
+      { label: 'Submit permit — gas line', time: 'Day 1', desc: 'Include BTU load calculations, pipe sizing, material (CSST or black iron), appliance list. CFC or CFCW license required.' },
+      { label: 'Permit issued', time: 'Day 2–10', desc: 'Gas permits require plan review at most FL counties. Miami-Dade, Orange, and Broward: 7–14 days. Smaller counties: 3–7 days.' },
+      { label: 'Gas pipe rough-in installation', time: 'Day 3–12', desc: 'Black iron or CSST installed per NFPA 54/NFPA 58. CSST requires bonding per FL code. Walls remain open.' },
+      { label: 'Gas rough-in inspection', time: 'Day 4–14', desc: 'Inspector verifies pipe sizing, material, CSST bonding, shutoffs, and access clearances.' },
+      { label: 'Air pressure test', time: 'Day 5–15', desc: '15 PSI air test held for minimum 15 minutes. All connections checked with gas detector solution.' },
+      { label: 'Utility gas connection', time: 'Day 6–18', desc: 'After passing pressure test, gas company connects meter. May require separate utility scheduling (2–5 business days).' },
+      { label: 'Final inspection', time: 'Day 7–20', desc: 'Inspector confirms appliance connections, shutoffs, and all code requirements. Gas lit and tested.' }
+    ],
+    total: '7–20 business days total (2–5 weeks typical)',
+    delays: 'Most common delay: Gas utility scheduling after pressure test. Florida Power & Light, TECO, and Peoples Gas each have their own scheduling queues — sometimes 5–15 business days for meter set.'
+  },
+  'bathroom': {
+    desc: 'Bathroom addition permit and inspections',
+    steps: [
+      { label: 'Submit permit with plans', time: 'Day 1', desc: 'Full permit package: floor plan, fixture layout, electrical, plumbing, mechanical. Structural engineer stamp often required.' },
+      { label: 'Plan review', time: 'Day 5–20', desc: 'Full plan review required for all additions. Miami-Dade: 2–3 weeks. Other counties: 1–2 weeks. Online plan review available in most counties.' },
+      { label: 'Permit issued', time: 'Day 10–25', desc: 'All disciplines reviewed and approved. Building, electrical, plumbing, and mechanical permits typically issued together.' },
+      { label: 'Rough-in — framing + plumbing', time: 'Day 12–35', desc: 'Framing inspection, then rough-in plumbing with walls open. DWV and supply pipe installed.' },
+      { label: 'Rough-in inspection (plumbing)', time: 'Day 15–40', desc: 'Inspector verifies all plumbing rough-in: supply sizing, DWV slope, vent connections, anti-scald device.' },
+      { label: 'Pressure test', time: 'Day 16–42', desc: 'Supply pressure test 100 PSI / 15 min. DWV smoke test may be required by some counties.' },
+      { label: 'Insulation, drywall + close walls', time: 'Day 18–50', desc: 'Walls and ceiling closed after all rough-in inspections passed.' },
+      { label: 'Final inspection (all trades)', time: 'Day 22–60', desc: 'Building, plumbing, electrical, and mechanical all finaled. Certificate of Occupancy or CC issued.' }
+    ],
+    total: '22–60 business days total (1–3 months typical)',
+    delays: 'Most common delay: Plan review comments requiring revised drawings. Each revision cycle adds 5–14 days. Tip: Use an architect familiar with your FL county\'s review requirements.'
+  },
+  'backflow': {
+    desc: 'Backflow preventer installation permit',
+    steps: [
+      { label: 'Determine if permit required', time: 'Day 1', desc: 'Residential: often no permit for simple backflow devices. Commercial, multi-family, or irrigation backflows: permit required in most FL counties.' },
+      { label: 'Submit permit application', time: 'Day 1', desc: 'Specify backflow type (RP, DC, PVB), location, water service size, usage type. Water utility notification may be required.' },
+      { label: 'Permit issued', time: 'Day 1–5', desc: 'Simple backflow permits typically OTC or same-day. Commercial assemblies may require review: 3–7 days.' },
+      { label: 'Installation and testing', time: 'Day 2–7', desc: 'Backflow preventer installed and tested by certified backflow tester (FL requires annual test + certification).' },
+      { label: 'Final inspection', time: 'Day 3–10', desc: 'Inspector verifies assembly type, location, test report, and access requirements. Test report submitted to water utility.' }
+    ],
+    total: '3–10 business days total',
+    delays: 'Most common delay: Water utility requires separate notification or approval for main water service cross-connection installations — add 3–7 days for utility review.'
+  }
+};
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  if (e && e.target) e.target.classList.add('active');
+}
+function calcFee() {
+  var county = document.getElementById('county').value;
+  var project = document.getElementById('projectType').value;
+  var valInput = parseFloat(document.getElementById('projVal').value);
+  var planReview = document.getElementById('planReview').value;
+  var d = PERMIT_DATA[county];
+  var pv = PROJECT_VALUATION[project];
+  var val = valInput > 0 ? valInput : pv.typical;
+  var base = d.base;
+  var valSurcharge = Math.round(val * d.pct / 100);
+  var stateSurcharge = 6;
+  var subtotal = base + valSurcharge + stateSurcharge;
+  var planFee = (planReview === 'yes') ? d.plan : 0;
+  var total = subtotal + planFee;
+  var html = '<div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px">Estimate for: <strong style="color:#F4B942">' + esc(pv.label) + '</strong> in <strong style="color:#F4B942">' + esc(county.charAt(0).toUpperCase()+county.slice(1).replace('-',' ')) + ' County</strong></div>';
+  html += '<div class="fee-row"><span>Base permit fee</span><span class="fee-val">$' + base.toLocaleString() + '</span></div>';
+  html += '<div class="fee-row"><span>Valuation surcharge (' + d.pct + '% of $' + val.toLocaleString() + ')</span><span class="fee-val">$' + valSurcharge.toLocaleString() + '</span></div>';
+  html += '<div class="fee-row"><span>FL state surcharge</span><span class="fee-val">$' + stateSurcharge + '</span></div>';
+  if (planReview === 'yes') {
+    html += '<div class="fee-row"><span>Plan review fee</span><span class="fee-val">$' + planFee + '+ </span></div>';
+  } else if (planReview === 'unsure') {
+    html += '<div class="fee-row"><span>Plan review fee (if required)</span><span class="fee-val">$' + d.plan + '+</span></div>';
+  }
+  html += '<div class="fee-row" style="border-top:2px solid #F4B942;margin-top:6px;padding-top:10px"><span><strong>Estimated Total</strong></span><span><strong class="fee-total">$' + total.toLocaleString() + '</strong>' + (planReview==='unsure' ? '<span style="color:#94A3B8;font-size:0.72rem"> – $'+(total+d.plan).toLocaleString()+'</span>' : '') + '</span></div>';
+  if (valInput <= 0) {
+    html += '<div style="font-size:0.72rem;color:#94A3B8;margin-top:8px">⚠️ Using typical project value of $' + pv.typical.toLocaleString() + '. Enter your actual project value for a more accurate estimate.</div>';
+  }
+  var box = document.getElementById('feeResult');
+  box.style.display = 'block';
+  document.getElementById('feeBreakdown').innerHTML = html;
+}
+function showTimeline() {
+  var project = document.getElementById('tlProject').value;
+  var tl = TIMELINE_DATA[project];
+  var html = '<div class="card"><div class="card-title"><span>📋</span>' + esc(tl.desc) + '</div>';
+  tl.steps.forEach(function(s, i) {
+    html += '<div class="timeline-step"><div class="tl-dot">' + (i+1) + '</div><div class="tl-body"><div class="tl-title">' + esc(s.label) + '</div><div class="tl-time">' + esc(s.time) + '</div><div class="tl-desc">' + esc(s.desc) + '</div></div></div>';
+  });
+  html += '<div style="background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:0.78rem;color:#94A3B8"><strong style="color:#F4B942">Total timeline:</strong> ' + esc(tl.total) + '</div>';
+  html += '<div class="warn-box" style="margin-top:8px"><strong>Common delay:</strong> ' + esc(tl.delays) + '</div>';
+  html += '</div>';
+  document.getElementById('timelineResult').innerHTML = html;
+}
+function submitQuote() {
+  var name = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){ t.style.display = 'none'; }, 3500);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline florida-plumbing-permit-fee-estimator miami-dade-permit-cost broward-permit-fee palm-beach-plumbing-permit hillsborough-permit-fee orange-county-permit florida-inspection-timeline 
+</div>
+</body>
+</html>
