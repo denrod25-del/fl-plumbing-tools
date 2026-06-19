@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Gas Line Sizing Calculator | BTU Demand | NFPA 54 | FPC §409 Florida</title>
+<meta name="description" content="Calculate natural gas and propane line sizing for Florida homes. NFPA 54 / FPC §409 pipe sizing tables, BTU demand calculator for tankless water heaters, furnaces, ranges, dryers, and generators. Meter sizing, permit requirements, and FL county inspector tips. Palm Beach, Broward, Miami-Dade, Hillsborough, Orange County.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#0F1629 0%,#141929 100%);border-bottom:3px solid #F97316;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#F97316;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#F9731622;color:#F97316;border:1px solid #F9731644;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.72rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#F97316;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#F97316;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#F97316}
+.btn{width:100%;padding:14px;background:#F97316;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-outline{background:transparent;border:1px solid #F97316;color:#F97316;padding:8px 14px;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;width:100%;margin-top:8px}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.code-table{width:100%;border-collapse:collapse;font-size:0.73rem;margin-top:8px}
+.code-table th{background:#141929;color:#F97316;padding:7px 5px;text-align:center;font-size:0.69rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table th:first-child{text-align:left}
+.code-table td{padding:6px 5px;border-bottom:1px solid #1E2A45;color:#E2E8F0;text-align:center;vertical-align:middle}
+.code-table td:first-child{text-align:left;font-weight:700;color:#F97316}
+.code-table tr:last-child td{border-bottom:none}
+.highlight-row td{background:#F9731611;color:#F97316;font-weight:700}
+.tip-box{background:#F9731611;border:1px solid #F9731633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#F97316}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F97316;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #F9731655}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.stat-card{background:#0F1629;border-radius:8px;padding:12px;text-align:center;border:1px solid #1E2A45}
+.stat-num{font-size:1.1rem;font-weight:800;color:#F97316}
+.stat-label{font-size:0.7rem;color:#94A3B8;margin-top:3px}
+.result-hero{background:#F9731611;border:1px solid #F9731633;border-radius:12px;padding:16px;margin-top:10px}
+.result-headline{font-size:1.3rem;font-weight:800;text-align:center;margin-bottom:4px;color:#F97316}
+.result-sub{font-size:0.8rem;color:#94A3B8;text-align:center}
+.app-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.8rem}
+.app-row:last-child{border-bottom:none}
+.app-chk{width:20px;flex-shrink:0}
+.app-chk input[type=checkbox]{width:18px;height:18px;accent-color:#F97316;cursor:pointer}
+.app-name{flex:1;color:#E2E8F0;font-size:0.78rem;font-weight:500}
+.app-btu-inp{width:100px;flex-shrink:0}
+.app-btu-inp input{padding:5px 8px;font-size:0.76rem;text-align:right}
+.cat-header{font-size:0.7rem;font-weight:800;color:#F97316;text-transform:uppercase;letter-spacing:0.08em;padding:8px 0 4px;border-bottom:1px solid #1E2A45;margin-bottom:4px}
+.section-label{font-size:0.76rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;margin:14px 0 8px}
+.meter-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.meter-size{font-size:1.0rem;font-weight:800;color:#F97316}
+.meter-label{font-size:0.78rem;color:#E2E8F0;font-weight:600;margin-top:3px}
+.meter-note{font-size:0.72rem;color:#94A3B8;margin-top:6px;line-height:1.4}
+.meter-badge{display:inline-block;background:#F9731622;color:#F97316;border:1px solid #F9731644;border-radius:6px;font-size:0.68rem;font-weight:700;padding:2px 8px;margin-top:4px}
+.county-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.county-card{background:#141929;border-radius:8px;padding:10px;border:1px solid #1E2A45;font-size:0.75rem}
+.county-name{font-weight:700;color:#F97316;font-size:0.78rem;margin-bottom:4px}
+.county-detail{color:#94A3B8;line-height:1.4}
+.pipe-rec-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.pipe-rec-row:last-child{border-bottom:none}
+.pipe-sz-badge{background:#F9731622;color:#F97316;border:1px solid #F9731644;border-radius:6px;font-size:0.75rem;font-weight:800;padding:3px 10px;min-width:48px;text-align:center;flex-shrink:0}
+.pipe-rec-detail{flex:1;color:#E2E8F0;font-size:0.75rem}
+.pipe-cap-note{font-size:0.69rem;color:#94A3B8;margin-top:2px}
+.demand-bar-wrap{display:flex;align-items:center;gap:6px;margin-top:6px}
+.demand-bar{flex:1;height:10px;background:#1E2A45;border-radius:5px;overflow:hidden}
+.demand-fill{height:100%;border-radius:5px;background:#F97316;transition:width .5s}
+.demand-pct{font-size:0.68rem;color:#94A3B8;min-width:30px;text-align:right}
+.step-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #1E2A4530}
+.step-num{width:24px;height:24px;border-radius:50%;background:#F97316;color:#0A0E1A;font-weight:800;font-size:0.78rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-content{flex:1;font-size:0.78rem;color:#E2E8F0;line-height:1.5}
+.step-sub{font-size:0.72rem;color:#94A3B8;margin-top:3px}
+.ref-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.ref-code{font-weight:700;color:#F97316;font-size:0.75rem}
+.ref-desc{color:#E2E8F0;flex:1;margin-left:10px}
+.ref-req{font-size:0.7rem;color:#94A3B8;text-align:right}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🔥</div>
+  <h1>FL Gas Line Sizing &amp; BTU Demand Calculator</h1>
+  <p>NFPA 54 / FPC §409 sizing tables, meter selection, and FL permit requirements</p>
+  <span class="badge">NFPA 54 · FPC §409 · Natural Gas &amp; Propane · FL Permit Ready</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('btu',event)">BTU Calc</button>
+    <button class="tab" onclick="showTab('sizing',event)">Line Sizing</button>
+    <button class="tab" onclick="showTab('meter',event)">Meter Sizing</button>
+    <button class="tab" onclick="showTab('quote',event)">Free Quote</button>
+  </div>
+
+  <!-- TAB 1: BTU Calc -->
+  <div id="btu" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>📋</span>Appliance BTU Demand Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Check each appliance you have or plan to install. Edit BTU values if you know your model's exact rating. The total determines your gas line and meter sizing.</div>
+      <label>Gas type</label>
+      <select id="gasType" onchange="updateGasType()">
+        <option value="ng">Natural Gas (1,020 BTU/cu ft)</option>
+        <option value="lp">Propane / LPG (2,516 BTU/cu ft)</option>
+      </select>
+      <div class="section-label" style="margin-top:14px">Select your appliances &amp; verify BTU ratings</div>
+      <div class="cat-header">💧 Water Heating</div>
+      <div id="app-water"></div>
+      <div class="cat-header" style="margin-top:10px">❄️ HVAC</div>
+      <div id="app-hvac"></div>
+      <div class="cat-header" style="margin-top:10px">🍳 Kitchen</div>
+      <div id="app-kitchen"></div>
+      <div class="cat-header" style="margin-top:10px">👕 Laundry</div>
+      <div id="app-laundry"></div>
+      <div class="cat-header" style="margin-top:10px">⚡ Generator</div>
+      <div id="app-generator"></div>
+      <div class="cat-header" style="margin-top:10px">🌿 Outdoor / Other</div>
+      <div id="app-outdoor"></div>
+      <label style="margin-top:14px">Demand diversity factor</label>
+      <select id="diversityFactor">
+        <option value="1.0">1.0 — Worst case / code minimum (all appliances simultaneous)</option>
+        <option value="0.85" selected>0.85 — Standard residential (NFPA 54 §6.1)</option>
+        <option value="0.75">0.75 — Larger home, likely non-simultaneous use</option>
+        <option value="0.65">0.65 — Very large home, many appliances</option>
+      </select>
+      <button class="btn" onclick="calcBTU()">Calculate Total Demand</button>
+      <div id="btu-result" class="result-box">
+        <div class="result-hero">
+          <div class="result-headline" id="btu-total-disp">—</div>
+          <div class="result-sub">Total design BTU/hr demand</div>
+        </div>
+        <div class="stat-grid" style="margin-top:12px">
+          <div class="stat-card">
+            <div class="stat-num" id="btu-raw-disp">—</div>
+            <div class="stat-label">Installed BTU/hr (all appliances)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="btu-cfh-disp">—</div>
+            <div class="stat-label" id="cfh-label">Design CFH (natural gas)</div>
+          </div>
+        </div>
+        <div id="btu-breakdown" style="margin-top:12px"></div>
+        <div class="tip-box" style="margin-top:12px">
+          <strong>Next step:</strong> Take your design BTU/hr to the <strong>Line Sizing</strong> tab to get recommended pipe diameter per NFPA 54 / FPC §409.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📖</span>Appliance BTU Reference Chart</div>
+      <table class="code-table">
+        <thead><tr><th style="text-align:left">Appliance</th><th>Typical BTU/hr</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Tankless WH — condensing</td><td>150,000–199,000</td><td>Check nameplate</td></tr>
+          <tr><td>Tankless WH — non-condensing</td><td>120,000–150,000</td><td>High demand</td></tr>
+          <tr><td>Storage WH (40 gal)</td><td>32,000–40,000</td><td>FHR affects size</td></tr>
+          <tr><td>Storage WH (50 gal)</td><td>36,000–50,000</td><td>Most common FL</td></tr>
+          <tr><td>Storage WH (75 gal)</td><td>60,000–75,000</td><td>Large household</td></tr>
+          <tr><td>Gas Furnace</td><td>40,000–150,000</td><td>Per nameplate</td></tr>
+          <tr><td>Gas Range (5-burner)</td><td>55,000–65,000</td><td>All burners + oven</td></tr>
+          <tr><td>Gas Cooktop (4-burner)</td><td>36,000–48,000</td><td>No oven</td></tr>
+          <tr><td>Gas Dryer (standard)</td><td>22,000</td><td>DOE standard</td></tr>
+          <tr><td>Gas Dryer (high-cap)</td><td>30,000–35,000</td><td>DG series</td></tr>
+          <tr><td>Generator — 10 kW</td><td>125,000–145,000</td><td>At full load</td></tr>
+          <tr><td>Generator — 16 kW</td><td>175,000–195,000</td><td>Very common FL</td></tr>
+          <tr><td>Generator — 22 kW (Generac)</td><td>245,000–260,000</td><td>Standard Generac</td></tr>
+          <tr><td>Generator — 26 kW</td><td>305,000–330,000</td><td>Full home backup</td></tr>
+          <tr><td>Pool/Spa Heater — 200 MBH</td><td>200,000</td><td>Typical FL pool</td></tr>
+          <tr><td>Pool/Spa Heater — 400 MBH</td><td>400,000</td><td>Large pool/spa</td></tr>
+          <tr><td>Outdoor Grill</td><td>40,000–60,000</td><td>Estimate</td></tr>
+          <tr><td>Gas Fireplace / Logs</td><td>25,000–80,000</td><td>Per insert</td></tr>
+          <tr><td>Gas Boiler / Hydronic</td><td>80,000–175,000</td><td>Per rating</td></tr>
+          <tr><td>Gas Space Heater</td><td>20,000–30,000</td><td>Wall/floor mount</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: Line Sizing -->
+  <div id="sizing" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📐</span>Gas Pipe Sizing — NFPA 54 / FPC §409</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Enter your design BTU demand and longest pipe run to get recommended pipe diameter. Based on NFPA 54 Table 402.4(2) for Schedule 40 metallic pipe at 0.3 in. WC pressure drop.</div>
+      <label>Design BTU/hr demand</label>
+      <input type="number" id="sz-btu" placeholder="e.g. 350000" min="1000" max="2000000">
+      <label>Gas type</label>
+      <select id="sz-gastype">
+        <option value="ng">Natural Gas (1,020 BTU/cu ft)</option>
+        <option value="lp">Propane / LPG (2,516 BTU/cu ft)</option>
+      </select>
+      <label>Pipe material</label>
+      <select id="sz-pipetype" onchange="updatePipeType()">
+        <option value="steel">Schedule 40 Black Steel / Galvanized (NFPA 54 Table 402.4)</option>
+        <option value="csst">CSST — Gastite / TracPipe (0.5 in. WC drop)</option>
+        <option value="pe">PE / HDPE (underground only, Table 402.4(13))</option>
+      </select>
+      <label>Longest pipe run from meter to farthest appliance (feet)</label>
+      <input type="number" id="sz-length" placeholder="e.g. 60" min="5" max="300">
+      <div class="tip-box" style="margin-top:10px">
+        <strong>Tip:</strong> For sizing purposes, add 50% to actual pipe length to account for fittings (elbows, tees, valves). This is the "equivalent length" method per NFPA 54 §6.1.2.
+      </div>
+      <button class="btn" onclick="calcSizing()">Get Recommended Pipe Size</button>
+      <div id="sizing-result" class="result-box">
+        <div class="result-hero">
+          <div class="result-headline" id="sz-rec-disp">—</div>
+          <div class="result-sub" id="sz-rec-sub">Recommended minimum pipe diameter</div>
+        </div>
+        <div id="sz-breakdown" style="margin-top:12px"></div>
+        <div id="sz-warning-box" style="margin-top:8px;display:none"></div>
+        <div class="tip-box" style="margin-top:10px">
+          <strong>Always size up:</strong> NFPA 54 requires you select the pipe size whose capacity <em>equals or exceeds</em> your design demand. When in doubt, go one size larger — oversizing gas pipe is safe; undersizing causes pressure drop, appliance starvation, and failed inspections.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>NFPA 54 Pipe Capacity Table — Schedule 40 Steel</div>
+      <div style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px">BTU/hr capacity at 0.3 in. WC pressure drop · Natural gas (1,020 BTU/cu ft)</div>
+      <div style="overflow-x:auto">
+      <table class="code-table" style="min-width:420px">
+        <thead>
+          <tr>
+            <th style="text-align:left">Pipe Size</th>
+            <th>20 ft</th>
+            <th>40 ft</th>
+            <th>60 ft</th>
+            <th>80 ft</th>
+            <th>100 ft</th>
+            <th>150 ft</th>
+            <th>200 ft</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1/2″</td><td>119,000</td><td>84,000</td><td>68,000</td><td>59,000</td><td>52,000</td><td>42,000</td><td>37,000</td></tr>
+          <tr><td>3/4″</td><td>255,000</td><td>178,000</td><td>145,000</td><td>127,000</td><td>111,000</td><td>90,000</td><td>79,000</td></tr>
+          <tr><td>1″</td><td>476,000</td><td>332,000</td><td>273,000</td><td>238,000</td><td>209,000</td><td>168,000</td><td>146,000</td></tr>
+          <tr><td>1-1/4″</td><td>987,000</td><td>687,000</td><td>562,000</td><td>491,000</td><td>428,000</td><td>347,000</td><td>303,000</td></tr>
+          <tr><td>1-1/2″</td><td>1,482,000</td><td>1,032,000</td><td>845,000</td><td>738,000</td><td>643,000</td><td>522,000</td><td>456,000</td></tr>
+          <tr><td>2″</td><td>2,831,000</td><td>1,971,000</td><td>1,613,000</td><td>1,410,000</td><td>1,226,000</td><td>996,000</td><td>869,000</td></tr>
+          <tr><td>2-1/2″</td><td>4,897,000</td><td>3,410,000</td><td>2,791,000</td><td>2,440,000</td><td>2,122,000</td><td>1,724,000</td><td>1,503,000</td></tr>
+          <tr><td>3″</td><td>9,163,000</td><td>6,380,000</td><td>5,222,000</td><td>4,564,000</td><td>3,970,000</td><td>3,226,000</td><td>2,814,000</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="tip-box" style="margin-top:10px">
+        <strong>Propane (LPG):</strong> For propane, multiply BTU capacity values by 0.406 (propane has higher BTU/cu ft so same volume at same pressure drop carries proportionally less compared to NG sizing tables based on CFH). Use NFPA 54 Table 402.4(6) specifically for propane, or use a licensed gas contractor.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>CSST Capacity Table — Gastite / TracPipe</div>
+      <div style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px">BTU/hr · Natural gas · 0.5 in. WC pressure drop · Verify with manufacturer tables</div>
+      <div style="overflow-x:auto">
+      <table class="code-table" style="min-width:380px">
+        <thead>
+          <tr>
+            <th style="text-align:left">CSST Size</th>
+            <th>20 ft</th>
+            <th>40 ft</th>
+            <th>60 ft</th>
+            <th>100 ft</th>
+            <th>150 ft</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>3/8″ CSST</td><td>50,000</td><td>35,000</td><td>28,000</td><td>22,000</td><td>18,000</td></tr>
+          <tr><td>1/2″ CSST</td><td>117,000</td><td>81,000</td><td>66,000</td><td>51,000</td><td>41,000</td></tr>
+          <tr><td>3/4″ CSST</td><td>276,000</td><td>192,000</td><td>157,000</td><td>121,000</td><td>98,000</td></tr>
+          <tr><td>1″ CSST</td><td>544,000</td><td>379,000</td><td>310,000</td><td>239,000</td><td>194,000</td></tr>
+          <tr><td>1-1/4″ CSST</td><td>970,000</td><td>676,000</td><td>553,000</td><td>427,000</td><td>347,000</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="warn-box" style="margin-top:10px">
+        <strong>CSST Bonding Required:</strong> Florida adopted NFPA 54 2021 edition requiring CSST bonding per §7.13. All CSST must be bonded to the electrical grounding system with a direct bond at each section. Improperly bonded CSST failed in multiple FL lightning incidents. County inspectors check CSST bonding rigorously.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚡</span>Generator Gas Line Notes</div>
+      <div style="font-size:0.78rem;color:#94A3B8;line-height:1.5;margin-bottom:10px">Standby generators are the most common reason FL homeowners need gas line upsizing. Key planning considerations:</div>
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Dedicated line required</strong>
+          <div class="step-sub">Generac, Kohler, and Briggs &amp; Stratton require a dedicated gas supply line — not shared with other appliances on the same branch. The generator manufacturer's installation manual specifies minimum inlet pressure and pipe sizing.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>Size for full-load BTU, not rated kW</strong>
+          <div class="step-sub">A 22 kW Generac draws 250,000–260,000 BTU/hr at full load running on natural gas. At 50% load (typical residential), it draws about 155,000 BTU/hr. Size the gas line for full load per NFPA 54.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>FL permit required</strong>
+          <div class="step-sub">Generator gas hookup requires a mechanical/gas permit in all FL counties. The gas line must be inspected before the generator is commissioned. Licensed plumber or master gas contractor required. Typical cost: $250–$600 for permit + inspection.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>Meter capacity check</strong>
+          <div class="step-sub">Adding a generator often bumps total demand past the residential 175 CFH or 250 CFH meter capacity. Contact FPL/TECO/Peoples Gas to verify meter capacity before installation. Meter upgrade is utility-coordinated and may add 2–6 weeks to project timeline.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <strong>Propane vs. natural gas</strong>
+          <div class="step-sub">In areas without natural gas service (much of rural FL), generators run on propane. Propane has 2.5× the BTU density of NG, so propane pipe can be one size smaller for the same CFH demand. Propane tank sizing: 120–500 gallon for residential standby. 250-gallon minimum recommended for 22 kW units.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Meter Sizing -->
+  <div id="meter" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔧</span>Gas Meter Sizing Guide</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">The gas meter must be sized to supply the total design demand. In Florida, the local distribution utility (FPL Gas / Peoples Gas, TECO Peoples Gas, or City Gas) owns and sizes the meter. This guide helps you understand what to request.</div>
+      <label>Your total design BTU/hr demand</label>
+      <input type="number" id="mt-btu" placeholder="e.g. 450000" min="10000">
+      <label>Gas type</label>
+      <select id="mt-gastype">
+        <option value="ng">Natural Gas</option>
+        <option value="lp">Propane (tank-supplied, no utility meter)</option>
+      </select>
+      <button class="btn" onclick="calcMeter()">Recommend Meter Size</button>
+      <div id="meter-result" class="result-box">
+        <div id="meter-rec-content"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>Residential Meter Sizing Chart — Natural Gas</div>
+      <table class="code-table">
+        <thead><tr><th style="text-align:left">Meter Size</th><th>Max Capacity</th><th>Max BTU/hr</th><th>Typical Use</th></tr></thead>
+        <tbody>
+          <tr><td>B-175 (175 CFH)</td><td>175 CFH</td><td>178,500</td><td>WH + range + dryer</td></tr>
+          <tr><td>B-250 (250 CFH)</td><td>250 CFH</td><td>255,000</td><td>Adds small generator or pool heater</td></tr>
+          <tr><td>425 CFH Diaphragm</td><td>425 CFH</td><td>433,500</td><td>WH + furnace + gen + pool</td></tr>
+          <tr><td>800 CFH</td><td>800 CFH</td><td>816,000</td><td>Large residential / commercial</td></tr>
+          <tr><td>1,600 CFH</td><td>1,600 CFH</td><td>1,632,000</td><td>Commercial / industrial</td></tr>
+        </tbody>
+      </table>
+      <div class="tip-box" style="margin-top:10px">
+        <strong>Utility coordinates meter size:</strong> You (or your licensed contractor) submit a load calc to the local utility showing total connected appliance BTU demand. The utility then determines if a meter upgrade is needed. Meter upgrades are typically free from the utility but require scheduling and may take 2–6 weeks.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🏛️</span>FL County Permit Requirements — Gas Work</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">All gas piping work in Florida requires a mechanical/gas permit. Here are key requirements by major county:</div>
+      <div class="county-grid">
+        <div class="county-card">
+          <div class="county-name">Palm Beach County</div>
+          <div class="county-detail">Gas permit required. Licensed plumber or master gas contractor. CSST bonding strict. Hurricane strap required for exterior-mounted meters and generators. Call 561-233-5100.</div>
+        </div>
+        <div class="county-card">
+          <div class="county-name">Broward County</div>
+          <div class="county-detail">Permit via Broward County Building Division or city (Ft. Laud., Hollywood). 10-business-day review typical. CSST bond inspection at rough-in and final. 954-357-6350.</div>
+        </div>
+        <div class="county-card">
+          <div class="county-name">Miami-Dade County</div>
+          <div class="county-detail">Miami-Dade Building Dept. permit required. High Velocity Hurricane Zone (HVHZ) — extra fastening and CSST bonding. iBuild online portal. 786-315-2100.</div>
+        </div>
+        <div class="county-card">
+          <div class="county-name">Hillsborough County</div>
+          <div class="county-detail">Permit via Hillsborough County or Tampa (city). TECO Peoples Gas utility. CSST bonding and pressure test required. 813-272-5600.</div>
+        </div>
+        <div class="county-card">
+          <div class="county-name">Orange County</div>
+          <div class="county-detail">Permit via Orange County EPD or Orlando (city). Duke Energy / TECO gas service. Online permit portal at ocfl.net/Development. 407-836-5550.</div>
+        </div>
+        <div class="county-card">
+          <div class="county-name">Lee / Collier Counties</div>
+          <div class="county-detail">Lee County Building Dept. or Collier Growth Mgmt. TECO Peoples Gas. Post-Ian: all gas work requires full pressure test with 20-min hold at 3× operating pressure. 239-533-8329.</div>
+        </div>
+        <div class="county-card">
+          <div class="county-name">Duval / Jacksonville</div>
+          <div class="county-detail">Consolidated City of Jacksonville permit. JEA gas service. Generator gas lines must be on separate branch. City Gas Company of FL. 904-630-1100.</div>
+        </div>
+        <div class="county-card">
+          <div class="county-name">Pinellas County</div>
+          <div class="county-detail">Pinellas County Building Dept. or city (Clearwater, St. Pete). TECO Peoples Gas. Online permits at pinellascounty.org/build. 727-464-3888.</div>
+        </div>
+      </div>
+      <div class="warn-box" style="margin-top:12px">
+        <strong>FPC §409.1:</strong> All gas piping installations must comply with NFPA 54 (National Fuel Gas Code) as adopted by Florida. Unlicensed gas work is a 2nd-degree misdemeanor. Only a licensed plumber (CFC, CPC), certified gas line contractor, or certified underground utility contractor may pull a gas permit in Florida.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📋</span>Inspection Checklist — What Inspectors Check</div>
+      <div id="inspection-items">
+        <div class="ref-row">
+          <div class="ref-code">§409.1</div>
+          <div class="ref-desc">Pipe material: black steel, CSST, PE (underground), or copper (LP only)</div>
+          <div class="ref-req">Required</div>
+        </div>
+        <div class="ref-row">
+          <div class="ref-code">§409.2</div>
+          <div class="ref-desc">Pressure test: 1.5× operating pressure, minimum 10 PSI for 15 minutes with no drop</div>
+          <div class="ref-req">Required</div>
+        </div>
+        <div class="ref-row">
+          <div class="ref-code">§409.3</div>
+          <div class="ref-desc">CSST bonding: direct electrical bond to grounding electrode system, #6 AWG minimum</div>
+          <div class="ref-req">Required</div>
+        </div>
+        <div class="ref-row">
+          <div class="ref-code">NFPA 54 §7.8</div>
+          <div class="ref-desc">Shutoff valve within 6 ft of each appliance, readily accessible, no threading required for CSST</div>
+          <div class="ref-req">Required</div>
+        </div>
+        <div class="ref-row">
+          <div class="ref-code">§409.5</div>
+          <div class="ref-desc">Pipe support: black steel every 8 ft horizontal, CSST per manufacturer (every 4 ft typical)</div>
+          <div class="ref-req">Required</div>
+        </div>
+        <div class="ref-row">
+          <div class="ref-code">§409.6</div>
+          <div class="ref-desc">Drip leg (sediment trap) at each appliance connection with quick-connect coupling</div>
+          <div class="ref-req">Required</div>
+        </div>
+        <div class="ref-row">
+          <div class="ref-code">§409.7</div>
+          <div class="ref-desc">Pipe labeled or marked at intervals ≤10 ft in concealed locations</div>
+          <div class="ref-req">Required</div>
+        </div>
+        <div class="ref-row">
+          <div class="ref-code">NFPA 54 §6.1</div>
+          <div class="ref-desc">Load calculation on permit application showing total BTU demand and pipe sizing per table</div>
+          <div class="ref-req">Required</div>
+        </div>
+        <div class="ref-row">
+          <div class="ref-code">FPC §106.1</div>
+          <div class="ref-desc">Licensed contractor on permit — CFC, CPC, or gas line contractor license number</div>
+          <div class="ref-req">Required</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Free Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔥</span>Get a Free Gas Line Sizing Quote</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">Whether you're adding a generator, tankless water heater, pool heater, or new appliances — our licensed gas contractors provide free on-site quotes. We handle permits, CSST bonding, pressure testing, and final inspection.</div>
+      <label>Your name</label>
+      <input type="text" id="q-name" placeholder="Full name">
+      <label>Phone number</label>
+      <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div>
+          <label>FL county</label>
+          <select id="q-county">
+            <option value="">Select county</option>
+            <option>Palm Beach</option><option>Broward</option><option>Miami-Dade</option>
+            <option>Hillsborough</option><option>Orange</option><option>Lee</option>
+            <option>Collier</option><option>Pinellas</option><option>Duval</option>
+            <option>Volusia</option><option>Sarasota</option><option>Brevard</option>
+            <option>Polk</option><option>St. Lucie</option><option>Manatee</option>
+            <option>Seminole</option><option>Lake</option><option>Osceola</option>
+            <option>Alachua</option><option>Other FL County</option>
+          </select>
+        </div>
+        <div>
+          <label>Gas type</label>
+          <select id="q-gas">
+            <option>Natural Gas</option><option>Propane</option><option>Not sure</option>
+          </select>
+        </div>
+      </div>
+      <label>Project type</label>
+      <select id="q-project">
+        <option value="">Select project</option>
+        <option>Add standby generator gas line</option>
+        <option>Tankless water heater gas line upgrade</option>
+        <option>New gas line — whole home (new construction)</option>
+        <option>Pool/spa heater gas line</option>
+        <option>Gas range or cooktop installation</option>
+        <option>Full gas line repipe (galvanized to CSST)</option>
+        <option>Generator + water heater (combo project)</option>
+        <option>Meter upgrade / gas line upsizing</option>
+        <option>Outdoor kitchen / gas grill connection</option>
+        <option>Other gas line work</option>
+      </select>
+      <label>Approximate total BTU demand (if known)</label>
+      <input type="number" id="q-btu" placeholder="e.g. 350000 — leave blank if unknown">
+      <label>Additional notes</label>
+      <textarea id="q-notes" style="width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;resize:vertical;min-height:80px" placeholder="Describe your project — home size, appliances being added, current gas service..."></textarea>
+      <button class="btn" onclick="submitQuote()">Request Free Quote</button>
+      <div class="ok-box" style="margin-top:14px">
+        <strong>✓ Licensed &amp; Insured:</strong> All gas work performed by Florida-licensed plumbers and gas contractors. Permits pulled, inspections scheduled, and CSST bonding completed to code.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>💡</span>Why Gas Line Sizing Matters in Florida</div>
+      <div style="font-size:0.78rem;color:#94A3B8;line-height:1.6;margin-bottom:10px">Florida's unique conditions make proper gas line sizing critical:</div>
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Generator surge is Florida's #1 gas line issue</strong>
+          <div class="step-sub">Post-Irma and Ian, generator installations increased 400% in South Florida. The vast majority of undersized gas lines we see are homes that added a 22 kW generator to a 175 CFH meter that was already running a tankless water heater. The generator starves for gas.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>Tankless water heaters demand 5× more gas than storage</strong>
+          <div class="step-sub">A tankless WH demands 150,000–199,000 BTU/hr when firing. A storage water heater only needs 36,000–50,000 BTU/hr. Many FL homes upgraded to tankless without upsizing the gas line — the result is long wait times for hot water and pressure drops at other appliances.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>Galvanized pipe corrodes in FL humidity</strong>
+          <div class="step-sub">Galvanized steel gas pipe installed before 1985 is internally corroding in most FL homes due to humidity and moisture. Rust particles clog appliance valves and reduce pipe ID, effectively shrinking capacity. Full repipe to CSST or black steel recommended for homes over 30 years old.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>CSST lightning strikes are a FL-specific risk</strong>
+          <div class="step-sub">Florida is the lightning capital of the US. Improperly bonded CSST is vulnerable to lightning-induced arc-through — gas fires that start inside walls. Every FL CSST installation must be directly bonded per NFPA 54 §7.13 and FPC §409. Inspectors take this seriously after several FL incidents.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! 🔥</div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+var APPLIANCES = [
+  {id:'twh1',name:'Tankless Water Heater (condensing)',btu:199000,cat:'water'},
+  {id:'twh2',name:'Tankless Water Heater (non-condensing)',btu:150000,cat:'water'},
+  {id:'swh40',name:'Storage Water Heater (40 gal)',btu:36000,cat:'water'},
+  {id:'swh50',name:'Storage Water Heater (50 gal)',btu:40000,cat:'water'},
+  {id:'swh75',name:'Storage Water Heater (75 gal)',btu:75000,cat:'water'},
+  {id:'fur80',name:'Gas Furnace (80,000 BTU)',btu:80000,cat:'hvac'},
+  {id:'fur100',name:'Gas Furnace (100,000 BTU)',btu:100000,cat:'hvac'},
+  {id:'fur150',name:'Gas Furnace (150,000 BTU)',btu:150000,cat:'hvac'},
+  {id:'boiler',name:'Gas Boiler / Hydronic Heat',btu:120000,cat:'hvac'},
+  {id:'spacehtr',name:'Gas Space Heater (wall/floor)',btu:25000,cat:'hvac'},
+  {id:'range5',name:'Gas Range — 5 burner + oven',btu:55000,cat:'kitchen'},
+  {id:'cooktop4',name:'Gas Cooktop — 4 burner',btu:40000,cat:'kitchen'},
+  {id:'oven',name:'Gas Oven (standalone)',btu:18000,cat:'kitchen'},
+  {id:'dryer',name:'Gas Dryer (standard)',btu:22000,cat:'laundry'},
+  {id:'dryerhd',name:'Gas Dryer (high-capacity)',btu:35000,cat:'laundry'},
+  {id:'gen10',name:'Standby Generator — 10 kW',btu:130000,cat:'generator'},
+  {id:'gen16',name:'Standby Generator — 16 kW',btu:182000,cat:'generator'},
+  {id:'gen22',name:'Standby Generator — 22 kW (Generac 7043)',btu:252000,cat:'generator'},
+  {id:'gen26',name:'Standby Generator — 26 kW',btu:320000,cat:'generator'},
+  {id:'gen36',name:'Standby Generator — 36 kW (Generac)',btu:430000,cat:'generator'},
+  {id:'pool200',name:'Pool / Spa Heater — 200 MBH',btu:200000,cat:'outdoor'},
+  {id:'pool400',name:'Pool / Spa Heater — 400 MBH',btu:400000,cat:'outdoor'},
+  {id:'grill',name:'Outdoor Gas Grill',btu:50000,cat:'outdoor'},
+  {id:'fplace',name:'Gas Fireplace / Insert',btu:40000,cat:'outdoor'},
+  {id:'logset',name:'Vented Gas Log Set (large)',btu:80000,cat:'outdoor'}
+];
+
+function buildAppliances() {
+  var cats = {water:'app-water',hvac:'app-hvac',kitchen:'app-kitchen',laundry:'app-laundry',generator:'app-generator',outdoor:'app-outdoor'};
+  APPLIANCES.forEach(function(a){
+    var el = document.getElementById(cats[a.cat]);
+    if(!el) return;
+    var row = document.createElement('div');
+    row.className = 'app-row';
+    row.innerHTML = '<div class="app-chk"><input type="checkbox" id="chk_'+esc(a.id)+'"></div>' +
+      '<div class="app-name">'+esc(a.name)+'</div>' +
+      '<div class="app-btu-inp"><input type="number" id="btu_'+esc(a.id)+'" value="'+a.btu+'" min="1000" max="2000000"></div>';
+    el.appendChild(row);
+  });
+}
+
+function updateGasType() {
+  var gt = document.getElementById('gasType').value;
+  var lb = document.getElementById('cfh-label');
+  if(lb) lb.textContent = gt==='ng' ? 'Design CFH (natural gas)' : 'Design CFH equiv (LP)';
+}
+
+function calcBTU() {
+  var total = 0;
+  var items = [];
+  var gt = document.getElementById('gasType').value;
+  var btupercf = gt==='ng' ? 1020 : 2516;
+  APPLIANCES.forEach(function(a){
+    var chk = document.getElementById('chk_'+a.id);
+    var inp = document.getElementById('btu_'+a.id);
+    if(chk && chk.checked && inp){
+      var btu = parseFloat(inp.value)||a.btu;
+      total += btu;
+      items.push({name:a.name, btu:btu});
+    }
+  });
+  if(items.length===0){
+    alert('Please select at least one appliance.');
+    return;
+  }
+  var div = parseFloat(document.getElementById('diversityFactor').value)||0.85;
+  var design = Math.ceil(total * div);
+  var cfh = Math.ceil(design / btupercf);
+  document.getElementById('btu-total-disp').textContent = design.toLocaleString() + ' BTU/hr';
+  document.getElementById('btu-raw-disp').textContent = total.toLocaleString();
+  document.getElementById('cfh-disp').textContent = cfh.toLocaleString() + ' CFH';
+  var html = '<div class="section-label">Appliance Breakdown</div>';
+  var maxBtu = Math.max.apply(null, items.map(function(x){return x.btu;}));
+  items.forEach(function(it){
+    var pct = Math.round(it.btu / total * 100);
+    html += '<div style="padding:6px 0;border-bottom:1px solid #1E2A4530">' +
+      '<div style="display:flex;justify-content:space-between;font-size:0.76rem;margin-bottom:4px">' +
+      '<span style="color:#E2E8F0">'+esc(it.name)+'</span>' +
+      '<span style="color:#F97316;font-weight:700">'+it.btu.toLocaleString()+' BTU/hr</span></div>' +
+      '<div class="demand-bar-wrap"><div class="demand-bar"><div class="demand-fill" style="width:'+Math.round(it.btu/maxBtu*100)+'%"></div></div>' +
+      '<span class="demand-pct">'+pct+'%</span></div></div>';
+  });
+  document.getElementById('btu-breakdown').innerHTML = html;
+  var rb = document.getElementById('btu-result');
+  rb.style.display='block';
+  rb.scrollIntoView({behavior:'smooth',block:'nearest'});
+  document.getElementById('sz-btu').value = design;
+  document.getElementById('mt-btu').value = design;
+}
+
+var NFPA_LENGTHS = [20,40,60,80,100,150,200];
+var NFPA_TABLE = {
+  '1/2"':   [119,84,68,59,52,42,37],
+  '3/4"':   [255,178,145,127,111,90,79],
+  '1"':     [476,332,273,238,209,168,146],
+  '1-1/4"': [987,687,562,491,428,347,303],
+  '1-1/2"': [1482,1032,845,738,643,522,456],
+  '2"':     [2831,1971,1613,1410,1226,996,869],
+  '2-1/2"': [4897,3410,2791,2440,2122,1724,1503],
+  '3"':     [9163,6380,5222,4564,3970,3226,2814]
+};
+var CSST_TABLE = {
+  '3/8" CSST': [50,35,28,22,18,null,null],
+  '1/2" CSST': [117,81,66,57,51,41,null],
+  '3/4" CSST': [276,192,157,137,121,98,86],
+  '1" CSST':   [544,379,310,271,239,194,170],
+  '1-1/4" CSST':[970,676,553,483,427,347,303]
+};
+
+function updatePipeType(){}
+
+function calcSizing() {
+  var btu = parseFloat(document.getElementById('sz-btu').value);
+  var length = parseFloat(document.getElementById('sz-length').value);
+  var ptype = document.getElementById('sz-pipetype').value;
+  var gt = document.getElementById('sz-gastype').value;
+  if(!btu || !length){
+    alert('Please enter BTU demand and pipe length.');
+    return;
+  }
+  var btuPerK = gt==='ng' ? 1020 : 2516;
+  var designCFH = btu / btuPerK;
+  var table = ptype==='csst' ? CSST_TABLE : NFPA_TABLE;
+  var recommended = null;
+  var recCap = 0;
+  var tableKeys = Object.keys(table);
+  var idxLen = 0;
+  var minDiff = Infinity;
+  NFPA_LENGTHS.forEach(function(l,i){if(Math.abs(l-length)<minDiff){minDiff=Math.abs(l-length);idxLen=i;}});
+  var html = '<div class="section-label">Pipe Size Options at '+length+' ft run</div>';
+  tableKeys.forEach(function(sz){
+    var caps = table[sz];
+    var cap = caps[idxLen];
+    if(cap===null){return;}
+    var capBtu = cap * btuPerK;
+    var adequate = capBtu >= btu;
+    var selected = adequate && !recommended;
+    if(selected){recommended=sz;recCap=capBtu;}
+    var pct = Math.min(100,Math.round(btu/capBtu*100));
+    var fillColor = adequate ? '#22C55E' : '#EF4444';
+    html += '<div class="pipe-rec-row">' +
+      '<div class="pipe-sz-badge"' + (selected?' style="background:#22C55E22;color:#22C55E;border-color:#22C55E44"':'') +'>' + esc(sz)+'</div>' +
+      '<div class="pipe-rec-detail">' +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:3px">' +
+      '<span style="color:'+(adequate?'#E2E8F0':'#94A3B8')+'">Capacity: '+(capBtu/1000).toFixed(0)+' MBH</span>' +
+      '<span style="color:'+(adequate?'#22C55E':'#EF4444');html+= ';font-weight:700">' + (adequate ? '✓ OK' : '✗ Under') + '</span></div>' +
+      '<div class="demand-bar"><div class="demand-fill" style="width:'+pct+'%;background:'+fillColor+'"></div></div>' +
+      (selected?'<div style="font-size:0.69rem;color:#22C55E;margin-top:3px;font-weight:700">★ RECOMMENDED MINIMUM SIZE</div>':'') +
+      '</div></div>';
+  });
+  if(!recommended){
+    html += '<div class="warn-box" style="margin-top:8px"><strong>Demand exceeds table:</strong> Your BTU demand exceeds the standard sizing table. A 3" or larger commercial pipe, or a multi-line configuration, will be needed. Contact a licensed gas contractor for engineered sizing.</div>';
+  }
+  document.getElementById('sz-breakdown').innerHTML = html;
+  if(recommended){
+    document.getElementById('sz-rec-disp').textContent = recommended;
+  } else {
+    document.getElementById('sz-rec-disp').textContent = '> 3" pipe';
+  }
+  var wb = document.getElementById('sz-warning-box');
+  if(ptype==='csst'){
+    wb.style.display='block';
+    wb.className='warn-box';
+    wb.innerHTML='<strong>CSST Bonding Required:</strong> All CSST must be directly bonded to the electrical grounding system per NFPA 54 §7.13 and FPC §409.3. Florida inspectors verify bonding at rough-in inspection.';
+  } else {
+    wb.style.display='none';
+  }
+  var rb = document.getElementById('sizing-result');
+  rb.style.display='block';
+  rb.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function calcMeter() {
+  var btu = parseFloat(document.getElementById('mt-btu').value);
+  var gt = document.getElementById('mt-gastype').value;
+  if(!btu){alert('Please enter BTU demand.');return;}
+  var html = '';
+  if(gt==='lp'){
+    html = '<div class="result-hero"><div class="result-headline">Propane Tank System</div>' +
+      '<div class="result-sub">No utility meter — propane is tank-supplied</div></div>' +
+      '<div class="tip-box" style="margin-top:12px"><strong>Propane tank sizing:</strong> For '+btu.toLocaleString()+' BTU/hr design demand — ' +
+      'Minimum 120-gallon tank for seasonal/backup use; 250-gallon for regular cooking + WH; 500-gallon for full home heating, generator, or pool heater. ' +
+      'Contact a licensed propane supplier (Ferrellgas, AmeriGas, Florida Propane) for tank sizing and rental agreements. ' +
+      'Tank must be set per NFPA 58 and FL Fire Code §6003 — minimum setbacks from structures apply.</div>';
+  } else {
+    var cfh = Math.ceil(btu/1020);
+    var meters = [
+      {cap:175,size:'B-175 (175 CFH)',notes:'Standard residential meter — most FL homes',cost:'Usually free from utility'},
+      {cap:250,size:'B-250 (250 CFH)',notes:'Homes with generator or pool heater',cost:'Usually free from utility'},
+      {cap:425,size:'425 CFH Diaphragm',notes:'Larger homes, multiple high-demand appliances',cost:'May require service upgrade'},
+      {cap:800,size:'800 CFH',notes:'Large residential or light commercial',cost:'Utility engineering required'},
+      {cap:1600,size:'1,600 CFH',notes:'Commercial / industrial',cost:'Commercial service, site-specific'}
+    ];
+    var rec = null;
+    meters.forEach(function(m){if(!rec && m.cap>=cfh) rec=m;});
+    if(!rec) rec={size:'Commercial meter (>1,600 CFH)',notes:'Requires utility engineering',cost:'Commercial rate schedule',cap:9999};
+    html = '<div class="result-hero"><div class="result-headline">'+esc(rec.size)+'</div>' +
+      '<div class="result-sub">'+esc(rec.notes)+'</div></div>' +
+      '<div class="stat-grid" style="margin-top:12px">' +
+      '<div class="stat-card"><div class="stat-num">'+cfh.toLocaleString()+' CFH</div><div class="stat-label">Your design demand</div></div>' +
+      '<div class="stat-card"><div class="stat-num">'+rec.cap.toLocaleString()+' CFH</div><div class="stat-label">Meter capacity</div></div>' +
+      '</div>' +
+      '<div class="tip-box" style="margin-top:12px"><strong>Cost:</strong> '+esc(rec.cost)+'<br><br>' +
+      '<strong>How to request:</strong> Your licensed contractor submits a load calculation to the local utility (TECO Peoples Gas, FPL Gas, or City Gas) showing total installed BTU demand. The utility reviews and either confirms current meter is adequate or schedules an upgrade. Allow 2–6 weeks for meter upgrades.</div>';
+  }
+  var rb = document.getElementById('meter-result');
+  rb.innerHTML = html;
+  rb.style.display='block';
+  rb.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  if(e && e.target) e.target.classList.add('active');
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if(!name || !phone){alert('Please enter your name and phone number.');return;}
+  var t = document.getElementById('toast');
+  t.style.display='block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+
+buildAppliances();
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator gas-line-sizing florida plumbing natural-gas LP pipe-sizing NFPA-54 FPC-409 BTU CFH meter appliance generator pool-heater CSST bonding Palm-Beach Broward Miami-Dade Hillsborough Orange Pinellas Lee Collier Duval Jacksonville Tampa Orlando Fort-Lauderdale Boca-Raton schedule-40 steel pipe capacity diversity-factor tankless water-heater furnace range dryer standby-generator 
+</div>
+</body>
+</html>

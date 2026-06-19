@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**183 interactive cost calculators** for Florida homeowners.
+**186 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -40,6 +40,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Drain Odor Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-odor/fl_drain_odor.html)
 - [FL Drain Vent Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/drain-vent/fl_drain_vent.html)
 - [FL Dwv Drain Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/dwv-drain-sizing/fl_dwv_drain_sizing.html)
+- [FL Emergency Plumbing Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/emergency-plumbing-cost/fl_emergency_plumbing_cost.html)
 - [FL Emergency Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/emergency-plumbing/fl_emergency_plumbing.html)
 - [FL Expansion Tank Prv Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/expansion-tank-prv/fl_expansion_tank_prv.html)
 - [FL Expansion Tank Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/expansion-tank/fl_expansion_tank.html)
@@ -55,6 +56,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Gas Leak Detection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-leak-detection/fl_gas_leak_detection.html)
 - [FL Gas Line Generator Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-generator/fl_gas_line_generator.html)
 - [FL Gas Line Installation Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-installation/fl_gas_line_installation.html)
+- [FL Gas Line Sizing Calc Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-sizing-calc/fl_gas_line_sizing.html)
 - [FL Gas Line Sizing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line-sizing/fl_gas_line_sizing.html)
 - [FL Gas Line Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-line/fl_gas_line.html)
 - [FL Gas Meter Demand Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/gas-meter-demand/fl_gas_meter_demand.html)
@@ -106,6 +108,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Plumbing Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-inspection/fl_plumbing_inspection.html)
 - [FL Plumbing Leak Repair Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-leak-repair-cost/fl_plumbing_leak_repair_cost.html)
 - [FL Plumbing Noise Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-noise/fl_plumbing_noise.html)
+- [FL Plumbing Presale Inspection Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/plumbing-presale-inspection/fl_plumbing_presale_inspection.html)
 - [FL Pool Equipment Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-equipment/fl_pool_equipment.html)
 - [FL Pool Heater Gas Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-heater-gas/fl_pool_heater_gas.html)
 - [FL Pool Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/pool-leak/fl_pool_leak.html)
