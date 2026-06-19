@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Bathroom Addition Plumbing Cost Calculator | Florida Permit Fees | Rough-In Costs by County</title>
+<meta name="description" content="Florida bathroom addition plumbing cost calculator. Estimate permit fees, rough-in costs, and fixture installation by county. Miami-Dade, Broward, Palm Beach, Orange, Hillsborough bathroom permit costs. Slab vs raised floor rough-in pricing for Florida homeowners.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1400 0%,#1f1a00 100%);border-bottom:3px solid #F4B942;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#F4B942;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#F4B94222;color:#F4B942;border:1px solid #F4B94244;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#F4B942;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#F4B942;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#F4B942}
+.btn{width:100%;padding:14px;background:#F4B942;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-outline{background:transparent;border:2px solid #F4B942;color:#F4B942;width:100%;padding:12px;border-radius:10px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:10px;transition:all .2s}
+.btn-outline:hover{background:#F4B94222}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #F4B94255}
+.tip-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#F4B942}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.info-box{background:#00B4FF11;border:1px solid #00B4FF33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.info-box strong{color:#00B4FF}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#94A3B8;flex:1;line-height:1.4;padding-right:8px}
+.data-val{font-weight:700;color:#E2E8F0;min-width:90px;text-align:right}
+.data-val.gold{color:#F4B942}
+.data-val.green{color:#22C55E}
+.data-val.red{color:#EF4444}
+.data-val.teal{color:#14B8A6}
+.data-val.blue{color:#00B4FF}
+.cost-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #1E2A4530;font-size:0.8rem}
+.cost-row:last-child{border-bottom:none}
+.cost-label{color:#E2E8F0;flex:1}
+.cost-range{color:#F4B942;font-weight:700;text-align:right;white-space:nowrap}
+.cost-note{color:#94A3B8;font-size:0.7rem;margin-top:1px}
+.total-bar{background:#F4B94222;border:1px solid #F4B94255;border-radius:10px;padding:14px;margin-top:14px}
+.total-label{font-size:0.75rem;color:#94A3B8;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.total-amount{font-size:1.6rem;font-weight:700;color:#F4B942}
+.total-sub{font-size:0.72rem;color:#94A3B8;margin-top:2px}
+.county-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.county-card{background:#141929;border-radius:8px;padding:12px;border:1px solid #1E2A45}
+.county-name{font-size:0.85rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.county-fees{font-size:0.75rem;color:#94A3B8;line-height:1.6}
+.county-fees span{color:#E2E8F0;font-weight:600}
+.fixture-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #1E2A4530;cursor:pointer}
+.fixture-toggle:last-child{border-bottom:none}
+.fixture-info{flex:1}
+.fixture-name{font-size:0.82rem;font-weight:700;color:#E2E8F0}
+.fixture-cost{font-size:0.72rem;color:#94A3B8;margin-top:2px}
+.fixture-qty{display:flex;align-items:center;gap:8px}
+.qty-btn{width:28px;height:28px;border-radius:6px;border:1px solid #1E2A45;background:#0F1629;color:#E2E8F0;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+.qty-btn:hover{border-color:#F4B942;color:#F4B942}
+.qty-display{font-size:0.9rem;font-weight:700;color:#F4B942;min-width:20px;text-align:center}
+.section-head{font-size:0.75rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;padding:12px 0 6px;border-bottom:1px solid #1E2A4530;margin-bottom:8px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.permit-step{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #1E2A4530}
+.permit-step:last-child{border-bottom:none}
+.step-num{width:24px;height:24px;min-width:24px;border-radius:50%;background:#F4B94222;border:1px solid #F4B94244;color:#F4B942;font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step-content{flex:1}
+.step-title{font-size:0.82rem;font-weight:700;color:#E2E8F0;margin-bottom:2px}
+.step-desc{font-size:0.72rem;color:#94A3B8;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🚿</div>
+  <h1>FL Bathroom Addition Plumbing Cost Calculator</h1>
+  <p>Rough-in costs · County permit fees · Slab vs raised floor · Fixture installation pricing · FL building code</p>
+  <span class="badge">All 12 FL Counties · FPC Compliance · Slab Penetration Costs · 2024–2025 Pricing</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('cost',event)">Cost Breakdown</button>
+    <button class="tab" onclick="showTab('county',event)">By County</button>
+    <button class="tab" onclick="showTab('permit',event)">Permit Guide</button>
+    <button class="tab" onclick="showTab('quote',event)">Get a Quote</button>
+  </div>
+
+  <!-- COST BREAKDOWN TAB -->
+  <div class="panel active" id="panel-cost">
+    <div class="card">
+      <div class="card-title">🧮 Bathroom Addition Cost Estimator</div>
+      <label>County</label>
+      <select id="county-sel">
+        <option value="miami-dade">Miami-Dade County</option>
+        <option value="broward">Broward County</option>
+        <option value="palm-beach">Palm Beach County</option>
+        <option value="orange">Orange County</option>
+        <option value="hillsborough">Hillsborough County</option>
+        <option value="pinellas">Pinellas County</option>
+        <option value="duval">Duval County (Jacksonville)</option>
+        <option value="lee">Lee County (Fort Myers)</option>
+        <option value="collier">Collier County (Naples)</option>
+        <option value="sarasota">Sarasota County</option>
+        <option value="volusia">Volusia County (Daytona)</option>
+        <option value="brevard">Brevard County</option>
+      </select>
+      <label>Floor / Foundation Type</label>
+      <select id="floor-type">
+        <option value="slab">Concrete Slab (most FL homes)</option>
+        <option value="raised">Raised / Wood Frame Floor</option>
+        <option value="tile">Slab with Existing Tile</option>
+      </select>
+      <label>Project Type</label>
+      <select id="proj-type">
+        <option value="new">New bathroom (new rough-in from main stack)</option>
+        <option value="extend">Extending existing lines (&lt;20 ft)</option>
+        <option value="convert">Converting half bath to full</option>
+      </select>
+      <label>Estimated Bathroom SF (for permit calc)</label>
+      <input type="number" id="bath-sf" value="50" min="20" max="300">
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔧 Select Fixtures</div>
+      <div class="fixture-toggle" onclick="adjQty('toilet',1)">
+        <div class="fixture-info">
+          <div class="fixture-name">Toilet (gravity flush)</div>
+          <div class="fixture-cost">Rough-in + install: $450–$700 · Includes flange, supply, shutoff</div>
+        </div>
+        <div class="fixture-qty">
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('toilet',-1)">−</button>
+          <span class="qty-display" id="qty-toilet">1</span>
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('toilet',1)">+</button>
+        </div>
+      </div>
+      <div class="fixture-toggle" onclick="adjQty('lav',1)">
+        <div class="fixture-info">
+          <div class="fixture-name">Lavatory (bathroom sink)</div>
+          <div class="fixture-cost">Rough-in + install: $325–$525 · Hot/cold supply + drain/trap</div>
+        </div>
+        <div class="fixture-qty">
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('lav',-1)">−</button>
+          <span class="qty-display" id="qty-lav">1</span>
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('lav',1)">+</button>
+        </div>
+      </div>
+      <div class="fixture-toggle" onclick="adjQty('tubshower',1)">
+        <div class="fixture-info">
+          <div class="fixture-name">Tub / Shower Combo</div>
+          <div class="fixture-cost">Rough-in + install: $750–$1,100 · Includes mixing valve, pan drain</div>
+        </div>
+        <div class="fixture-qty">
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('tubshower',-1)">−</button>
+          <span class="qty-display" id="qty-tubshower">0</span>
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('tubshower',1)">+</button>
+        </div>
+      </div>
+      <div class="fixture-toggle" onclick="adjQty('shower',1)">
+        <div class="fixture-info">
+          <div class="fixture-name">Shower Only (no tub)</div>
+          <div class="fixture-cost">Rough-in + install: $650–$950 · Pressure-balance valve required (FPC §424.3)</div>
+        </div>
+        <div class="fixture-qty">
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('shower',-1)">−</button>
+          <span class="qty-display" id="qty-shower">0</span>
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('shower',1)">+</button>
+        </div>
+      </div>
+      <div class="fixture-toggle" onclick="adjQty('bidet',1)">
+        <div class="fixture-info">
+          <div class="fixture-name">Bidet / Bidet Toilet Seat</div>
+          <div class="fixture-cost">Rough-in + install: $400–$650 · Separate supply + drain or T-off toilet supply</div>
+        </div>
+        <div class="fixture-qty">
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('bidet',-1)">−</button>
+          <span class="qty-display" id="qty-bidet">0</span>
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('bidet',1)">+</button>
+        </div>
+      </div>
+      <div class="fixture-toggle" onclick="adjQty('floordrain',1)">
+        <div class="fixture-info">
+          <div class="fixture-name">Floor Drain</div>
+          <div class="fixture-cost">Rough-in + install: $275–$450 · Requires slab core or trench</div>
+        </div>
+        <div class="fixture-qty">
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('floordrain',-1)">−</button>
+          <span class="qty-display" id="qty-floordrain">0</span>
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('floordrain',1)">+</button>
+        </div>
+      </div>
+      <div class="fixture-toggle" onclick="adjQty('vanity',1)">
+        <div class="fixture-info">
+          <div class="fixture-name">Double Vanity (2nd sink)</div>
+          <div class="fixture-cost">Rough-in + install: $325–$525 · Shared drain with P-trap per FPC §1002</div>
+        </div>
+        <div class="fixture-qty">
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('vanity',-1)">−</button>
+          <span class="qty-display" id="qty-vanity">0</span>
+          <button class="qty-btn" onclick="event.stopPropagation();adjQty('vanity',1)">+</button>
+        </div>
+      </div>
+      <button class="btn" onclick="calcCost()">Calculate Total Cost</button>
+    </div>
+
+    <div class="result-box" id="result-cost">
+      <div class="section-head">Cost Estimate</div>
+      <div id="cost-lines"></div>
+      <div class="total-bar">
+        <div class="total-label">Estimated Total (Plumbing Only)</div>
+        <div class="total-amount" id="total-display">$0</div>
+        <div class="total-sub" id="total-sub">Does not include tile, drywall, electrical, or HVAC</div>
+      </div>
+      <div class="tip-box" id="cost-notes" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 What's Included in Rough-In Cost</div>
+      <div class="data-row">
+        <div class="data-label">Drain, waste & vent (DWV) piping</div>
+        <div class="data-val gold">PVC or ABS</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Water supply lines (hot + cold)</div>
+        <div class="data-val gold">CPVC or PEX</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Vent stack penetration through roof</div>
+        <div class="data-val gold">Incl. flashing</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Slab core drilling (per penetration)</div>
+        <div class="data-val red">+$150–$350</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Concrete saw-cut and patch (slab)</div>
+        <div class="data-val red">+$800–$1,800</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Water supply shutoffs at fixtures</div>
+        <div class="data-val green">Included</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Pressure balance / mixing valve (shower)</div>
+        <div class="data-val green">Incl. per FPC §424.3</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Trap primers (floor drain)</div>
+        <div class="data-val gold">$125–$250</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Final plumbing inspection</div>
+        <div class="data-val green">Required — FL Statute</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚠️ Slab vs Raised Floor Cost Difference</div>
+      <div class="warn-box">
+        <strong>Concrete slab adds $1,200–$3,500</strong> to any new-drain bathroom addition. Saw-cutting, breaking, trenching, backfill, and patch concrete are labor-intensive in FL. Raised (wood frame) homes have drain access from below — same rough-in but without slab work.
+      </div>
+      <div class="data-row" style="margin-top:10px">
+        <div class="data-label">Slab saw-cut &amp; trench (per linear ft)</div>
+        <div class="data-val red">$45–$85/LF</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Concrete core drill (per hole)</div>
+        <div class="data-val red">$150–$350</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Concrete patch &amp; cure (per SF)</div>
+        <div class="data-val red">$18–$35/SF</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Raised floor access (per joist bay)</div>
+        <div class="data-val green">$0 extra</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Typical slab surcharge (full bath)</div>
+        <div class="data-val red">+$1,800–$3,500</div>
+      </div>
+      <div class="tip-box">
+        <strong>FL tip:</strong> Most pre-1980 South FL homes are slab-on-grade. Homes in North FL and raised areas (flood zones) may be pier-and-beam. Always confirm before pricing.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📐 Line Extension Costs</div>
+      <div class="data-row">
+        <div class="data-label">Extending cold water supply (per LF)</div>
+        <div class="data-val gold">$25–$45/LF</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Extending hot water supply (per LF)</div>
+        <div class="data-val gold">$28–$50/LF</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Extending 3" drain line (per LF)</div>
+        <div class="data-val gold">$35–$65/LF</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Extending 4" main drain (per LF)</div>
+        <div class="data-val gold">$40–$75/LF</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Adding dry vent to existing stack</div>
+        <div class="data-val gold">$350–$700</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">New vent through roof (with flashing)</div>
+        <div class="data-val gold">$450–$900</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Air admittance valve (AAV) in lieu of vent</div>
+        <div class="data-val teal">$85–$175</div>
+      </div>
+      <div class="tip-box">
+        <strong>Note:</strong> FL Plumbing Code §906 allows AAVs (air admittance valves) in certain locations — not at the main stack termination or where negative pressure is common. Verify with inspector.
+      </div>
+    </div>
+  </div>
+
+  <!-- BY COUNTY TAB -->
+  <div class="panel" id="panel-county">
+    <div class="card">
+      <div class="card-title">🗺️ FL County Permit Fees — Bathroom Addition</div>
+      <div class="tip-box">
+        <strong>How to read:</strong> Fees shown are for the plumbing sub-permit of a bathroom addition. Most counties also require a building permit (structural) and sometimes electrical. Fees below are 2024–2025 estimates. Always verify with your AHJ (Authority Having Jurisdiction).
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Miami-Dade County</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$150</span> + <span>$3.50/SF</span><br>
+        Typical 50 SF bath permit: <span>$325</span><br>
+        Re-inspection fee: <span>$75/visit</span><br>
+        Plumbing sub-permit required: <span>Yes — separate from building permit</span><br>
+        Impact fee (new fixture units): <span>Check with MDWASD</span><br>
+        Online permit portal: <span>Miami-Dade iBuildMiami</span>
+      </div>
+      <div class="tip-box" style="margin-top:8px">
+        <strong>Miami-Dade note:</strong> Owner-builder permits allowed with affidavit. Licensed plumber required for new rough-in in most unincorporated areas. City of Miami and Coral Gables have separate AHJs.
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Broward County</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$100</span> + <span>$2.75/SF</span><br>
+        Typical 50 SF bath permit: <span>$238</span><br>
+        Re-inspection fee: <span>$65/visit</span><br>
+        Plan review turnaround: <span>10–15 business days (standard), 5 days (expedited +50%)</span><br>
+        Online permit portal: <span>Broward Permit System (BSO/CSS)</span>
+      </div>
+      <div class="tip-box" style="margin-top:8px">
+        <strong>Broward note:</strong> Fort Lauderdale, Hollywood, and Pompano Beach have independent permit offices. Unincorporated Broward uses county portal. Verify jurisdiction by address.
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Palm Beach County</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$130</span> + <span>$3.00/SF</span><br>
+        Typical 50 SF bath permit: <span>$280</span><br>
+        Re-inspection fee: <span>$70/visit</span><br>
+        Plan review: <span>15 business days standard</span><br>
+        Online portal: <span>Palm Beach County IMS</span>
+      </div>
+      <div class="tip-box" style="margin-top:8px">
+        <strong>PBC note:</strong> Boca Raton, West Palm Beach, Boynton Beach, and Delray Beach are independent cities. PBC plumbing sub-permit is required before inspection scheduling.
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Orange County (Orlando area)</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$80</span> + <span>$2.50/SF</span><br>
+        Typical 50 SF bath permit: <span>$205</span><br>
+        Re-inspection fee: <span>$55/visit</span><br>
+        Online portal: <span>Orange County CSS (Citizen Self Service)</span><br>
+        Expedited review: <span>Available at 2× fee</span>
+      </div>
+      <div class="tip-box" style="margin-top:8px">
+        <strong>Orange Co. note:</strong> City of Orlando, Winter Park, and Maitland have independent AHJs. Orange County covers unincorporated areas only. Plumbing sub-permit separate from building permit.
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Hillsborough County (Tampa area)</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$95</span> + <span>$2.25/SF</span><br>
+        Typical 50 SF bath permit: <span>$208</span><br>
+        Re-inspection fee: <span>$60/visit</span><br>
+        Online portal: <span>Hillsborough County HCePermit</span><br>
+        City of Tampa: <span>Separate AHJ — City of Tampa permit required</span>
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Pinellas County (St. Pete / Clearwater)</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$85</span> + <span>$2.00/SF</span><br>
+        Typical 50 SF bath permit: <span>$185</span><br>
+        Re-inspection fee: <span>$55/visit</span><br>
+        Online portal: <span>Pinellas County Building Services</span>
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Duval County (Jacksonville)</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$70</span> + <span>$1.75/SF</span><br>
+        Typical 50 SF bath permit: <span>$158</span><br>
+        Re-inspection fee: <span>$50/visit</span><br>
+        Online portal: <span>COJ ePermit (City of Jacksonville)</span><br>
+        Consolidated city-county: <span>One AHJ covers most of Duval</span>
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Lee County (Fort Myers / Cape Coral)</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$100</span> + <span>$2.50/SF</span><br>
+        Typical 50 SF bath permit: <span>$225</span><br>
+        Re-inspection fee: <span>$65/visit</span><br>
+        Cape Coral: <span>Separate city AHJ — different fee schedule</span><br>
+        Post-Ian surcharge: <span>Expedited review available at 1.5× for reconstruction</span>
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Collier County (Naples)</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$120</span> + <span>$3.25/SF</span><br>
+        Typical 50 SF bath permit: <span>$283</span><br>
+        Re-inspection fee: <span>$70/visit</span><br>
+        Online portal: <span>Collier County CSS</span><br>
+        City of Naples: <span>Separate AHJ — independent city</span>
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Sarasota County</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$90</span> + <span>$2.00/SF</span><br>
+        Typical 50 SF bath permit: <span>$190</span><br>
+        Re-inspection fee: <span>$55/visit</span><br>
+        Online portal: <span>Sarasota County ePermit</span>
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Volusia County (Daytona area)</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$75</span> + <span>$1.90/SF</span><br>
+        Typical 50 SF bath permit: <span>$170</span><br>
+        Re-inspection fee: <span>$50/visit</span><br>
+        Online portal: <span>Volusia County Development Services</span>
+      </div>
+    </div>
+
+    <div class="county-card" style="margin-bottom:8px">
+      <div class="county-name">📍 Brevard County (Space Coast)</div>
+      <div class="county-fees">
+        Base plumbing fee: <span>$80</span> + <span>$2.00/SF</span><br>
+        Typical 50 SF bath permit: <span>$180</span><br>
+        Re-inspection fee: <span>$55/visit</span><br>
+        Online portal: <span>Brevard County Building &amp; Permitting</span><br>
+        Melbourne/Titusville/Cocoa: <span>Independent city AHJs</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📌 What the Permit Covers</div>
+      <div class="data-row">
+        <div class="data-label">Rough-in inspection (before walls close)</div>
+        <div class="data-val green">Required</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Water test (10 PSI, 15 min for DWV)</div>
+        <div class="data-val green">FL code §312</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Final inspection (after fixtures installed)</div>
+        <div class="data-val green">Required</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Permit validity period</div>
+        <div class="data-val gold">180 days (FL §105.3.2)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Owner-builder option</div>
+        <div class="data-val teal">Available with affidavit</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Licensed CPC required for new rough-in?</div>
+        <div class="data-val gold">Yes — FL §489.105</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERMIT GUIDE TAB -->
+  <div class="panel" id="panel-permit">
+    <div class="card">
+      <div class="card-title">📜 FL Bathroom Addition Permit Process</div>
+      <div class="permit-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Determine Jurisdiction</div>
+          <div class="step-desc">Is the property in an unincorporated county area or within city limits? City of Tampa, Orlando, Miami, Jacksonville are independent AHJs. County rules apply outside city limits. Permits must be pulled with the correct AHJ — pulling with the wrong office voids the permit.</div>
+        </div>
+      </div>
+      <div class="permit-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Prepare Plans &amp; Documents</div>
+          <div class="step-desc">Most counties require: floor plan showing new bathroom location, plumbing schematic (DWV and supply), fixture schedule, and sometimes a site plan. For bathroom additions &gt;200 SF, full architectural drawings may be required. Simple bathroom additions in existing footprint typically require only plumbing plans.</div>
+        </div>
+      </div>
+      <div class="permit-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Submit Building + Plumbing Sub-Permit</div>
+          <div class="step-desc">Most FL jurisdictions require both a building permit (structural) AND a plumbing sub-permit. The plumbing CPC (Certified Plumbing Contractor) pulls the sub-permit under their license. Owner-builders can pull their own permit with a homeowner exemption affidavit (FL §489.103).</div>
+        </div>
+      </div>
+      <div class="permit-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Schedule Rough-In Inspection</div>
+          <div class="step-desc">After all DWV and supply piping is installed but BEFORE walls are closed. Inspector verifies pipe sizing, slope (1/4" per LF for horizontal drain, FPC §704.1), trap distances within 5 ft of vent (FPC §909), and pressure balance valve on shower (FPC §424.3).</div>
+        </div>
+      </div>
+      <div class="permit-step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Pressure Test</div>
+          <div class="step-desc">FL Plumbing Code §312 requires DWV air or water test: 10 PSI air for 15 minutes, or fill stack with water 10 ft above highest fitting. Water supply must hold at working pressure (typically 40–80 PSI) for 15 minutes. Document test results for inspector.</div>
+        </div>
+      </div>
+      <div class="permit-step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Close Walls — Continue Construction</div>
+          <div class="step-desc">Once rough-in inspection passes, walls can be insulated, tiled, and closed. Do not cover plumbing until inspection card is signed. Tile setters, drywall, and electrical can proceed.</div>
+        </div>
+      </div>
+      <div class="permit-step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-title">Final Plumbing Inspection</div>
+          <div class="step-desc">After all fixtures are installed and functional. Inspector checks: toilet flange height (FPC §405.4.1 — flush to finished floor or max 1/4" above), shower valve operation, trap accessibility, hot water on left (FPC §607.2), and no cross-connections.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚡ Key FL Plumbing Code Requirements</div>
+      <div class="data-row">
+        <div class="data-label">Drain slope (horizontal)</div>
+        <div class="data-val gold">1/4" per LF (FPC §704.1)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Trap to vent distance (max)</div>
+        <div class="data-val gold">5 ft for 1.5" trap (FPC §909)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Shower pressure balance valve</div>
+        <div class="data-val gold">Required (FPC §424.3)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Toilet flange height</div>
+        <div class="data-val gold">Flush to 1/4" above finish (FPC §405.4.1)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">P-trap water seal depth</div>
+        <div class="data-val gold">2"–4" (FPC §1002.4)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Hot water on left at fixtures</div>
+        <div class="data-val gold">Required (FPC §607.2)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Min shower floor area</div>
+        <div class="data-val gold">900 in² (FPC §408.6)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Water supply pressure (min/max)</div>
+        <div class="data-val gold">15–80 PSI (FPC §604.8)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Vent termination above roof</div>
+        <div class="data-val gold">6" min (FPC §904.1)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Cleanout at base of stack</div>
+        <div class="data-val gold">Required (FPC §708.3)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏠 Bathroom Type Comparison</div>
+      <div class="data-row">
+        <div class="data-label">Half bath (toilet + sink only)</div>
+        <div class="data-val gold">$3,500–$6,500</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Full bath (toilet + sink + tub/shower)</div>
+        <div class="data-val gold">$6,500–$12,000</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Master bath (dual sinks + shower + soaker tub)</div>
+        <div class="data-val gold">$10,000–$22,000</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Slab surcharge (add to any above)</div>
+        <div class="data-val red">+$1,800–$3,500</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">New drain main from septic/sewer</div>
+        <div class="data-val red">+$2,500–$5,000</div>
+      </div>
+      <div class="tip-box">
+        <strong>All figures are plumbing labor + materials only.</strong> Add 25–40% for tile, fixtures, vanities, mirrors, lighting, drywall, and painting.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔵 Impact Fees for New Bathrooms</div>
+      <div class="info-box">
+        <strong>New fixture units = new capacity.</strong> Some FL utilities treat a bathroom addition as increased water/sewer demand and charge connection fees or impact fees. Miami-Dade WASD, Broward County, and Palm Beach County utilities may assess fees for added DFUs (Drainage Fixture Units). Check with your utility before pulling the permit.
+      </div>
+      <div class="data-row" style="margin-top:10px">
+        <div class="data-label">Toilet = DFU value</div>
+        <div class="data-val gold">4 DFUs</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Lavatory = DFU value</div>
+        <div class="data-val gold">1 DFU</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Bathtub = DFU value</div>
+        <div class="data-val gold">2 DFUs</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Shower = DFU value</div>
+        <div class="data-val gold">2 DFUs</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Typical full bath total DFUs</div>
+        <div class="data-val gold">7–8 DFUs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GET A QUOTE TAB -->
+  <div class="panel" id="panel-quote">
+    <div class="card">
+      <div class="card-title">📞 Get a Bathroom Addition Quote</div>
+      <div class="tip-box">
+        <strong>Free on-site estimate.</strong> Our licensed CPC will assess your existing plumbing, slab or raised floor, and distance to the main stack — and give you an itemized quote with permit costs included.
+      </div>
+      <label>Your Name</label>
+      <input type="text" id="q-name" placeholder="Full name">
+      <div class="form-row">
+        <div>
+          <label>Phone</label>
+          <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+        </div>
+        <div>
+          <label>County</label>
+          <select id="q-county">
+            <option>Miami-Dade</option>
+            <option>Broward</option>
+            <option>Palm Beach</option>
+            <option>Orange</option>
+            <option>Hillsborough</option>
+            <option>Pinellas</option>
+            <option>Duval</option>
+            <option>Lee</option>
+            <option>Collier</option>
+            <option>Sarasota</option>
+            <option>Volusia</option>
+            <option>Brevard</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <label>Bathroom Type</label>
+      <select id="q-type">
+        <option>Half bath (toilet + sink)</option>
+        <option>Full bath (toilet + sink + shower/tub)</option>
+        <option>Master bath (dual sinks + shower + tub)</option>
+        <option>Converting half to full bath</option>
+        <option>Other / not sure yet</option>
+      </select>
+      <label>Floor Type</label>
+      <select id="q-floor">
+        <option>Concrete slab (I believe)</option>
+        <option>Raised / wood frame</option>
+        <option>Not sure — need assessment</option>
+      </select>
+      <label>Project Timeline</label>
+      <select id="q-timeline">
+        <option>ASAP — ready to start</option>
+        <option>Within 30 days</option>
+        <option>1–3 months</option>
+        <option>Just pricing for now</option>
+      </select>
+      <label>Additional Notes (optional)</label>
+      <input type="text" id="q-notes" placeholder="e.g. converting closet to bath, slab home 1972...">
+      <button class="btn" onclick="submitQuote()">Request Free Estimate</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✅ Why Choose a Licensed CPC</div>
+      <div class="data-row">
+        <div class="data-label">Pulls permit under CPC license</div>
+        <div class="data-val green">Full liability coverage</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">FL §489.105 certified</div>
+        <div class="data-val green">State licensed</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Handles all inspections</div>
+        <div class="data-val green">We schedule &amp; attend</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Permit fee pass-through</div>
+        <div class="data-val green">No markup</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">FL code compliant DWV design</div>
+        <div class="data-val green">Guaranteed pass</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! ☎️</div>
+
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+function showTab(id, ev) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  if(ev && ev.target) ev.target.classList.add('active');
+  var panel = document.getElementById('panel-'+id);
+  if(panel) panel.classList.add('active');
+}
+
+var QTYS = {toilet:1, lav:1, tubshower:0, shower:0, bidet:0, floordrain:0, vanity:0};
+
+function adjQty(key, delta) {
+  QTYS[key] = Math.max(0, (QTYS[key]||0) + delta);
+  var el = document.getElementById('qty-'+key);
+  if(el) el.textContent = QTYS[key];
+}
+
+var FIXTURE_DATA = {
+  toilet:    {name:'Toilet (gravity flush)',    lo:450,  hi:700,  note:'Includes 3" closet flange, supply line, shutoff, wax ring'},
+  lav:       {name:'Lavatory (bathroom sink)',  lo:325,  hi:525,  note:'Includes P-trap, supply lines, shutoffs, drain assembly'},
+  tubshower: {name:'Tub/Shower combo',          lo:750,  hi:1100, note:'Includes mixing valve, drain, overflow, surround prep'},
+  shower:    {name:'Shower (no tub)',           lo:650,  hi:950,  note:'Pressure-balance valve req. FPC §424.3, drain, curb'},
+  bidet:     {name:'Bidet',                     lo:400,  hi:650,  note:'Supply T-off toilet or separate line + drain'},
+  floordrain:{name:'Floor drain',               lo:275,  hi:450,  note:'Trap primer required per FPC §1002.3'},
+  vanity:    {name:'Double vanity (2nd sink)',   lo:325,  hi:525,  note:'Shared drain line with wye fitting'}
+};
+
+var COUNTY_FEES = {
+  'miami-dade':  {base:150, perSF:3.50, note:'Plumbing sub-permit required; re-insp $75'},
+  'broward':     {base:100, perSF:2.75, note:'Verify city vs county jurisdiction'},
+  'palm-beach':  {base:130, perSF:3.00, note:'15-day standard plan review'},
+  'orange':      {base:80,  perSF:2.50, note:'Separate from City of Orlando AHJ'},
+  'hillsborough':{base:95,  perSF:2.25, note:'City of Tampa is separate AHJ'},
+  'pinellas':    {base:85,  perSF:2.00, note:'St. Pete and Clearwater separate'},
+  'duval':       {base:70,  perSF:1.75, note:'COJ covers most of Duval county'},
+  'lee':         {base:100, perSF:2.50, note:'Cape Coral separate AHJ'},
+  'collier':     {base:120, perSF:3.25, note:'City of Naples separate AHJ'},
+  'sarasota':    {base:90,  perSF:2.00, note:'City of Sarasota separate AHJ'},
+  'volusia':     {base:75,  perSF:1.90, note:'Daytona/Ormond Beach separate'},
+  'brevard':     {base:80,  perSF:2.00, note:'Melbourne/Titusville separate'}
+};
+
+function calcCost() {
+  var county = document.getElementById('county-sel').value;
+  var floor = document.getElementById('floor-type').value;
+  var projType = document.getElementById('proj-type').value;
+  var sf = parseInt(document.getElementById('bath-sf').value) || 50;
+
+  var lines = '';
+  var totalLo = 0, totalHi = 0;
+
+  var keys = Object.keys(QTYS);
+  for(var i=0;i<keys.length;i++){
+    var k = keys[i];
+    if(!QTYS[k]) continue;
+    var d = FIXTURE_DATA[k];
+    var lo = d.lo * QTYS[k], hi = d.hi * QTYS[k];
+    totalLo += lo; totalHi += hi;
+    lines += '<div class="cost-row"><div class="cost-label">'+esc(d.name)+(QTYS[k]>1?' ×'+QTYS[k]:'')+'<br><span style="font-size:0.7rem;color:#94A3B8">'+esc(d.note)+'</span></div><div class="cost-range">$'+lo.toLocaleString()+'–$'+hi.toLocaleString()+'</div></div>';
+  }
+
+  if(projType === 'new') {
+    var rlo = 1800, rhi = 3200;
+    totalLo += rlo; totalHi += rhi;
+    lines += '<div class="cost-row"><div class="cost-label">New supply + drain from main stack<br><span style="font-size:0.7rem;color:#94A3B8">Run new lines from existing stack location</span></div><div class="cost-range">$'+rlo.toLocaleString()+'–$'+rhi.toLocaleString()+'</div></div>';
+  } else if(projType === 'extend') {
+    var rlo2 = 900, rhi2 = 1800;
+    totalLo += rlo2; totalHi += rhi2;
+    lines += '<div class="cost-row"><div class="cost-label">Extend existing supply + drain lines<br><span style="font-size:0.7rem;color:#94A3B8">Tap into nearby existing plumbing</span></div><div class="cost-range">$'+rlo2.toLocaleString()+'–$'+rhi2.toLocaleString()+'</div></div>';
+  } else {
+    var rlo3 = 600, rhi3 = 1200;
+    totalLo += rlo3; totalHi += rhi3;
+    lines += '<div class="cost-row"><div class="cost-label">Half-to-full conversion rough-in<br><span style="font-size:0.7rem;color:#94A3B8">Add shower/tub drain to existing DWV</span></div><div class="cost-range">$'+rlo3.toLocaleString()+'–$'+rhi3.toLocaleString()+'</div></div>';
+  }
+
+  var slabNote = '';
+  if(floor === 'slab') {
+    totalLo += 1800; totalHi += 3500;
+    lines += '<div class="cost-row"><div class="cost-label">Slab saw-cut, trench &amp; patch<br><span style="font-size:0.7rem;color:#EF4444">Concrete slab homes — add slab work costs</span></div><div class="cost-range" style="color:#EF4444">+$1,800–$3,500</div></div>';
+    slabNote = 'Slab penetration adds significant cost — confirm floor type before finalizing budget.';
+  } else if(floor === 'tile') {
+    totalLo += 2200; totalHi += 4000;
+    lines += '<div class="cost-row"><div class="cost-label">Slab saw-cut + tile removal/replace<br><span style="font-size:0.7rem;color:#EF4444">Existing tile must be removed and replaced</span></div><div class="cost-range" style="color:#EF4444">+$2,200–$4,000</div></div>';
+    slabNote = 'Existing tile over slab increases cost — tile replacement typically not included in plumbing quote.';
+  }
+
+  var countyData = COUNTY_FEES[county] || COUNTY_FEES['orange'];
+  var permitCost = countyData.base + Math.round(countyData.perSF * sf);
+  totalLo += permitCost; totalHi += permitCost + 75;
+  lines += '<div class="cost-row"><div class="cost-label">Permit fee ('+county.replace('-',' ')+'county, '+sf+' SF)<br><span style="font-size:0.7rem;color:#94A3B8">'+esc(countyData.note)+'</span></div><div class="cost-range">$'+permitCost.toLocaleString()+'–$'+(permitCost+75).toLocaleString()+'</div></div>';
+
+  var box = document.getElementById('result-cost');
+  var cl = document.getElementById('cost-lines');
+  var td = document.getElementById('total-display');
+  var ts = document.getElementById('total-sub');
+  var cn = document.getElementById('cost-notes');
+
+  cl.innerHTML = lines;
+  td.textContent = '$'+totalLo.toLocaleString()+' – $'+totalHi.toLocaleString();
+  ts.textContent = 'Plumbing labor, materials & permit only. Add tile, fixtures, drywall, electrical separately.';
+  cn.innerHTML = slabNote ? '<strong>⚠️ Slab Note:</strong> '+esc(slabNote) : '<strong>✅ This estimate covers all plumbing rough-in, fixture connections, pressure testing, and permit costs.</strong> Fixture costs assume standard mid-range products. Upgrades (rainfall showerhead, smart toilet, etc.) are billed separately.';
+  box.style.display = 'block';
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  if(!name){alert('Please enter your name.');return;}
+  var phone = document.getElementById('q-phone').value.trim();
+  if(!phone){alert('Please enter your phone number.');return;}
+  showToast();
+}
+
+function showToast() {
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';}, 4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+fl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-costfl-bathroom-addition-plumbing-cost-calculator florida-bathroom-permit-fee rough-in-cost slab-penetration-cost county-permit-bathroom miami-dade-bathroom-permit broward-bathroom-permit palm-beach-bathroom-permit orange-county-bathroom-permit hillsborough-bathroom-permit fixture-rough-in-cost toilet-rough-in lavatory-rough-in shower-rough-in tub-rough-in bidet-rough-in slab-vs-raised-floor-cost bathroom-addition-FL FPC-bathroom-code drain-waste-vent supply-lines bathroom-permit-fees-florida half-bath-cost full-bath-cost master-bath-cost
+</div>
+</body>
+</html>

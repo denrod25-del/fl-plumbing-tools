@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Plumbing Leak & Slab Leak Diagnosis Tool | Florida Slab Leak Detection | Copper Pipe Under Slab</title>
+<meta name="description" content="Florida slab leak and plumbing leak diagnosis tool. Symptom checker for under-slab leaks, detection methods (acoustic, thermal, tracer gas), repair cost estimator. Common in South FL copper pipe homes built 1950s–1990s. Palm Beach, Broward, Miami-Dade slab leak repair options.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#001218 0%,#001a22 100%);border-bottom:3px solid #06B6D4;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#06B6D4;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#06B6D422;color:#06B6D4;border:1px solid #06B6D444;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#06B6D4;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#06B6D4;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#06B6D4}
+.btn{width:100%;padding:14px;background:#06B6D4;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-outline{background:transparent;border:2px solid #06B6D4;color:#06B6D4;width:100%;padding:12px;border-radius:10px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:10px;transition:all .2s}
+.btn-outline:hover{background:#06B6D422}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#06B6D4;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #06B6D455}
+.tip-box{background:#06B6D411;border:1px solid #06B6D433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#06B6D4}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.gold-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.gold-box strong{color:#F4B942}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#94A3B8;flex:1;line-height:1.4;padding-right:8px}
+.data-val{font-weight:700;color:#E2E8F0;min-width:90px;text-align:right}
+.data-val.cyan{color:#06B6D4}
+.data-val.green{color:#22C55E}
+.data-val.red{color:#EF4444}
+.data-val.gold{color:#F4B942}
+.data-val.blue{color:#00B4FF}
+.symptom-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #1E2A4530;cursor:pointer}
+.symptom-item:last-child{border-bottom:none}
+.sym-check{width:22px;height:22px;min-width:22px;border-radius:5px;border:2px solid #1E2A45;background:#141929;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all .2s;margin-top:1px}
+.sym-check.checked{background:#06B6D4;border-color:#06B6D4;color:#0A0E1A}
+.sym-content{flex:1}
+.sym-title{font-size:0.82rem;font-weight:700;color:#E2E8F0;margin-bottom:2px}
+.sym-desc{font-size:0.72rem;color:#94A3B8;line-height:1.4}
+.sym-weight{font-size:0.65rem;font-weight:700;padding:1px 6px;border-radius:4px;display:inline-block;margin-top:3px}
+.w-high{background:#EF444422;color:#EF4444;border:1px solid #EF444433}
+.w-med{background:#F4B94222;color:#F4B942;border:1px solid #F4B94233}
+.w-low{background:#06B6D422;color:#06B6D4;border:1px solid #06B6D433}
+.diag-bar{margin:14px 0 6px}
+.diag-label{font-size:0.72rem;color:#94A3B8;margin-bottom:4px;display:flex;justify-content:space-between}
+.diag-track{height:8px;background:#1E2A45;border-radius:4px;overflow:hidden}
+.diag-fill{height:100%;border-radius:4px;transition:width .4s;background:#06B6D4}
+.diag-fill.high{background:#EF4444}
+.diag-fill.med{background:#F4B942}
+.method-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45}
+.method-name{font-size:0.85rem;font-weight:700;color:#06B6D4;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.method-cost{font-size:0.75rem;font-weight:700;color:#F4B942}
+.method-body{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+.method-row{display:flex;justify-content:space-between;padding:4px 0;font-size:0.75rem;border-bottom:1px solid #1E2A4520}
+.method-row:last-child{border-bottom:none}
+.method-key{color:#94A3B8}
+.method-val{color:#E2E8F0;font-weight:600;text-align:right}
+.repair-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45}
+.repair-name{font-size:0.88rem;font-weight:700;margin-bottom:4px}
+.repair-cost{font-size:1rem;font-weight:700;color:#F4B942;margin-bottom:6px}
+.repair-body{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+.repair-tag{display:inline-block;font-size:0.62rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:5px;margin-bottom:4px}
+.rt-best{background:#22C55E22;color:#22C55E;border:1px solid #22C55E33}
+.rt-ok{background:#06B6D422;color:#06B6D4;border:1px solid #06B6D433}
+.rt-last{background:#EF444422;color:#EF4444;border:1px solid #EF444433}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.risk-pill{display:inline-block;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px;margin:3px 3px 0 0}
+.rp-high{background:#EF444422;color:#EF4444;border:1px solid #EF444433}
+.rp-med{background:#F4B94222;color:#F4B942;border:1px solid #F4B94233}
+.rp-low{background:#22C55E22;color:#22C55E;border:1px solid #22C55E33}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🔍</div>
+  <h1>FL Plumbing Leak &amp; Slab Leak Diagnosis Tool</h1>
+  <p>Symptom checker · Detection methods · Repair options &amp; cost · FL copper pipe slab leak guide</p>
+  <span class="badge">South FL Copper Pipe Homes · Acoustic · Thermal · Tracer Gas · Reroute vs Spot Repair</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('symptom',event)">Symptom Checker</button>
+    <button class="tab" onclick="showTab('detect',event)">Detection Methods</button>
+    <button class="tab" onclick="showTab('repair',event)">Repair Options</button>
+    <button class="tab" onclick="showTab('quote',event)">Get a Quote</button>
+  </div>
+
+  <!-- SYMPTOM CHECKER TAB -->
+  <div class="panel active" id="panel-symptom">
+    <div class="card">
+      <div class="card-title">🩺 Slab Leak Symptom Checker</div>
+      <div class="tip-box">
+        <strong>Check all symptoms you're experiencing.</strong> Most slab leaks in FL start small — catching them early saves $3,000–$15,000 in foundation repair costs. 79% of FL slab leak calls involve copper pipe installed pre-1985.
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s1')">
+        <div class="sym-check" id="s1">✓</div>
+        <div class="sym-content">
+          <div class="sym-title">Water bill increased 20%+ with no change in usage</div>
+          <div class="sym-desc">Unexplained increase on utility statement is #1 indicator. A 1/8" pin-hole in copper loses 7,000–10,000 gallons/month.</div>
+          <span class="sym-weight w-high">HIGH indicator</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s2')">
+        <div class="sym-check" id="s2"></div>
+        <div class="sym-content">
+          <div class="sym-title">Warm or hot spot on the floor (tile or slab)</div>
+          <div class="sym-desc">A hot water line leaking under the slab creates a distinct warm spot even through tile. Walk barefoot on cool mornings.</div>
+          <span class="sym-weight w-high">HIGH indicator — hot line</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s3')">
+        <div class="sym-check" id="s3"></div>
+        <div class="sym-content">
+          <div class="sym-title">Sound of running water when no fixtures are on</div>
+          <div class="sym-desc">Turn off all fixtures and appliances. If you can hear running water or hissing near the floor, likely an active slab leak.</div>
+          <span class="sym-weight w-high">HIGH indicator</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s4')">
+        <div class="sym-check" id="s4"></div>
+        <div class="sym-content">
+          <div class="sym-title">Water meter moving with all fixtures off</div>
+          <div class="sym-desc">Locate your water meter. Turn off everything. Watch for the low-flow indicator (triangle) spinning. Any movement = active leak.</div>
+          <span class="sym-weight w-high">DEFINITIVE — call now</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s5')">
+        <div class="sym-check" id="s5"></div>
+        <div class="sym-content">
+          <div class="sym-title">Wet, damp, or musty spots on floor / baseboards</div>
+          <div class="sym-desc">Water migrates up through slab or appears at base of walls. Often first spotted on carpet or near exterior doors/walls.</div>
+          <span class="sym-weight w-high">HIGH indicator</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s6')">
+        <div class="sym-check" id="s6"></div>
+        <div class="sym-content">
+          <div class="sym-title">Tile cracking or grout separating at floor level</div>
+          <div class="sym-desc">Soil erosion from water under the slab causes settling. Tile cracks radiate from the leak point over time. Common in South FL limestone substrate.</div>
+          <span class="sym-weight w-med">MEDIUM indicator</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s7')">
+        <div class="sym-check" id="s7"></div>
+        <div class="sym-content">
+          <div class="sym-title">Low water pressure at one or more fixtures</div>
+          <div class="sym-desc">A leaking supply line loses pressure to downstream fixtures. Hot water pressure dropping more than cold suggests hot-side leak.</div>
+          <span class="sym-weight w-med">MEDIUM indicator</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s8')">
+        <div class="sym-check" id="s8"></div>
+        <div class="sym-content">
+          <div class="sym-title">Mold or mildew odor at floor level or behind walls</div>
+          <div class="sym-desc">Chronic moisture under slab creates mold. In FL humidity, mold establishes within 24–48 hours of water intrusion. Health risk.</div>
+          <span class="sym-weight w-med">MEDIUM indicator</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s9')">
+        <div class="sym-check" id="s9"></div>
+        <div class="sym-content">
+          <div class="sym-title">Foundation cracks appearing on interior or exterior walls</div>
+          <div class="sym-desc">Long-term slab leaks erode the substrate under the foundation, causing differential settling and structural cracks. Urgent.</div>
+          <span class="sym-weight w-high">URGENT — structural risk</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s10')">
+        <div class="sym-check" id="s10"></div>
+        <div class="sym-content">
+          <div class="sym-title">Home built 1955–1990 with original copper piping</div>
+          <div class="sym-desc">High-risk era for Type M copper under slab in FL. Acidic soil pH (4.5–6.5 typical in South FL) corrodes copper from outside. Pin-holes develop at flux residue points and soil contact.</div>
+          <span class="sym-weight w-med">RISK FACTOR</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s11')">
+        <div class="sym-check" id="s11"></div>
+        <div class="sym-content">
+          <div class="sym-title">Water heater running constantly / high gas/electric bill</div>
+          <div class="sym-desc">Hot water slab leaks cause the water heater to run non-stop. Electric heaters especially — check if heating element cycles frequently.</div>
+          <span class="sym-weight w-med">MEDIUM indicator</span>
+        </div>
+      </div>
+      <div class="symptom-item" onclick="toggleSym(this,'s12')">
+        <div class="sym-check" id="s12"></div>
+        <div class="sym-content">
+          <div class="sym-title">Green staining at copper pipe fittings or shutoffs</div>
+          <div class="sym-desc">Verdigris (copper oxidation) at visible fittings suggests pipe-wide corrosion. If visible pipes show pitting, under-slab sections likely worse.</div>
+          <span class="sym-weight w-low">SUPPORTING factor</span>
+        </div>
+      </div>
+      <button class="btn" onclick="diagnose()">Analyze Symptoms</button>
+    </div>
+    <div class="result-box" id="result-diag">
+      <div id="diag-output"></div>
+    </div>
+  </div>
+
+  <!-- DETECTION METHODS TAB -->
+  <div class="panel" id="panel-detect">
+    <div class="card">
+      <div class="card-title">🔬 Slab Leak Detection Methods</div>
+      <div class="tip-box">
+        <strong>Detection before repair is essential.</strong> Pinpointing the leak location before breaking concrete saves $500–$2,000 in unnecessary excavation. FL licensed plumbers use 3 primary methods — often combined.
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-name">🎧 Acoustic Leak Detection (Electronic Listening)<span class="method-cost">$300–$600</span></div>
+      <div class="method-body">Specialized electronic amplifiers and ground microphones detect the sound of water escaping through a pipe under pressure. The technician walks a grid pattern over the slab, listening for sound amplification at the leak point.</div>
+      <div style="margin-top:10px">
+        <div class="method-row"><span class="method-key">Accuracy</span><span class="method-val">70–85% (varies by pipe depth, soil type, background noise)</span></div>
+        <div class="method-row"><span class="method-key">Best for</span><span class="method-val">Pressurized hot or cold supply leaks</span></div>
+        <div class="method-row"><span class="method-key">Limitations</span><span class="method-val">Cannot locate leaks in low-pressure or drain lines</span></div>
+        <div class="method-row"><span class="method-key">Equipment</span><span class="method-val">Ground microphone, pipe amplifier, correlator</span></div>
+        <div class="method-row"><span class="method-key">FL conditions</span><span class="method-val">Works well in clay/limestone substrate; less accurate in sand fill</span></div>
+        <div class="method-row"><span class="method-key">Typical FL cost</span><span class="method-val">$300–$600 (detection only, not repair)</span></div>
+      </div>
+      <div class="ok-box" style="margin-top:8px">
+        <strong>Best first step</strong> — fast, non-invasive, no damage to slab. Most FL plumbers start here.
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-name">🌡️ Thermal Imaging (Infrared Camera)<span class="method-cost">$400–$800</span></div>
+      <div class="method-body">An infrared camera detects temperature differentials on the slab surface. Hot water leaks create distinct warm spots visible on thermal imagery. Cold water leaks show as cool zones, especially on warm FL mornings.</div>
+      <div style="margin-top:10px">
+        <div class="method-row"><span class="method-key">Accuracy</span><span class="method-val">80–92% for hot water leaks; 50–70% for cold</span></div>
+        <div class="method-row"><span class="method-key">Best for</span><span class="method-val">Hot water supply leaks — most definitive thermal signature</span></div>
+        <div class="method-row"><span class="method-key">Limitations</span><span class="method-val">Tile thickness affects accuracy; cold lines harder to spot</span></div>
+        <div class="method-row"><span class="method-key">FL timing</span><span class="method-val">Best scanned early morning before ambient heat builds</span></div>
+        <div class="method-row"><span class="method-key">Equipment</span><span class="method-val">FLIR or Fluke thermal camera (pro grade &gt;320×240 resolution)</span></div>
+        <div class="method-row"><span class="method-key">Typical FL cost</span><span class="method-val">$400–$800 (often combined with acoustic)</span></div>
+      </div>
+      <div class="tip-box" style="margin-top:8px">
+        <strong>FL advantage:</strong> Thermal detection is especially effective in FL homes where tile floors are common (excellent thermal conduction vs carpet). Best in winter months.
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-name">💨 Tracer Gas Detection (Hydrogen/Nitrogen)<span class="method-cost">$500–$900</span></div>
+      <div class="method-body">A non-toxic mixture of 95% nitrogen and 5% hydrogen (or helium in some systems) is injected into the water line. The gas migrates through the leak point and up through the slab. An electronic gas sniffer precisely locates where gas is surfacing.</div>
+      <div style="margin-top:10px">
+        <div class="method-row"><span class="method-key">Accuracy</span><span class="method-val">95%+ — highest precision of any detection method</span></div>
+        <div class="method-row"><span class="method-key">Best for</span><span class="method-val">Pinpoint accuracy when acoustic gives area estimate only</span></div>
+        <div class="method-row"><span class="method-key">Process</span><span class="method-val">Shut water, inject gas, sweep slab with gas sniffer probe</span></div>
+        <div class="method-row"><span class="method-key">Safety</span><span class="method-val">95%N₂/5%H₂ is non-flammable and non-toxic</span></div>
+        <div class="method-row"><span class="method-key">Cost</span><span class="method-val">$500–$900 (equipment-intensive; worth it for complex leaks)</span></div>
+      </div>
+      <div class="ok-box" style="margin-top:8px">
+        <strong>Most accurate method.</strong> Minimizes unnecessary slab breaking. Recommended when acoustic pinpoint accuracy is ±3 ft or more.
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-name">📷 Video Pipe Inspection (CCTV Camera)<span class="method-cost">$250–$500</span></div>
+      <div class="method-body">A small waterproof camera on a flexible cable is inserted into the pipe to visually inspect interior surfaces. Reveals pitting, corrosion, scale buildup, cracks, or collapsed sections. Used for drain lines that cannot be pressurized for acoustic detection.</div>
+      <div style="margin-top:10px">
+        <div class="method-row"><span class="method-key">Best for</span><span class="method-val">Drain line leaks, cast iron sewer inspection, pre-purchase inspection</span></div>
+        <div class="method-row"><span class="method-key">Cannot do</span><span class="method-val">Supply line leaks (too small diameter; line must be clear)</span></div>
+        <div class="method-row"><span class="method-key">Output</span><span class="method-val">Recorded video with timestamp and pipe depth locator</span></div>
+        <div class="method-row"><span class="method-key">FL use case</span><span class="method-val">Cast iron drain inspection in pre-1975 homes</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-name">💧 Hydrostatic Pressure Test<span class="method-cost">$200–$400</span></div>
+      <div class="method-body">The drain system is plugged at the main clean-out and filled with water to test-chamber height. Pressure is monitored — a drop confirms a drain leak. Isolating sections identifies which branch is leaking. Often used to confirm a drain leak before camera inspection.</div>
+      <div style="margin-top:10px">
+        <div class="method-row"><span class="method-key">Confirms</span><span class="method-val">Whether drain system leaks (not supply)</span></div>
+        <div class="method-row"><span class="method-key">Isolates</span><span class="method-val">Which branch — bathroom, kitchen, main sewer</span></div>
+        <div class="method-row"><span class="method-key">Required by</span><span class="method-val">Many FL insurance companies before claim approval</span></div>
+        <div class="method-row"><span class="method-key">FL insurance</span><span class="method-val">Citizens, Universal, FedNat require hydrostatic test for drain leak claims</span></div>
+      </div>
+      <div class="warn-box" style="margin-top:8px">
+        <strong>Insurance requirement:</strong> Many FL homeowners insurance policies require a hydrostatic test before approving slab leak claims. Ask your adjuster before scheduling repair.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗺️ FL-Specific Slab Leak Risk Factors</div>
+      <div class="data-row">
+        <div class="data-label">Soil type (acidic — South FL)</div>
+        <div class="data-val red">pH 4.5–6.5 corrodes copper</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Pipe material (high-risk era)</div>
+        <div class="data-val red">Type M copper, 1955–1985</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Chloramine in FL municipal water</div>
+        <div class="data-val red">Accelerates interior pitting</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Limestone substrate (SE FL)</div>
+        <div class="data-val red">Poor support, pipe vibration</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">High water pressure (FL average)</div>
+        <div class="data-val gold">60–80 PSI — above ideal 40–60</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Thermal expansion in FL heat</div>
+        <div class="data-val gold">Daily cycle stress on fittings</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Flux residue corrosion points</div>
+        <div class="data-val gold">Solder joints are weak points</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">High-risk counties</div>
+        <div class="data-val cyan">PBC, Broward, Miami-Dade</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 DIY Leak Confirmation Test</div>
+      <div class="data-row">
+        <div class="data-label">Step 1: Note water meter reading</div>
+        <div class="data-val cyan">Write it down</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Step 2: Turn off all water in house</div>
+        <div class="data-val cyan">All fixtures, ice makers, sprinklers</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Step 3: Watch meter for 15 min</div>
+        <div class="data-val cyan">Do not use water at all</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Step 4: Read meter again</div>
+        <div class="data-val cyan">Any change = active leak</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Meter moved — close main shutoff</div>
+        <div class="data-val cyan">Then re-check meter</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">If meter stops with main off</div>
+        <div class="data-val green">Leak is inside house plumbing</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">If meter still moves with main off</div>
+        <div class="data-val red">Leak is in service line (call utility)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPAIR OPTIONS TAB -->
+  <div class="panel" id="panel-repair">
+    <div class="card">
+      <div class="card-title">🔧 Slab Leak Repair Options</div>
+      <div class="tip-box">
+        <strong>Three main repair strategies in FL.</strong> The right choice depends on: leak location, pipe age, number of existing leaks, insurance coverage, and long-term plans. Our licensed plumber will recommend based on your specific situation.
+      </div>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name" style="color:#22C55E">🏆 Reroute / Repipe (Overhead or Through Walls)</div>
+      <div class="repair-cost">$3,500 – $8,500 (whole-house reroute)</div>
+      <span class="repair-tag rt-best">Best long-term value</span>
+      <span class="repair-tag rt-best">No slab breaking</span>
+      <span class="repair-tag rt-best">New pipe warranty</span>
+      <div class="repair-body" style="margin-top:8px">
+        <strong>How it works:</strong> Existing under-slab copper is abandoned in place. New PEX or CPVC supply lines are run overhead through the attic and down through walls to each fixture. No concrete is broken.
+        <br><br><strong>Why FL plumbers recommend this most:</strong> If your home is 1955–1990 with original copper under slab, one leak usually means the entire pipe system is in similar condition. Spot repair today means another slab leak in 2–5 years.
+        <br><br><strong>Materials used:</strong> PEX-A (Uponor/Rehau) or CPVC per FPC requirements. PEX is flexible, freeze-tolerant, and immune to the soil chemistry that corrodes copper.
+        <br><br><strong>Cost factors:</strong> Number of fixtures, home SF, attic accessibility, drywall patching, restoring wall finish.
+      </div>
+      <div style="margin-top:10px">
+        <div class="method-row"><span class="method-key">2-bed/1-bath home (slab)</span><span class="method-val">$3,500–$5,500</span></div>
+        <div class="method-row"><span class="method-key">3-bed/2-bath home</span><span class="method-val">$5,000–$7,500</span></div>
+        <div class="method-row"><span class="method-key">4-bed/3-bath home</span><span class="method-val">$7,000–$10,500</span></div>
+        <div class="method-row"><span class="method-key">Drywall restoration</span><span class="method-val">+$500–$2,500 additional</span></div>
+        <div class="method-row"><span class="method-key">PEX pipe warranty</span><span class="method-val">25 years (manufacturer)</span></div>
+      </div>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name" style="color:#06B6D4">🔨 Spot Repair (Jackhammer / Open Slab)</div>
+      <div class="repair-cost">$1,800 – $4,500 (one leak location)</div>
+      <span class="repair-tag rt-ok">Lowest upfront cost</span>
+      <span class="repair-tag rt-last">Only fixes current leak</span>
+      <div class="repair-body" style="margin-top:8px">
+        <strong>How it works:</strong> Concrete is jackhammered at the confirmed leak location (typically a 2'×2' to 4'×4' area). The leaking pipe section is cut out, repaired with a copper coupler, and the slab is patched with new concrete.
+        <br><br><strong>When to consider:</strong> Newer home (post-1990), first leak in the system, isolated damage, or if reroute is not feasible due to home construction type.
+        <br><br><strong>FL insurance:</strong> Homeowners insurance under FL Statute §627.706 (Covered Perils — sudden accidental discharge) may cover the access cost (jackhammer, slab opening, closing) but typically NOT the pipe repair itself or finished floor restoration.
+        <br><br><strong>Important caveat:</strong> If the system has a history of leaks or pipe is original 1955–1985 copper, spot repair is a temporary solution.
+      </div>
+      <div style="margin-top:10px">
+        <div class="method-row"><span class="method-key">Jackhammer &amp; excavation</span><span class="method-val">$500–$1,200</span></div>
+        <div class="method-row"><span class="method-key">Pipe repair (copper splice)</span><span class="method-val">$350–$800</span></div>
+        <div class="method-row"><span class="method-key">Concrete patch &amp; cure</span><span class="method-val">$400–$900</span></div>
+        <div class="method-row"><span class="method-key">Tile restoration (over patch)</span><span class="method-val">$400–$1,200+</span></div>
+        <div class="method-row"><span class="method-key">FL insurance may cover</span><span class="method-val">Access/opening costs only</span></div>
+      </div>
+    </div>
+
+    <div class="repair-card">
+      <div class="repair-name" style="color:#F4B942">🔵 Epoxy Pipe Lining (CIPP)</div>
+      <div class="repair-cost">$2,500 – $7,000 (single-pipe run)</div>
+      <span class="repair-tag rt-ok">No slab breaking</span>
+      <span class="repair-tag rt-ok">Seals pitting &amp; minor leaks</span>
+      <span class="repair-tag rt-last">Not for heavily corroded pipe</span>
+      <div class="repair-body" style="margin-top:8px">
+        <strong>How it works:</strong> Cured-in-place pipe (CIPP) epoxy lining is blown or pulled through the existing copper pipe. The epoxy cures against the interior wall, creating a new smooth pipe within the old one. Does not require slab excavation.
+        <br><br><strong>Best for:</strong> Widespread pin-holing where the pipe structure is still largely intact. Seals current leaks and prevents future ones in the lined section.
+        <br><br><strong>Limitations:</strong> Cannot reline severely corroded or collapsed pipe. Reduces interior pipe diameter by ~1/8". Not all FL inspectors accept as final repair without spot repair verification. Ask about permit requirements in your county.
+        <br><br><strong>Manufacturers used in FL:</strong> Nu-Flow, Perma-Pipe, Pipe Shield.
+      </div>
+      <div style="margin-top:10px">
+        <div class="method-row"><span class="method-key">Single hot or cold line (avg home)</span><span class="method-val">$2,500–$4,500</span></div>
+        <div class="method-row"><span class="method-key">Full hot &amp; cold system lining</span><span class="method-val">$5,500–$10,000</span></div>
+        <div class="method-row"><span class="method-key">Permit required in most FL counties</span><span class="method-val">Yes — verify with AHJ</span></div>
+        <div class="method-row"><span class="method-key">FL insurance coverage</span><span class="method-val">Varies; some carriers exclude lining</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏦 FL Homeowners Insurance &amp; Slab Leaks</div>
+      <div class="warn-box">
+        <strong>FL Statute §627.706</strong> — The "sudden and accidental" discharge provision covers the cost of accessing the leak (breaking slab, drywall removal) but typically does NOT cover the pipe repair itself. Coverage for finished floor restoration varies by policy.
+      </div>
+      <div class="data-row" style="margin-top:10px">
+        <div class="data-label">Access/opening costs covered?</div>
+        <div class="data-val green">Usually yes (§627.706)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Pipe repair covered?</div>
+        <div class="data-val red">Usually excluded</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Finished floor restoration?</div>
+        <div class="data-val gold">Policy-dependent</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Mold remediation if caused by leak?</div>
+        <div class="data-val gold">Check mold sub-limit ($10K avg)</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Hydrostatic test required?</div>
+        <div class="data-val gold">Citizens, UPC, FedNat — yes</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Must use approved contractor?</div>
+        <div class="data-val gold">Many insurers — yes</div>
+      </div>
+      <div class="tip-box">
+        <strong>Filing a claim?</strong> Call a licensed plumber FIRST before calling your insurance company. The plumber can document the damage, issue a written diagnosis, and recommend whether a claim makes sense given your deductible vs repair cost.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Repair Cost Comparison</div>
+      <div class="data-row">
+        <div class="data-label">Detection (acoustic or thermal)</div>
+        <div class="data-val cyan">$300–$800</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Spot repair (one leak)</div>
+        <div class="data-val cyan">$1,800–$4,500</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Spot repair × 3 leaks (5-yr avg for older homes)</div>
+        <div class="data-val red">$5,400–$13,500</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Full reroute (PEX overhead)</div>
+        <div class="data-val green">$4,500–$8,500</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Epoxy lining (full system)</div>
+        <div class="data-val cyan">$6,000–$10,000</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Foundation repair (if delayed too long)</div>
+        <div class="data-val red">$8,000–$25,000+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GET A QUOTE TAB -->
+  <div class="panel" id="panel-quote">
+    <div class="card">
+      <div class="card-title">📞 Schedule Slab Leak Diagnosis</div>
+      <div class="tip-box">
+        <strong>Same-day response for active leaks.</strong> If your meter is moving with all fixtures off, don't wait — call now. Water loss under the slab causes foundation damage that costs 5× more to fix than the original leak.
+      </div>
+      <label>Your Name</label>
+      <input type="text" id="q-name" placeholder="Full name">
+      <div class="form-row">
+        <div>
+          <label>Phone</label>
+          <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+        </div>
+        <div>
+          <label>County</label>
+          <select id="q-county">
+            <option>Miami-Dade</option>
+            <option>Broward</option>
+            <option>Palm Beach</option>
+            <option>Orange</option>
+            <option>Hillsborough</option>
+            <option>Pinellas</option>
+            <option>Lee</option>
+            <option>Collier</option>
+            <option>Sarasota</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <label>What are you experiencing?</label>
+      <select id="q-symptom">
+        <option>High water bill with no explanation</option>
+        <option>Hot spot on floor</option>
+        <option>Sound of running water (fixtures off)</option>
+        <option>Meter moving with fixtures off</option>
+        <option>Wet/damp floor or baseboards</option>
+        <option>Low water pressure</option>
+        <option>Multiple concerns</option>
+        <option>Just want an inspection</option>
+      </select>
+      <label>Home year built</label>
+      <input type="text" id="q-year" placeholder="e.g. 1972">
+      <label>Urgency</label>
+      <select id="q-urgency">
+        <option>Emergency — active leak right now</option>
+        <option>Urgent — within 24 hours</option>
+        <option>This week</option>
+        <option>Scheduling for inspection only</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Request Diagnosis Call</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✅ Our Leak Detection Process</div>
+      <div class="data-row">
+        <div class="data-label">Licensed CPC on every call</div>
+        <div class="data-val green">FL §489.105</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Acoustic + thermal combo scan</div>
+        <div class="data-val green">Standard</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Written leak location report</div>
+        <div class="data-val green">Included for insurance</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Insurance claim documentation</div>
+        <div class="data-val green">We assist</div>
+      </div>
+      <div class="data-row">
+        <div class="data-label">Same-day emergency response</div>
+        <div class="data-val cyan">Active leaks</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours! ☎️</div>
+
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+function showTab(id, ev) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  if(ev && ev.target) ev.target.classList.add('active');
+  var panel = document.getElementById('panel-'+id);
+  if(panel) panel.classList.add('active');
+}
+
+var SYM_WEIGHTS = {s1:3, s2:3, s3:3, s4:5, s5:2, s6:2, s7:2, s8:1, s9:3, s10:1, s11:2, s12:1};
+var SYM_CHECKED = {};
+
+function toggleSym(el, id) {
+  SYM_CHECKED[id] = !SYM_CHECKED[id];
+  var box = document.getElementById(id);
+  if(box){
+    box.classList.toggle('checked', !!SYM_CHECKED[id]);
+    box.textContent = SYM_CHECKED[id] ? '✓' : '';
+  }
+}
+
+function diagnose() {
+  var score = 0;
+  var keys = Object.keys(SYM_WEIGHTS);
+  for(var i=0;i<keys.length;i++){
+    if(SYM_CHECKED[keys[i]]) score += SYM_WEIGHTS[keys[i]];
+  }
+  var maxScore = 28;
+  var pct = Math.round((score / maxScore) * 100);
+  var level = '', color = '', advice = '', fillClass = '';
+  if(pct >= 60 || SYM_CHECKED['s4']) {
+    level = 'HIGH PROBABILITY — Active Slab Leak';
+    color = '#EF4444';
+    fillClass = 'high';
+    advice = 'Your symptoms strongly indicate an active under-slab leak. ' + (SYM_CHECKED['s4'] ? 'A moving meter with all fixtures off is definitive. ' : '') + 'Call a licensed plumber for acoustic/thermal detection today. Every day of delay risks foundation damage and mold growth.';
+  } else if(pct >= 35) {
+    level = 'MODERATE PROBABILITY — Inspection Recommended';
+    color = '#F4B942';
+    fillClass = 'med';
+    advice = 'Several indicators suggest a possible slab leak or hidden plumbing leak. Schedule a leak detection scan to confirm. Perform the DIY meter test (see Detection tab) to check if your meter moves with all fixtures off.';
+  } else if(pct >= 15) {
+    level = 'LOW-MODERATE — Monitor &amp; Test';
+    color = '#06B6D4';
+    fillClass = '';
+    advice = 'Some symptoms present but not conclusive. Perform the meter test first. If your home was built 1955–1985 with original copper, a preventive inspection is worthwhile given your risk profile.';
+  } else {
+    level = 'LOW PROBABILITY';
+    color = '#22C55E';
+    fillClass = '';
+    advice = 'Symptoms do not strongly indicate a slab leak. If you have unexplained water bill increases, consider the DIY meter test or a general plumbing inspection.';
+  }
+
+  var pctDisplay = Math.min(pct, 100);
+  var html = '<div style="margin-bottom:10px"><div style="font-size:0.85rem;font-weight:700;color:'+color+'">'+esc(level)+'</div></div>';
+  html += '<div class="diag-bar"><div class="diag-label"><span>Symptom match</span><span style="color:'+color+'">'+pctDisplay+'%</span></div><div class="diag-track"><div class="diag-fill '+fillClass+'" style="width:'+pctDisplay+'%"></div></div></div>';
+  html += '<div style="font-size:0.78rem;color:#94A3B8;line-height:1.6;margin-top:10px">'+esc(advice)+'</div>';
+
+  if(pct >= 35) {
+    html += '<div style="margin-top:12px;font-size:0.75rem;color:#94A3B8"><strong style="color:#06B6D4">Recommended next steps:</strong><br>1. Perform meter test (Detection tab)<br>2. Schedule acoustic + thermal scan ($300–$800)<br>3. Get written leak location report for insurance<br>4. Discuss repair options with licensed CPC</div>';
+  }
+
+  var box = document.getElementById('result-diag');
+  box.innerHTML = html;
+  box.style.display = 'block';
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  if(!name){alert('Please enter your name.');return;}
+  var phone = document.getElementById('q-phone').value.trim();
+  if(!phone){alert('Please enter your phone number.');return;}
+  showToast();
+}
+
+function showToast() {
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';}, 4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+fl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-liningfl-slab-leak-diagnosis florida-plumbing-leak-detection slab-leak-symptom-checker acoustic-leak-detection thermal-imaging-slab-leak tracer-gas-detection copper-pipe-slab-leak south-florida-slab-leak slab-leak-repair-options reroute-repipe spot-repair epoxy-pipe-lining FL-homeowners-insurance-slab-leak FL-statute-627-706 hydrostatic-pressure-test miami-dade-slab-leak broward-slab-leak palm-beach-slab-leak water-meter-test slab-leak-cost florida-slab-leak-foundation pipe-corrosion-florida CIPP-lining
+</div>
+</body>
+</html>

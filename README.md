@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**195 interactive cost calculators** for Florida homeowners.
+**198 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -16,6 +16,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Backflow Prevention Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow-prevention/fl_backflow_prevention.html)
 - [FL Backflow Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow/fl_backflow.html)
 - [FL Backwater Valve Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backwater-valve/fl_backwater_valve.html)
+- [FL Bathroom Addition Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-addition-cost/fl_bathroom_addition_cost.html)
 - [FL Bathroom Addition Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-addition/fl_bathroom_addition.html)
 - [FL Bathroom Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-cost/fl_bathroom_cost.html)
 - [FL Bathroom Remodel Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-remodel-plumbing/fl_bathroom_remodel_plumbing.html)
@@ -94,6 +95,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Mobile Home Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/mobile-home/fl_mobile_home.html)
 - [FL Multi Family Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/multi-family/fl_multi_family.html)
 - [FL New Construction Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/new-construction/fl_new_construction.html)
+- [FL Outdoor Kitchen Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/outdoor-kitchen-plumbing/fl_outdoor_kitchen_plumbing.html)
 - [FL Outdoor Kitchen Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/outdoor-kitchen/fl_outdoor_kitchen.html)
 - [FL Outdoor Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/outdoor-plumbing/fl_outdoor_plumbing.html)
 - [FL Outdoor Shower Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/outdoor-shower/fl_outdoor_shower.html)
@@ -153,6 +155,7 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Shower Remodel Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-remodel/fl_shower_remodel.html)
 - [FL Shower Valve Antiscald Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-valve-antiscald/fl_shower_valve_antiscald.html)
 - [FL Shower Valve Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/shower-valve/fl_shower_valve.html)
+- [FL Slab Leak Diagnosis Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-leak-diagnosis/fl_slab_leak_diagnosis.html)
 - [FL Slab Leak Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-leak/fl_slab_leak.html)
 - [FL Slab Repair Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/slab-repair/fl_slab_repair.html)
 - [FL Solar Hpwh Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/solar-hpwh/fl_solar_hpwh.html)
