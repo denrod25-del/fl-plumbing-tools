@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**172 interactive cost calculators** for Florida homeowners.
+**174 interactive cost calculators** for Florida homeowners.
 Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zero dependencies.
 
 **Live site:** https://denrod25-del.github.io/fl-plumbing-tools/
@@ -10,10 +10,12 @@ Each tool: 3-tab interface (Cost Calc * FL Guide * Checklist), mobile-first, zer
 - [FL Ada Aging In Place Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/ada-aging-in-place/fl_ada_aging.html)
 - [FL Adu Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/adu-plumbing/fl_adu_plumbing.html)
 - [FL Anode Rod Guide Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/anode-rod-guide/fl_anode_rod_guide.html)
+- [FL Anti Scald Valve Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/anti-scald-valve/fl_anti_scald_valve.html)
 - [FL Backflow Compliance Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow-compliance/fl_backflow_compliance.html)
 - [FL Backflow Preventer Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow-preventer/fl_backflow_preventer.html)
 - [FL Backflow Prevention Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow-prevention/fl_backflow_prevention.html)
 - [FL Backflow Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backflow/fl_backflow.html)
+- [FL Backwater Valve Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/backwater-valve/fl_backwater_valve.html)
 - [FL Bathroom Addition Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-addition/fl_bathroom_addition.html)
 - [FL Bathroom Cost Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-cost/fl_bathroom_cost.html)
 - [FL Bathroom Remodel Plumbing Cost Guide](https://denrod25-del.github.io/fl-plumbing-tools/bathroom-remodel-plumbing/fl_bathroom_remodel_plumbing.html)
