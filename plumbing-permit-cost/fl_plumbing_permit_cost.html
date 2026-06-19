@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Plumbing Permit Cost Calculator | By County | Florida Building Permit Fees</title>
+<meta name="description" content="Calculate Florida plumbing permit costs by county for water heater replacement, repipe, new bathroom addition, drain work, gas line installation. Palm Beach, Broward, Miami-Dade, Hillsborough, Orange, Pinellas, Lee, Collier, Duval permit fee estimator. FPC permit requirements guide.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1400 0%,#1a1700 100%);border-bottom:3px solid #F4B942;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#F4B942;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#F4B94222;color:#F4B942;border:1px solid #F4B94244;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#F4B942;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#F4B942;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#F4B942}
+.btn{width:100%;padding:14px;background:#F4B942;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.code-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:8px}
+.code-table th{background:#141929;color:#F4B942;padding:8px 6px;text-align:left;font-size:0.71rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table td{padding:7px 6px;border-bottom:1px solid #1E2A45;color:#E2E8F0;vertical-align:top}
+.code-table tr:last-child td{border-bottom:none}
+.tip-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#F4B942}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.info-box{background:#00B4FF11;border:1px solid #00B4FF33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.info-box strong{color:#00B4FF}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#F4B942;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #F4B94255}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.stat-card{background:#0F1629;border-radius:8px;padding:12px;text-align:center;border:1px solid #1E2A45}
+.stat-num{font-size:1.1rem;font-weight:800;color:#F4B942}
+.stat-label{font-size:0.7rem;color:#94A3B8;margin-top:3px}
+.result-hero{background:#F4B94211;border:1px solid #F4B94233;border-radius:12px;padding:16px;margin-top:10px;text-align:center}
+.result-range{font-size:1.5rem;font-weight:900;color:#F4B942}
+.result-label{font-size:0.8rem;color:#94A3B8;margin-top:3px}
+.fee-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.fee-row:last-child{border-bottom:none}
+.fee-label{color:#94A3B8;flex:1;line-height:1.4}
+.fee-val{font-weight:700;color:#E2E8F0;min-width:90px;text-align:right}
+.fee-val.gold{color:#F4B942}
+.permit-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.permit-card-title{font-size:0.88rem;font-weight:800;color:#F4B942;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.permit-required{display:inline-block;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#EF444422;color:#EF4444;border:1px solid #EF444433}
+.permit-optional{display:inline-block;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#F4B94222;color:#F4B942;border:1px solid #F4B94233}
+.permit-notreq{display:inline-block;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#22C55E22;color:#22C55E;border:1px solid #22C55E33}
+.permit-body{font-size:0.77rem;color:#94A3B8;line-height:1.5;margin-top:6px}
+.county-row{padding:10px 0;border-bottom:1px solid #1E2A4530}
+.county-row:last-child{border-bottom:none}
+.county-name{font-weight:700;color:#F4B942;font-size:0.82rem;margin-bottom:4px}
+.county-detail{color:#94A3B8;font-size:0.77rem;line-height:1.5}
+.step-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45;display:flex;gap:10px;align-items:flex-start}
+.step-num{background:#F4B942;color:#0A0E1A;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;margin-top:1px}
+.step-content{flex:1}
+.step-title{font-size:0.82rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.step-body{font-size:0.75rem;color:#94A3B8;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🏛️</div>
+  <h1>FL Plumbing Permit Cost Calculator</h1>
+  <p>Permit fees by county · What requires a permit · How to apply · Real-project estimates</p>
+  <span class="badge">FPC Compliance · Palm Beach · Broward · Miami-Dade · Hillsborough · Orange · Pinellas</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calc',event)">Cost Estimator</button>
+    <button class="tab" onclick="showTab('required',event)">What Needs a Permit</button>
+    <button class="tab" onclick="showTab('apply',event)">How to Apply</button>
+    <button class="tab" onclick="showTab('help',event)">Get Help</button>
+  </div>
+
+  <!-- TAB 1: Cost Estimator -->
+  <div id="calc" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>💰</span>Estimate Your Plumbing Permit Cost</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Select your project type and Florida county to get a realistic permit fee range — including base fee, plan review, and inspection surcharges.</div>
+      <label>Project type</label>
+      <select id="projType">
+        <option value="">Select project type...</option>
+        <option value="wh_elec">Water heater replacement — electric (same location)</option>
+        <option value="wh_gas">Water heater replacement — gas (same location)</option>
+        <option value="wh_tank">Water heater replacement — tankless gas (new venting)</option>
+        <option value="wh_hp">Water heater replacement — heat pump (new electrical)</option>
+        <option value="repipe_full">Full home repipe (PEX or CPVC)</option>
+        <option value="repipe_part">Partial repipe (section replacement)</option>
+        <option value="bath_add">New bathroom addition (full — toilet, sink, shower)</option>
+        <option value="bath_half">New half bath addition (toilet + sink only)</option>
+        <option value="drain_work">Drain/sewer line work (repair or replacement)</option>
+        <option value="gas_new">New gas line installation (appliance connection)</option>
+        <option value="gas_generator">Gas line for standby generator</option>
+        <option value="slab_leak">Slab leak repair (access + pipe repair)</option>
+        <option value="fixture_add">New fixture addition (sink, laundry, etc.)</option>
+        <option value="pool_heater">Pool/spa heater installation (gas)</option>
+        <option value="outdoor_kitchen">Outdoor kitchen plumbing</option>
+      </select>
+      <label>FL county / city</label>
+      <select id="projCounty">
+        <option value="pbc_county">Palm Beach County (unincorporated)</option>
+        <option value="pbc_wpb">West Palm Beach City</option>
+        <option value="pbc_boca">Boca Raton City</option>
+        <option value="broward_county">Broward County (unincorporated)</option>
+        <option value="broward_ftl">Fort Lauderdale City</option>
+        <option value="broward_hollywood">Hollywood City</option>
+        <option value="mdade_county">Miami-Dade County (unincorporated)</option>
+        <option value="mdade_miami">Miami City</option>
+        <option value="mdade_coralgables">Coral Gables City</option>
+        <option value="hillsborough_county">Hillsborough County (unincorporated)</option>
+        <option value="hillsborough_tampa">Tampa City</option>
+        <option value="orange_county">Orange County (unincorporated)</option>
+        <option value="orange_orlando">Orlando City</option>
+        <option value="pinellas_county">Pinellas County (unincorporated)</option>
+        <option value="pinellas_stpete">St. Petersburg City</option>
+        <option value="pinellas_clearwater">Clearwater City</option>
+        <option value="lee_county">Lee County (unincorporated)</option>
+        <option value="lee_ftmyers">Fort Myers City</option>
+        <option value="collier_county">Collier County (unincorporated)</option>
+        <option value="collier_naples">Naples City</option>
+        <option value="duval_jax">Jacksonville / Duval (consolidated)</option>
+        <option value="sarasota_county">Sarasota County (unincorporated)</option>
+        <option value="sarasota_city">Sarasota City</option>
+        <option value="volusia_county">Volusia County (unincorporated)</option>
+        <option value="manatee_county">Manatee County</option>
+      </select>
+      <div class="form-row" style="margin-top:10px">
+        <div>
+          <label>Property type</label>
+          <select id="projPropType">
+            <option value="sfh">Single-family home</option>
+            <option value="condo">Condo / townhouse</option>
+            <option value="commercial">Commercial / mixed-use</option>
+          </select>
+        </div>
+        <div>
+          <label>Permit applicant</label>
+          <select id="projApplicant">
+            <option value="licensed">Licensed contractor</option>
+            <option value="owner">Owner-builder</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="calcPermit()">Calculate Permit Cost</button>
+      <div id="permit-result" class="result-box">
+        <div class="result-hero">
+          <div class="result-range" id="permit-range">$0 – $0</div>
+          <div class="result-label" id="permit-label">Estimated total permit cost</div>
+        </div>
+        <div style="margin-top:14px">
+          <div class="fee-row"><div class="fee-label">Base plumbing permit fee</div><div class="fee-val gold" id="base-fee">—</div></div>
+          <div class="fee-row"><div class="fee-label">Plan review fee (if required)</div><div class="fee-val" id="plan-fee">—</div></div>
+          <div class="fee-row"><div class="fee-label">Inspection fee (per inspection)</div><div class="fee-val" id="insp-fee">—</div></div>
+          <div class="fee-row"><div class="fee-label">Technology / admin surcharge (varies)</div><div class="fee-val" id="tech-fee">—</div></div>
+          <div class="fee-row"><div class="fee-label">Inspections typically required</div><div class="fee-val" id="insp-count">—</div></div>
+          <div class="fee-row"><div class="fee-label">Timeline — permit issuance</div><div class="fee-val" id="timeline">—</div></div>
+        </div>
+        <div id="permit-note" style="margin-top:10px"></div>
+        <div class="tip-box" style="margin-top:10px">
+          <strong>Reminder:</strong> These are FL market averages. Actual fees depend on assessed project valuation, current fee schedules (updated annually by many FL counties), and any city overlay requirements. Request the current fee schedule from your building department before finalizing project budgets.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>FL Permit Cost Quick Reference</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:8px;line-height:1.5">Typical ranges for the most common FL residential plumbing permit projects (licensed contractor pulling permit, single-family home):</div>
+      <table class="code-table">
+        <thead><tr><th>Project</th><th>Typical FL Range</th><th>Inspections</th></tr></thead>
+        <tbody>
+          <tr><td>Water heater — electric (same location)</td><td>$50 – $175</td><td>1 (rough-in/final)</td></tr>
+          <tr><td>Water heater — gas (same location)</td><td>$75 – $225</td><td>1–2</td></tr>
+          <tr><td>Water heater — tankless gas (new venting)</td><td>$125 – $350</td><td>2</td></tr>
+          <tr><td>Water heater — heat pump (new electrical)</td><td>$150 – $400</td><td>2</td></tr>
+          <tr><td>Full home repipe (PEX/CPVC)</td><td>$350 – $1,200</td><td>2–3</td></tr>
+          <tr><td>Partial repipe (section)</td><td>$150 – $450</td><td>1–2</td></tr>
+          <tr><td>New full bathroom addition</td><td>$400 – $1,500</td><td>2–4</td></tr>
+          <tr><td>New half bath addition</td><td>$200 – $600</td><td>1–2</td></tr>
+          <tr><td>Drain / sewer line work</td><td>$150 – $600</td><td>1–2</td></tr>
+          <tr><td>New gas line (appliance)</td><td>$100 – $400</td><td>1–2</td></tr>
+          <tr><td>Gas line for standby generator</td><td>$200 – $600</td><td>2</td></tr>
+          <tr><td>Slab leak repair</td><td>$150 – $500</td><td>1–2</td></tr>
+          <tr><td>Pool/spa heater installation</td><td>$200 – $600</td><td>2</td></tr>
+          <tr><td>Outdoor kitchen plumbing</td><td>$250 – $700</td><td>2</td></tr>
+        </tbody>
+      </table>
+      <div class="warn-box" style="margin-top:10px">
+        <strong>South FL premium:</strong> Miami-Dade, Broward, and Palm Beach permit fees are typically 30–50% higher than the FL statewide average, reflecting higher local base rates and the HVHZ (High Velocity Hurricane Zone) code overlay that requires additional plan review for many plumbing projects.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🏛️</span>Permit Fee Structures by County</div>
+      <div class="county-row">
+        <div class="county-name">Palm Beach County (unincorporated)</div>
+        <div class="county-detail">Base plumbing permit: $80 minimum + $8 per fixture. Plan review: 65% of permit fee. Technology fee: $6 flat. Water heater: ~$110–$160. Full repipe: $450–$900 depending on fixture count. Search: pbcgov.com/pzb. Phone: 561-233-5100.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Broward County (unincorporated)</div>
+        <div class="county-detail">Base fee: $85 minimum + valuation-based rate (~$12 per $1,000 construction value). Plan review: 50% of permit fee. DCA surcharge: 1% of permit fee. Water heater: ~$120–$200. Full repipe: $500–$1,000. broward.org/Building. 954-357-6350.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Miami-Dade County (unincorporated)</div>
+        <div class="county-detail">Base fee: $125 minimum. HVHZ plan review required on most projects. Technology surcharge: $15. Additional DCA surcharge per state. Water heater: ~$150–$250. Full repipe: $600–$1,200. miamidade.gov/permits. 786-315-2100. Note: City of Miami and municipalities have own fee schedules.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Hillsborough County (unincorporated)</div>
+        <div class="county-detail">Base fee: $65 minimum + $6 per fixture. Technology fee: $10. Plan review: 50% for larger projects. Water heater: ~$90–$150. Full repipe: $350–$700. hcflgov.net. 813-272-5600. Note: Tampa City has own schedule — typically 10–15% higher than county rates.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Orange County (unincorporated)</div>
+        <div class="county-detail">Base fee: $60 minimum + $5.50 per fixture + $0.45/LF for piping. Plan review: 35% of permit fee. Technology surcharge: $8. Water heater: ~$80–$130. Full repipe: $300–$650. ocfl.net. 407-836-5550.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Pinellas County (unincorporated)</div>
+        <div class="county-detail">Base fee: $70 minimum + fixture-based rate. Plan review: included for standard projects. Technology fee: $8. Water heater: ~$85–$140. Full repipe: $320–$650. pinellascounty.org/build. 727-464-3888.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Lee County (unincorporated)</div>
+        <div class="county-detail">Base fee: $65 minimum + $5/fixture. Post-Hurricane Ian: additional review requirements for coastal zones. Technology fee: $8. Water heater: ~$80–$140. Full repipe: $300–$600. leegov.com/dcd. 239-533-8329.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Collier County (unincorporated)</div>
+        <div class="county-detail">Base fee: $110 minimum. Technology surcharge: $12. Plan review: 50% of base fee. One of the higher per-permit base rates in FL. Water heater: ~$130–$200. Full repipe: $450–$900. cvportal.colliercountyfl.gov. 239-252-2400.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Duval County / Jacksonville (consolidated)</div>
+        <div class="county-detail">Base fee: $60 minimum + $5/fixture. Technology fee: $8. One of the more affordable major FL markets for permits. Water heater: ~$70–$120. Full repipe: $280–$550. coj.net/BuildingInspection. 904-630-1100.</div>
+      </div>
+      <div class="county-row">
+        <div class="county-name">Sarasota County (unincorporated)</div>
+        <div class="county-detail">Base fee: $75 minimum + $6/fixture. Technology fee: $8. Plan review: 40% for new work. Water heater: ~$85–$145. Full repipe: $325–$650. scgov.net/government/building-permitting. 941-861-5000.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: What Needs a Permit -->
+  <div id="required" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📋</span>FL Plumbing Permit Requirements</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Florida Statute §489.103 and the Florida Building Code (FBC) determine what requires a permit. Local amendments may add requirements — when in doubt, always call your building department before starting work.</div>
+
+      <div class="permit-card">
+        <div class="permit-card-title">Water Heater Replacement <span class="permit-required">PERMIT REQUIRED</span></div>
+        <div class="permit-body">
+          Florida requires a permit for ALL water heater replacements — both tank and tankless, gas and electric. This applies statewide under FBC Chapter 5, Section 502.2. There are no exceptions for "same-for-same" replacement (unlike some other states).<br><br>
+          <strong style="color:#F4B942">Why FL requires it:</strong> The permit ensures the T&P (temperature-pressure) relief valve is properly installed and piped, the water heater is adequately supported, electrical connections meet code (for electric units), gas connections are tested (for gas units), and the unit meets current efficiency standards.<br><br>
+          <strong style="color:#EF4444">Consequence of skipping:</strong> An unpermitted water heater installation can void your homeowner's insurance policy if a failure causes damage. Many FL homeowner's policies specifically exclude losses from unpermitted work. When selling the home, the unpermitted water heater will appear in the permit history search.
+        </div>
+      </div>
+
+      <div class="permit-card">
+        <div class="permit-card-title">Home Repipe (Supply Pipe Replacement) <span class="permit-required">PERMIT REQUIRED</span></div>
+        <div class="permit-body">
+          Replacing supply pipe throughout a home — whether for polybutylene removal, galvanized replacement, or copper repipe — requires a plumbing permit in all FL jurisdictions. This is true even if the new pipe is the same material and follows the same path.<br><br>
+          <strong style="color:#F4B942">Plan review:</strong> Most FL counties require a simple sketch or diagram showing pipe routing for full repipes. Licensed plumbers typically handle this documentation as part of the permit application. The sketch does not need to be a formal engineering drawing for residential work.<br><br>
+          <strong style="color:#14B8A6">Inspection:</strong> A rough-in inspection is required before walls are closed, and a final pressure test (typically 150 PSI for 15 minutes on PEX) must be witnessed by the inspector. Plumbers are required to notify the building department when ready for inspection.
+        </div>
+      </div>
+
+      <div class="permit-card">
+        <div class="permit-card-title">Bathroom Addition (New) <span class="permit-required">PERMIT REQUIRED</span></div>
+        <div class="permit-body">
+          Adding a new bathroom to an existing home requires both a plumbing permit and typically a building permit (for structural work) and sometimes an electrical permit. The plumbing scope includes new supply lines, new drain/waste/vent lines, fixture connections, and connection to the main DWV system.<br><br>
+          <strong style="color:#F4B942">Complexity factors:</strong> Distance from main sewer line, whether the addition is on a slab or has crawl space, venting requirements (wet venting vs. separate vent stack), and whether the project involves slab penetration all affect both cost and inspection requirements.<br><br>
+          <strong style="color:#E2E8F0">Typical inspections:</strong> Underground/slab rough-in (before concrete pour), wall rough-in (before drywall), and final. Some counties add a "top-out" inspection when drain lines are complete above the slab.
+        </div>
+      </div>
+
+      <div class="permit-card">
+        <div class="permit-card-title">Drain / Sewer Line Work <span class="permit-required">PERMIT REQUIRED</span></div>
+        <div class="permit-body">
+          Replacing, repairing, or relining drain lines — including the sewer lateral from house to street — requires a plumbing permit. This includes trenchless liner installation (CIPP) and excavation-based replacement.<br><br>
+          <strong style="color:#F4B942">Sewer lateral jurisdiction:</strong> In FL, the homeowner typically owns the sewer lateral from the home to the connection point at the utility's main line. All work on this line requires a permit. Some FL utilities also require their own tap permit or notification when lateral work is performed.
+        </div>
+      </div>
+
+      <div class="permit-card">
+        <div class="permit-card-title">New Gas Line Installation <span class="permit-required">PERMIT REQUIRED</span></div>
+        <div class="permit-body">
+          All new gas line installations require a plumbing permit in Florida. This includes running a new gas line to an appliance, installing CSST, extending existing lines, and installing gas service for standby generators or pool heaters.<br><br>
+          <strong style="color:#F4B942">Gas-specific requirements:</strong> Gas line installations require a pressure test (typically 3–10 PSI for 30 minutes, witnessed by inspector) before the system is put into service. CSST installations must include bonding per NFPA 54 §7.13 and FPC §409.3 — especially important in FL due to lightning risk. All gas work must be performed by a licensed plumber (Plumbing-Gas specialty) or certified gas contractor in Florida.
+        </div>
+      </div>
+
+      <div class="permit-card">
+        <div class="permit-card-title">Slab Leak Repair <span class="permit-required">PERMIT REQUIRED</span></div>
+        <div class="permit-body">
+          Slab leak repairs — whether by jackhammer access, tunnel, or pipe reroute — require a plumbing permit. The permit covers the pipe repair AND any concrete restoration (which may also require a structural permit if significant concrete removal is involved).<br><br>
+          <strong style="color:#F4B942">Reroute vs. direct repair:</strong> Both require permits. A reroute through walls is often permitted under the same plumbing permit as the slab repair. If the reroute involves opening exterior walls or the attic, a building permit may also be required depending on the county.
+        </div>
+      </div>
+
+      <div class="permit-card">
+        <div class="permit-card-title">Like-for-Like Minor Fixture Repairs <span class="permit-notreq">NO PERMIT NEEDED</span></div>
+        <div class="permit-body">
+          The following minor repairs generally do NOT require a permit in Florida under FBC §105.2.2 exemptions:<br><br>
+          • Replacing a faucet or showerhead at the same location<br>
+          • Replacing a toilet (same drain location, same rough-in distance)<br>
+          • Replacing a garbage disposal (same drain connection)<br>
+          • Replacing a water shutoff valve (like-for-like, same size)<br>
+          • Clearing a drain clog<br>
+          • Replacing supply hose to fixture (under-sink connections)<br><br>
+          <strong style="color:#F4B942">Important exception:</strong> Some FL municipalities (notably Miami Beach, Coral Gables, and others) have adopted stricter local amendments that require permits even for toilet replacements. Always verify with your local building department for city-specific rules.
+        </div>
+      </div>
+
+      <div class="permit-card">
+        <div class="permit-card-title">Pool / Spa Heater Installation <span class="permit-required">PERMIT REQUIRED</span></div>
+        <div class="permit-body">
+          Installing a gas pool or spa heater requires a plumbing permit (for the gas line connection) and sometimes a mechanical permit (for the heater unit itself). Heat pump pool heaters may additionally require an electrical permit.<br><br>
+          <strong style="color:#F4B942">FL pool-specific:</strong> Florida requires proper backflow prevention on all pool plumbing connections per FPC §608. Pool heater gas lines must be properly sized for the BTU demand — often requiring a 1" or 1-1/4" line for 200–400 MBH heaters.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚠️</span>Owner-Builder Permits in Florida</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida Statute §489.103(7) allows homeowners to pull a permit as "Owner-Builder" for work on their primary residence. Important limitations apply to plumbing:</div>
+      <table class="code-table">
+        <thead><tr><th>Owner-Builder Rule</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Eligibility</td><td>Must be the property owner AND must personally perform or directly supervise the work — you cannot hire an unlicensed person</td></tr>
+          <tr><td>Primary residence only</td><td>Owner-builder permits are NOT available for rental properties, investment properties, or properties you intend to sell within 1 year of permit issuance</td></tr>
+          <tr><td>Affidavit required</td><td>You must sign a sworn affidavit at the building department stating the property is your primary residence and you will personally perform/supervise</td></tr>
+          <tr><td>Insurance implications</td><td>Owner-builder work may void homeowner's insurance coverage during construction; notify your insurer before starting</td></tr>
+          <tr><td>Resale disclosure</td><td>You must disclose the owner-builder work to any buyer within 1 year of receiving the final inspection under FS §489.103(7)(b)</td></tr>
+          <tr><td>Recommendation</td><td>For gas line work, full repipes, and complex drain work, a licensed plumber is strongly recommended regardless of permit type — the code compliance and safety requirements are complex</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: How to Apply -->
+  <div id="apply" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📝</span>How to Apply for a FL Plumbing Permit</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Most Florida jurisdictions now have online permit portals. Here is the standard application process — specifics vary by county and city:</div>
+
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Gather project documents</div>
+          <div class="step-body">For residential plumbing work, you typically need: (a) completed permit application form, (b) contractor's license number and certificate of insurance (if using a contractor), (c) site plan or simple sketch showing project location and pipe routing, (d) equipment specifications (for water heaters, gas appliances — model number and BTU/input rating), and (e) owner-builder affidavit (if pulling own permit). Most FL counties have the application form available online on their building department website.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Submit via online portal (preferred) or in person</div>
+          <div class="step-body">All major FL counties now offer online permit submission. Online submission is generally faster (1–5 business days for simple residential plumbing vs. 5–10 days in person), allows you to track status, and provides digital permit documents. Most FL portals: Palm Beach — epermits.pbcgov.com; Broward — ebuilding.broward.org; Miami-Dade — iBuild portal at miamidade.gov/permits; Hillsborough — hcflgov.net; Orange — ocfl.net; Jacksonville — coj.net. For City of Tampa, Fort Lauderdale, and other municipalities, use the city's own portal.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Pay the permit fee</div>
+          <div class="step-body">Permit fees are typically paid online via credit card (note: some counties charge a credit card convenience fee of 2–3%) or by check in person. The fee is generally due at the time of permit issuance — after plan review is approved. Some jurisdictions require payment at submission for plan review. Keep your receipt — you'll need the permit number for scheduling inspections.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Post the permit and begin work</div>
+          <div class="step-body">Once the permit is issued, you or your contractor must: (a) post the permit card visibly at the job site (on the front door or a stake near the driveway), (b) keep a copy of the approved plans/application at the site, and (c) notify the building department when ready for each required inspection. Most FL counties allow inspection scheduling online or by phone — you cannot begin work until the permit is in hand for projects requiring inspections before walls are closed.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Schedule and pass inspections</div>
+          <div class="step-body">Request inspections as you reach each required stage. Inspectors in most FL counties are available within 24–48 business hours of a request. Common FL plumbing inspection stages: (a) underground rough-in (before backfill/concrete), (b) wall rough-in (before drywall), (c) final (after all fixtures installed and functional). Most FL counties now offer 1–2 hour inspection windows. The inspector will sign off on the permit card after each passing inspection.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Obtain the final certificate of completion</div>
+          <div class="step-body">After the final inspection passes, most FL counties issue a Certificate of Completion (CO) or mark the permit as "Final" in their online system. Save this documentation permanently — it will be required if you sell the home, refinance, or file an insurance claim. The CO serves as proof that the work was done to code and inspected by a licensed building official.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⏱️</span>FL Permit Processing Times — What to Expect</div>
+      <table class="code-table">
+        <thead><tr><th>County / City</th><th>Simple Plumbing (WH, repipe)</th><th>Complex (bath add, new gas)</th></tr></thead>
+        <tbody>
+          <tr><td>Palm Beach County</td><td>2–5 business days</td><td>5–10 business days</td></tr>
+          <tr><td>Broward County</td><td>3–7 business days</td><td>7–14 business days</td></tr>
+          <tr><td>Miami-Dade County</td><td>5–10 business days</td><td>10–21 business days (HVHZ review)</td></tr>
+          <tr><td>Tampa City</td><td>2–4 business days</td><td>5–10 business days</td></tr>
+          <tr><td>Hillsborough County</td><td>2–5 business days</td><td>5–10 business days</td></tr>
+          <tr><td>Orange County</td><td>2–4 business days</td><td>5–8 business days</td></tr>
+          <tr><td>Orlando City</td><td>3–6 business days</td><td>7–14 business days</td></tr>
+          <tr><td>Pinellas County</td><td>2–5 business days</td><td>5–10 business days</td></tr>
+          <tr><td>Lee County</td><td>3–7 business days</td><td>7–14 business days</td></tr>
+          <tr><td>Collier County</td><td>4–8 business days</td><td>10–21 business days</td></tr>
+          <tr><td>Jacksonville / Duval</td><td>2–4 business days</td><td>4–8 business days</td></tr>
+          <tr><td>Sarasota County</td><td>2–5 business days</td><td>5–10 business days</td></tr>
+        </tbody>
+      </table>
+      <div class="tip-box" style="margin-top:10px">
+        <strong>Expedite options:</strong> Many FL counties offer expedited review for an additional fee (typically 50–100% of the base permit fee). Miami-Dade, Broward, and Palm Beach offer express review programs. For time-sensitive projects (insurance-required repairs, pre-sale work), ask your building department about expedited review at submission.
+      </div>
+      <div class="warn-box" style="margin-top:10px">
+        <strong>Permit expiration:</strong> Florida plumbing permits expire if work has not commenced within 180 days of issuance, or if no inspection is requested within 180 days of the last approved inspection. If a permit expires, you must submit a renewal application — which may require re-plan-review and additional fees. Do not let permits sit idle.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Get Help -->
+  <div id="help" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔧</span>Get Help with Your FL Plumbing Project</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">Our licensed Florida Master Plumbers handle the permit application, all inspections, and final documentation — so you don't have to navigate the process alone. We know the requirements for every major FL county.</div>
+      <label>Your name</label>
+      <input type="text" id="h-name" placeholder="Full name">
+      <label>Phone number</label>
+      <input type="tel" id="h-phone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div>
+          <label>Project type</label>
+          <select id="h-proj">
+            <option value="">Select...</option>
+            <option>Water heater replacement</option>
+            <option>Full home repipe</option>
+            <option>New bathroom addition</option>
+            <option>Gas line installation</option>
+            <option>Drain / sewer line work</option>
+            <option>Slab leak repair</option>
+            <option>Pool heater installation</option>
+            <option>Other plumbing project</option>
+          </select>
+        </div>
+        <div>
+          <label>FL county</label>
+          <select id="h-county">
+            <option>Palm Beach</option><option>Broward</option><option>Miami-Dade</option>
+            <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+            <option>Lee</option><option>Collier</option><option>Duval</option>
+            <option>Sarasota</option><option>Volusia</option><option>Manatee</option>
+            <option>Other FL County</option>
+          </select>
+        </div>
+      </div>
+      <label>Do you have existing permits open on this property?</label>
+      <select id="h-openpermit">
+        <option>No open permits — clean permit history</option>
+        <option>Yes — open permit from previous work (need to close out)</option>
+        <option>Unknown — need to check permit history</option>
+        <option>Yes — failed inspection (need to correct and re-inspect)</option>
+      </select>
+      <button class="btn" onclick="submitHelp()">Get a Free Permit + Project Quote</button>
+      <div class="ok-box" style="margin-top:14px">
+        <strong>✓ What we handle:</strong> Permit application filing · All required drawings and documentation · Scheduling and attending all inspections · Final CO documentation · Permit history search for your property
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>FL Plumbing Permits — By the Numbers</div>
+      <div class="stat-grid" style="margin-top:0">
+        <div class="stat-card">
+          <div class="stat-num">~400K</div>
+          <div class="stat-label">Plumbing permits issued annually across FL (estimated)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">$135</div>
+          <div class="stat-label">Average FL residential plumbing permit fee (statewide average)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">8–18%</div>
+          <div class="stat-label">Permit cost as % of typical FL plumbing project total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">23%</div>
+          <div class="stat-label">Estimated FL plumbing work performed without a required permit</div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-top:12px">
+        <strong>The real cost of skipping a permit:</strong> The average FL homeowner who skips a required plumbing permit saves $80–$200 in permit fees. When the unpermitted work is discovered during a home sale (permit history search), the typical remediation cost is $1,500–$5,000 — including retroactive permit fees, inspection costs, potential wall opening for inspection, and contractor time. The math consistently favors pulling the permit.
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! 🏛️</div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+var PROJ_DATA = {
+  wh_elec:    {base:[50,175],plan:[0,50],insp:[0,30],tech:[5,15],inspections:'1 (final)',timeline:'1–3 days',note:'Simplest FL permit. Most counties issue same-day for licensed contractor with complete application. Permit card must be posted at unit.'},
+  wh_gas:     {base:[75,225],plan:[0,60],insp:[10,40],tech:[5,15],inspections:'1–2',timeline:'1–5 days',note:'Gas WH requires pressure test of gas connection. Inspector verifies T&P valve and proper gas shutoff. Some counties require mechanical inspection in addition to plumbing.'},
+  wh_tank:    {base:[125,350],plan:[20,80],insp:[15,50],tech:[5,20],inspections:'2',timeline:'2–7 days',note:'Tankless gas WH with new venting requires inspection of venting system, combustion air, and gas connection. Plan review required for new penetrations through walls or roof.'},
+  wh_hp:      {base:[150,400],plan:[25,100],insp:[20,60],tech:[5,20],inspections:'2',timeline:'2–7 days',note:'Heat pump WH typically requires both plumbing permit (condensate drain) and electrical permit (dedicated circuit). Get both permits from same department if possible.'},
+  repipe_full:{base:[350,1200],plan:[75,250],insp:[30,80],tech:[10,25],inspections:'2–3',timeline:'3–10 days',note:'Rough-in inspection required before walls are closed. Pressure test (150 PSI for 15 min on PEX) witnessed by inspector. Most costly permit but provides full code documentation for insurance and resale.'},
+  repipe_part:{base:[150,450],plan:[20,80],insp:[15,40],tech:[5,15],inspections:'1–2',timeline:'2–7 days',note:'Partial repipe covers specific sections. Inspector verifies pressure test of repaired section and appropriate transition fittings between old and new materials.'},
+  bath_add:   {base:[400,1500],plan:[100,400],insp:[40,120],tech:[15,35],inspections:'2–4',timeline:'5–14 days',note:'Most complex residential plumbing permit. Requires underground rough-in inspection (before slab pour if applicable), wall rough-in, and final. Building permit also required for structural work.'},
+  bath_half:  {base:[200,600],plan:[40,150],insp:[20,60],tech:[10,20],inspections:'1–2',timeline:'3–8 days',note:'Half bath (toilet + sink, no shower) is simpler than full bath addition. Still requires verification of proper venting and connection to main DWV system.'},
+  drain_work: {base:[150,600],plan:[20,100],insp:[15,50],tech:[5,20],inspections:'1–2',timeline:'2–7 days',note:'Drain work includes camera documentation requirement in some FL counties. Trenchless liner (CIPP) requires inspection before and after liner installation to document pipe condition.'},
+  gas_new:    {base:[100,400],plan:[25,100],insp:[15,50],tech:[5,15],inspections:'1–2',timeline:'2–7 days',note:'Gas line requires pressure test (typically 3–10 PSI for 30 minutes) witnessed by inspector. CSST must include bonding documentation. Licensed plumbing-gas specialty or certified gas contractor required.'},
+  gas_generator:{base:[200,600],plan:[40,150],insp:[20,60],tech:[10,20],inspections:'2',timeline:'3–10 days',note:'Generator gas line often requires a larger pipe than homeowners expect (22–26 kW generators: typically 1" to 1-1/4" depending on run length). BTU calc documentation may be required.'},
+  slab_leak:  {base:[150,500],plan:[0,80],insp:[15,50],tech:[5,15],inspections:'1–2',timeline:'2–7 days',note:'Permit covers both pipe repair and concrete restoration. If rerouting through walls, additional inspection for wall rough-in may be required. Insurance claim documentation often triggers expedited permit review in FL.'},
+  fixture_add:{base:[80,300],plan:[0,60],insp:[10,35],tech:[5,15],inspections:'1',timeline:'1–5 days',note:'Adding a new fixture at an existing drain and supply location is simpler. Adding a new fixture that requires new drain or supply lines is treated more like partial repipe or drain work.'},
+  pool_heater:{base:[200,600],plan:[40,150],insp:[20,60],tech:[10,20],inspections:'2',timeline:'3–10 days',note:'Gas pool heater requires gas pressure test and verification of pool backflow prevention. Heat pump pool heaters also require electrical permit. BTU demand calculation should be documented.'},
+  outdoor_kitchen:{base:[250,700],plan:[50,175],insp:[25,75],tech:[10,20],inspections:'2',timeline:'4–12 days',note:'Outdoor kitchen plumbing typically includes water supply, drain, and gas connections — may require all three permit types. Each jurisdiction handles this differently; some issue a single trade permit, others require separate applications.'}
+};
+
+var COUNTY_MULTIPLIER = {
+  pbc_county:1.2,pbc_wpb:1.25,pbc_boca:1.3,
+  broward_county:1.25,broward_ftl:1.3,broward_hollywood:1.25,
+  mdade_county:1.4,mdade_miami:1.45,mdade_coralgables:1.5,
+  hillsborough_county:1.0,hillsborough_tampa:1.1,
+  orange_county:0.95,orange_orlando:1.05,
+  pinellas_county:1.0,pinellas_stpete:1.05,pinellas_clearwater:1.05,
+  lee_county:1.0,lee_ftmyers:1.05,
+  collier_county:1.3,collier_naples:1.35,
+  duval_jax:0.9,
+  sarasota_county:1.05,sarasota_city:1.1,
+  volusia_county:0.9,manatee_county:0.95
+};
+
+function calcPermit() {
+  var proj = document.getElementById('projType').value;
+  if(!proj){alert('Please select a project type.');return;}
+  var county = document.getElementById('projCounty').value;
+  var prop = document.getElementById('projPropType').value;
+  var applicant = document.getElementById('projApplicant').value;
+  var d = PROJ_DATA[proj];
+  var mult = COUNTY_MULTIPLIER[county] || 1.0;
+  var propMult = prop === 'commercial' ? 1.8 : 1.0;
+  var appMult = applicant === 'owner' ? 1.1 : 1.0; // OB permits slightly more complex
+  var lowTotal = Math.round((d.base[0] + d.plan[0] + d.insp[0] + d.tech[0]) * mult * propMult * appMult / 5) * 5;
+  var highTotal = Math.round((d.base[1] + d.plan[1] + d.insp[1] + d.tech[1]) * mult * propMult * appMult / 5) * 5;
+  document.getElementById('permit-range').textContent = '$'+lowTotal.toLocaleString()+' – $'+highTotal.toLocaleString();
+  document.getElementById('permit-label').textContent = 'Estimated total permit cost (all fees)';
+  document.getElementById('base-fee').textContent = '$'+Math.round(d.base[0]*mult)+'–$'+Math.round(d.base[1]*mult);
+  document.getElementById('plan-fee').textContent = d.plan[1] === 0 ? 'Not required for this project type' : '$'+Math.round(d.plan[0]*mult)+'–$'+Math.round(d.plan[1]*mult);
+  document.getElementById('insp-fee').textContent = d.insp[1] === 0 ? 'Included in base fee' : '$'+Math.round(d.insp[0]*mult)+' – $'+Math.round(d.insp[1]*mult)+' per inspection';
+  document.getElementById('tech-fee').textContent = '$'+d.tech[0]+' – $'+d.tech[1];
+  document.getElementById('insp-count').textContent = d.inspections;
+  document.getElementById('timeline').textContent = d.timeline;
+  var noteEl = document.getElementById('permit-note');
+  noteEl.innerHTML = '<div class="info-box"><strong>Project notes:</strong> '+esc(d.note)+'</div>';
+  var rb = document.getElementById('permit-result');
+  rb.style.display = 'block';
+  rb.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  if(e && e.target) e.target.classList.add('active');
+}
+
+function submitHelp() {
+  var name = document.getElementById('h-name').value.trim();
+  var phone = document.getElementById('h-phone').value.trim();
+  if(!name || !phone){alert('Please enter your name and phone number.');return;}
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection fl-plumbing-permit-cost-calculator county-permit-fee water-heater-permit repipe-permit bathroom-addition-permit gas-line-permit slab-leak-permit palm-beach-permit broward-permit miami-dade-permit hillsborough-permit orange-permit pinellas-permit lee-permit collier-permit duval-permit sarasota-permit florida-building-permit fpc-permit-requirements owner-builder-permit permit-timeline permit-inspection 
+</div>
+</body>
+</html>

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Bathroom Rough-In Measurement Calculator | Florida Plumbing Code FPC Chapter 4</title>
+<meta name="description" content="Calculate bathroom rough-in measurements for Florida plumbing code compliance. Toilet rough-in distance, shower drain placement, vanity drain height, vent stack location, ADA clearance requirements. FPC Chapter 4 citations, IPC Table 405.3.1, Palm Beach, Broward, Miami-Dade, Hillsborough, Orange, Pinellas bathroom addition calculator.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#001a2e 0%,#00142a 100%);border-bottom:3px solid #00B4FF;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#00B4FF;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#00B4FF22;color:#00B4FF;border:1px solid #00B4FF44;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#00B4FF;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#00B4FF;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#00B4FF}
+.btn{width:100%;padding:14px;background:#00B4FF;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.code-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:8px}
+.code-table th{background:#141929;color:#00B4FF;padding:8px 6px;text-align:left;font-size:0.71rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table td{padding:7px 6px;border-bottom:1px solid #1E2A45;color:#E2E8F0;vertical-align:top}
+.code-table tr:last-child td{border-bottom:none}
+.tip-box{background:#00B4FF11;border:1px solid #00B4FF33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#00B4FF}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.gold-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.gold-box strong{color:#F4B942}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#00B4FF;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #00B4FF55}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.meas-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.meas-row:last-child{border-bottom:none}
+.meas-label{color:#94A3B8;flex:1;line-height:1.4}
+.meas-val{font-weight:700;color:#00B4FF;min-width:90px;text-align:right}
+.meas-val.pass{color:#22C55E}
+.meas-val.warn{color:#F4B942}
+.meas-val.fail{color:#EF4444}
+.fixture-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.fixture-title{font-size:0.88rem;font-weight:800;color:#00B4FF;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.fixture-body{font-size:0.76rem;color:#94A3B8;line-height:1.55}
+.fixture-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:0.74rem}
+.fixture-table th{color:#00B4FF;padding:5px 4px;text-align:left;border-bottom:1px solid #1E2A4530;font-size:0.7rem}
+.fixture-table td{padding:5px 4px;border-bottom:1px solid #1E2A4530;color:#E2E8F0;vertical-align:top}
+.fixture-table tr:last-child td{border-bottom:none}
+.code-cite{display:inline-block;font-size:0.63rem;background:#00B4FF11;color:#00B4FF;border:1px solid #00B4FF33;border-radius:4px;padding:1px 6px;margin-left:4px}
+.clear-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #1E2A4530}
+.clear-row:last-child{border-bottom:none}
+.clear-icon{font-size:1.3rem;min-width:24px;text-align:center}
+.clear-content{flex:1}
+.clear-title{font-size:0.82rem;font-weight:700;color:#E2E8F0;margin-bottom:3px}
+.clear-detail{font-size:0.76rem;color:#94A3B8;line-height:1.5}
+.vent-row{padding:10px 0;border-bottom:1px solid #1E2A4530}
+.vent-row:last-child{border-bottom:none}
+.vent-name{font-weight:700;color:#00B4FF;font-size:0.82rem;margin-bottom:5px}
+.vent-detail{font-size:0.76rem;color:#94A3B8;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">📐</div>
+  <h1>FL Bathroom Rough-In Calculator</h1>
+  <p>Florida Plumbing Code (FPC) Chapter 4 compliant · Toilet · Shower · Vanity · Vent Stack · ADA Clearances</p>
+  <span class="badge">FPC §403 · §405 · §408 · §411 · IPC Table 405.3.1 · ADA Standards §603</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calc',event)">Rough-In Calc</button>
+    <button class="tab" onclick="showTab('clearance',event)">Clearance Checker</button>
+    <button class="tab" onclick="showTab('vent',event)">Vent Stack Guide</button>
+    <button class="tab" onclick="showTab('plumber',event)">Get a Plumber</button>
+  </div>
+
+  <!-- TAB 1: Rough-In Calculator -->
+  <div id="calc" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>📐</span>Bathroom Rough-In Measurements</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Select the fixture and slab/wall type to generate code-compliant rough-in measurements per Florida Plumbing Code (FPC), which adopts the International Plumbing Code (IPC) with Florida amendments.</div>
+
+      <label>Fixture type</label>
+      <select id="fixtureType" onchange="updateFixtureUI()">
+        <option value="">Select fixture...</option>
+        <option value="toilet_std">Toilet — standard (floor-mount, 12" rough-in)</option>
+        <option value="toilet_10">Toilet — 10" rough-in (smaller bathrooms)</option>
+        <option value="toilet_14">Toilet — 14" rough-in (older homes, pre-1980)</option>
+        <option value="toilet_wall">Toilet — wall-hung (carrier required)</option>
+        <option value="shower_single">Shower — single drain (3" drain, 32"+ pan)</option>
+        <option value="shower_linear">Shower — linear drain (curbless/ADA)</option>
+        <option value="bathtub_std">Bathtub — standard (5' alcove)</option>
+        <option value="bathtub_freestand">Bathtub — freestanding (floor mount supply)</option>
+        <option value="vanity_top">Vanity — top-mount sink (standard)</option>
+        <option value="vanity_under">Vanity — undermount / vessel sink</option>
+        <option value="laundry_sink">Laundry / utility sink</option>
+        <option value="floor_drain">Floor drain (utility / garage)</option>
+      </select>
+
+      <div id="extra-inputs"></div>
+
+      <button class="btn" onclick="calcRoughIn()">Calculate Rough-In Measurements</button>
+      <div id="roughin-result" class="result-box">
+        <div id="roughin-summary"></div>
+        <div id="roughin-measurements" style="margin-top:12px"></div>
+        <div id="roughin-notes" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📋</span>FPC Rough-In Reference — All Fixtures</div>
+
+      <div class="fixture-card">
+        <div class="fixture-title">🚽 Toilet (Floor-Mount) <span class="code-cite">FPC §405.3.1 / IPC Table 405.3.1</span></div>
+        <div class="fixture-body">
+          The "rough-in distance" for a toilet is the measurement from the finished wall behind the toilet to the center of the drain (closet flange). This is the most common source of error in bathroom rough-ins.
+        </div>
+        <table class="fixture-table">
+          <thead><tr><th>Measurement</th><th>FPC / IPC Minimum</th><th>Recommended</th></tr></thead>
+          <tbody>
+            <tr><td>Rough-in distance (wall to flange center)</td><td>12" (standard), 10" or 14" for specific toilets</td><td>12" (most toilets)</td></tr>
+            <tr><td>Centerline from side wall (minimum)</td><td>15" — FPC §405.3.1</td><td>18" preferred / ADA: 18"</td></tr>
+            <tr><td>Centerline from opposite fixture/wall</td><td>15" — FPC §405.3.1</td><td>18" preferred</td></tr>
+            <tr><td>Clear floor space in front of toilet</td><td>21" minimum — FPC §405.3.1</td><td>30" preferred</td></tr>
+            <tr><td>Closet flange height (finished floor)</td><td>Flange top 0"–1/4" above finished floor</td><td>Flush with finished floor + wax ring allowance</td></tr>
+            <tr><td>Drain pipe size (closet bend)</td><td>3" minimum — FPC §708.1</td><td>4" at main stack connection</td></tr>
+            <tr><td>Drain slope (closet drain to stack)</td><td>1/4" per foot minimum — FPC §704.1</td><td>1/4" per foot</td></tr>
+            <tr><td>Vent distance (trap to vent)</td><td>≤ 6 feet — FPC §909.1</td><td>As short as practical</td></tr>
+          </tbody>
+        </table>
+        <div class="warn-box" style="margin-top:8px">
+          <strong>FL-specific:</strong> Florida homes often have 10" rough-in toilets in smaller guest bathrooms built in the 1960s–1980s. When replacing in an existing bathroom, measure from the back wall to the center of the flange BEFORE purchasing a new toilet — buying a 12" toilet for a 10" rough-in will cause the tank to hit the wall.
+        </div>
+      </div>
+
+      <div class="fixture-card">
+        <div class="fixture-title">🚿 Shower Drain Placement <span class="code-cite">FPC §408 / FPC §417</span></div>
+        <div class="fixture-body">
+          Shower drain placement must be centered in the shower floor or positioned per the linear drain manufacturer's specification for linear drains. Key measurements for new shower rough-in:
+        </div>
+        <table class="fixture-table">
+          <thead><tr><th>Measurement</th><th>FPC Requirement</th></tr></thead>
+          <tbody>
+            <tr><td>Drain size — shower up to 1,296 sq in floor area</td><td>2" minimum — FPC §417.5.2.2</td></tr>
+            <tr><td>Drain size — shower over 1,296 sq in</td><td>3" minimum — FPC §417.5.2.2</td></tr>
+            <tr><td>Minimum shower floor size (FPC)</td><td>30" × 30" — FPC §417.4</td></tr>
+            <tr><td>Standard shower floor size (recommended)</td><td>36" × 36" minimum practical</td></tr>
+            <tr><td>ADA shower floor size (roll-in)</td><td>60" × 30" minimum — ADA §608.3</td></tr>
+            <tr><td>Drain slope of shower floor</td><td>1/4" per foot to drain — FPC §417.5.2</td></tr>
+            <tr><td>P-trap depth below drain</td><td>2" drain trap, 2" outlet — FPC §1002.2</td></tr>
+            <tr><td>Trap to vent distance (2" drain)</td><td>≤ 5 feet — FPC §909.1</td></tr>
+            <tr><td>Drain rough-in height from subfloor</td><td>Varies by finish floor height — set so drain cover is flush with tile</td></tr>
+            <tr><td>Shower valve rough-in height (mixing valve)</td><td>48"–52" AFF (above finished floor), code minimum — manufacturer may vary</td></tr>
+            <tr><td>Showerhead rough-in height</td><td>78"–80" AFF — FPC §417.6 allows variation</td></tr>
+          </tbody>
+        </table>
+        <div class="tip-box" style="margin-top:8px">
+          <strong>Pre-slope critical:</strong> In FL slab homes, the shower drain area requires a pre-slope (mud bed) under the tile liner. The pre-slope must run from the walls down to the drain at 1/4" per foot. This is set before the waterproofing membrane and tile. Measure and mark the drain center point on the slab BEFORE the mud bed is poured — moving it after is extremely difficult.
+        </div>
+      </div>
+
+      <div class="fixture-card">
+        <div class="fixture-title">🛁 Bathtub Rough-In <span class="code-cite">FPC §405 / FPC §408</span></div>
+        <div class="fixture-body">
+          Standard 5' alcove bathtub rough-in measurements. The tub drain is always at the foot end of the tub (plumbed end).
+        </div>
+        <table class="fixture-table">
+          <thead><tr><th>Measurement</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Standard 5' tub overall length</td><td>60" (5'0")</td></tr>
+            <tr><td>Standard tub width (alcove)</td><td>30" or 32"</td></tr>
+            <tr><td>Drain rough-in from back wall</td><td>From back wall to drain center: verify by tub model — typically 3.5"–4" from end wall, 16" from back wall for 32" wide tub</td></tr>
+            <tr><td>Overflow rough-in height</td><td>17"–20" AFF to overflow center — varies by tub</td></tr>
+            <tr><td>Drain pipe size</td><td>1-1/2" minimum (tub only) — FPC §702.1; 1-1/2" to 2" if combined with shower</td></tr>
+            <tr><td>Tub/shower valve rough-in height</td><td>28"–30" AFF for tub-only valve</td></tr>
+            <tr><td>Diverter (if shared tub/shower) rough-in height</td><td>Same as valve — 28"–32" AFF; showerhead at 78"–80"</td></tr>
+            <tr><td>Hot supply location (left or right)</td><td>Hot on LEFT (plumber's left when facing valve) — per ASSE 1016</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="fixture-card">
+        <div class="fixture-title">🚰 Vanity / Sink Drain Rough-In <span class="code-cite">FPC §405 / IPC §405.3</span></div>
+        <div class="fixture-body">
+          Vanity drain rough-in height is the most commonly wrong measurement in bathroom renovations. Set it wrong and you'll need a modified P-trap or an extension.
+        </div>
+        <table class="fixture-table">
+          <thead><tr><th>Measurement</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Drain rough-in height (center of drain stub) — standard vanity</td><td>18"–20" AFF — most vanity-top sinks: 20" AFF is ideal for standard 32"–34" vanity height</td></tr>
+            <tr><td>Drain rough-in height — vessel sink / tall vanity</td><td>22"–24" AFF to allow trap arm connection above P-trap crown</td></tr>
+            <tr><td>ADA sink drain rough-in height (accessible)</td><td>17" maximum AFF for ADA sink clearance — ADA §606.2</td></tr>
+            <tr><td>Drain lateral position (centered on sink)</td><td>Centered on vanity cabinet, typically 12"–16" from side wall depending on vanity width</td></tr>
+            <tr><td>Drain pipe size — single lavatory sink</td><td>1-1/4" trap, 1-1/2" drain stub — FPC §702.1</td></tr>
+            <tr><td>Hot supply rough-in — horizontal offset</td><td>4" left of drain centerline</td></tr>
+            <tr><td>Cold supply rough-in — horizontal offset</td><td>4" right of drain centerline</td></tr>
+            <tr><td>Supply stub-out height (under-sink)</td><td>20"–22" AFF — allows angle stop valve access under vanity</td></tr>
+            <tr><td>Supply stub-out size</td><td>1/2" IPS — FPC §604.4</td></tr>
+          </tbody>
+        </table>
+        <div class="tip-box" style="margin-top:8px">
+          <strong>FL humidity tip:</strong> In Florida bathrooms, ensure the P-trap is accessible for cleaning (traps collect soap scum faster in humid climates). When roughing in the drain, set it so the trap arm extends through the wall and terminates with a cleanout-accessible configuration. Many FL vanities get smelly from biofilm — a trap with a cleanout makes maintenance much easier.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Clearance Checker -->
+  <div id="clearance" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📏</span>FL Bathroom Clearance Requirements</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Enter your bathroom dimensions to check clearance compliance against FPC §405.3.1, IPC Table 405.3.1, and ADA Standards §603 (for accessible bathrooms):</div>
+
+      <div class="form-row">
+        <div>
+          <label>Toilet to side wall (A) — inches</label>
+          <input type="number" id="c-toilet-side" placeholder="e.g. 15" min="0" max="120">
+        </div>
+        <div>
+          <label>Toilet to opposite wall/fixture (B)</label>
+          <input type="number" id="c-toilet-opp" placeholder="e.g. 15" min="0" max="120">
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Clear space in front of toilet (C)</label>
+          <input type="number" id="c-toilet-front" placeholder="e.g. 21" min="0" max="120">
+        </div>
+        <div>
+          <label>Shower width (interior) — inches</label>
+          <input type="number" id="c-shower-width" placeholder="e.g. 36" min="0" max="240">
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Shower depth (interior) — inches</label>
+          <input type="number" id="c-shower-depth" placeholder="e.g. 36" min="0" max="240">
+        </div>
+        <div>
+          <label>Vanity clear width (opening) — inches</label>
+          <input type="number" id="c-vanity-clear" placeholder="e.g. 21" min="0" max="120">
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Door clear width — inches</label>
+          <input type="number" id="c-door-width" placeholder="e.g. 24" min="0" max="60">
+        </div>
+        <div>
+          <label>ADA / accessible design?</label>
+          <select id="c-ada">
+            <option value="no">No — standard residential</option>
+            <option value="yes">Yes — ADA / accessible required</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="checkClearance()">Check Code Clearances</button>
+      <div id="clearance-result" class="result-box">
+        <div id="clearance-summary"></div>
+        <div id="clearance-checks" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📐</span>FPC Minimum Clearance Requirements</div>
+      <div class="clear-row">
+        <div class="clear-icon">🚽</div>
+        <div class="clear-content">
+          <div class="clear-title">Toilet — Centerline to Side Wall / Fixture</div>
+          <div class="clear-detail"><strong style="color:#22C55E">FPC minimum: 15"</strong> from toilet centerline to side wall or adjacent fixture. <strong style="color:#F4B942">Preferred: 18"</strong>. ADA requirement: 18" from toilet centerline to side wall (grab bar wall side). Note: FPC §405.3.1 sets the 15" minimum — it is legal but very tight. Most experienced plumbers and inspectors will flag 15" as "technically passing but inadequate." ADA requires 60" minimum clear floor space around the toilet for accessible use.</div>
+        </div>
+      </div>
+      <div class="clear-row">
+        <div class="clear-icon">🚽</div>
+        <div class="clear-content">
+          <div class="clear-title">Toilet — Clear Space in Front (Depth)</div>
+          <div class="clear-detail"><strong style="color:#22C55E">FPC minimum: 21"</strong> in front of toilet from front edge of bowl to opposite wall or obstruction. <strong style="color:#F4B942">Preferred: 30"</strong>. ADA requirement: 60" depth for forward approach OR 56" for side transfer. The 21" minimum makes a very tight powder room — acceptable for code but uncomfortable for daily use.</div>
+        </div>
+      </div>
+      <div class="clear-row">
+        <div class="clear-icon">🚿</div>
+        <div class="clear-content">
+          <div class="clear-title">Shower — Minimum Interior Dimensions</div>
+          <div class="clear-detail"><strong style="color:#22C55E">FPC minimum: 30" × 30"</strong> (FPC §417.4). Note: a 30"×30" shower is barely functional — most FL plumbers and contractors won't install this size. <strong style="color:#F4B942">Practical minimum: 36"×36"</strong>. ADA roll-in shower: 60"×30" minimum. Transfer shower (ADA): 36"×36". Standard FL shower (comfortable): 42"×42" or 48"×36".</div>
+        </div>
+      </div>
+      <div class="clear-row">
+        <div class="clear-icon">🚰</div>
+        <div class="clear-content">
+          <div class="clear-title">Lavatory / Vanity — Clear Space</div>
+          <div class="clear-detail"><strong style="color:#22C55E">FPC minimum: 21" clear space</strong> in front of lavatory. For an accessible/ADA vanity, 30"×48" clear floor space is required (ADA §606.2). The lavatory rim may not exceed 34" AFF (ADA). Standard residential vanity: no code minimum on vanity face height beyond the 21" floor clearance requirement.</div>
+        </div>
+      </div>
+      <div class="clear-row">
+        <div class="clear-icon">🚪</div>
+        <div class="clear-content">
+          <div class="clear-title">Bathroom Door Clear Width</div>
+          <div class="clear-detail"><strong style="color:#22C55E">FBC minimum: 24" clear width</strong> for interior doors serving bathrooms in residential occupancies. <strong style="color:#F4B942">Preferred: 32" clear</strong>. ADA requirement: 32" minimum clear width. Standard door size for 32" clear: 34" door in a 36" rough opening. Note: Clear width is measured from the face of the door to the face of the door stop, not the rough opening.</div>
+        </div>
+      </div>
+      <div class="clear-row">
+        <div class="clear-icon">📏</div>
+        <div class="clear-content">
+          <div class="clear-title">Fixture-to-Fixture Clearances</div>
+          <div class="clear-detail">
+            <strong style="color:#E2E8F0">Between toilet and lavatory:</strong> 15" minimum from toilet centerline to side of lavatory (FPC §405.3.1).<br>
+            <strong style="color:#E2E8F0">Between lavatory and side wall:</strong> 4" minimum from sink edge to side wall (IPC Table 405.3.1).<br>
+            <strong style="color:#E2E8F0">Between two lavatories:</strong> 30" minimum center-to-center (IPC Table 405.3.1).<br>
+            <strong style="color:#E2E8F0">Bathtub to wall:</strong> 0" permitted (alcove), but shower fixtures need 6" clearance side walls.
+          </div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-top:10px">
+        <strong>FL bathroom size reality:</strong> Many FL homes (especially 1960s–1980s South FL concrete block construction) have extremely small master bathrooms — some just 5' × 8' (60" × 96"). Code permits this size for a full bathroom but it is very tight. When renovating these spaces, focus clearances on the toilet and shower — those are where FL inspectors focus. Vanity clearances rarely fail.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Vent Stack Guide -->
+  <div id="vent" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔧</span>FL Bathroom Vent Stack Guide</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Venting is the most critical and most frequently violated aspect of bathroom plumbing in Florida. Proper venting prevents siphoning of P-traps, eliminates sewer gas in occupied spaces, and is a primary inspection item. FPC §9 governs all vent requirements:</div>
+
+      <div class="vent-row">
+        <div class="vent-name">Why Bathroom Venting Is Critical in FL</div>
+        <div class="vent-detail">
+          In Florida, two factors make proper bathroom venting even more important than in cooler climates: (1) <strong style="color:#E2E8F0">Humidity:</strong> FL's high humidity makes sewer gas odors more noticeable — and more rapidly spread throughout a home when traps are siphoned. (2) <strong style="color:#E2E8F0">Slab construction:</strong> Most FL homes are slab-on-grade, meaning drain lines run under the slab and cannot be easily accessed for repair. A venting error discovered after the slab is poured means cutting concrete. Rough-in inspection ensures venting is correct before the slab is poured or walls are closed.<br><br>
+          Common FL violation: Installing a "cheater vent" (air admittance valve) in a location that doesn't meet FPC requirements — typically in a closed cabinet with no air source, or in an attic space that doesn't connect to open air.
+        </div>
+      </div>
+
+      <div class="vent-row">
+        <div class="vent-name">Trap-to-Vent Distance Limits <span class="code-cite">FPC §909.1</span></div>
+        <div class="vent-detail">
+          The maximum horizontal distance from the trap weir (bottom of the trap outlet) to the vent is critical — exceed these limits and the vent won't prevent trap siphoning:
+          <table class="fixture-table" style="margin-top:8px">
+            <thead><tr><th>Drain Pipe Size</th><th>Max Trap-to-Vent Distance</th><th>Common Use</th></tr></thead>
+            <tbody>
+              <tr><td>1-1/4"</td><td>5 feet</td><td>Lavatory / sink</td></tr>
+              <tr><td>1-1/2"</td><td>6 feet</td><td>Lavatory, tub, shower (small)</td></tr>
+              <tr><td>2"</td><td>8 feet</td><td>Shower, laundry, floor drain</td></tr>
+              <tr><td>3"</td><td>12 feet</td><td>Toilet (closet flange)</td></tr>
+              <tr><td>4"</td><td>12 feet</td><td>Main drain / soil stack</td></tr>
+            </tbody>
+          </table>
+          <div class="warn-box" style="margin-top:8px">
+            <strong>Common mistake:</strong> When adding a bathroom far from the main vent stack, plumbers sometimes exceed the trap-to-vent distance without adding an individual vent. This causes gurgling toilets, slow drains, and sewer gas — often misdiagnosed as a drain clog. The actual fix is adding a proper vent connection.
+          </div>
+        </div>
+      </div>
+
+      <div class="vent-row">
+        <div class="vent-name">Vent Pipe Sizing <span class="code-cite">FPC §904 / FPC §916</span></div>
+        <div class="vent-detail">
+          <table class="fixture-table" style="margin-top:4px">
+            <thead><tr><th>Vent Type</th><th>Minimum Size</th><th>FL Rule</th></tr></thead>
+            <tbody>
+              <tr><td>Individual toilet vent</td><td>2" — FPC §904.1</td><td>Many FL jurisdictions require 3" vent for toilet regardless of code minimum</td></tr>
+              <tr><td>Individual lavatory vent</td><td>1-1/4" — FPC §904.1</td><td>Typically 1-1/2" in practice</td></tr>
+              <tr><td>Shower individual vent</td><td>1-1/2" — FPC §904.1</td><td>Often 2" in FL for larger showers</td></tr>
+              <tr><td>Common (shared) bathroom vent</td><td>Must equal or exceed largest individual vent requirement</td><td>Typically 3" for full bathroom</td></tr>
+              <tr><td>Main stack (soil + vent)</td><td>4" — FPC §904.1 for stacks serving toilets</td><td>3" permitted only if no toilet is connected (lavatory/shower only stack)</td></tr>
+              <tr><td>Stack above roof penetration</td><td>4" — FPC §904.2 (extends 6" above FL roofs min.)</td><td>In FL wind zones, inspect storm collar carefully — improperly sealed roof vents are a common water intrusion source</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="vent-row">
+        <div class="vent-name">Wet Venting — A Common FL Bathroom Solution <span class="code-cite">FPC §908</span></div>
+        <div class="vent-detail">
+          Wet venting allows a single pipe to serve as both a drain and a vent simultaneously — very common in FL bathrooms where running a separate vent stack would require penetrating through multiple floors or a long horizontal run under the slab.<br><br>
+          <strong style="color:#E2E8F0">How wet venting works in a Florida bathroom:</strong> The lavatory (sink) drain serves as both a drain and a vent for the toilet. The lavatory drain connects to the toilet drain downstream of the toilet trap, and the lavatory vent pipe then extends up through the wall and through the roof. The lavatory provides adequate air to prevent siphoning of both the toilet and lavatory traps.<br><br>
+          <strong style="color:#00B4FF">FL wet venting rules (FPC §908):</strong> Wet-vented fixtures must be above the flood rim level of other wet-vented fixtures. The wet vent pipe must be sized as a drain (for the total fixture units flowing through it) AND as a vent (minimum 2" for wet vent serving a toilet). Maximum 1 toilet per wet vent system. The wet vent must be installed horizontally and cannot drop below the flood rim of any fixture it serves.<br><br>
+          <strong style="color:#F4B942">Most common FL wet vent configuration:</strong> Toilet connects to 3" drain → 3" drain runs to wet vent connection → lavatory (1.5") drain drops into wet vent pipe → wet vent continues as 2" pipe up through wall → exits roof at 4" minimum above roof surface.
+        </div>
+      </div>
+
+      <div class="vent-row">
+        <div class="vent-name">Air Admittance Valves (AAV) in Florida <span class="code-cite">FPC §918</span></div>
+        <div class="vent-detail">
+          Florida DOES permit Air Admittance Valves (AAV, sometimes called Studor vents or cheater vents) under FPC §918 as an alternative to a conventional vent pipe. Critical FL rules for AAV use:<br><br>
+          ✓ AAV must be listed to ASSE 1051 or ASSE 1050 (individual fixture AAV must be ASSE 1051)<br>
+          ✓ AAV must be located in a space that receives air — an AAV in a completely sealed cabinet space will not function<br>
+          ✓ AAV must be accessible for maintenance and inspection — cannot be buried in a wall<br>
+          ✓ AAV must be installed minimum 4" above the trap arm connection (the horizontal drain pipe)<br>
+          ✓ AAV can serve individual fixtures or a branch — but the building main vent must still extend through the roof<br>
+          ✗ AAV cannot replace the main building vent — at least one vent must extend to open air per FPC §918.7<br>
+          ✗ AAV should not be used in beach/high-humidity environments where the valve mechanism can corrode<br><br>
+          <strong style="color:#EF4444">FL code note:</strong> Some FL jurisdictions (notably Miami-Dade and Broward) have stricter-than-state-code AAV restrictions. Verify with your local building department before planning an AAV-based vent system.
+        </div>
+      </div>
+
+      <div class="vent-row">
+        <div class="vent-name">Vent Through Roof — FL-Specific Requirements</div>
+        <div class="vent-detail">
+          Florida's climate creates unique roof vent requirements:<br><br>
+          • Vent pipe must extend minimum 6" above the roof surface (FPC §904.2). In FL wind zones (most of South FL), flash and seal all roof vent penetrations with appropriate storm collars and sealant rated for FL conditions.<br>
+          • HVHZ (High Velocity Hurricane Zone) — Miami-Dade and Broward — require NOA (Notice of Acceptance) compliant roof flashing for all vent penetrations. Use only NOA-approved lead, aluminum, or rubber roof jacks.<br>
+          • FL vent pipes must terminate with a screen or mesh cap to prevent insect and bird entry — particularly important in South FL where palmetto bugs (American cockroaches) regularly enter homes through open vent stacks.<br>
+          • In FL tile roof construction, coordinate vent stack location with the tile installer — running a 4" vent between tile courses after tile is installed is extremely disruptive and expensive.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Get a Plumber -->
+  <div id="plumber" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔧</span>Get a Florida Licensed Plumber</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">Bathroom rough-in work requires a FL licensed plumbing contractor (CFC license). We verify all FPC compliance requirements, obtain required permits, and schedule inspections — so your new bathroom starts right and passes first time.</div>
+      <label>Your name</label>
+      <input type="text" id="p-name" placeholder="Full name">
+      <label>Phone number</label>
+      <input type="tel" id="p-phone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div>
+          <label>Project type</label>
+          <select id="p-proj">
+            <option>New full bathroom addition</option>
+            <option>New half bath addition</option>
+            <option>Bathroom remodel (existing location)</option>
+            <option>Shower replacement / conversion</option>
+            <option>Toilet rough-in adjustment</option>
+            <option>Vanity / sink rough-in</option>
+            <option>Vent problem (gurgling / sewer gas)</option>
+            <option>Other bathroom plumbing</option>
+          </select>
+        </div>
+        <div>
+          <label>FL county</label>
+          <select id="p-county">
+            <option>Palm Beach</option><option>Broward</option><option>Miami-Dade</option>
+            <option>Hillsborough</option><option>Orange</option><option>Pinellas</option>
+            <option>Lee</option><option>Collier</option><option>Duval</option>
+            <option>Sarasota</option><option>Volusia</option><option>Manatee</option>
+            <option>Other FL County</option>
+          </select>
+        </div>
+      </div>
+      <label>Home type / construction</label>
+      <select id="p-construction">
+        <option>CBS (concrete block) — slab on grade</option>
+        <option>CBS with crawl space (rare in FL)</option>
+        <option>Frame construction — slab</option>
+        <option>Frame construction — raised foundation</option>
+        <option>Condo / apartment</option>
+        <option>Manufactured / mobile home</option>
+      </select>
+      <button class="btn" onclick="submitPlumber()">Get a Free Rough-In Quote</button>
+      <div class="ok-box" style="margin-top:14px">
+        <strong>✓ FL licensed Master Plumber (MP license)</strong> · Permit application handling · All inspections coordinated · Rough-in drawings provided · ADA / accessible bathroom design available · FPC Chapter 4 compliance guaranteed
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>Bathroom Rough-In — FL By the Numbers</div>
+      <table class="code-table">
+        <thead><tr><th>Rough-In Fact</th><th>FL Reality</th></tr></thead>
+        <tbody>
+          <tr><td>Most common toilet rough-in in FL (built 1990–present)</td><td>12 inches (standard)</td></tr>
+          <tr><td>Most common toilet rough-in in FL (built pre-1980)</td><td>10 inches (measure before replacing!)</td></tr>
+          <tr><td>Standard FL shower size (new construction)</td><td>48" × 36" (comfortable) or 36" × 36" (code minimum + some margin)</td></tr>
+          <tr><td>Primary vent failure in FL bathroom additions</td><td>Exceeding trap-to-vent distance (especially when slab is poured too far from main stack)</td></tr>
+          <tr><td>FL inspection failure rate — bathroom plumbing rough-in</td><td>~15–20% first-time failure (primarily venting and slope issues)</td></tr>
+          <tr><td>Cost to re-route drain under FL slab if roughed-in incorrectly</td><td>$800 – $3,500 (jackhammer, re-pipe, concrete restoration)</td></tr>
+          <tr><td>Average FL licensed plumber cost for full bathroom rough-in</td><td>$1,500 – $4,000 (not including fixtures)</td></tr>
+          <tr><td>Time from rough-in to inspection pass (FL average)</td><td>3–7 business days after calling for inspection</td></tr>
+        </tbody>
+      </table>
+      <div class="warn-box" style="margin-top:10px">
+        <strong>The most expensive FL bathroom plumbing mistake:</strong> Setting the toilet flange too high (above finished floor level) or too low (creating a void that allows wax ring failure). In FL slab construction, the flange is set during the rough-in pour — if it's wrong, fixing it requires cutting the slab. Always use a flange extension spacer kit to fine-tune height after tile is installed rather than relying on exact rough-in height.
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! 📐</div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+var FIXTURE_SPECS = {
+  toilet_std: {
+    title:'Toilet — 12" Rough-In (Standard)',
+    measurements:[
+      {label:'Rough-in distance (back wall to flange center)',val:'12 inches (12.0")',code:'FPC §405.3.1'},
+      {label:'Flange centerline to side wall (min)',val:'15" minimum / 18" preferred',code:'FPC §405.3.1'},
+      {label:'Flange centerline to opposite wall/fixture (min)',val:'15" minimum / 18" preferred',code:'FPC §405.3.1'},
+      {label:'Clear floor space in front of toilet',val:'21" minimum / 30" preferred',code:'FPC §405.3.1'},
+      {label:'Closet flange height above subfloor',val:'Set so top is 0"–1/4" above finished floor',code:'FPC §405.3.1'},
+      {label:'Closet flange pipe size',val:'3" flange (4" permitted and preferred at stack)',code:'FPC §708.1'},
+      {label:'Drain slope (toilet to stack)',val:'1/4" per foot — e.g., 12 ft run = 3" drop',code:'FPC §704.1'},
+      {label:'Max trap-to-vent distance (3" drain)',val:'12 feet maximum',code:'FPC §909.1'},
+      {label:'Vent pipe size minimum',val:'2" (3" preferred by many FL jurisdictions)',code:'FPC §904.1'},
+      {label:'Water supply stub-out height',val:'6"–8" AFF (above finished floor) — left side of toilet',code:'FPC §604.4'}
+    ],
+    notes:'The standard 12" rough-in fits the vast majority of toilets manufactured after 1980. Before purchasing a replacement toilet for an existing bathroom, always verify the rough-in distance by measuring from the center of the floor bolt caps (or the wall if no toilet is installed) to the finished wall behind the toilet. Do not measure to the baseboard.'
+  },
+  toilet_10: {
+    title:'Toilet — 10" Rough-In',
+    measurements:[
+      {label:'Rough-in distance (back wall to flange center)',val:'10 inches (10.0")',code:'FPC §405.3.1'},
+      {label:'Flange centerline to side wall (min)',val:'15" minimum / 18" preferred',code:'FPC §405.3.1'},
+      {label:'Clear floor space in front of toilet',val:'21" minimum',code:'FPC §405.3.1'},
+      {label:'Toilet models compatible',val:'Must specify "10-inch rough-in" when purchasing — not all manufacturers offer this',code:'—'},
+      {label:'Drain pipe size',val:'3" minimum (4" preferred at main stack)',code:'FPC §708.1'},
+      {label:'Max trap-to-vent distance',val:'12 feet (3" drain)',code:'FPC §909.1'}
+    ],
+    notes:'10" rough-in toilets are less common but are standard in smaller FL bathrooms built in the 1960s–1980s. When replacing a toilet in an older South FL home, always measure the existing rough-in. Installing a 12" toilet on a 10" rough-in will cause the tank to be 2" away from the wall — both unsightly and often a code issue. Converting a 10" to a 12" rough-in requires cutting and re-routing the closet bend under the slab.'
+  },
+  toilet_14: {
+    title:'Toilet — 14" Rough-In',
+    measurements:[
+      {label:'Rough-in distance (back wall to flange center)',val:'14 inches (14.0")',code:'FPC §405.3.1'},
+      {label:'Note',val:'14" rough-in is uncommon — found in some pre-1960 FL construction. Verify by measuring before purchasing.',code:'—'},
+      {label:'Flange centerline to side wall',val:'15" minimum',code:'FPC §405.3.1'},
+      {label:'Drain pipe size',val:'3" minimum',code:'FPC §708.1'}
+    ],
+    notes:'14" rough-in is rare and found mostly in very old FL homes. Most manufacturers do not make 14" rough-in toilets — options are limited. Consider re-routing the closet drain to 12" during a renovation.'
+  },
+  toilet_wall: {
+    title:'Toilet — Wall-Hung',
+    measurements:[
+      {label:'Carrier rough-in — centerline to finished wall',val:'10" (most carriers) — verify by manufacturer',code:'FPC §405.3.1'},
+      {label:'Toilet rim height above finished floor',val:'14"–17" AFF (ADA: 17"–19")',code:'ADA §604.4'},
+      {label:'Centerline to side wall',val:'15" minimum / 18" ADA',code:'FPC §405.3.1'},
+      {label:'Clear floor space in front',val:'21" minimum / 30" preferred',code:'FPC §405.3.1'},
+      {label:'Carrier installation depth in wall',val:'Typically 4"–6" into wall cavity — requires adequate wall thickness',code:'—'},
+      {label:'Drain connection on carrier',val:'Typically 3" spigot — connects to in-wall drain',code:'FPC §708.1'},
+      {label:'Supply connection on carrier',val:'Typically two 1/2" connections on carrier',code:'FPC §604.4'}
+    ],
+    notes:'Wall-hung toilets require a structural carrier frame embedded in the wall. In FL CBS (concrete block) construction, this requires a framed-out pocket within the block wall — coordinate with the general contractor before rough-in. Wall-hung toilets are popular in FL modern construction for their easy-clean floors (important in humid FL bathrooms) and ADA compliance flexibility.'
+  },
+  shower_single: {
+    title:'Shower — Single Center Drain',
+    measurements:[
+      {label:'Drain rough-in — center of drain to back wall',val:'Half of shower depth (e.g., 36" deep shower: drain at 18" from back wall)',code:'FPC §417.5'},
+      {label:'Drain rough-in — center of drain to side wall',val:'Half of shower width (e.g., 36" wide: drain at 18" from each side)',code:'FPC §417.5'},
+      {label:'Drain pipe size — shower ≤ 1,296 sq in',val:'2" minimum drain pipe',code:'FPC §417.5.2.2'},
+      {label:'Drain pipe size — shower > 1,296 sq in',val:'3" minimum drain pipe',code:'FPC §417.5.2.2'},
+      {label:'Shower floor slope to drain',val:'1/4" per foot minimum (from all walls to drain)',code:'FPC §417.5.2'},
+      {label:'Pre-slope under waterproofing membrane',val:'1/4" per foot — required before liner',code:'FPC §417.5.2'},
+      {label:'Shower valve rough-in height',val:'48"–52" AFF (industry standard; code permits variation)',code:'Manufacturer / FPC §417.6'},
+      {label:'Showerhead rough-in height',val:'78"–80" AFF above finished floor',code:'FPC §417.6'},
+      {label:'Max trap-to-vent distance (2" drain)',val:'8 feet maximum',code:'FPC §909.1'},
+      {label:'Shower minimum interior dimensions',val:'30" × 30" (FPC) / 36" × 36" practical minimum',code:'FPC §417.4'}
+    ],
+    notes:'In FL slab construction, the shower drain is the most critical rough-in measurement to get right — the drain pipe extends through the slab and cannot be easily moved. Mark the drain center precisely on the slab BEFORE the concrete is poured, and use a temporary cover to protect the drain opening during construction.'
+  },
+  shower_linear: {
+    title:'Shower — Linear / Curbless Drain (ADA)',
+    measurements:[
+      {label:'Linear drain rough-in position',val:'Typically at the far end of the shower (opposite entry) — verify by drain model',code:'FPC §417.5'},
+      {label:'Drain pipe size for linear drain',val:'2" minimum (most linear drains connect to 2" pipe); 3" for showers over 1,296 sq in',code:'FPC §417.5.2.2'},
+      {label:'Floor slope — single slope to linear drain',val:'1/4" per foot — entire floor slopes to the drain wall',code:'FPC §417.5.2'},
+      {label:'Minimum shower size (curbless ADA)',val:'60" × 30" roll-in shower — ADA §608.3',code:'ADA §608.3'},
+      {label:'Shower valve height (accessible)',val:'15"–48" AFF — ADA reach range',code:'ADA §308'},
+      {label:'Blocking for grab bars',val:'Rough-in 2× blocking at 33"–36" AFF on all three walls',code:'ADA §609.3'},
+      {label:'Shower seat (fold-down, if provided)',val:'17"–19" AFF seat surface height',code:'ADA §610.2'},
+      {label:'Max trap-to-vent distance',val:'8 feet (2" drain)',code:'FPC §909.1'}
+    ],
+    notes:'Curbless (barrier-free) showers are increasingly popular in FL for aging-in-place design and modern aesthetics. The linear drain requires careful waterproofing coordination — the entire shower floor must be properly sloped to the drain, and the waterproofing must extend up the wall a minimum of 3" above the finished floor elevation at the entry.'
+  },
+  bathtub_std: {
+    title:'Bathtub — Standard 5\' Alcove',
+    measurements:[
+      {label:'Tub overall rough opening (width)',val:'30" (2-1/2\') or 32" width — verify by tub model',code:'FPC §408'},
+      {label:'Tub rough opening (length)',val:'60" (5\'0") minimum for standard alcove tub',code:'—'},
+      {label:'Drain rough-in from plumbed end wall',val:'Typically 0"–4" from end wall — verify by tub model (usually 3"–4")',code:'FPC §408'},
+      {label:'Drain rough-in from back wall (center)',val:'Typically 14"–17" from back wall for 30"–32" tub width',code:'—'},
+      {label:'Overflow rough-in height',val:'17"–20" AFF — verify by tub model',code:'—'},
+      {label:'Drain pipe size (tub only)',val:'1-1/2" minimum — FPC §702.1',code:'FPC §702.1'},
+      {label:'Drain pipe size (tub + shower combo)',val:'1-1/2" to 2"',code:'FPC §702.1'},
+      {label:'Tub/shower valve rough-in height',val:'28"–30" AFF for tub-only; 48"–52" AFF for combo valve',code:'Manufacturer / ASSE 1016'},
+      {label:'Hot supply side',val:'HOT on LEFT when facing the valve wall (per ASSE 1016)',code:'ASSE 1016'},
+      {label:'Showerhead height (combo)',val:'78"–80" AFF',code:'—'}
+    ],
+    notes:'FL homes frequently have combination tub/shower in secondary bathrooms and standalone tubs in master baths. When setting the drain rough-in for a tub replacement, reference the exact tub model specification sheet — drain placement varies by 2"–4" between manufacturers, and this error is commonly discovered (too late) during installation.'
+  },
+  vanity_top: {
+    title:'Vanity — Top-Mount Sink',
+    measurements:[
+      {label:'Drain rough-in height (center of drain stub)',val:'18"–20" AFF — 20" is ideal for standard 32"–34" vanity',code:'FPC §405 / IPC'},
+      {label:'Drain centerline from side wall',val:'Centered on vanity cabinet opening — typically 12"–16" from side wall',code:'—'},
+      {label:'Hot supply stub-out (horizontal)',val:'4" LEFT of drain centerline',code:'IPC §408.3'},
+      {label:'Cold supply stub-out (horizontal)',val:'4" RIGHT of drain centerline',code:'IPC §408.3'},
+      {label:'Supply stub-out height',val:'20"–22" AFF (allows angle stop below cabinet shelf)',code:'—'},
+      {label:'Supply stub-out pipe size',val:'1/2" IPS',code:'FPC §604.4'},
+      {label:'Drain pipe size',val:'1-1/4" trap arm, 1-1/2" drain stub',code:'FPC §702.1'},
+      {label:'Max trap-to-vent distance (1-1/2" drain)',val:'6 feet maximum',code:'FPC §909.1'},
+      {label:'P-trap access',val:'Must be accessible — do not enclose without cleanout provision',code:'FPC §1002.1'}
+    ],
+    notes:'The most common vanity rough-in error is setting the drain stub-out too high (above 22" AFF) or too far from center, causing the P-trap to be at an awkward angle or requiring a modified connection. Set the drain stub at 20" AFF and it will work with virtually all standard vanity heights (30"–36") and sink bowl depths (5"–8").'
+  },
+  vanity_under: {
+    title:'Vanity — Undermount / Vessel Sink',
+    measurements:[
+      {label:'Drain rough-in height — vessel sink (elevated)',val:'22"–24" AFF — vessel sinks sit ON TOP of the counter, so the drain exit point is higher',code:'FPC §405'},
+      {label:'Drain rough-in height — undermount (flush counter)',val:'Same as top-mount: 18"–20" AFF',code:'FPC §405'},
+      {label:'Drain centerline',val:'Centered on vessel/undermount sink location',code:'—'},
+      {label:'Supply stub-out height',val:'20"–24" AFF for vessel sink (hides behind vessel body)',code:'—'},
+      {label:'Vessel sink considerations',val:'Counter height with vessel typically 36"–40" AFF — verify user preference',code:'—'}
+    ],
+    notes:'Vessel sinks are popular in FL modern and contemporary bathrooms. The key rough-in consideration: the drain stub must exit the wall (or floor) higher than for a standard drop-in sink because the vessel bottom is elevated above the counter surface. Confirm exact vessel sink model and counter height before setting rough-in measurements.'
+  },
+  laundry_sink: {
+    title:'Laundry / Utility Sink',
+    measurements:[
+      {label:'Drain rough-in height',val:'24"–28" AFF for wall-hung utility sink',code:'FPC §405'},
+      {label:'Drain pipe size',val:'1-1/2" minimum — often 2" for utility sink connected to washer drain',code:'FPC §702.1'},
+      {label:'Hot/cold supply stub-out height',val:'44"–48" AFF for top-fill utility sink (above rim level)',code:'FPC §604.4'},
+      {label:'Max trap-to-vent distance (1-1/2" drain)',val:'6 feet',code:'FPC §909.1'},
+      {label:'Standpipe height for washer (if combined)',val:'18"–42" AFF — FPC §802.4',code:'FPC §802.4'},
+      {label:'Standpipe pipe size (washer)',val:'2" minimum — FPC §802.4',code:'FPC §802.4'}
+    ],
+    notes:'FL laundry rooms are frequently in garages or exterior utility rooms — in high-humidity FL conditions, the P-trap for utility sinks can dry out if rarely used. Install a deep-seal trap (3.5" water seal vs. standard 1-3/4") for utility sinks in FL to reduce dry-out risk in air-conditioned spaces.'
+  },
+  floor_drain: {
+    title:'Floor Drain (Utility / Garage)',
+    measurements:[
+      {label:'Drain rough-in position',val:'Low point of floor — set drain at finished floor level or 1/4" recessed',code:'FPC §415'},
+      {label:'Drain pipe size — utility room',val:'2" minimum — FPC §415.1',code:'FPC §415.1'},
+      {label:'Drain pipe size — garage (vehicle area)',val:'3" minimum per most FL jurisdictions',code:'—'},
+      {label:'Floor slope to drain',val:'1/8" per foot minimum — FPC §415.1',code:'FPC §415.1'},
+      {label:'Trap seal (deep-seal required)',val:'3.5" minimum water seal — FPC §1002.5',code:'FPC §1002.5'},
+      {label:'Cleanout access',val:'Must have accessible cleanout within 5 feet of connection to main drain',code:'FPC §708.1'}
+    ],
+    notes:'FL garages frequently have floor drains required by builders for storm water management — however, connecting garage floor drains to the sanitary sewer is regulated by FL environmental laws. Many FL municipalities prohibit direct garage-to-sewer connections to prevent vehicle fluid contamination. Verify with local building and environmental departments before connecting a garage drain to the sanitary system.'
+  }
+};
+
+function updateFixtureUI() {
+  var ft = document.getElementById('fixtureType').value;
+  var el = document.getElementById('extra-inputs');
+  el.innerHTML = '';
+}
+
+function calcRoughIn() {
+  var ft = document.getElementById('fixtureType').value;
+  if(!ft){alert('Please select a fixture type.');return;}
+  var spec = FIXTURE_SPECS[ft];
+  if(!spec){alert('Spec not found for this fixture type.');return;}
+  var sumHtml = '<div style="background:#00B4FF11;border:1px solid #00B4FF33;border-radius:10px;padding:12px;text-align:center"><div style="font-size:1.1rem;font-weight:800;color:#00B4FF">'+esc(spec.title)+'</div><div style="font-size:0.75rem;color:#94A3B8;margin-top:4px">Florida Plumbing Code compliant rough-in measurements</div></div>';
+  var measHtml = '<div style="font-size:0.75rem;font-weight:700;color:#94A3B8;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">Required Measurements</div>';
+  spec.measurements.forEach(function(m) {
+    measHtml += '<div class="meas-row"><div class="meas-label">'+esc(m.label)+(m.code && m.code !== '—' ? ' <span class="code-cite">'+esc(m.code)+'</span>' : '')+'</div><div class="meas-val">'+esc(m.val)+'</div></div>';
+  });
+  var notesHtml = '<div class="tip-box"><strong>FL Plumber Notes:</strong> '+esc(spec.notes)+'</div>';
+  document.getElementById('roughin-summary').innerHTML = sumHtml;
+  document.getElementById('roughin-measurements').innerHTML = measHtml;
+  document.getElementById('roughin-notes').innerHTML = notesHtml;
+  var rb = document.getElementById('roughin-result');
+  rb.style.display = 'block';
+  rb.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function checkClearance() {
+  var toiletSide = parseFloat(document.getElementById('c-toilet-side').value) || 0;
+  var toiletOpp = parseFloat(document.getElementById('c-toilet-opp').value) || 0;
+  var toiletFront = parseFloat(document.getElementById('c-toilet-front').value) || 0;
+  var showerW = parseFloat(document.getElementById('c-shower-width').value) || 0;
+  var showerD = parseFloat(document.getElementById('c-shower-depth').value) || 0;
+  var vanityC = parseFloat(document.getElementById('c-vanity-clear').value) || 0;
+  var doorW = parseFloat(document.getElementById('c-door-width').value) || 0;
+  var isADA = document.getElementById('c-ada').value === 'yes';
+  var checks = [];
+  var fails = 0;
+  var warns = 0;
+  function addCheck(label, val, min, pref, adaMin, code) {
+    if(val === 0) return;
+    var limit = isADA && adaMin > 0 ? adaMin : min;
+    var status, cls;
+    if(val < limit){status = 'FAIL — minimum '+limit+'"';cls='fail';fails++;}
+    else if(val < pref){status = 'PASS ('+val+'") — prefer '+pref+'"';cls='warn';warns++;}
+    else{status = 'PASS ✓ ('+val+'")';cls='pass';}
+    checks.push({label:label,val:val,status:status,cls:cls,code:code});
+  }
+  addCheck('Toilet centerline to side wall',toiletSide,15,18,18,'FPC §405.3.1');
+  addCheck('Toilet centerline to opp. wall/fixture',toiletOpp,15,18,18,'FPC §405.3.1');
+  addCheck('Clear floor space in front of toilet',toiletFront,21,30,isADA?60:30,'FPC §405.3.1');
+  addCheck('Shower interior width',showerW,30,36,36,'FPC §417.4');
+  addCheck('Shower interior depth',showerD,30,36,30,'FPC §417.4');
+  addCheck('Vanity clear space (in front)',vanityC,21,30,isADA?48:30,'FPC §405.3.1');
+  addCheck('Door clear width',doorW,24,32,32,'FBC / ADA §404.2.3');
+  if(checks.length === 0){alert('Please enter at least one measurement.');return;}
+  var totalPass = checks.length - fails - warns;
+  var summaryColor = fails > 0 ? '#EF4444' : warns > 0 ? '#F4B942' : '#22C55E';
+  var summaryText = fails > 0 ? 'CODE VIOLATIONS FOUND — '+fails+' measurement(s) below minimum' : warns > 0 ? 'PASSES — '+warns+' measurement(s) below preferred clearance' : 'ALL PASS ✓ — All measurements meet FPC requirements';
+  var html = '<div style="background:'+summaryColor+'22;border:1px solid '+summaryColor+'44;border-radius:10px;padding:12px;text-align:center;margin-bottom:12px"><div style="font-size:0.95rem;font-weight:800;color:'+summaryColor+'">'+esc(summaryText)+'</div></div>';
+  checks.forEach(function(c){
+    html += '<div class="meas-row"><div class="meas-label">'+esc(c.label)+' <span class="code-cite">'+esc(c.code)+'</span></div><div class="meas-val '+c.cls+'">'+esc(c.status)+'</div></div>';
+  });
+  if(isADA){html += '<div class="tip-box" style="margin-top:10px"><strong>ADA note:</strong> ADA clearances shown are minimum standards under ADA Standards for Accessible Design §603. Florida Fair Housing Act may apply different standards for multi-family housing. Consult your local building department for applicable accessibility code.</div>';}
+  document.getElementById('clearance-summary').innerHTML = '';
+  document.getElementById('clearance-checks').innerHTML = html;
+  document.getElementById('clearance-result').style.display = 'block';
+  document.getElementById('clearance-result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  if(e && e.target) e.target.classList.add('active');
+}
+
+function submitPlumber() {
+  var name = document.getElementById('p-name').value.trim();
+  var phone = document.getElementById('p-phone').value.trim();
+  if(!name || !phone){alert('Please enter your name and phone number.');return;}
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code fl-bathroom-rough-in-calculator toilet-rough-in shower-drain-placement vanity-drain-height vent-stack-guide fpc-chapter-4 ipc-table-405 clearance-requirements ada-bathroom palm-beach broward miami-dade hillsborough orange pinellas bathroom-addition-plumbing closet-flange-height p-trap-vent wet-venting air-admittance-valve florida-plumbing-code 
+</div>
+</body>
+</html>

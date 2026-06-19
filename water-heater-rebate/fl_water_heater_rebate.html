@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Water Heater Rebate &amp; Incentive Finder | FPL, Duke, TECO, Federal Tax Credit 25C</title>
+<meta name="description" content="Find Florida water heater rebates and incentives by utility: FPL up to $200, Duke Energy up to $200, TECO up to $100. Federal 25C tax credit up to $600 for heat pump water heaters. Compare heat pump vs. tank vs. tankless costs and rebates for South Florida, Tampa Bay, Orlando, Fort Myers, Jacksonville homeowners.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#001a1a 0%,#001f2a 100%);border-bottom:3px solid #06B6D4;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#06B6D4;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#06B6D422;color:#06B6D4;border:1px solid #06B6D444;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#06B6D4;color:#0A0E1A}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#06B6D4;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=text],input[type=tel],input[type=number]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#06B6D4}
+.btn{width:100%;padding:14px;background:#06B6D4;color:#0A0E1A;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.code-table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-top:8px}
+.code-table th{background:#141929;color:#06B6D4;padding:8px 6px;text-align:left;font-size:0.71rem;font-weight:700;border-bottom:1px solid #1E2A45}
+.code-table td{padding:7px 6px;border-bottom:1px solid #1E2A45;color:#E2E8F0;vertical-align:top}
+.code-table tr:last-child td{border-bottom:none}
+.tip-box{background:#06B6D411;border:1px solid #06B6D433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#06B6D4}
+.warn-box{background:#F9731611;border:1px solid #F9731633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#F97316}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.gold-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.gold-box strong{color:#F4B942}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#06B6D4;color:#0A0E1A;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #06B6D455}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rebate-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.rebate-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.rebate-name{font-size:0.88rem;font-weight:800;color:#06B6D4;flex:1;line-height:1.3}
+.rebate-amount{font-size:1.1rem;font-weight:900;color:#22C55E;min-width:70px;text-align:right}
+.rebate-body{font-size:0.76rem;color:#94A3B8;line-height:1.55}
+.rebate-chip{display:inline-block;font-size:0.63rem;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:4px;margin-top:6px}
+.chip-utility{background:#06B6D422;color:#06B6D4;border:1px solid #06B6D433}
+.chip-federal{background:#F4B94222;color:#F4B942;border:1px solid #F4B94233}
+.chip-state{background:#22C55E22;color:#22C55E;border:1px solid #22C55E33}
+.chip-stackable{background:#8B5CF622;color:#A78BFA;border:1px solid #8B5CF633}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.stat-card{background:#0F1629;border-radius:8px;padding:12px;text-align:center;border:1px solid #1E2A45}
+.stat-num{font-size:1.15rem;font-weight:800;color:#06B6D4}
+.stat-label{font-size:0.7rem;color:#94A3B8;margin-top:3px}
+.savings-hero{background:#06B6D411;border:1px solid #06B6D433;border-radius:12px;padding:16px;margin-top:10px;text-align:center}
+.savings-amount{font-size:1.6rem;font-weight:900;color:#06B6D4}
+.savings-label{font-size:0.8rem;color:#94A3B8;margin-top:3px}
+.wh-row{padding:10px 0;border-bottom:1px solid #1E2A4530}
+.wh-row:last-child{border-bottom:none}
+.wh-name{font-weight:700;color:#06B6D4;font-size:0.84rem;margin-bottom:6px}
+.wh-detail{color:#94A3B8;font-size:0.76rem;line-height:1.5}
+.compare-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.compare-card{background:#141929;border-radius:10px;padding:14px;border:2px solid #1E2A45}
+.compare-card.recommended{border-color:#22C55E}
+.compare-card-title{font-size:0.9rem;font-weight:800;margin-bottom:8px}
+.compare-card-title.cyan{color:#06B6D4}
+.compare-card-title.orange{color:#F97316}
+.compare-card-title.blue{color:#00B4FF}
+.compare-metric{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1E2A4530;font-size:0.77rem}
+.compare-metric:last-child{border-bottom:none}
+.compare-label{color:#94A3B8}
+.compare-val{font-weight:700;color:#E2E8F0}
+.compare-val.good{color:#22C55E}
+.compare-val.bad{color:#EF4444}
+.rec-badge{display:inline-block;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#22C55E22;color:#22C55E;border:1px solid #22C55E33;margin-left:8px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">💧</div>
+  <h1>FL Water Heater Rebate &amp; Incentive Finder</h1>
+  <p>FPL · Duke Energy · TECO · Gainesville Regional · Federal 25C Tax Credit · Up to $1,400+ in savings</p>
+  <span class="badge">South FL · Tampa Bay · Orlando · Fort Myers · Jacksonville · Gainesville</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('finder',event)">Find My Rebates</button>
+    <button class="tab" onclick="showTab('federal',event)">Federal Tax Credits</button>
+    <button class="tab" onclick="showTab('compare',event)">HP vs. Tank vs. Tankless</button>
+    <button class="tab" onclick="showTab('quote',event)">Get a Quote</button>
+  </div>
+
+  <!-- TAB 1: Rebate Finder -->
+  <div id="finder" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>🔍</span>Find Your Available Rebates</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Florida utility rebate programs change frequently. We've compiled current programs — select your utility and water heater type to see available incentives.</div>
+      <label>Florida electric utility provider</label>
+      <select id="utilityProvider">
+        <option value="">Select your utility...</option>
+        <option value="fpl">Florida Power &amp; Light (FPL) — South/East FL</option>
+        <option value="duke">Duke Energy Florida — Tampa Bay, Citrus, Highlands</option>
+        <option value="teco">Tampa Electric (TECO) — Hillsborough County</option>
+        <option value="gainesville">Gainesville Regional Utilities (GRU) — Gainesville</option>
+        <option value="jea">JEA — Jacksonville / Duval County</option>
+        <option value="ocala">Ocala Electric — Marion County</option>
+        <option value="lakeland">Lakeland Electric — Lakeland area</option>
+        <option value="fpuc">Florida Public Utilities — Northwest FL / Panhandle</option>
+        <option value="keys">Keys Energy — Monroe County / Florida Keys</option>
+        <option value="other">Other / Rural cooperative / Municipal</option>
+      </select>
+      <label>Water heater type you're installing</label>
+      <select id="whType">
+        <option value="">Select type...</option>
+        <option value="hp">Heat pump water heater (HPWH) — most rebates</option>
+        <option value="tankless_gas">Tankless gas water heater (condensing)</option>
+        <option value="tankless_elec">Tankless electric water heater</option>
+        <option value="solar">Solar water heater</option>
+        <option value="tank_elec">Standard electric tank (resistance)</option>
+        <option value="tank_gas">Standard gas tank</option>
+      </select>
+      <div class="form-row">
+        <div>
+          <label>Existing system type</label>
+          <select id="existingSystem">
+            <option value="old_tank">Old electric tank (standard)</option>
+            <option value="old_gas">Old gas tank</option>
+            <option value="old_hp">Old heat pump WH</option>
+            <option value="other">Other / unsure</option>
+          </select>
+        </div>
+        <div>
+          <label>Home ownership</label>
+          <select id="ownership">
+            <option value="own">Own my home</option>
+            <option value="rent">Renting</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="findRebates()">Find My Rebates &amp; Incentives</button>
+      <div id="rebate-result" class="result-box"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>💰</span>FL Utility Rebate Programs — Overview</div>
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">FPL (Florida Power &amp; Light) — Heat Pump Water Heater Rebate</div>
+          <div class="rebate-amount">$200</div>
+        </div>
+        <div class="rebate-body">FPL offers a $200 instant rebate for qualifying heat pump water heaters (ENERGY STAR certified, ≥2.0 EF/UEF). Available to FPL residential customers replacing an existing electric water heater. The rebate is applied as a bill credit within 1–2 billing cycles. FPL territory covers most of South and East Florida including Miami-Dade, Broward, Palm Beach, Martin, St. Lucie, Indian River, Okeechobee, Glades, Hendry, Collier (eastern), Monroe (portions), and the east coast counties up to St. Johns.<br>How to apply: fpl.com/home/products-and-services/rebates — submit online with purchase receipt and ENERGY STAR certification documentation.</div>
+        <span class="rebate-chip chip-utility">FPL Territory</span>
+        <span class="rebate-chip chip-stackable">Stackable with 25C federal credit</span>
+      </div>
+
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">Duke Energy Florida — Heat Pump Water Heater Rebate</div>
+          <div class="rebate-amount">$200</div>
+        </div>
+        <div class="rebate-body">Duke Energy Florida offers a $200 rebate for ENERGY STAR certified heat pump water heaters. Available to Duke residential customers in the Tampa Bay area, Citrus County, Highlands County, and other Duke service territories. Rebate is paid as a check or bill credit. Duke territory includes Pinellas (portions), Pasco, Hernando, Citrus, Highlands, Lake (portions), and portions of Osceola.<br>How to apply: duke-energy.com/home/products/water-heaters — online application with receipt and ENERGY STAR certificate. Processing time: 6–8 weeks for check, 1–2 billing cycles for bill credit.</div>
+        <span class="rebate-chip chip-utility">Duke Energy Territory</span>
+        <span class="rebate-chip chip-stackable">Stackable with 25C federal credit</span>
+      </div>
+
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">Tampa Electric (TECO) — Heat Pump Water Heater Rebate</div>
+          <div class="rebate-amount">$100</div>
+        </div>
+        <div class="rebate-body">Tampa Electric offers a $100 rebate for ENERGY STAR certified heat pump water heaters. Available to residential customers in the TECO service area (Hillsborough County and adjacent areas). TECO also offers an interest-free on-bill financing option for qualifying energy efficiency upgrades including heat pump water heaters through their "On Your Side" program.<br>How to apply: tampaelectric.com/home/save-energy/rebates — online application required within 90 days of installation. Receipt and ENERGY STAR documentation required.</div>
+        <span class="rebate-chip chip-utility">TECO Territory (Hillsborough)</span>
+        <span class="rebate-chip chip-stackable">Stackable with 25C</span>
+      </div>
+
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">Gainesville Regional Utilities (GRU) — High-Efficiency WH Rebate</div>
+          <div class="rebate-amount">$100–$200</div>
+        </div>
+        <div class="rebate-body">GRU offers tiered rebates for high-efficiency water heaters. Heat pump water heaters: $200 rebate. ENERGY STAR certified solar water heaters: up to $300. GRU is a city-owned utility serving Gainesville and surrounding areas in Alachua County. GRU also participates in the Florida Water Star program for new construction.<br>How to apply: gru.com — search "rebates" in the customer portal. GRU rebate programs are updated annually and program availability may vary.</div>
+        <span class="rebate-chip chip-utility">GRU Territory (Gainesville)</span>
+        <span class="rebate-chip chip-stackable">Stackable with 25C</span>
+      </div>
+
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">JEA (Jacksonville Electric Authority) — Efficiency Rebates</div>
+          <div class="rebate-amount">$50–$150</div>
+        </div>
+        <div class="rebate-body">JEA offers rebates for qualifying heat pump water heaters in their "EverSmarter" home program. Amount varies by program cycle — typically $50–$150. JEA territory covers Jacksonville and most of Duval County. JEA customers may also qualify for the FPL ENERGY STAR rebate programs through affiliated program partnerships (verify at time of application).<br>How to apply: jea.com/home/save-energy — online application required. Check current JEA rebate catalog for updated amounts before purchasing.</div>
+        <span class="rebate-chip chip-utility">JEA Territory (Jacksonville)</span>
+        <span class="rebate-chip chip-stackable">May stack with 25C</span>
+      </div>
+
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">Florida Public Utilities (FPUC) — Energy Efficiency Program</div>
+          <div class="rebate-amount">Varies</div>
+        </div>
+        <div class="rebate-body">Florida Public Utilities serves portions of Northwest Florida, Central Florida, and the Panhandle. FPUC offers energy efficiency rebates through their "Smart Energy" program, including for high-efficiency water heaters. Program details and amounts vary — contact FPUC at 1-800-427-7712 or visit fpuc.com for current rebate availability in your service area.</div>
+        <span class="rebate-chip chip-utility">Northwest / Panhandle FL</span>
+      </div>
+
+      <div class="tip-box" style="margin-top:12px">
+        <strong>Stacking strategy:</strong> The most aggressive FL water heater savings combine: (1) Utility rebate ($100–$200), (2) Federal 25C tax credit ($300 for ENERGY STAR certified heat pump WH, or up to $600 for models that qualify), (3) Manufacturer rebate (varies — often $50–$150 from A.O. Smith, Rheem, Bradford White, etc.), and (4) Sales tax savings (FL has periodic sales tax holidays). A homeowner replacing an old electric tank with a heat pump water heater can realistically save $500–$900 in first-year incentives, plus $300–$500/year in energy cost savings.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Federal Tax Credits -->
+  <div id="federal" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🏛️</span>Federal 25C Tax Credit — Water Heaters</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">The Inflation Reduction Act (IRA) dramatically expanded the 25C energy efficiency tax credit for homeowners. Here's exactly what FL homeowners qualify for on water heater purchases through December 31, 2032:</div>
+
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">Heat Pump Water Heater — 25C Credit</div>
+          <div class="rebate-amount" style="color:#F4B942">$600</div>
+        </div>
+        <div class="rebate-body">
+          <strong style="color:#E2E8F0">Credit amount:</strong> 30% of the cost (including installation), up to a maximum of $600 per year.<br><br>
+          <strong style="color:#E2E8F0">Qualification requirements:</strong> The heat pump water heater must meet ENERGY STAR requirements — specifically a Uniform Energy Factor (UEF) ≥ 2.0 for storage water heaters. The unit must be installed in your primary U.S. residence. New construction does not qualify — this credit is for existing homes only.<br><br>
+          <strong style="color:#E2E8F0">Popular FL qualifying models (examples):</strong> A.O. Smith Voltex, Rheem ProTerra, Bradford White AeroTherm, GE GeoSpring successor models, Stiebel Eltron, Bosch — verify current ENERGY STAR certification before purchase.<br><br>
+          <strong style="color:#E2E8F0">How to claim:</strong> File IRS Form 5695 (Residential Energy Credits) with your federal tax return for the year in which the installation is completed. The credit reduces your tax liability dollar-for-dollar — it is a nonrefundable credit (you cannot receive more than you owe in taxes for that year). Unused credit does NOT carry forward.<br><br>
+          <strong style="color:#E2E8F0">Documentation:</strong> Keep the purchase receipt showing the product cost and installation date, and the manufacturer's certification statement that the product qualifies for the 25C credit. Most manufacturers include this with the product or on their website.
+        </div>
+        <span class="rebate-chip chip-federal">Federal 25C Credit</span>
+        <span class="rebate-chip chip-stackable">Stackable with utility rebates</span>
+      </div>
+
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">Natural Gas / Propane / Oil Water Heater — 25C Credit</div>
+          <div class="rebate-amount" style="color:#F4B942">$300</div>
+        </div>
+        <div class="rebate-body">
+          <strong style="color:#E2E8F0">Credit amount:</strong> 30% of cost, up to $300 per year.<br><br>
+          <strong style="color:#E2E8F0">Qualification requirements:</strong> Must meet ENERGY STAR requirements — for gas storage water heaters, this means a UEF ≥ 0.81 for 50-gallon units. For tankless (demand) gas water heaters, UEF ≥ 0.95. The condensing tankless gas water heater category often has UEF values of 0.97–0.99, qualifying easily.<br><br>
+          <strong style="color:#E2E8F0">Note for FL homeowners:</strong> Natural gas is less common in FL than in northern states (many FL areas are propane or all-electric). Verify your fuel type before purchasing. Propane water heaters DO qualify for the 25C credit under the same rules as natural gas.
+        </div>
+        <span class="rebate-chip chip-federal">Federal 25C Credit</span>
+      </div>
+
+      <div class="rebate-card">
+        <div class="rebate-header">
+          <div class="rebate-name">Annual Cap &amp; Combined Credit Rules</div>
+          <div class="rebate-amount" style="color:#94A3B8">$1,200/yr</div>
+        </div>
+        <div class="rebate-body">
+          The 25C credit has an annual cap of $1,200 total for all home energy efficiency improvements combined (insulation, windows, doors, HVAC, water heaters, etc.). Within that $1,200 cap, specific sub-limits apply: water heaters have a $600 sub-cap (heat pump WH) or $300 sub-cap (gas WH). The $600 heat pump water heater credit plus a $600 heat pump HVAC credit in the same year would = $1,200 — hitting the annual cap. Plan large upgrades across multiple tax years to maximize the credit. The $1,200/year limit resets each calendar year through 2032.<br><br>
+          <strong style="color:#E2E8F0">Important:</strong> If you also qualify for the 25D credit (solar energy systems, geothermal heat pumps) — that is a SEPARATE credit with no cap, and does not count against the 25C $1,200 annual limit.
+        </div>
+        <span class="rebate-chip chip-federal">Annual $1,200 total cap</span>
+      </div>
+
+      <div class="gold-box" style="margin-top:10px">
+        <strong>25C + Utility Rebate: Stacking Example (FL Heat Pump WH)</strong><br><br>
+        Purchase + installation cost: $1,800<br>
+        FPL utility rebate (bill credit): −$200 → $1,600 net cost<br>
+        Federal 25C credit (30% of $1,800): −$540 (capped at $600, so full credit applies)<br>
+        Manufacturer rebate (e.g., Rheem): −$100<br><br>
+        <strong>Effective out-of-pocket cost: ~$1,160</strong> for a heat pump water heater that replaces a standard tank and saves $300–$500/year in electricity. Payback period: ~2–4 years in FL climate.
+      </div>
+
+      <div class="card" style="margin-top:12px;margin-bottom:0">
+        <div class="card-title"><span>📊</span>25C Credit Calculator</div>
+        <label>Total purchase + installation cost ($)</label>
+        <input type="number" id="creditCost" placeholder="e.g. 1800" min="0" max="50000">
+        <label>Water heater type</label>
+        <select id="creditType">
+          <option value="hp">Heat pump water heater (ENERGY STAR certified)</option>
+          <option value="gas_tank">Natural gas storage WH (ENERGY STAR, UEF ≥ 0.81)</option>
+          <option value="gas_tankless">Condensing tankless gas WH (ENERGY STAR, UEF ≥ 0.95)</option>
+        </select>
+        <button class="btn" onclick="calcCredit()">Calculate My Federal Credit</button>
+        <div id="credit-result" class="result-box">
+          <div class="savings-hero">
+            <div class="savings-amount" id="credit-amount">$0</div>
+            <div class="savings-label" id="credit-label">Estimated federal 25C tax credit</div>
+          </div>
+          <div id="credit-detail" style="margin-top:12px;font-size:0.78rem;color:#94A3B8;line-height:1.5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Compare WH Types -->
+  <div id="compare" class="panel">
+    <div class="card">
+      <div class="card-title"><span>⚖️</span>Heat Pump vs. Tank vs. Tankless — FL Comparison</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Florida's climate significantly affects water heater performance. Our hot, humid air is ideal for heat pump water heaters — the ambient heat boosts efficiency. Here's how all three types compare for FL homes:</div>
+
+      <div class="compare-grid">
+        <div class="compare-card recommended">
+          <div class="compare-card-title cyan">Heat Pump Water Heater (HPWH) <span class="rec-badge">Recommended for FL</span></div>
+          <div class="compare-metric"><div class="compare-label">Purchase cost (unit only)</div><div class="compare-val">$800 – $1,400</div></div>
+          <div class="compare-metric"><div class="compare-label">Installation cost</div><div class="compare-val">$300 – $600</div></div>
+          <div class="compare-metric"><div class="compare-label">Average FL annual energy cost</div><div class="compare-val good">$150 – $250</div></div>
+          <div class="compare-metric"><div class="compare-label">Efficiency (UEF)</div><div class="compare-val good">2.0 – 4.0 UEF</div></div>
+          <div class="compare-metric"><div class="compare-label">FL utility rebate available</div><div class="compare-val good">$100 – $200 ✓</div></div>
+          <div class="compare-metric"><div class="compare-label">Federal 25C credit</div><div class="compare-val good">Up to $600 ✓</div></div>
+          <div class="compare-metric"><div class="compare-label">Total first-year incentives</div><div class="compare-val good">$400 – $900</div></div>
+          <div class="compare-metric"><div class="compare-label">Typical lifespan</div><div class="compare-val">12 – 15 years</div></div>
+          <div class="compare-metric"><div class="compare-label">FL climate advantage</div><div class="compare-val good">Excellent</div></div>
+          <div class="compare-metric"><div class="compare-label">Payback period (vs. standard tank)</div><div class="compare-val">2 – 4 years</div></div>
+          <div style="margin-top:10px;font-size:0.76rem;color:#94A3B8;line-height:1.5">
+            <strong style="color:#06B6D4">FL advantages:</strong> Florida's warm climate means the heat pump operates in its most efficient range nearly year-round. In cooler climates, HPWHs drop efficiency in winter — in FL, they maintain 2.0–4.0x efficiency vs. standard electric resistance all year. Space requirements: needs ~10 sq ft of air space and will dehumidify the surrounding room (often a bonus in FL).<br><br>
+            <strong style="color:#EF4444">FL considerations:</strong> Adds some noise (~50 dB, similar to a dehumidifier). In very small utility closets, may need ventilation ducting. In air-conditioned spaces, the heat pump extracts heat from the room air — a minor offset to AC efficiency in summer (major efficiency win in winter when the HPWH reduces heat load).
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-card-title orange">Standard Electric Tank</div>
+          <div class="compare-metric"><div class="compare-label">Purchase cost (unit only)</div><div class="compare-val">$300 – $700</div></div>
+          <div class="compare-metric"><div class="compare-label">Installation cost</div><div class="compare-val">$150 – $400</div></div>
+          <div class="compare-metric"><div class="compare-label">Average FL annual energy cost</div><div class="compare-val bad">$450 – $600</div></div>
+          <div class="compare-metric"><div class="compare-label">Efficiency (UEF)</div><div class="compare-val bad">0.88 – 0.95 UEF</div></div>
+          <div class="compare-metric"><div class="compare-label">FL utility rebate available</div><div class="compare-val bad">None ✗</div></div>
+          <div class="compare-metric"><div class="compare-label">Federal 25C credit</div><div class="compare-val bad">None (fails to meet minimum EF) ✗</div></div>
+          <div class="compare-metric"><div class="compare-label">Typical lifespan</div><div class="compare-val">8 – 12 years</div></div>
+          <div class="compare-metric"><div class="compare-label">FL climate advantage</div><div class="compare-val">Neutral</div></div>
+          <div style="margin-top:10px;font-size:0.76rem;color:#94A3B8;line-height:1.5">
+            <strong style="color:#F97316">FL considerations:</strong> No utility rebates and no 25C credit for standard electric tanks. The most common existing installation in FL (historically cheap to install, ubiquitous at new construction). Replacement cost is lower than HPWH, but lifetime energy cost is $3,000–$5,000 more over a 10-year period compared to a heat pump water heater in a FL home. Best case for a standard tank: when space constraints prevent HPWH installation.
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-card-title blue">Tankless Gas (On-Demand)</div>
+          <div class="compare-metric"><div class="compare-label">Purchase cost (unit only)</div><div class="compare-val">$600 – $1,500</div></div>
+          <div class="compare-metric"><div class="compare-label">Installation cost</div><div class="compare-val">$500 – $1,500</div></div>
+          <div class="compare-metric"><div class="compare-label">Average FL annual energy cost</div><div class="compare-val">$180 – $320</div></div>
+          <div class="compare-metric"><div class="compare-label">Efficiency (UEF)</div><div class="compare-val good">0.94 – 0.99 UEF</div></div>
+          <div class="compare-metric"><div class="compare-label">FL utility rebate available</div><div class="compare-val bad">None (gas; most FL rebates are electric-focused) ✗</div></div>
+          <div class="compare-metric"><div class="compare-label">Federal 25C credit</div><div class="compare-val good">Up to $300 ✓</div></div>
+          <div class="compare-metric"><div class="compare-label">Typical lifespan</div><div class="compare-val good">18 – 25 years</div></div>
+          <div class="compare-metric"><div class="compare-label">FL climate advantage</div><div class="compare-val">Good</div></div>
+          <div style="margin-top:10px;font-size:0.76rem;color:#94A3B8;line-height:1.5">
+            <strong style="color:#00B4FF">FL considerations:</strong> Tankless gas is efficient and very popular in FL (no tank to rust in high-humidity environment, no standby heat loss). The 25C credit applies to ENERGY STAR certified condensing units (UEF ≥ 0.95). Installation cost is higher due to new venting requirements and often a natural gas line upgrade. About 35% of FL homes have natural gas — propane is an alternative in rural areas. Note: FL utility rebates are almost entirely focused on electric appliances, so no utility rebates typically available for gas tankless units.
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top:12px">
+        <strong>Bottom line for FL homeowners:</strong> In Florida's climate, the heat pump water heater almost always wins on total cost of ownership when you factor in the utility rebates, federal 25C credit, and energy savings. The only common exceptions are: (1) homes with very limited utility space where a HPWH cannot be installed, (2) homes already on natural gas where a condensing tankless unit may make more sense, or (3) vacation/snowbird homes with very low hot water usage where a smaller standard tank is more practical.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📊</span>FL Annual Energy Cost by Water Heater Type</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:8px">Based on average FL electricity rate of $0.12/kWh (FPL residential average), typical FL household hot water usage (65 gallons/day), and FL average inlet water temperature (70°F):</div>
+      <table class="code-table">
+        <thead><tr><th>Type</th><th>Annual Energy Use</th><th>Annual Cost</th><th>10-Year Cost</th></tr></thead>
+        <tbody>
+          <tr><td>Standard electric tank (0.90 UEF)</td><td>4,800 kWh</td><td>$576</td><td>$5,760</td></tr>
+          <tr><td>Heat pump WH (2.5 UEF avg FL)</td><td>1,920 kWh</td><td>$230</td><td>$2,300</td></tr>
+          <tr><td>Heat pump WH (3.5 UEF, best-in-class)</td><td>1,370 kWh</td><td>$165</td><td>$1,650</td></tr>
+          <tr><td>Condensing tankless gas (0.97 UEF)</td><td>240 therms</td><td>$240</td><td>$2,400</td></tr>
+          <tr><td>Standard tankless gas (0.82 UEF)</td><td>285 therms</td><td>$285</td><td>$2,850</td></tr>
+          <tr><td>Tankless electric</td><td>3,200 kWh</td><td>$384</td><td>$3,840</td></tr>
+          <tr><td>Solar WH (with electric backup)</td><td>800 kWh eq.</td><td>$96</td><td>$960</td></tr>
+        </tbody>
+      </table>
+      <div class="warn-box" style="margin-top:10px">
+        <strong>FL-specific note:</strong> Gas prices used: $1.00/therm (FL natural gas residential average). Electricity rate: $0.12/kWh. Actual rates vary by utility, time of use, and billing tier. FPL and Duke Energy customers on time-of-use rates can reduce HPWH costs further by running the unit during off-peak hours (typically night).
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Get a Quote -->
+  <div id="quote" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🔧</span>Get a Free Water Heater Quote</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">Our licensed FL plumbers specialize in heat pump water heater installations — we handle the utility rebate paperwork and ensure your installation qualifies for the federal 25C tax credit. We'll quote you the net cost after all incentives.</div>
+      <label>Your name</label>
+      <input type="text" id="q-name" placeholder="Full name">
+      <label>Phone number</label>
+      <input type="tel" id="q-phone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div>
+          <label>FL utility provider</label>
+          <select id="q-utility">
+            <option>FPL</option><option>Duke Energy</option><option>TECO</option>
+            <option>JEA</option><option>GRU</option><option>Lakeland Electric</option>
+            <option>Keys Energy</option><option>Other / Municipal</option>
+          </select>
+        </div>
+        <div>
+          <label>Preferred WH type</label>
+          <select id="q-type">
+            <option>Heat pump (recommended)</option>
+            <option>Tankless gas</option>
+            <option>Standard electric tank</option>
+            <option>Unsure — need recommendation</option>
+          </select>
+        </div>
+      </div>
+      <label>Current water heater age / situation</label>
+      <select id="q-situation">
+        <option>Current unit is working but old (10+ years)</option>
+        <option>Current unit is leaking or failed</option>
+        <option>Building addition / new construction</option>
+        <option>Upgrading for energy savings / rebates</option>
+        <option>Converting from gas to electric</option>
+        <option>Converting from tank to tankless</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Get My Free Quote + Rebate Report</button>
+      <div class="ok-box" style="margin-top:14px">
+        <strong>✓ We'll send you:</strong> Net cost after all FL utility rebates + federal 25C credit · ENERGY STAR certified options that qualify for maximum incentives · Installation timeline · Permit handling (FL requires permit for all WH replacements)
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📊</span>FL Water Heater Stats</div>
+      <div class="stat-grid" style="margin-top:0">
+        <div class="stat-card">
+          <div class="stat-num">$300–$600</div>
+          <div class="stat-label">Maximum annual energy savings switching from standard tank to HPWH in FL</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">$400–$900</div>
+          <div class="stat-label">First-year total incentives available for FL heat pump WH installations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">2–4 yrs</div>
+          <div class="stat-label">Typical HPWH payback period in Florida vs. standard electric tank</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">Dec 2032</div>
+          <div class="stat-label">Federal 25C tax credit expiration — currently available for 7+ more years</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">We'll call you within 2 hours! 💧</div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+var UTILITY_REBATES = {
+  fpl:         {hp:200,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'FPL',url:'fpl.com/home/products-and-services/rebates',territory:'South/East Florida'},
+  duke:        {hp:200,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'Duke Energy Florida',url:'duke-energy.com/home/products/water-heaters',territory:'Tampa Bay, Citrus, Highlands'},
+  teco:        {hp:100,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'Tampa Electric (TECO)',url:'tampaelectric.com/home/save-energy/rebates',territory:'Hillsborough County'},
+  gainesville: {hp:200,solar:300,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'GRU',url:'gru.com',territory:'Gainesville / Alachua County'},
+  jea:         {hp:100,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'JEA',url:'jea.com/home/save-energy',territory:'Jacksonville / Duval County'},
+  ocala:       {hp:50,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'Ocala Electric',url:'ocalaelectric.com',territory:'Marion County'},
+  lakeland:    {hp:75,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'Lakeland Electric',url:'lakelandelectric.com',territory:'Lakeland / Polk County'},
+  fpuc:        {hp:0,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'FPUC',url:'fpuc.com',territory:'Northwest FL / Panhandle'},
+  keys:        {hp:0,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'Keys Energy',url:'keysenergy.com',territory:'Monroe County / FL Keys'},
+  other:       {hp:0,solar:0,tankless_gas:0,tankless_elec:0,tank_elec:0,tank_gas:0,name:'Your utility',url:'',territory:'Contact your utility for current programs'}
+};
+
+var FEDERAL_CREDIT = {hp:600,tankless_gas:300,tank_gas:300,solar:0.3,tankless_elec:0,tank_elec:0};
+var FEDERAL_NOTES = {
+  hp:'Heat pump water heaters (ENERGY STAR certified, UEF ≥ 2.0): 30% of purchase + installation, up to $600 per year. File IRS Form 5695.',
+  tankless_gas:'Condensing gas tankless water heaters (ENERGY STAR, UEF ≥ 0.95): 30% of cost, up to $300 per year. File IRS Form 5695.',
+  tank_gas:'Gas storage water heaters (ENERGY STAR, UEF ≥ 0.81): 30% of cost, up to $300 per year. File IRS Form 5695.',
+  tankless_elec:'Standard electric tankless does not meet the 25C credit requirements for 2024–2032 (does not qualify as a heat pump unit).',
+  tank_elec:'Standard electric resistance tank water heaters do not qualify for the 25C credit.',
+  solar:'Solar water heaters qualify for the separate 25D credit (30% of cost, no cap) — NOT the 25C credit. The 25D credit requires that at least 50% of energy comes from solar.'
+};
+
+function findRebates() {
+  var utility = document.getElementById('utilityProvider').value;
+  if(!utility){alert('Please select your utility provider.');return;}
+  var whType = document.getElementById('whType').value;
+  if(!whType){alert('Please select water heater type.');return;}
+  var ownership = document.getElementById('ownership').value;
+  var rb = UTILITY_REBATES[utility];
+  var utilityRebate = rb ? (rb[whType] || 0) : 0;
+  var federalCap = FEDERAL_CREDIT[whType] || 0;
+  var federalNote = FEDERAL_NOTES[whType] || '';
+  var totalMax = utilityRebate + federalCap + 100; // assume ~$100 mfr rebate for qualifying units
+  var html = '<div class="savings-hero"><div class="savings-amount">Up to $'+totalMax.toLocaleString()+'</div><div class="savings-label">Estimated maximum first-year incentives</div></div>';
+  html += '<div style="margin-top:14px">';
+  if(utilityRebate > 0) {
+    html += '<div class="fee-row" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem"><div style="color:#94A3B8;flex:1">'+esc(rb.name)+' utility rebate</div><div style="font-weight:700;color:#22C55E">$'+utilityRebate+' ✓</div></div>';
+  } else {
+    html += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem"><div style="color:#94A3B8;flex:1">'+(rb?esc(rb.name):'')+' utility rebate</div><div style="font-weight:700;color:#EF4444">No rebate for this type</div></div>';
+  }
+  if(federalCap > 0) {
+    html += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem"><div style="color:#94A3B8;flex:1">Federal 25C tax credit (max)</div><div style="font-weight:700;color:#F4B942">Up to $'+federalCap+' ✓</div></div>';
+  } else {
+    html += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem"><div style="color:#94A3B8;flex:1">Federal 25C tax credit</div><div style="font-weight:700;color:#EF4444">Not available for this type</div></div>';
+  }
+  html += '<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:0.78rem"><div style="color:#94A3B8;flex:1">Manufacturer rebate (estimate, varies)</div><div style="font-weight:700;color:#94A3B8">$50 – $150 (verify at purchase)</div></div>';
+  html += '</div>';
+  if(ownership === 'rent') {
+    html += '<div class="warn-box" style="margin-top:10px"><strong>Renter note:</strong> Most utility rebates are available only to homeowners. The federal 25C credit is only claimable by the property owner (you cannot claim it as a renter). Encourage your landlord to upgrade the water heater — both the utility rebate and tax credit benefit them as the owner.</div>';
+  }
+  if(federalNote) {
+    html += '<div class="tip-box" style="margin-top:10px"><strong>Federal credit details:</strong> '+esc(federalNote)+'</div>';
+  }
+  if(rb && rb.url) {
+    html += '<div class="ok-box" style="margin-top:10px"><strong>How to apply for the '+esc(rb.name)+' rebate:</strong> Visit '+esc(rb.url)+' — submit online with purchase receipt and ENERGY STAR certification documentation within 90 days of installation.</div>';
+  }
+  var el = document.getElementById('rebate-result');
+  el.innerHTML = html;
+  el.style.display = 'block';
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function calcCredit() {
+  var cost = parseFloat(document.getElementById('creditCost').value);
+  if(!cost || cost <= 0){alert('Please enter a valid installation cost.');return;}
+  var type = document.getElementById('creditType').value;
+  var maxCredit = type === 'hp' ? 600 : 300;
+  var rawCredit = Math.round(cost * 0.30);
+  var credit = Math.min(rawCredit, maxCredit);
+  document.getElementById('credit-amount').textContent = '$'+credit.toLocaleString();
+  document.getElementById('credit-label').textContent = 'Estimated federal 25C tax credit (nonrefundable)';
+  var pct = Math.round((rawCredit / cost) * 100);
+  var detail = '30% of $'+cost.toLocaleString()+' = $'+rawCredit.toLocaleString();
+  if(rawCredit > maxCredit) {detail += ' — capped at $'+maxCredit+' for this type';}
+  detail += '. Credit is nonrefundable — reduces your tax liability. File IRS Form 5695 with your '+new Date().getFullYear()+' federal return. Keep purchase receipt and ENERGY STAR manufacturer certification.';
+  document.getElementById('credit-detail').textContent = detail;
+  document.getElementById('credit-result').style.display = 'block';
+}
+
+function showTab(id, e) {
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  if(e && e.target) e.target.classList.add('active');
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if(!name || !phone){alert('Please enter your name and phone number.');return;}
+  var t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate fl-water-heater-rebate-finder fpl-rebate duke-energy-rebate teco-rebate gainesville-gru-rebate jea-rebate federal-25c-tax-credit heat-pump-water-heater energy-star-rebate florida-utility-rebate ira-inflation-reduction-act hpwh-rebate florida-electric-rebate water-heater-incentive south-florida palm-beach broward miami-dade hillsborough orange pinellas tankless-rebate 
+</div>
+</body>
+</html>
