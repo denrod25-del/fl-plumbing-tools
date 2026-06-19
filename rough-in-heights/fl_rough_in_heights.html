@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Plumbing Rough-In Height Standards Calculator | Sink Drain Height | Toilet Flange | Shower Valve | FPC 2023</title>
+<meta name="description" content="Florida plumbing rough-in height standards calculator for sinks, tubs, toilets, and showers. FPC 2023 compliance, ADA requirements, toilet flange height, shower valve rough-in, tub drain offset, residential and commercial. Palm Beach, Broward, Miami-Dade, Orange, Hillsborough plumbing rough-in guide.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#000d1a 0%,#001122 100%);border-bottom:3px solid #00B4FF;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#00B4FF;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#00B4FF22;color:#00B4FF;border:1px solid #00B4FF44;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#00B4FF;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#00B4FF;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#00B4FF}
+.btn{width:100%;padding:14px;background:#00B4FF;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#00B4FF;color:#fff;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #00B4FF55}
+.tip-box{background:#00B4FF11;border:1px solid #00B4FF33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#00B4FF}
+.warn-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#EF4444}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.info-box{background:#14B8A611;border:1px solid #14B8A633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.info-box strong{color:#14B8A6}
+.gold-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.gold-box strong{color:#F4B942}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#94A3B8;flex:1;line-height:1.4;padding-right:8px}
+.data-val{font-weight:700;color:#E2E8F0;min-width:110px;text-align:right}
+.data-val.blue{color:#00B4FF}
+.data-val.green{color:#22C55E}
+.data-val.red{color:#EF4444}
+.data-val.gold{color:#F4B942}
+.data-val.teal{color:#14B8A6}
+.fixture-block{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.fixture-name{font-size:0.88rem;font-weight:700;color:#E2E8F0;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #1E2A4530}
+.fixture-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.fixture-item{background:#0F1629;border-radius:6px;padding:8px;text-align:center}
+.fixture-item-label{font-size:0.65rem;color:#94A3B8;margin-bottom:3px}
+.fixture-item-val{font-size:0.88rem;font-weight:700;color:#00B4FF}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.res-card{background:#0F1629;border-radius:8px;padding:10px;text-align:center;border:1px solid #1E2A45}
+.res-label{font-size:0.68rem;color:#94A3B8;margin-bottom:3px}
+.res-val{font-size:1.05rem;font-weight:900;color:#00B4FF}
+.res-unit{font-size:0.65rem;color:#94A3B8;margin-top:2px}
+.room-card{background:#141929;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1E2A45}
+.room-title{font-size:0.9rem;font-weight:700;color:#00B4FF;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1E2A4530;display:flex;align-items:center;gap:8px}
+.spec-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid #1E2A4530;font-size:0.75rem}
+.spec-row:last-child{border-bottom:none}
+.spec-label{color:#94A3B8;flex:1;line-height:1.4;padding-right:6px}
+.spec-std{color:#E2E8F0;font-weight:700;min-width:60px;text-align:right}
+.spec-ada{color:#F4B942;font-weight:700;min-width:60px;text-align:right}
+.col-headers{display:flex;justify-content:flex-end;gap:0px;margin-bottom:4px}
+.col-h{font-size:0.62rem;font-weight:700;min-width:60px;text-align:right}
+.col-h.std{color:#00B4FF}
+.col-h.ada{color:#F4B942}
+.ada-badge{display:inline-block;font-size:0.62rem;font-weight:700;padding:1px 6px;border-radius:3px;background:#F4B94222;color:#F4B942;border:1px solid #F4B94233}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">📐</div>
+  <h1>FL Plumbing Rough-In Height Standards Calculator</h1>
+  <p>Sinks · Tubs · Toilets · Showers · FPC 2023 compliance · ADA vs. standard · All fixture types · FL licensed plumbing rough-in guide</p>
+  <span class="badge">FPC 2023 · Florida Building Code · ADA Standards · All 67 FL Counties</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calc',event)">Rough-In Calc</button>
+    <button class="tab" onclick="showTab('ada',event)">ADA vs Standard</button>
+    <button class="tab" onclick="showTab('byroom',event)">By Room</button>
+    <button class="tab" onclick="showTab('service',event)">Get a Quote</button>
+  </div>
+
+  <!-- TAB 1: Rough-In Calculator -->
+  <div id="calc" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>🔧</span>Fixture Rough-In Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Select your fixture type and options to get precise rough-in dimensions per Florida Plumbing Code 2023 and Florida Building Code. All heights measured from finished floor (AFF) unless noted.</div>
+      <label>Fixture type</label>
+      <select id="fixtureType" onchange="updateFixtureOptions()">
+        <option value="lav">Bathroom lavatory (vanity sink)</option>
+        <option value="kitchen">Kitchen sink</option>
+        <option value="utility">Utility / laundry sink (slop sink)</option>
+        <option value="toilet">Toilet (gravity tank)</option>
+        <option value="toilet_pressure">Toilet (pressure-assist / commercial)</option>
+        <option value="urinal">Urinal (commercial)</option>
+        <option value="tub">Standard bathtub</option>
+        <option value="tub_shower">Tub/shower combination</option>
+        <option value="shower">Walk-in shower (no tub)</option>
+        <option value="outdoor">Outdoor hose bibb / irrigation valve</option>
+        <option value="washer">Clothes washer standpipe</option>
+        <option value="dishwasher">Dishwasher drain</option>
+        <option value="waterheater">Water heater supply/drain</option>
+      </select>
+      <label>Use type</label>
+      <select id="useType">
+        <option value="standard">Standard residential</option>
+        <option value="ada">ADA compliant (accessible)</option>
+        <option value="commercial">Commercial (non-ADA)</option>
+      </select>
+      <label id="wallLabel" style="display:none">Wall type (affects drain offset)</label>
+      <select id="wallType" style="display:none">
+        <option value="standard">Standard 2×4 framing</option>
+        <option value="2x6">2×6 framing</option>
+        <option value="metal">Metal stud framing</option>
+      </select>
+      <label id="floorLabel" style="display:none">Finished floor type (affects toilet flange height)</label>
+      <select id="floorType" style="display:none">
+        <option value="slab">Concrete slab — tile to be set</option>
+        <option value="tile_set">Tile already set (1/2" avg)</option>
+        <option value="wood">Wood subfloor + tile</option>
+        <option value="vinyl">Vinyl plank (3/8–1/2")</option>
+      </select>
+      <button class="btn" onclick="calcRoughIn()">Calculate Rough-In Dimensions</button>
+      <div class="result-box" id="calcResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📏</span>Quick Reference — Most Common FL Rough-Ins</div>
+      <div style="font-size:0.75rem;color:#94A3B8;margin-bottom:10px">Standard residential, measured from finished floor (AFF) or as noted.</div>
+
+      <div class="fixture-block">
+        <div class="fixture-name">🚽 Toilet (Gravity Tank)</div>
+        <div class="fixture-grid">
+          <div class="fixture-item"><div class="fixture-item-label">Closet flange height (slab)</div><div class="fixture-item-val">0"–1/4" AFF</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Flange to finished floor</div><div class="fixture-item-val">1/4" max above</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Supply line rough-in</div><div class="fixture-item-val">6" to left, 7" AFF</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Drain centerline to wall</div><div class="fixture-item-val">12" (std) / 10" or 14"</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Side clearance (FL code)</div><div class="fixture-item-val">15" to CL from wall/ob</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Front clearance (FL code)</div><div class="fixture-item-val">21" min from front</div></div>
+        </div>
+      </div>
+
+      <div class="fixture-block">
+        <div class="fixture-name">🚿 Walk-In Shower Valve</div>
+        <div class="fixture-grid">
+          <div class="fixture-item"><div class="fixture-item-label">Mixing valve centerline</div><div class="fixture-item-val">48" AFF (std)</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Showerhead stub-out</div><div class="fixture-item-val">78"–80" AFF</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Hot supply to valve</div><div class="fixture-item-val">4" left of CL</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Cold supply to valve</div><div class="fixture-item-val">4" right of CL</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Drain to back wall</div><div class="fixture-item-val">Varies by base</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Min shower floor size</div><div class="fixture-item-val">30"×30" (FPC)</div></div>
+        </div>
+      </div>
+
+      <div class="fixture-block">
+        <div class="fixture-name">🛁 Bathtub</div>
+        <div class="fixture-grid">
+          <div class="fixture-item"><div class="fixture-item-label">Overflow centerline</div><div class="fixture-item-val">16"–18" AFF (floor)</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Drain rough-in</div><div class="fixture-item-val">Per tub spec sheet</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Faucet valve stub-outs</div><div class="fixture-item-val">28"–32" AFF</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Supply line spacing</div><div class="fixture-item-val">8" c-c (hot left)</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Showerhead (over tub)</div><div class="fixture-item-val">75"–78" AFF</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Drain offset (standard)</div><div class="fixture-item-val">See drain rough-in</div></div>
+        </div>
+      </div>
+
+      <div class="fixture-block">
+        <div class="fixture-name">🚰 Lavatory / Vanity Sink</div>
+        <div class="fixture-grid">
+          <div class="fixture-item"><div class="fixture-item-label">Drain centerline (standard)</div><div class="fixture-item-val">18"–20" AFF</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Supply stub-outs</div><div class="fixture-item-val">21"–22" AFF</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Supply spacing (c-c)</div><div class="fixture-item-val">8" (hot left)</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">Drain to back wall</div><div class="fixture-item-val">12"–15" AFF (standard)</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">ADA drain height</div><div class="fixture-item-val">17" AFF max</div></div>
+          <div class="fixture-item"><div class="fixture-item-label">ADA supply height</div><div class="fixture-item-val">18"–20" AFF</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>⚠️</span>Florida-Specific Rough-In Code Notes</div>
+      <div class="data-row"><span class="data-label">FL Plumbing Code edition currently adopted</span><span class="data-val blue">FPC 2023 (6th Edition)</span></div>
+      <div class="data-row"><span class="data-label">Toilet flange must be flush with or above finished floor</span><span class="data-val blue">FPC §405.4.1</span></div>
+      <div class="data-row"><span class="data-label">Shower valve must be pressure-balancing or thermostatic</span><span class="data-val blue">FPC §424.3</span></div>
+      <div class="data-row"><span class="data-label">Max temperature at shower valve — scald protection</span><span class="data-val red">120°F (FPC §424.3)</span></div>
+      <div class="data-row"><span class="data-label">Min shower enclosure size (finished floor area)</span><span class="data-val blue">900 sq in / 30"×30" (FPC §408.6)</span></div>
+      <div class="data-row"><span class="data-label">Vent required within — lavatory trap arm</span><span class="data-val blue">5 ft of trap (FPC §909)</span></div>
+      <div class="data-row"><span class="data-label">P-trap seal depth requirement</span><span class="data-val blue">2"–4" water seal (FPC §1002)</span></div>
+      <div class="data-row"><span class="data-label">Hot water left-hand rule — all FL fixtures</span><span class="data-val blue">Hot on left, cold on right (FPC §607.2)</span></div>
+      <div class="data-row"><span class="data-label">FL permit required for rough-in changes?</span><span class="data-val red">Yes — all rough-in plumbing requires FL permit</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ADA vs Standard -->
+  <div id="ada" class="panel">
+    <div class="card">
+      <div class="card-title"><span>♿</span>ADA vs. Standard Rough-In Comparison</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">ADA requirements under 2010 ADA Standards for Accessible Design apply to commercial buildings and any residential units designated as accessible. FL Fair Housing requires accessible design in multi-family housing (4+ units). Many FL homeowners choose ADA heights for aging-in-place design.</div>
+      <div class="tip-box"><strong>FL Aging-in-Place Trend:</strong> With Florida's large retiree population, many residential clients request ADA-compliant rough-in heights even when not legally required. Planning accessible heights at rough-in costs nothing extra — retrofitting later costs $800–$3,500 per fixture.</div>
+    </div>
+
+    <div class="room-card">
+      <div class="room-title"><span>🚽</span>Toilet <span class="ada-badge">ADA §604</span></div>
+      <div class="col-headers"><span class="col-h std">Standard</span><span class="col-h ada">ADA</span></div>
+      <div class="spec-row"><span class="spec-label">Seat height (finished)</span><span class="spec-std">14"–16"</span><span class="spec-ada">17"–19"</span></div>
+      <div class="spec-row"><span class="spec-label">Toilet centerline from side wall</span><span class="spec-std">12"–18"</span><span class="spec-ada">18" exactly</span></div>
+      <div class="spec-row"><span class="spec-label">Clear floor space in front of toilet</span><span class="spec-std">21" min</span><span class="spec-ada">60" wide × 56" depth</span></div>
+      <div class="spec-row"><span class="spec-label">Grab bar — rear wall</span><span class="spec-std">Not required</span><span class="spec-ada">33"–36" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Grab bar — side wall (from rear wall)</span><span class="spec-std">Not required</span><span class="spec-ada">6" max from rear; 54" from wall</span></div>
+      <div class="spec-row"><span class="spec-label">Flush control side</span><span class="spec-std">Either side</span><span class="spec-ada">Open (non-wall) side</span></div>
+      <div class="spec-row"><span class="spec-label">Tissue dispenser height</span><span class="spec-std">Any</span><span class="spec-ada">7"–9" forward of front edge, 19" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Drain rough-in (typically unchanged)</span><span class="spec-std">12" from wall</span><span class="spec-ada">12" from wall (same)</span></div>
+      <div class="spec-row"><span class="spec-label">Supply rough-in height</span><span class="spec-std">7" AFF</span><span class="spec-ada">7" AFF (same)</span></div>
+    </div>
+
+    <div class="room-card">
+      <div class="room-title"><span>🚰</span>Lavatory / Vanity Sink <span class="ada-badge">ADA §606</span></div>
+      <div class="col-headers"><span class="col-h std">Standard</span><span class="col-h ada">ADA</span></div>
+      <div class="spec-row"><span class="spec-label">Sink rim / counter height (finished)</span><span class="spec-std">32"–36" AFF</span><span class="spec-ada">34" max AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Drain centerline height AFF</span><span class="spec-std">18"–20"</span><span class="spec-ada">17" max</span></div>
+      <div class="spec-row"><span class="spec-label">Supply stub-out height AFF</span><span class="spec-std">21"–22"</span><span class="spec-ada">18"–20"</span></div>
+      <div class="spec-row"><span class="spec-label">Clear knee space below (depth)</span><span class="spec-std">Not required</span><span class="spec-ada">11" at 9" AFF, 8" at 27" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Clear floor space (forward approach)</span><span class="spec-std">Not required</span><span class="spec-ada">30"×48" centered</span></div>
+      <div class="spec-row"><span class="spec-label">Pipe insulation required (drain/supply)</span><span class="spec-std">Optional</span><span class="spec-ada">Required — protect knees</span></div>
+      <div class="spec-row"><span class="spec-label">Faucet — maximum reach to operate</span><span class="spec-std">Any</span><span class="spec-ada">Max 11" from front edge</span></div>
+      <div class="spec-row"><span class="spec-label">Faucet — operable parts</span><span class="spec-std">Any type</span><span class="spec-ada">Lever, push, touchless (not round knob)</span></div>
+    </div>
+
+    <div class="room-card">
+      <div class="room-title"><span>🚿</span>Shower <span class="ada-badge">ADA §608</span></div>
+      <div class="col-headers"><span class="col-h std">Standard</span><span class="col-h ada">ADA</span></div>
+      <div class="spec-row"><span class="spec-label">Shower size (minimum)</span><span class="spec-std">30"×30"</span><span class="spec-ada">36"×36" transfer / 30"×60" roll-in</span></div>
+      <div class="spec-row"><span class="spec-label">Shower threshold / curb height</span><span class="spec-std">Up to 4" curb</span><span class="spec-ada">1/2" max for transfer; 0" for roll-in</span></div>
+      <div class="spec-row"><span class="spec-label">Control valve height (mixing valve)</span><span class="spec-std">48" AFF (typical)</span><span class="spec-ada">38"–48" AFF (within reach range)</span></div>
+      <div class="spec-row"><span class="spec-label">Showerhead height</span><span class="spec-std">78"–80" AFF</span><span class="spec-ada">48" AFF (handheld) — also at 78" fixed</span></div>
+      <div class="spec-row"><span class="spec-label">Handheld showerhead required?</span><span class="spec-std">Optional</span><span class="spec-ada">Required; 59" hose minimum</span></div>
+      <div class="spec-row"><span class="spec-label">Seat requirement</span><span class="spec-std">Optional</span><span class="spec-ada">Required (fold-down or built-in)</span></div>
+      <div class="spec-row"><span class="spec-label">Grab bar — control wall</span><span class="spec-std">Optional</span><span class="spec-ada">33"–36" AFF horizontal</span></div>
+      <div class="spec-row"><span class="spec-label">Grab bar — back wall</span><span class="spec-std">Optional</span><span class="spec-ada">33"–36" AFF horizontal</span></div>
+      <div class="spec-row"><span class="spec-label">Controls — accessible from entry?</span><span class="spec-std">Not required</span><span class="spec-ada">Reachable without entering spray</span></div>
+    </div>
+
+    <div class="room-card">
+      <div class="room-title"><span>🛁</span>Bathtub <span class="ada-badge">ADA §607</span></div>
+      <div class="col-headers"><span class="col-h std">Standard</span><span class="col-h ada">ADA</span></div>
+      <div class="spec-row"><span class="spec-label">Tub rim height (finished)</span><span class="spec-std">15"–18" AFF</span><span class="spec-ada">17" max (preferred for transfer)</span></div>
+      <div class="spec-row"><span class="spec-label">Clear floor space (side of tub)</span><span class="spec-std">Not required</span><span class="spec-ada">30" wide × 60" long (alongside tub)</span></div>
+      <div class="spec-row"><span class="spec-label">Faucet controls location</span><span class="spec-std">Center of tub wall</span><span class="spec-ada">Between 33"–36" AFF, at foot end</span></div>
+      <div class="spec-row"><span class="spec-label">Showerhead (over tub) — handheld</span><span class="spec-std">Optional</span><span class="spec-ada">Required; 59" hose min</span></div>
+      <div class="spec-row"><span class="spec-label">Grab bar — back wall (horizontal)</span><span class="spec-std">Optional</span><span class="spec-ada">Two rails at 8"–10" AFF and 33"–36" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Grab bar — foot end</span><span class="spec-std">Optional</span><span class="spec-ada">At tub foot end, same heights</span></div>
+      <div class="spec-row"><span class="spec-label">Seat (at head end)</span><span class="spec-std">Optional</span><span class="spec-ada">Required — permanent or fold-down</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🏗️</span>FL Fair Housing / ADA Applicability</div>
+      <div class="data-row"><span class="data-label">Single-family home (owner-occupied)</span><span class="data-val blue">ADA not required (optional)</span></div>
+      <div class="data-row"><span class="data-label">Multi-family 4+ units (ground-floor or elevator) — FL Fair Housing</span><span class="data-val red">Accessible design required</span></div>
+      <div class="data-row"><span class="data-label">Commercial — places of public accommodation</span><span class="data-val red">Full ADA required</span></div>
+      <div class="data-row"><span class="data-label">Rental single-family (any # of units)</span><span class="data-val blue">FL Fair Housing applies to 4+ units</span></div>
+      <div class="data-row"><span class="data-label">FL state and local government buildings</span><span class="data-val red">Full ADA + FL ADA required</span></div>
+      <div class="data-row"><span class="data-label">Renovation vs. new construction — ADA trigger</span><span class="data-val">New = full compliance; reno = path of travel</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: By Room -->
+  <div id="byroom" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🏠</span>Rough-In Standards by Room — FL Residential</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:4px">All measurements from finished floor (AFF) unless noted. Standard residential, no ADA unless marked.</div>
+    </div>
+
+    <div class="room-card">
+      <div class="room-title"><span>🚽</span>Master Bathroom / Full Bath</div>
+      <div class="spec-row"><span class="spec-label">Toilet drain — floor penetration centerline to finished wall (standard)</span><span class="spec-std" style="color:#00B4FF">12"</span></div>
+      <div class="spec-row"><span class="spec-label">Toilet supply — height AFF, 6" left of drain CL</span><span class="spec-std" style="color:#00B4FF">7" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Lavatory drain — height AFF (standard)</span><span class="spec-std" style="color:#00B4FF">18"–20" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Lavatory supply stub-outs — height AFF</span><span class="spec-std" style="color:#00B4FF">21"–22" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Lavatory supply spacing (center to center)</span><span class="spec-std" style="color:#00B4FF">8" c-c (hot L, cold R)</span></div>
+      <div class="spec-row"><span class="spec-label">Tub faucet stub-outs — height AFF</span><span class="spec-std" style="color:#00B4FF">28"–32" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Tub/shower showerhead stub-out — AFF</span><span class="spec-std" style="color:#00B4FF">75"–78" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Shower valve mixing valve — AFF</span><span class="spec-std" style="color:#00B4FF">48" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Shower showerhead stub-out — AFF</span><span class="spec-std" style="color:#00B4FF">78"–80" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Shower supply spacing (c-c) to valve</span><span class="spec-std" style="color:#00B4FF">8" c-c (hot L, cold R)</span></div>
+      <div class="spec-row"><span class="spec-label">Toilet side clearance — CL to wall/obstacle</span><span class="spec-std" style="color:#00B4FF">15" min (FPC)</span></div>
+      <div class="spec-row"><span class="spec-label">Toilet front clearance — CL to front</span><span class="spec-std" style="color:#00B4FF">21" min (FPC)</span></div>
+    </div>
+
+    <div class="room-card">
+      <div class="room-title"><span>🍳</span>Kitchen</div>
+      <div class="spec-row"><span class="spec-label">Kitchen sink drain — height AFF</span><span class="spec-std" style="color:#00B4FF">18"–20" AFF (to drain CL)</span></div>
+      <div class="spec-row"><span class="spec-label">Kitchen sink supply stub-outs — AFF</span><span class="spec-std" style="color:#00B4FF">20"–22" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Kitchen supply spacing (c-c)</span><span class="spec-std" style="color:#00B4FF">8" c-c (hot L, cold R)</span></div>
+      <div class="spec-row"><span class="spec-label">Dishwasher drain (high loop) — min height</span><span class="spec-std" style="color:#00B4FF">20" AFF min loop</span></div>
+      <div class="spec-row"><span class="spec-label">Dishwasher supply line — size</span><span class="spec-std" style="color:#00B4FF">3/8" compression from shut-off</span></div>
+      <div class="spec-row"><span class="spec-label">Refrigerator ice maker — supply rough-in</span><span class="spec-std" style="color:#00B4FF">6"–12" AFF, behind fridge</span></div>
+      <div class="spec-row"><span class="spec-label">Gas line (if applicable) — AFF</span><span class="spec-std" style="color:#00B4FF">6"–12" AFF, behind range</span></div>
+    </div>
+
+    <div class="room-card">
+      <div class="room-title"><span>👕</span>Laundry Room</div>
+      <div class="spec-row"><span class="spec-label">Washing machine standpipe height — AFF</span><span class="spec-std" style="color:#00B4FF">36"–42" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Standpipe minimum trap-to-top distance</span><span class="spec-std" style="color:#00B4FF">18" min (trap arm below)</span></div>
+      <div class="spec-row"><span class="spec-label">Washer supply stub-outs — AFF</span><span class="spec-std" style="color:#00B4FF">40"–48" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Washer supply spacing (c-c)</span><span class="spec-std" style="color:#00B4FF">8" c-c (hot L, cold R)</span></div>
+      <div class="spec-row"><span class="spec-label">Slop sink drain — AFF</span><span class="spec-std" style="color:#00B4FF">12"–14" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Slop sink supply — AFF</span><span class="spec-std" style="color:#00B4FF">36"–40" AFF</span></div>
+      <div class="spec-row"><span class="spec-label">Dryer gas stub-out (if applicable)</span><span class="spec-std" style="color:#00B4FF">6"–8" AFF, behind unit</span></div>
+    </div>
+
+    <div class="room-card">
+      <div class="room-title"><span>💧</span>Water Heater / Mechanical</div>
+      <div class="spec-row"><span class="spec-label">Water heater drain valve — AFF</span><span class="spec-std" style="color:#00B4FF">3"–4" AFF (tank bottom)</span></div>
+      <div class="spec-row"><span class="spec-label">T&amp;P valve discharge — relief valve height</span><span class="spec-std" style="color:#00B4FF">Per mfr; drain within 6" of floor</span></div>
+      <div class="spec-row"><span class="spec-label">Cold water supply inlet — AFF</span><span class="spec-std" style="color:#00B4FF">Top of water heater</span></div>
+      <div class="spec-row"><span class="spec-label">Hot water outlet — AFF</span><span class="spec-std" style="color:#00B4FF">Top of water heater</span></div>
+      <div class="spec-row"><span class="spec-label">Water heater seismic strapping (FL — slab)</span><span class="spec-std" style="color:#00B4FF">Not required in FL (no seismic zone)</span></div>
+      <div class="spec-row"><span class="spec-label">Expansion tank (FL — closed system requirement)</span><span class="spec-std" style="color:#00B4FF">Required with backflow preventer</span></div>
+      <div class="spec-row"><span class="spec-label">Gas WH — sediment trap AFF</span><span class="spec-std" style="color:#00B4FF">Required; within 12" of WH</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📝</span>FL Plumbing Code Toilet Clearance Minimums</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">FL Building Code §2904 establishes minimum toilet compartment clearances. Many FL municipalities enforce stricter clearances — check local amendments before rough-in.</div>
+      <div class="data-row"><span class="data-label">Min side clearance — toilet CL to wall</span><span class="data-val blue">15" (FPC); 18" (ADA)</span></div>
+      <div class="data-row"><span class="data-label">Min side clearance — toilet CL to tub/shower</span><span class="data-val blue">15"</span></div>
+      <div class="data-row"><span class="data-label">Min clearance — front of toilet bowl</span><span class="data-val blue">21" (FPC); 60" clear (ADA)</span></div>
+      <div class="data-row"><span class="data-label">Minimum bathroom doorway width (FL code)</span><span class="data-val blue">24" clear (28" door); 32" ADA</span></div>
+      <div class="data-row"><span class="data-label">Lavatory — min clearance from toilet CL (side)</span><span class="data-val blue">15" from toilet CL</span></div>
+      <div class="data-row"><span class="data-label">Shower — min clear floor space inside</span><span class="data-val blue">900 sq in (30"×30" min)</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Get a Quote -->
+  <div id="service" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📋</span>Request Rough-In Plumbing Quote</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">New construction rough-in, remodel rough-in changes, ADA retrofit, or inspection fail corrections — we handle all FL plumbing rough-in work under a licensed FL master plumber. Permitted and inspected.</div>
+      <div class="ok-box"><strong>✅ Our Rough-In Services:</strong><br>• New construction rough-in — all fixtures<br>• Remodel rough-in — bathroom, kitchen, laundry<br>• ADA accessible design rough-in<br>• Toilet flange reset / height correction<br>• Shower valve relocation<br>• Failed inspection corrections<br>• Rough-in plan review and layout consultation<br>• FL plumbing permit pull and inspection</div>
+      <label>Your name</label>
+      <input type="text" id="qName" placeholder="Full name">
+      <label>Phone number</label>
+      <input type="tel" id="qPhone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div><label>Property ZIP</label><input type="text" id="qZip" placeholder="33401"></div>
+        <div>
+          <label>Project type</label>
+          <select id="qProject">
+            <option value="new">New construction</option>
+            <option value="remodel">Bathroom remodel</option>
+            <option value="kitchen">Kitchen remodel</option>
+            <option value="ada">ADA retrofit</option>
+            <option value="failed">Failed inspection fix</option>
+            <option value="laundry">Laundry room rough-in</option>
+          </select>
+        </div>
+      </div>
+      <label>Number of fixtures to rough in</label>
+      <select id="qFixtures">
+        <option value="1_2">1–2 fixtures</option>
+        <option value="3_5" selected>3–5 fixtures</option>
+        <option value="6_10">6–10 fixtures (full bathroom)</option>
+        <option value="11_plus">11+ fixtures (whole house)</option>
+      </select>
+      <label>ADA / accessible design required?</label>
+      <select id="qAda">
+        <option value="no">No — standard residential</option>
+        <option value="yes">Yes — full ADA compliance</option>
+        <option value="aging">Aging-in-place (ADA-inspired, not required)</option>
+        <option value="not_sure">Not sure — need consultation</option>
+      </select>
+      <button class="btn" onclick="submitQuote()">Request Rough-In Quote</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚡</span>Plumbing Inspection Support</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Failed a rough-in inspection? We diagnose and correct same-day in most FL counties. Call for immediate support.</div>
+      <div style="text-align:center;margin-top:12px">
+        <div style="font-size:1.4rem;font-weight:900;color:#00B4FF">(561) 555-PIPE</div>
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:4px">Licensed FL Master Plumber · Permitted Work · All FL Counties</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+function showTab(id,e){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  e.target.classList.add('active');
+}
+
+function updateFixtureOptions(){
+  var ft = document.getElementById('fixtureType').value;
+  var wallLbl = document.getElementById('wallLabel');
+  var wallSel = document.getElementById('wallType');
+  var floorLbl = document.getElementById('floorLabel');
+  var floorSel = document.getElementById('floorType');
+  wallLbl.style.display = (ft==='toilet'||ft==='toilet_pressure'||ft==='lav')?'block':'none';
+  wallSel.style.display = wallLbl.style.display;
+  floorLbl.style.display = (ft==='toilet'||ft==='toilet_pressure')?'block':'none';
+  floorSel.style.display = floorLbl.style.display;
+}
+
+var ROUGH_IN = {
+  lav:{
+    standard:{drainH:'18"–20" AFF',supplyH:'21"–22" AFF',supplySpacing:'8" c-c (hot left, cold right)',drainToWall:'12"–15" from back wall',trapSize:'1-1/4" or 1-1/2"',ventReq:'Within 5 ft of trap (FPC §909)',notes:'Drain stub-out should land at sink drain centerline. Vanity cabinet depth affects final height — confirm with cabinet spec sheet.'},
+    ada:{drainH:'17" max AFF',supplyH:'18"–20" AFF',supplySpacing:'8" c-c (hot left, cold right)',drainToWall:'12"–15" from back wall',trapSize:'1-1/2"',ventReq:'Within 5 ft of trap',notes:'ADA requires knee clearance below sink: 27" AFF at front, 9" depth min. Insulate drain and supply pipes to protect user from contact burns.'},
+    commercial:{drainH:'18"–20" AFF',supplyH:'21"–22" AFF',supplySpacing:'8" c-c',drainToWall:'12" to 15"',trapSize:'1-1/2"',ventReq:'Within 5 ft',notes:'Commercial applications may require sensor faucets (no manual knobs in healthcare settings). Check FL HRS requirements for food service.'}
+  },
+  kitchen:{
+    standard:{drainH:'18"–20" AFF',supplyH:'20"–22" AFF',supplySpacing:'8" c-c (hot left, cold right)',drainToWall:'16"–22" from back wall',trapSize:'1-1/2" or 2"',ventReq:'Within 5 ft (or island vent if applicable)',notes:'Double-bowl sinks use a waste tee or continuous waste assembly. Garbage disposal requires dedicated drain line to trap. Dishwasher drain must high-loop to 20" AFF min or air gap (FL requires air gap in some counties).'},
+    ada:{drainH:'16"–17" AFF',supplyH:'18"–20" AFF',supplySpacing:'8" c-c',drainToWall:'Per sink spec',trapSize:'1-1/2" or 2"',ventReq:'Within 5 ft',notes:'ADA kitchen sink: rim max 34" AFF, 27" clear knee space below, insulated drain and supply. Open space below sink must be clear for wheelchair approach.'},
+    commercial:{drainH:'18"–20" AFF',supplyH:'20"–22" AFF',supplySpacing:'8" c-c',drainToWall:'Per sink spec',trapSize:'2" (grease trap may apply)',ventReq:'FL FPC §709 — may require separate vent',notes:'Commercial kitchens may require grease interceptor — confirm with FL DEP local program before rough-in.'}
+  },
+  toilet:{
+    standard:{drainH:'Floor penetration',supplyH:'7" AFF, 6" left of drain CL',supplySpacing:'N/A (single supply)',drainToWall:'12" CL to wall (most models; verify mfr spec for 10" or 14")',trapSize:'3" or 4" closet flange',ventReq:'Wet vent or individual vent — FPC §909',notes:'Flange must be flush with or up to 1/4" above finished floor per FPC §405.4.1. If tile will be set after flange, use flange extension ring. Do not set flange below finished floor — this is a code violation.'},
+    ada:{drainH:'Floor penetration',supplyH:'7" AFF, 6" left of drain CL',supplySpacing:'N/A',drainToWall:'12" CL to wall',trapSize:'3" or 4" closet flange',ventReq:'FPC §909',notes:'ADA toilet seat height 17"–19" — use ADA-height toilet (comfort height). CL must be exactly 18" from side wall or obstacle. Clear floor space 60" wide × 56" forward of rear wall.'},
+    commercial:{drainH:'Floor penetration',supplyH:'Per mfr spec (flush valve)',supplySpacing:'N/A',drainToWall:'12" standard',trapSize:'4" closet flange',ventReq:'Individual vent (FPC)',notes:'Pressure-assist or flush-valve commercial toilets require higher supply pressure (25 PSI min at valve) and larger supply line (1" typical). Check water hammer arrester requirement.'}
+  },
+  toilet_pressure:{
+    standard:{drainH:'Floor penetration',supplyH:'7"–8" AFF, 6" left of drain CL',supplySpacing:'N/A',drainToWall:'12"',trapSize:'4" closet flange',ventReq:'Individual vent',notes:'Pressure-assist toilets require min 25 PSI supply pressure. Provide 1" supply line to valve location. Water hammer arrestor required per FPC §604.9.'},
+    ada:{drainH:'Floor penetration',supplyH:'7" AFF',supplySpacing:'N/A',drainToWall:'12"',trapSize:'4" closet flange',ventReq:'Individual vent',notes:'Same ADA requirements as gravity toilet — seat height 17"–19", CL 18" from wall, 60"×56" clear floor.'},
+    commercial:{drainH:'Floor penetration',supplyH:'Per mfr spec',supplySpacing:'N/A',drainToWall:'12" standard',trapSize:'4" closet flange',ventReq:'Individual vent',notes:'Commercial flush valves (Sloan, Zurn) require min 1" water main supply, 25 PSI minimum. Verify water pressure before specifying flush valve toilets — FL beach municipal supply varies.'}
+  },
+  urinal:{
+    standard:{drainH:'Per mfr spec (usually 14"–17" from wall)',supplyH:'Per mfr spec (flush valve)',supplySpacing:'N/A',drainToWall:'Per mfr',trapSize:'2" drain min',ventReq:'Individual vent (FPC)',notes:'Urinals are commercial use. FL code requires 12" CL to wall minimum, 15" to adjacent obstacle. ADA urinal: rim 17" max AFF, 13.5" deep min, elongated rim.'},
+    ada:{drainH:'Per mfr spec',supplyH:'Per mfr spec',supplySpacing:'N/A',drainToWall:'Per mfr',trapSize:'2" drain',ventReq:'Individual vent',notes:'ADA urinal: rim max 17" AFF, 13.5" deep minimum. Flush control max 44" AFF. Clear floor space 30"×48" forward approach.'},
+    commercial:{drainH:'Per mfr spec',supplyH:'Per mfr spec',supplySpacing:'N/A',drainToWall:'Per mfr',trapSize:'2" drain',ventReq:'Required',notes:'Commercial urinals require 1" supply line to flush valve. Verify FL water conservation compliance — max 0.5 GPF per FL Statute §553.9061.'}
+  },
+  tub:{
+    standard:{drainH:'Per tub specification (drain location varies)',supplyH:'28"–32" AFF',supplySpacing:'8" c-c (hot left)',drainToWall:'Per tub — measure from drain hole on spec sheet',trapSize:'1-1/2" P-trap',ventReq:'Within 5 ft of trap (FPC §909)',notes:'Always get tub spec sheet before rough-in — drain location varies by brand and model. Overflow plate centerline typically 16"–18" from finished floor. Showerhead over tub: 75"–78" AFF stub-out.'},
+    ada:{drainH:'Per tub spec',supplyH:'28"–32" AFF at foot end',supplySpacing:'8" c-c',drainToWall:'Per tub spec',trapSize:'1-1/2"',ventReq:'Within 5 ft',notes:'ADA tub: rim 17" AFF max preferred. Controls at foot end, reachable from outside tub. Grab bars at 8"–10" AFF and 33"–36" AFF. Handheld showerhead required with 59" hose.'},
+    commercial:{drainH:'Per tub spec',supplyH:'28"–32" AFF',supplySpacing:'8" c-c',drainToWall:'Per spec',trapSize:'1-1/2"',ventReq:'Within 5 ft',notes:'Hotel/hospital tubs: confirm with facilities department for specific brand. Some commercial tubs require floor-mounted supply valves — verify spec.'}
+  },
+  tub_shower:{
+    standard:{drainH:'Per tub specification',supplyH:'28"–32" AFF (tub valve)',supplySpacing:'8" c-c (hot left)',drainToWall:'Per tub spec',trapSize:'1-1/2"',ventReq:'Within 5 ft',notes:'Tub/shower combo: single valve with diverter. Valve rough-in at 28"–32" AFF. Showerhead stub-out at 75"–78" AFF. Use pressure-balancing valve (required by FPC §424.3).'},
+    ada:{drainH:'Per tub spec',supplyH:'28"–32" AFF at foot end',supplySpacing:'8" c-c',drainToWall:'Per spec',trapSize:'1-1/2"',ventReq:'Within 5 ft',notes:'ADA combo: same as ADA tub requirements. Handheld showerhead at 48" AFF (second connection) plus fixed at 75" AFF. Controls at foot end of tub.'},
+    commercial:{drainH:'Per tub spec',supplyH:'28"–32" AFF',supplySpacing:'8" c-c',drainToWall:'Per spec',trapSize:'1-1/2"',ventReq:'Within 5 ft',notes:'Hotel/motel most common application. Verify tub model with facilities — rough-in varies significantly by brand.'}
+  },
+  shower:{
+    standard:{drainH:'Floor drain — center or per base spec',supplyH:'48" AFF (mixing valve)',supplySpacing:'8" c-c (hot left)',drainToWall:'Per shower base spec',trapSize:'2" (FPC min for shower)',ventReq:'Within 5 ft of trap',notes:'Walk-in shower: pressure-balancing or thermostatic mixing valve required (FPC §424.3). Showerhead stub-out: 78"–80" AFF. Min shower size: 30"×30" finished floor (FPC §408.6). Shower pan must pitch 1/4" per foot to drain.'},
+    ada:{drainH:'Per transfer or roll-in base',supplyH:'38"–48" AFF',supplySpacing:'8" c-c',drainToWall:'Transfer: 1 side; Roll-in: any position',trapSize:'2"',ventReq:'Within 5 ft',notes:'ADA shower: 36"×36" transfer or 30"×60" roll-in. 1/2" max threshold or zero threshold (roll-in). Handheld showerhead at 48" AFF, 59" hose. Controls reachable from outside spray zone. Fold-down seat required.'},
+    commercial:{drainH:'Per spec',supplyH:'48" AFF',supplySpacing:'8" c-c',drainToWall:'Per spec',trapSize:'2" min (commercial may require larger)',ventReq:'Individual vent may be required',notes:'Commercial shower rooms (gym, hotel): gang shower may need common drain. Verify FL code for gang shower compartment spacing (FPC §408.6 requires 30"×30" min per stall).'}
+  },
+  outdoor:{
+    standard:{drainH:'N/A',supplyH:'12"–18" AFF (slab) or 12" above grade',supplySpacing:'N/A (single)',drainToWall:'Per location',trapSize:'N/A',ventReq:'N/A (hose bibb)',notes:'FL hose bibbs must be vacuum-breaker type (FPC §608.15.4.2). Minimum height 12" above grade per FPC. Anti-siphon required. In FL, freeze protection is rarely needed but hose bibbs should still be drainable in North FL.'},
+    ada:{drainH:'N/A',supplyH:'15"–48" AFF',supplySpacing:'N/A',drainToWall:'N/A',trapSize:'N/A',ventReq:'N/A',notes:'ADA exterior hose bib: operable part within 44" max AFF, within reach range. No ADA requirement for standard residential exterior hose bibbs.'},
+    commercial:{drainH:'N/A',supplyH:'12"–24" AFF',supplySpacing:'N/A',drainToWall:'N/A',trapSize:'N/A',ventReq:'N/A',notes:'Commercial exterior hose stations: check FL cross-connection requirements. Typically require RPZ backflow preventer on commercial irrigation supply.'}
+  },
+  washer:{
+    standard:{drainH:'Standpipe trap: 6"–18" AFF; top of standpipe: 36"–42" AFF',supplyH:'40"–48" AFF',supplySpacing:'8" c-c (hot left)',drainToWall:'Behind washer location',trapSize:'2" standpipe and trap',ventReq:'Within 5 ft (may use auto vent in FL)',notes:'Standpipe must be 2" diameter and 36"–42" AFF total height. Trap must be 6"–18" below standpipe top. Supply shut-offs required within 6" of supply stub-outs. Hot left, cold right.'},
+    ada:{drainH:'Same as standard — washer not an ADA fixture',supplyH:'40"–48" AFF',supplySpacing:'8" c-c',drainToWall:'Per location',trapSize:'2"',ventReq:'Within 5 ft',notes:'Washer is not a standard ADA fixture. Front-loading washers on raised platforms for wheelchair access — platform doesn\'t change plumbing rough-in.'},
+    commercial:{drainH:'Per washer spec; commercial machines may require 3" drain',supplyH:'40"–48" AFF',supplySpacing:'8" c-c',drainToWall:'Per spec',trapSize:'2" min; 3" for commercial',ventReq:'Per FL code',notes:'Commercial laundry: high-capacity machines may require 3" drain standpipe. Hot supply may need recirculating hot water for instant hot. Verify water usage rate — FL WMD may require sub-meter.'}
+  },
+  dishwasher:{
+    standard:{drainH:'High loop: 20" AFF min; or air gap above sink rim',supplyH:'Supply from under-sink shut-off; 3/8" line',supplySpacing:'N/A',drainToWall:'Under sink area',trapSize:'5/8" drain hose (included with unit)',ventReq:'High loop or air gap (FL §608.15.2)',notes:'FL plumbing code requires either a high-loop drain (drain hose looped to 20" AFF min, secured) or an air gap device on the sink rim. Air gap is preferred by FL inspectors. Dishwasher supply from hot water shut-off under sink.'},
+    ada:{drainH:'Same as standard',supplyH:'Same as standard',supplySpacing:'N/A',drainToWall:'N/A',trapSize:'5/8"',ventReq:'High loop or air gap',notes:'No special ADA rough-in for dishwasher. ADA kitchen design affects counter height and clearance, not dishwasher plumbing connections.'},
+    commercial:{drainH:'Per NSF/FL code — commercial DW drains to floor sink or grease interceptor',supplyH:'Per unit spec (often hot water booster at 180°F)',supplySpacing:'N/A',drainToWall:'N/A',trapSize:'Per mfr',ventReq:'Floor drain / floor sink required',notes:'Commercial dishwashers require booster heater to 180°F rinse temperature (FL HRS), floor drain, and may require separate grease interceptor connection.'}
+  },
+  waterheater:{
+    standard:{drainH:'Drain valve: 3"–4" AFF (tank bottom)',supplyH:'Top of water heater — per mfr',supplySpacing:'N/A (cold in, hot out)',drainToWall:'T&P relief valve drain: within 6" of floor or to exterior',trapSize:'3/4" T&P discharge; drain valve 3/4"',ventReq:'N/A (water heater — gas vent separate)',notes:'FL requires expansion tank on all closed systems (backflow preventer on supply). T&P relief valve discharge pipe must not have valves, slope to drain, and terminate within 6" of floor or outside building. Gas WH requires sediment trap within 12" of appliance.'},
+    ada:{drainH:'Standard applies',supplyH:'Standard applies',supplySpacing:'N/A',drainToWall:'Standard applies',trapSize:'Standard applies',ventReq:'N/A',notes:'Water heater is not an ADA fixture. ADA design may affect whether a tankless unit is preferred for ADA bathroom designs (smaller footprint, unlimited hot water for roll-in showers).'},
+    commercial:{drainH:'Per mfr',supplyH:'Per mfr',supplySpacing:'N/A',drainToWall:'T&P drain to floor drain',trapSize:'3/4" or larger',ventReq:'N/A (plumbing)',notes:'Commercial water heaters (storage or tankless): T&P relief must drain to floor drain or exterior. FL requires expansion tank on any system with backflow preventer. Verify BTU input for gas permit threshold (FL: above 200,000 BTU/hr requires separate gas permit).'}
+  }
+};
+
+function calcRoughIn(){
+  var ft = document.getElementById('fixtureType').value;
+  var ut = document.getElementById('useType').value;
+  var data = ROUGH_IN[ft] && ROUGH_IN[ft][ut] ? ROUGH_IN[ft][ut] : null;
+  if(!data){
+    document.getElementById('calcResult').innerHTML='<div style="color:#EF4444;font-size:0.82rem">No data for this combination.</div>';
+    document.getElementById('calcResult').style.display='block';
+    return;
+  }
+  var floorType = document.getElementById('floorType').value;
+  var flangeNote = '';
+  if(ft==='toilet'||ft==='toilet_pressure'){
+    var flangeAdj = {slab:'Set flange so top of flange is 0"–1/4" above rough concrete (tile will bring it to flush or slightly above)',tile_set:'Use flange extension if existing flange is below or flush with tile — FPC requires flange at or above finished floor',wood:'Set flange 1/4"–1/2" above subfloor; tile + mortar bed will bring to correct height',vinyl:'Set flange 1/2" above subfloor; vinyl plank adds 3/8"–1/2"'};
+    flangeNote = '<div class="gold-box" style="margin-top:8px"><strong>Flange Height Note ('+floorType+'):</strong> '+esc(flangeAdj[floorType]||'')+'</div>';
+  }
+  var fxLabel = {'lav':'Lavatory / Vanity Sink','kitchen':'Kitchen Sink','utility':'Utility / Slop Sink','toilet':'Toilet (Gravity Tank)','toilet_pressure':'Toilet (Pressure-Assist)','urinal':'Urinal','tub':'Bathtub','tub_shower':'Tub/Shower Combination','shower':'Walk-In Shower','outdoor':'Outdoor Hose Bibb','washer':'Clothes Washer Standpipe','dishwasher':'Dishwasher Drain','waterheater':'Water Heater'};
+  var utLabel = {standard:'Standard Residential',ada:'ADA Compliant',commercial:'Commercial'};
+  var html = '<div style="font-size:0.82rem;font-weight:700;color:#00B4FF;margin-bottom:10px">'+esc(fxLabel[ft]||ft)+' — '+esc(utLabel[ut]||ut)+'</div>';
+  html += '<div class="res-grid">';
+  html += '<div class="res-card"><div class="res-label">Drain / Stub-Out Height</div><div class="res-val" style="font-size:0.88rem">'+esc(data.drainH)+'</div></div>';
+  html += '<div class="res-card"><div class="res-label">Supply Height AFF</div><div class="res-val" style="font-size:0.88rem">'+esc(data.supplyH)+'</div></div>';
+  html += '<div class="res-card"><div class="res-label">Supply Spacing / Layout</div><div class="res-val" style="font-size:0.88rem">'+esc(data.supplySpacing)+'</div></div>';
+  html += '<div class="res-card"><div class="res-label">Drain to Wall / Offset</div><div class="res-val" style="font-size:0.88rem">'+esc(data.drainToWall)+'</div></div>';
+  html += '<div class="res-card"><div class="res-label">Trap / Drain Size</div><div class="res-val" style="font-size:0.88rem">'+esc(data.trapSize)+'</div></div>';
+  html += '<div class="res-card"><div class="res-label">Vent Requirement</div><div class="res-val" style="font-size:0.88rem">'+esc(data.ventReq)+'</div></div>';
+  html += '</div>';
+  html += flangeNote;
+  html += '<div class="tip-box" style="margin-top:8px"><strong>FL Code Note:</strong> '+esc(data.notes)+'</div>';
+  html += '<button class="btn" onclick="document.getElementById(\'service\').classList.add(\'active\');document.querySelectorAll(\'.panel\').forEach(function(p){if(p.id!==\'service\')p.classList.remove(\'active\');});document.querySelectorAll(\'.tab\').forEach(function(t,i){if(i===3)t.classList.add(\'active\');else t.classList.remove(\'active\');});" style="margin-top:10px;font-size:0.82rem">Get a Quote for This Fixture →</button>';
+  var rb = document.getElementById('calcResult');
+  rb.innerHTML = html; rb.style.display = 'block';
+}
+
+function submitQuote(){
+  var n=document.getElementById('qName').value.trim();
+  var p=document.getElementById('qPhone').value.trim();
+  if(!n||!p){alert('Please enter your name and phone number.');return;}
+  showToast("We'll call you within 2 hours!");
+}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection fl-plumbing-rough-in-heights toilet-flange-height shower-valve-rough-in sink-drain-height ADA-rough-in FPC-2023 Florida-Building-Code closet-flange-height tub-rough-in shower-rough-in lavatory-drain-height kitchen-sink-rough-in washer-standpipe-height FPC-405 FPC-424 FPC-608 pressure-balancing-valve thermostatic-valve ADA-accessible-design aging-in-place FL-plumbing-permit rough-in-calculator rough-in-standards Palm-Beach-County Broward Miami-Dade Hillsborough Orange-County plumbing-inspection rough-in-inspection 
+</div>
+</body>
+</html>

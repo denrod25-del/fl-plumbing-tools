@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FL Grease Trap vs Interceptor Sizing Guide | Commercial Kitchen | FOG Compliance | Palm Beach Broward Miami-Dade | FPC 2023</title>
+<meta name="description" content="Florida commercial kitchen grease trap vs grease interceptor sizing calculator. FOG compliance, fixture unit method, flow rate sizing, FL DEP rules, Palm Beach County, Broward, Miami-Dade, Hillsborough FOG ordinances. Grease interceptor maintenance schedule. FPC 2023.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a0500 0%,#200600 100%);border-bottom:3px solid #EF4444;padding:20px 16px;text-align:center}
+.header h1{font-size:1.35rem;color:#EF4444;font-weight:700;line-height:1.3}
+.header p{color:#94A3B8;font-size:0.85rem;margin-top:6px}
+.badge{display:inline-block;background:#EF444422;color:#EF4444;border:1px solid #EF444444;border-radius:12px;font-size:0.7rem;padding:2px 10px;margin-top:8px;font-weight:600}
+.container{max-width:480px;margin:0 auto;padding:0 12px 40px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;margin:16px 0;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;color:#94A3B8;font-size:0.68rem;font-weight:600;border-radius:7px;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:#EF4444;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1E2A45}
+.card-title{font-size:0.9rem;font-weight:700;color:#EF4444;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:0.8rem;color:#94A3B8;margin-bottom:5px;margin-top:10px;font-weight:600}
+select,input[type=number],input[type=text],input[type=tel]{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:0.85rem;outline:none;appearance:none}
+select:focus,input:focus{border-color:#EF4444}
+.btn{width:100%;padding:14px;background:#EF4444;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:14px;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.result-box{background:#141929;border-radius:10px;padding:14px;margin-top:12px;border:1px solid #1E2A45;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#EF4444;color:#fff;padding:12px 24px;border-radius:24px;font-weight:700;font-size:0.9rem;z-index:999;display:none;white-space:nowrap;box-shadow:0 4px 20px #EF444455}
+.tip-box{background:#EF444411;border:1px solid #EF444433;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.tip-box strong{color:#EF4444}
+.warn-box{background:#F4B94211;border:1px solid #F4B94233;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.warn-box strong{color:#F4B942}
+.ok-box{background:#22C55E11;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.ok-box strong{color:#22C55E}
+.info-box{background:#00B4FF11;border:1px solid #00B4FF33;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.info-box strong{color:#00B4FF}
+.teal-box{background:#14B8A611;border:1px solid #14B8A633;border-radius:8px;padding:12px;margin-top:10px;font-size:0.78rem;color:#94A3B8;line-height:1.5}
+.teal-box strong{color:#14B8A6}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.data-row:last-child{border-bottom:none}
+.data-label{color:#94A3B8;flex:1;line-height:1.4;padding-right:8px}
+.data-val{font-weight:700;color:#E2E8F0;min-width:100px;text-align:right}
+.data-val.red{color:#EF4444}
+.data-val.green{color:#22C55E}
+.data-val.gold{color:#F4B942}
+.data-val.blue{color:#00B4FF}
+.data-val.teal{color:#14B8A6}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.compare-card{background:#141929;border-radius:10px;padding:12px;border:2px solid}
+.compare-card.trap{border-color:#F4B94244}
+.compare-card.interceptor{border-color:#EF444444}
+.compare-title{font-size:0.82rem;font-weight:700;margin-bottom:8px;text-align:center;padding-bottom:6px;border-bottom:1px solid #1E2A4530}
+.compare-title.trap{color:#F4B942}
+.compare-title.interceptor{color:#EF4444}
+.compare-item{font-size:0.72rem;color:#94A3B8;padding:4px 0;border-bottom:1px solid #1E2A4520;line-height:1.3}
+.compare-item:last-child{border-bottom:none}
+.compare-item strong{display:block;font-size:0.7rem;font-weight:700;margin-bottom:1px}
+.compare-item strong.trap{color:#F4B942}
+.compare-item strong.interceptor{color:#EF4444}
+.fixture-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.fixture-item:last-child{border-bottom:none}
+.fixture-name{color:#94A3B8;flex:1;padding-right:8px}
+.fixture-input{width:80px;background:#0F1629;border:1px solid #1E2A45;border-radius:6px;color:#E2E8F0;padding:6px 8px;font-size:0.82rem;outline:none;text-align:right}
+.fixture-input:focus{border-color:#EF4444}
+.fixture-dfu{font-size:0.72rem;color:#94A3B8;min-width:50px;text-align:right}
+.county-card{background:#141929;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #1E2A45}
+.county-name{font-size:0.85rem;font-weight:700;color:#EF4444;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #1E2A4530}
+.county-spec{font-size:0.75rem;color:#94A3B8;padding:5px 0;border-bottom:1px solid #1E2A4520;line-height:1.4}
+.county-spec:last-child{border-bottom:none}
+.county-spec strong{color:#E2E8F0}
+.maint-row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid #1E2A4530;font-size:0.78rem}
+.maint-row:last-child{border-bottom:none}
+.maint-label{color:#94A3B8;flex:1;line-height:1.4;padding-right:8px}
+.maint-freq{font-weight:700;color:#E2E8F0;min-width:110px;text-align:right}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.res-card{background:#0F1629;border-radius:8px;padding:10px;text-align:center;border:1px solid #1E2A45}
+.res-label{font-size:0.68rem;color:#94A3B8;margin-bottom:3px}
+.res-val{font-size:1rem;font-weight:900;color:#EF4444}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:2rem">🍳</div>
+  <h1>FL Grease Trap vs Interceptor Sizing Guide</h1>
+  <p>Commercial kitchen FOG compliance · Fixture unit method · Flow rate sizing · FL DEP rules · PBC / Broward / Miami-Dade / Hillsborough FOG ordinances · Maintenance schedule</p>
+  <span class="badge">FL DEP FOG Rules · FPC 2023 §1003 · All Major FL Counties · Commercial Kitchen</span>
+</div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('compare',event)">Trap vs Interceptor</button>
+    <button class="tab" onclick="showTab('sizing',event)">Sizing Calculator</button>
+    <button class="tab" onclick="showTab('fog',event)">FOG Compliance</button>
+    <button class="tab" onclick="showTab('service',event)">Get a Quote</button>
+  </div>
+
+  <!-- TAB 1: Trap vs Interceptor -->
+  <div id="compare" class="panel active">
+    <div class="card">
+      <div class="card-title"><span>⚖️</span>Grease Trap vs. Grease Interceptor — Which Do You Need?</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:12px;line-height:1.5">Florida requires grease control devices on all food service establishments. The choice between an indoor grease trap and an outdoor grease interceptor depends on flow rate, facility type, available space, and your local utility's FOG (Fats, Oils & Grease) ordinance.</div>
+      <div class="compare-grid">
+        <div class="compare-card trap">
+          <div class="compare-title trap">🪣 Grease Trap (Indoor)</div>
+          <div class="compare-item"><strong class="trap">Location</strong>Installed inside kitchen, under sink or floor-mounted</div>
+          <div class="compare-item"><strong class="trap">Typical size</strong>5–100 GPM capacity</div>
+          <div class="compare-item"><strong class="trap">Best for</strong>Small kitchens, food trucks, cafes, snack bars</div>
+          <div class="compare-item"><strong class="trap">Cost installed</strong>$500–$3,500</div>
+          <div class="compare-item"><strong class="trap">Pumping schedule</strong>Every 1–4 weeks (varies by use)</div>
+          <div class="compare-item"><strong class="trap">Access</strong>Easy — indoor access</div>
+          <div class="compare-item"><strong class="trap">FL code ref</strong>FPC §1003.1</div>
+        </div>
+        <div class="compare-card interceptor">
+          <div class="compare-title interceptor">🏗️ Grease Interceptor (Outdoor)</div>
+          <div class="compare-item"><strong class="interceptor">Location</strong>Outside building, buried underground</div>
+          <div class="compare-item"><strong class="interceptor">Typical size</strong>500–5,000+ gallon tank</div>
+          <div class="compare-item"><strong class="interceptor">Best for</strong>Full-service restaurants, cafeterias, hotels, hospitals</div>
+          <div class="compare-item"><strong class="interceptor">Cost installed</strong>$5,000–$25,000+</div>
+          <div class="compare-item"><strong class="interceptor">Pumping schedule</strong>Every 1–3 months (varies)</div>
+          <div class="compare-item"><strong class="interceptor">Access</strong>Vault access at grade — truck pumping</div>
+          <div class="compare-item"><strong class="interceptor">FL code ref</strong>FPC §1003.3</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🔍</span>Decision Guide — Which Do You Need?</div>
+      <label>Type of food service establishment</label>
+      <select id="estType" onchange="updateDecision()">
+        <option value="">Select your establishment type...</option>
+        <option value="food_truck">Food truck / mobile food unit</option>
+        <option value="snack_bar">Snack bar / concession stand</option>
+        <option value="cafe">Cafe / coffee shop (limited cooking)</option>
+        <option value="fast_food">Fast food / quick service restaurant</option>
+        <option value="casual">Casual dining restaurant</option>
+        <option value="full_service">Full-service / fine dining restaurant</option>
+        <option value="bar_grill">Bar & grill / sports bar</option>
+        <option value="bakery">Bakery / donut shop</option>
+        <option value="pizza">Pizza restaurant</option>
+        <option value="cafeteria">School / hospital / cafeteria</option>
+        <option value="hotel">Hotel kitchen</option>
+        <option value="ghost">Ghost kitchen / commissary kitchen</option>
+        <option value="catering">Catering facility</option>
+      </select>
+      <label>Number of seats (dining capacity)</label>
+      <select id="numSeats" onchange="updateDecision()">
+        <option value="0">No dining (takeout / delivery only)</option>
+        <option value="25">1–25 seats</option>
+        <option value="50">26–50 seats</option>
+        <option value="100">51–100 seats</option>
+        <option value="150">101–150 seats</option>
+        <option value="200">151–200 seats</option>
+        <option value="300">200+ seats</option>
+      </select>
+      <label>Number of meals served per day (approx)</label>
+      <select id="numMeals" onchange="updateDecision()">
+        <option value="50">Fewer than 50 meals/day</option>
+        <option value="100">50–100 meals/day</option>
+        <option value="200">101–200 meals/day</option>
+        <option value="400">201–400 meals/day</option>
+        <option value="600">401–600 meals/day</option>
+        <option value="1000">601–1,000 meals/day</option>
+        <option value="2000">1,000+ meals/day</option>
+      </select>
+      <label>Does your menu involve heavy frying, sautéing, or oil-heavy cooking?</label>
+      <select id="cookingType" onchange="updateDecision()">
+        <option value="low">Light cooking — mostly sandwiches, salads, prep</option>
+        <option value="medium">Moderate — some frying and grilling</option>
+        <option value="high">Heavy — deep fryers, woks, heavy saucing</option>
+      </select>
+      <label>Available space for grease control device</label>
+      <select id="spaceAvail" onchange="updateDecision()">
+        <option value="indoor">Indoor space available (under sink or in kitchen)</option>
+        <option value="outdoor">Outdoor space available (yard, parking area)</option>
+        <option value="both">Both indoor and outdoor available</option>
+        <option value="limited">Very limited — space is a constraint</option>
+      </select>
+      <div class="result-box" id="decisionResult" style="display:block;margin-top:12px">
+        <div style="font-size:0.78rem;color:#94A3B8;text-align:center;padding:10px">Select your establishment details above to get a recommendation.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📋</span>FL FOG Regulations — Code Requirements</div>
+      <div class="data-row"><span class="data-label">FL Plumbing Code section governing grease traps</span><span class="data-val red">FPC 2023 §1003</span></div>
+      <div class="data-row"><span class="data-label">Who regulates FOG in FL? (permits &amp; inspections)</span><span class="data-val red">Local utility / county + FL DEP</span></div>
+      <div class="data-row"><span class="data-label">FL DEP Chapter governing FOG discharge</span><span class="data-val red">FAC §62-302 &amp; §62-600</span></div>
+      <div class="data-row"><span class="data-label">Establishments exempted from grease device requirement</span><span class="data-val">Residential; vending machines; premises with no cooking</span></div>
+      <div class="data-row"><span class="data-label">FL pretreatment standard — FOG discharge limit to sewer</span><span class="data-val red">100 mg/L max (most FL utilities)</span></div>
+      <div class="data-row"><span class="data-label">Effluent FOG limit — Palm Beach County Utilities</span><span class="data-val red">100 mg/L</span></div>
+      <div class="data-row"><span class="data-label">Manifest / record-keeping requirement for pumping</span><span class="data-val red">Must retain manifests 3 years</span></div>
+      <div class="data-row"><span class="data-label">FOG permit required before opening?</span><span class="data-val red">Yes — most FL counties require FOG permit</span></div>
+      <div class="data-row"><span class="data-label">Bypass (grease device out of service) — allowed?</span><span class="data-val red">No — immediate violation in all FL counties</span></div>
+      <div class="warn-box"><strong>FL FOG Violation Penalties:</strong> Discharging excess FOG to the sewer system is a serious violation in Florida. Penalties range from $500 to $10,000+ per day depending on county. A sewer blockage caused by your FOG discharge can result in your business being held liable for the cost of sewer main jetting, cleanup, and any resulting SSO (Sanitary Sewer Overflow) — which can reach $50,000 or more. Proper sizing, maintenance, and documentation are essential.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🛢️</span>Grease Interceptor Sizing Standards — FL</div>
+      <div class="data-row"><span class="data-label">ASPE Standard for sizing (most FL utilities use)</span><span class="data-val red">PDI G101 or ASPE method</span></div>
+      <div class="data-row"><span class="data-label">Minimum grease interceptor size — typical FL counties</span><span class="data-val red">1,000 gallons</span></div>
+      <div class="data-row"><span class="data-label">Two-chamber required for interceptors?</span><span class="data-val red">Yes — FL DEP and most county FOG programs</span></div>
+      <div class="data-row"><span class="data-label">Pumping frequency rule — "25% Rule" (most FL counties)</span><span class="data-val red">Pump when 25% full of grease + solids</span></div>
+      <div class="data-row"><span class="data-label">NAUE method (meals/day) — FL alternative sizing</span><span class="data-val">Widely used by FL FOG programs</span></div>
+      <div class="data-row"><span class="data-label">Grease trap (indoor) — max capacity before interceptor required</span><span class="data-val red">100 GPM per FPC (most FL utilities require interceptor at 50+ GPM)</span></div>
+      <div class="data-row"><span class="data-label">Access manhole required — grease interceptor</span><span class="data-val red">Yes — at grade; both chambers</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: Sizing Calculator -->
+  <div id="sizing" class="panel">
+    <div class="card">
+      <div class="card-title"><span>📐</span>Grease Device Sizing Calculator</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Calculate required grease trap (GPM) or grease interceptor (gallons) capacity using the fixture unit method (FPC §1003) and the NAUE meals-per-day method used by most FL county FOG programs.</div>
+      <label>Sizing method</label>
+      <select id="sizingMethod" onchange="toggleSizingMethod()">
+        <option value="fixture">Fixture Unit Method (FPC §1003 — for grease trap sizing)</option>
+        <option value="naue">NAUE Method — Meals/Day (FL county FOG programs — for interceptor)</option>
+        <option value="flowrate">Flow Rate Method (actual GPM calculation)</option>
+      </select>
+
+      <!-- Fixture Method -->
+      <div id="fixtureMethod">
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:10px;margin-bottom:8px;line-height:1.5">Enter the number of each fixture type connected to the grease trap/interceptor. DFUs per FPC Table 709.1.</div>
+        <div class="fixture-item"><span class="fixture-name">3-compartment sink (per compartment)</span><input type="number" class="fixture-input" id="fx3comp" value="0" min="0" max="30"><span class="fixture-dfu">3 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Pot wash / pre-rinse sink</span><input type="number" class="fixture-input" id="fxPotwash" value="0" min="0" max="20"><span class="fixture-dfu">4 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Floor drain (kitchen)</span><input type="number" class="fixture-input" id="fxFloorDrain" value="0" min="0" max="20"><span class="fixture-dfu">2 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Floor sink (under equipment)</span><input type="number" class="fixture-input" id="fxFloorSink" value="0" min="0" max="20"><span class="fixture-dfu">3 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Commercial dishwasher</span><input type="number" class="fixture-input" id="fxDishwasher" value="0" min="0" max="10"><span class="fixture-dfu">6 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Mop sink / utility sink</span><input type="number" class="fixture-input" id="fxMopSink" value="0" min="0" max="10"><span class="fixture-dfu">3 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Dump sink / bar sink</span><input type="number" class="fixture-input" id="fxDumpSink" value="0" min="0" max="20"><span class="fixture-dfu">2 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Kettle condensate drain</span><input type="number" class="fixture-input" id="fxKettle" value="0" min="0" max="10"><span class="fixture-dfu">1 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Wok station drain</span><input type="number" class="fixture-input" id="fxWok" value="0" min="0" max="10"><span class="fixture-dfu">2 DFU ea</span></div>
+        <div class="fixture-item"><span class="fixture-name">Ice machine drain</span><input type="number" class="fixture-input" id="fxIce" value="0" min="0" max="10"><span class="fixture-dfu">1 DFU ea</span></div>
+        <label>Retention time (minutes) — from FPC Table 1003.1</label>
+        <select id="retentionTime">
+          <option value="15">15 min — less than 50% vegetable, no pork, no fowl</option>
+          <option value="20" selected>20 min — food with vegetable and limited animal fat</option>
+          <option value="25">25 min — food with substantial animal fat (pork, poultry, fryer oil)</option>
+          <option value="30">30 min — food with heavy fryer oil, lard, or tallow</option>
+        </select>
+        <label>Flow rate diversity factor</label>
+        <select id="diversityFactor">
+          <option value="0.80">0.80 — multiple fixtures seldom used simultaneously (small cafe)</option>
+          <option value="0.85" selected>0.85 — typical commercial kitchen (restaurant)</option>
+          <option value="0.90">0.90 — heavy use / most fixtures operate together</option>
+          <option value="1.00">1.00 — all fixtures at maximum simultaneous use</option>
+        </select>
+      </div>
+
+      <!-- NAUE Method -->
+      <div id="naueMethod" style="display:none">
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:10px;margin-bottom:8px;line-height:1.5">The NAUE (National Association of Utility Engineers) method calculates grease interceptor size by meals served per day. Used by PBC Utilities, Broward County, Miami-Dade Water & Sewer, and most FL FOG programs.</div>
+        <label>Number of meals served per day</label>
+        <input type="number" id="nMeals" value="200" min="1" max="10000" step="1">
+        <label>Waste flow factor (gallons per meal)</label>
+        <select id="wasteFlow">
+          <option value="6">6 gal/meal — limited menu, no heavy frying</option>
+          <option value="8" selected>8 gal/meal — typical restaurant with frying</option>
+          <option value="10">10 gal/meal — heavy cooking, multiple dishwashers</option>
+          <option value="12">12 gal/meal — cafeteria / institutional / hotel kitchen</option>
+          <option value="5">5 gal/meal — fast food / quick service</option>
+        </select>
+        <label>Retention time (hours)</label>
+        <select id="naueRetention">
+          <option value="12">12 hours — minimum (small operation)</option>
+          <option value="24" selected>24 hours — standard (most FL county FOG programs)</option>
+          <option value="48">48 hours — recommended for heavy FOG generators</option>
+        </select>
+        <label>Number of operating hours per day</label>
+        <select id="opHours">
+          <option value="8">8 hours (breakfast / lunch only)</option>
+          <option value="12">12 hours (lunch &amp; dinner)</option>
+          <option value="16" selected>16 hours (full service)</option>
+          <option value="18">18 hours</option>
+          <option value="24">24 hours (24-hour operation)</option>
+        </select>
+      </div>
+
+      <!-- Flow Rate Method -->
+      <div id="flowRateMethod" style="display:none">
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:10px;margin-bottom:8px;line-height:1.5">Enter actual measured or engineered peak flow rate. Peak flow is the maximum simultaneous discharge from all connected fixtures.</div>
+        <label>Peak flow rate (GPM) — measured or calculated</label>
+        <input type="number" id="peakGPM" value="25" min="1" max="2000" step="1">
+        <label>Retention time required (minutes)</label>
+        <select id="frRetention">
+          <option value="15">15 minutes</option>
+          <option value="20" selected>20 minutes</option>
+          <option value="25">25 minutes</option>
+          <option value="30">30 minutes</option>
+        </select>
+        <label>Device type to size</label>
+        <select id="frDeviceType">
+          <option value="trap">Indoor grease trap (GPM rating)</option>
+          <option value="interceptor">Outdoor grease interceptor (gallons)</option>
+        </select>
+      </div>
+
+      <button class="btn" onclick="calcGrease()">Calculate Grease Device Size</button>
+      <div class="result-box" id="greaseResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📊</span>FL Grease Trap Standard Sizes (Indoor)</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px">Standard GPM-rated indoor grease traps per PDI G101. Select the next standard size at or above your calculated requirement.</div>
+      <div class="data-row"><span class="data-label">5 GPM / 10 gallon — food truck, concession, small cafe</span><span class="data-val">Under-counter; ~$400–$700</span></div>
+      <div class="data-row"><span class="data-label">10 GPM / 20 gallon — small café, bakery, snack bar</span><span class="data-val">Under-counter; ~$700–$1,200</span></div>
+      <div class="data-row"><span class="data-label">15 GPM / 30 gallon — small restaurant, deli</span><span class="data-val">Under-counter/floor; ~$1,000–$2,000</span></div>
+      <div class="data-row"><span class="data-label">20 GPM / 40 gallon — medium café or limited kitchen</span><span class="data-val">Floor-mounted; ~$1,500–$3,000</span></div>
+      <div class="data-row"><span class="data-label">25 GPM / 50 gallon</span><span class="data-val">Floor-mounted; ~$2,000–$3,500</span></div>
+      <div class="data-row"><span class="data-label">35 GPM / 70 gallon</span><span class="data-val">Floor-mounted; ~$3,000–$5,000</span></div>
+      <div class="data-row"><span class="data-label">50 GPM / 100 gallon — larger quick service</span><span class="data-val">Floor-mounted; ~$4,000–$7,000</span></div>
+      <div class="data-row"><span class="data-label">100 GPM — maximum indoor grease trap (FPC §1003)</span><span class="data-val">Requires outdoor interceptor above this</span></div>
+      <div class="tip-box"><strong>FL Rule:</strong> When your calculated grease trap size exceeds the capacity of an indoor unit, or when your local FOG program requires it, you must install an outdoor underground grease interceptor instead. Most FL county FOG programs require interceptors for full-service restaurants regardless of fixture count.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🏗️</span>Grease Interceptor Tank Sizes — FL Standard</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px">Precast concrete or fiberglass underground interceptors. Select next standard size at or above calculated requirement.</div>
+      <div class="data-row"><span class="data-label">500 gallon — not accepted by most FL FOG programs (below minimum)</span><span class="data-val red">Below most FL minimums</span></div>
+      <div class="data-row"><span class="data-label">750 gallon — accepted by some FL counties for very small operations</span><span class="data-val gold">Small only; verify with county</span></div>
+      <div class="data-row"><span class="data-label">1,000 gallon — minimum for most FL county FOG programs</span><span class="data-val green">~$5,000–$8,000 installed</span></div>
+      <div class="data-row"><span class="data-label">1,500 gallon</span><span class="data-val green">~$7,000–$12,000 installed</span></div>
+      <div class="data-row"><span class="data-label">2,000 gallon — typical for casual dining (50–100 seats)</span><span class="data-val green">~$9,000–$15,000 installed</span></div>
+      <div class="data-row"><span class="data-label">2,500 gallon</span><span class="data-val green">~$11,000–$18,000 installed</span></div>
+      <div class="data-row"><span class="data-label">3,000 gallon — larger restaurants, hotel kitchens</span><span class="data-val green">~$13,000–$20,000 installed</span></div>
+      <div class="data-row"><span class="data-label">4,000–5,000 gallon — cafeteria, hospital, large hotel</span><span class="data-val green">~$18,000–$30,000 installed</span></div>
+      <div class="data-row"><span class="data-label">Custom / larger — multi-unit food courts</span><span class="data-val">Engineer-designed</span></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FOG Compliance -->
+  <div id="fog" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🏛️</span>FL County FOG Program Requirements</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Each FL county has its own FOG (Fats, Oils, and Grease) control program administered by the local water/wastewater utility. Requirements vary — always verify with your specific county utility before installing.</div>
+    </div>
+
+    <div class="county-card">
+      <div class="county-name">Palm Beach County (PBC) — Palm Beach County Utilities</div>
+      <div class="county-spec"><strong>FOG program:</strong> Palm Beach County FOG Control Ordinance (Ordinance 2016-011)</div>
+      <div class="county-spec"><strong>Required for:</strong> All food service establishments (FSEs) connecting to county sewer system</div>
+      <div class="county-spec"><strong>Minimum interceptor size:</strong> 1,000 gallons (precast concrete, two-chamber)</div>
+      <div class="county-spec"><strong>Flow rate limit:</strong> 100 mg/L FOG in effluent to sewer</div>
+      <div class="county-spec"><strong>Pumping minimum frequency:</strong> When 25% full of grease + solids; minimum quarterly pump-out required in most cases</div>
+      <div class="county-spec"><strong>Manifest requirements:</strong> Keep pumping manifests on-site for 3 years; submit copies to PBC Utilities annually or upon request</div>
+      <div class="county-spec"><strong>Permit required:</strong> Yes — FOG Control Device Permit from PBC Utilities before installation; separate from building permit</div>
+      <div class="county-spec"><strong>Inspection:</strong> PBC Utilities inspects interceptors at installation and periodically during operation</div>
+      <div class="county-spec"><strong>Key contact:</strong> PBC Utilities — Engineering Division, Pretreatment Program</div>
+    </div>
+
+    <div class="county-card">
+      <div class="county-name">Broward County — BSO / Broward County Environmental Licensing</div>
+      <div class="county-spec"><strong>FOG program:</strong> Broward County Unified Land Development Code + Municipal FOG ordinances (varies by city)</div>
+      <div class="county-spec"><strong>Required for:</strong> All FSEs — restaurants, food courts, caterers, hospitals, schools, hotels with food service</div>
+      <div class="county-spec"><strong>Minimum interceptor size:</strong> 1,000 gallons per most Broward cities; Ft. Lauderdale minimum 1,500 gal in some zones</div>
+      <div class="county-spec"><strong>Sizing method:</strong> NAUE method (meals/day × 8 gal × retention time ÷ operating hours) used by most Broward utilities</div>
+      <div class="county-spec"><strong>City-level FOG programs:</strong> Fort Lauderdale, Hollywood, Miramar, Pembroke Pines each have city-specific FOG programs — check with the city utility</div>
+      <div class="county-spec"><strong>Pumping frequency:</strong> When 25% full; minimum every 90 days for restaurants; some cities require monthly reporting</div>
+      <div class="county-spec"><strong>High-temperature dishwasher:</strong> Some Broward utilities exempt high-temp sanitizing dishwashers (180°F) from grease device connection — verify with your city utility</div>
+    </div>
+
+    <div class="county-card">
+      <div class="county-name">Miami-Dade County — Miami-Dade Water and Sewer Department (WASD)</div>
+      <div class="county-spec"><strong>FOG program:</strong> Miami-Dade WASD Industrial Pretreatment Program; Chapter 32 Miami-Dade Code</div>
+      <div class="county-spec"><strong>Required for:</strong> All FSEs connecting to WASD system; must obtain Industrial Wastewater Discharge Permit (IWDP)</div>
+      <div class="county-spec"><strong>Minimum interceptor size:</strong> 1,500 gallons (Miami-Dade has stricter minimums than most FL counties)</div>
+      <div class="county-spec"><strong>Effluent limit:</strong> 100 mg/L FOG; WASD may sample and test effluent — violation can trigger IWDP revocation</div>
+      <div class="county-spec"><strong>Reporting requirements:</strong> Quarterly self-monitoring reports required for larger FSEs; manifests submitted to WASD pretreatment division</div>
+      <div class="county-spec"><strong>Grease hauler registration:</strong> Only WASD-registered grease haulers may pump interceptors in Miami-Dade — must use registered contractor</div>
+      <div class="county-spec"><strong>Inspection frequency:</strong> WASD inspects most FSEs annually; non-compliance can result in fines up to $10,000/day</div>
+    </div>
+
+    <div class="county-card">
+      <div class="county-name">Hillsborough County — Tampa Bay Water / Hillsborough County ENV</div>
+      <div class="county-spec"><strong>FOG program:</strong> Hillsborough County FOG Control Ordinance; City of Tampa has separate ordinance</div>
+      <div class="county-spec"><strong>Required for:</strong> All FSEs — City of Tampa enforces separately from unincorporated Hillsborough</div>
+      <div class="county-spec"><strong>Minimum interceptor size:</strong> 1,000 gallons (Hillsborough County); City of Tampa may require larger</div>
+      <div class="county-spec"><strong>Best management practices (BMPs):</strong> All FSEs must implement and document BMPs including dry wipe pans, grease disposal procedures, and employee training</div>
+      <div class="county-spec"><strong>Grease disposal documentation:</strong> Waste manifests kept 3 years on-site; submitted to HCENV upon request or annually</div>
+      <div class="county-spec"><strong>City of Tampa:</strong> City of Tampa has separate FOG program — FSEs in city limits must register with Tampa Water Department; interceptor plan approval required before permit</div>
+    </div>
+
+    <div class="county-card">
+      <div class="county-name">Orange County / City of Orlando — Orlando Utilities Commission (OUC)</div>
+      <div class="county-spec"><strong>FOG program:</strong> City of Orlando FOG Control Program; Orange County Utilities has parallel program</div>
+      <div class="county-spec"><strong>Required for:</strong> All FSEs; commissary kitchens and ghost kitchens now specifically included (2022 update)</div>
+      <div class="county-spec"><strong>Minimum interceptor size:</strong> 1,000 gallons minimum; most restaurants required at 1,500 gal based on NAUE calculation</div>
+      <div class="county-spec"><strong>Pumping frequency:</strong> Every 90 days minimum; more often if 25% threshold reached sooner</div>
+      <div class="county-spec"><strong>Automated grease removal:</strong> Orange County Utilities accepts Automatic Grease Removal Devices (AGRDs) as alternative to large interceptors in some cases — pre-approval required</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🗓️</span>Grease Device Maintenance Schedule — FL</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Proper maintenance is legally required and prevents the most common cause of FOG violations. Keep all manifests for 3 years.</div>
+      <div class="maint-row"><span class="maint-label">Indoor grease trap (5–25 GPM) — small café or food truck</span><span class="maint-freq">Every 1–2 weeks</span></div>
+      <div class="maint-row"><span class="maint-label">Indoor grease trap (25–50 GPM) — fast food or small restaurant</span><span class="maint-freq">Weekly to bi-weekly</span></div>
+      <div class="maint-row"><span class="maint-label">Indoor grease trap (50–100 GPM) — medium restaurant</span><span class="maint-freq">Weekly</span></div>
+      <div class="maint-row"><span class="maint-label">Outdoor interceptor (1,000 gal) — casual dining, 50–75 seats</span><span class="maint-freq">Every 30–60 days</span></div>
+      <div class="maint-row"><span class="maint-label">Outdoor interceptor (1,500–2,000 gal) — full service restaurant</span><span class="maint-freq">Every 60–90 days</span></div>
+      <div class="maint-row"><span class="maint-label">Outdoor interceptor (2,500+ gal) — large restaurant / hotel</span><span class="maint-freq">Every 90 days (most FL FOG programs)</span></div>
+      <div class="maint-row"><span class="maint-label">25% Rule trigger (all FL counties) — pump regardless of schedule</span><span class="maint-freq">When 25% full of FOG + solids</span></div>
+      <div class="maint-row"><span class="maint-label">Solids trap depth (interceptor) — action threshold</span><span class="maint-freq">When solids within 12" of outlet</span></div>
+      <div class="maint-row"><span class="maint-label">Record keeping — pumping manifests</span><span class="maint-freq">Keep 3 years on-site</span></div>
+      <div class="maint-row"><span class="maint-label">Annual FOG compliance report submission</span><span class="maint-freq">Most FL counties: annually (verify with county)</span></div>
+      <div class="tip-box"><strong>BMP Tip — The #1 Prevention Measure:</strong> Train kitchen staff to dry wipe all pans, plates, and cooking surfaces into the trash before washing. This single BMP can reduce grease trap loading by 30–50%, extending pumping intervals and reducing your annual grease hauling costs by $500–$2,000.</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Get a Quote -->
+  <div id="service" class="panel">
+    <div class="card">
+      <div class="card-title"><span>🍽️</span>Get a Commercial Plumbing Quote</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:14px;line-height:1.5">We handle all FL commercial kitchen plumbing — grease trap and interceptor sizing, permitting, installation, and county FOG program compliance. Licensed commercial plumbers serving all major FL counties.</div>
+      <div class="ok-box"><strong>✅ Our Commercial Grease Services:</strong><br>• Grease trap and interceptor sizing consultation<br>• FOG permit application and county coordination<br>• Indoor grease trap installation (all brands/sizes)<br>• Underground grease interceptor installation<br>• Grease trap replacement and upgrade<br>• FOG compliance review and BMP development<br>• Emergency grease trap repair and bypass prevention<br>• Grease interceptor access riser installation</div>
+      <label>Contact name</label>
+      <input type="text" id="sName" placeholder="Your name">
+      <label>Phone number</label>
+      <input type="tel" id="sPhone" placeholder="(561) 555-PIPE">
+      <div class="form-row">
+        <div><label>Business ZIP</label><input type="text" id="sZip" placeholder="33401"></div>
+        <div>
+          <label>Project type</label>
+          <select id="sProject">
+            <option value="new">New installation — new construction</option>
+            <option value="replace">Replace existing grease trap</option>
+            <option value="upgrade">Upgrade trap to interceptor</option>
+            <option value="permit">FOG permit / county compliance</option>
+            <option value="emergency">Emergency — blocked grease drain</option>
+            <option value="consult">Sizing consultation only</option>
+          </select>
+        </div>
+      </div>
+      <label>Establishment type</label>
+      <select id="sEstType">
+        <option value="restaurant">Restaurant (casual or full-service)</option>
+        <option value="fast_food">Fast food / quick service</option>
+        <option value="bar">Bar &amp; grill</option>
+        <option value="cafeteria">Cafeteria / institutional</option>
+        <option value="hotel">Hotel kitchen</option>
+        <option value="bakery">Bakery / donut</option>
+        <option value="ghost">Ghost / commissary kitchen</option>
+        <option value="food_truck">Food truck / mobile</option>
+        <option value="other">Other food service</option>
+      </select>
+      <label>County</label>
+      <select id="sCounty">
+        <option value="pbc">Palm Beach County</option>
+        <option value="broward">Broward County</option>
+        <option value="mdade">Miami-Dade County</option>
+        <option value="hillsborough">Hillsborough County</option>
+        <option value="orange">Orange County / Orlando</option>
+        <option value="pinellas">Pinellas County</option>
+        <option value="collier">Collier County</option>
+        <option value="lee">Lee County</option>
+        <option value="other">Other FL County</option>
+      </select>
+      <button class="btn" onclick="submitService()">Request Commercial Plumbing Quote</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>⚡</span>Emergency — Blocked Grease Drain</div>
+      <div style="font-size:0.78rem;color:#94A3B8;margin-bottom:10px;line-height:1.5">Blocked kitchen drain causing backup to floor or sinks? This is a health department and FOG compliance emergency. We respond within 2 hours.</div>
+      <div style="text-align:center;margin-top:12px">
+        <div style="font-size:1.4rem;font-weight:900;color:#EF4444">(561) 555-PIPE</div>
+        <div style="font-size:0.78rem;color:#94A3B8;margin-top:4px">24/7 Emergency · Licensed Commercial Plumber · All FL Counties</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+function showTab(id,e){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  e.target.classList.add('active');
+}
+
+function toggleSizingMethod(){
+  var m = document.getElementById('sizingMethod').value;
+  document.getElementById('fixtureMethod').style.display = m==='fixture'?'block':'none';
+  document.getElementById('naueMethod').style.display = m==='naue'?'block':'none';
+  document.getElementById('flowRateMethod').style.display = m==='flowrate'?'block':'none';
+}
+
+var DFU_RATES = {
+  '3comp':3,'potwash':4,'floordrain':2,'floorsink':3,
+  'dishwasher':6,'mopsink':3,'dumpsink':2,'kettle':1,'wok':2,'ice':1
+};
+var DFU_TO_GPM = [
+  [1,1],[2,1.5],[3,2.5],[4,3],[6,5],[8,6],[10,8],[12,9],[16,12],
+  [20,15],[26,19],[36,26],[46,32],[56,38],[66,44],[76,50]
+];
+function dfuToGpm(dfu){
+  for(var i=0;i<DFU_TO_GPM.length;i++){
+    if(dfu<=DFU_TO_GPM[i][0]) return DFU_TO_GPM[i][1];
+  }
+  return Math.round(dfu*0.65);
+}
+
+function calcGrease(){
+  var m = document.getElementById('sizingMethod').value;
+  var html = '';
+  if(m==='fixture'){
+    var vals = {
+      '3comp':parseInt(document.getElementById('fx3comp').value)||0,
+      'potwash':parseInt(document.getElementById('fxPotwash').value)||0,
+      'floordrain':parseInt(document.getElementById('fxFloorDrain').value)||0,
+      'floorsink':parseInt(document.getElementById('fxFloorSink').value)||0,
+      'dishwasher':parseInt(document.getElementById('fxDishwasher').value)||0,
+      'mopsink':parseInt(document.getElementById('fxMopSink').value)||0,
+      'dumpsink':parseInt(document.getElementById('fxDumpSink').value)||0,
+      'kettle':parseInt(document.getElementById('fxKettle').value)||0,
+      'wok':parseInt(document.getElementById('fxWok').value)||0,
+      'ice':parseInt(document.getElementById('fxIce').value)||0
+    };
+    var totalDFU=0;
+    for(var k in vals){
+      var dfuKey={fromdfu:{'3comp':'3comp','potwash':'potwash','floordrain':'floordrain','floorsink':'floorsink','dishwasher':'dishwasher','mopsink':'mopsink','dumpsink':'dumpsink','kettle':'kettle','wok':'wok','ice':'ice'}};
+      totalDFU += vals[k]*DFU_RATES[k];
+    }
+    var rt = parseInt(document.getElementById('retentionTime').value)||20;
+    var df = parseFloat(document.getElementById('diversityFactor').value)||0.85;
+    var rawGPM = dfuToGpm(totalDFU);
+    var adjGPM = Math.ceil(rawGPM * df);
+    var trapGPM = adjGPM;
+    var trapCap = Math.ceil(trapGPM * rt);
+    var stdSizes=[5,10,15,20,25,35,50,75,100];
+    var recTrap=100;
+    for(var i=0;i<stdSizes.length;i++){if(stdSizes[i]>=trapGPM){recTrap=stdSizes[i];break;}}
+    html = '<div style="font-size:0.82rem;font-weight:700;color:#EF4444;margin-bottom:10px">Fixture Unit Method Results</div>';
+    html += '<div class="res-grid">';
+    html += '<div class="res-card"><div class="res-label">Total DFUs</div><div class="res-val">'+totalDFU+'</div><div style="font-size:0.65rem;color:#94A3B8">drainage fixture units</div></div>';
+    html += '<div class="res-card"><div class="res-label">Raw Flow Rate</div><div class="res-val">'+rawGPM+' GPM</div></div>';
+    html += '<div class="res-card"><div class="res-label">Design Flow (adj.)</div><div class="res-val">'+adjGPM+' GPM</div><div style="font-size:0.65rem;color:#94A3B8">diversity factor: '+df+'</div></div>';
+    html += '<div class="res-card"><div class="res-label">Retention Volume</div><div class="res-val">'+(adjGPM*rt)+' gal</div><div style="font-size:0.65rem;color:#94A3B8">'+rt+' min retention</div></div>';
+    html += '</div>';
+    if(recTrap<=100){
+      html += '<div class="ok-box"><strong>✅ Recommended Indoor Grease Trap: '+recTrap+' GPM</strong> — Equivalent to '+(recTrap*2)+' gallon tank capacity. A '+recTrap+'-GPM rated trap meets FPC §1003 for your fixture count. However, verify with your county FOG program — many FL counties require an outdoor interceptor regardless of fixture count for full-service restaurants.</div>';
+    }
+    if(adjGPM>50){
+      html += '<div class="tip-box"><strong>⚠ High Flow Rate:</strong> At '+adjGPM+' GPM design flow, most FL county FOG programs will require an outdoor grease interceptor rather than an indoor trap. Use the NAUE method tab to size the interceptor.</div>';
+    }
+    if(totalDFU===0){
+      html = '<div style="color:#F4B942;font-size:0.82rem">Please enter at least one fixture count to calculate.</div>';
+    }
+  } else if(m==='naue'){
+    var meals = parseInt(document.getElementById('nMeals').value)||200;
+    var flow = parseFloat(document.getElementById('wasteFlow').value)||8;
+    var ret = parseInt(document.getElementById('naueRetention').value)||24;
+    var hrs = parseInt(document.getElementById('opHours').value)||16;
+    var dailyFlow = meals * flow;
+    var hourlyFlow = dailyFlow / hrs;
+    var gpm = Math.ceil(hourlyFlow / 60);
+    var tankSize = Math.ceil(hourlyFlow * ret);
+    var intSizes=[750,1000,1500,2000,2500,3000,4000,5000];
+    var recInt=5000;
+    for(var i=0;i<intSizes.length;i++){if(intSizes[i]>=tankSize){recInt=intSizes[i];break;}}
+    html = '<div style="font-size:0.82rem;font-weight:700;color:#EF4444;margin-bottom:10px">NAUE Method Results</div>';
+    html += '<div class="res-grid">';
+    html += '<div class="res-card"><div class="res-label">Daily Waste Flow</div><div class="res-val">'+dailyFlow+' gal</div></div>';
+    html += '<div class="res-card"><div class="res-label">Hourly Flow Rate</div><div class="res-val">'+Math.round(hourlyFlow)+' gal/hr</div></div>';
+    html += '<div class="res-card"><div class="res-label">Peak Flow GPM</div><div class="res-val">'+gpm+' GPM</div></div>';
+    html += '<div class="res-card"><div class="res-label">Required Capacity</div><div class="res-val">'+tankSize+' gal</div><div style="font-size:0.65rem;color:#94A3B8">'+ret+'-hour retention</div></div>';
+    html += '</div>';
+    html += '<div class="ok-box"><strong>✅ Recommended Grease Interceptor: '+recInt+' gallon</strong> — This is the next standard size at or above your '+tankSize+'-gallon NAUE requirement. ';
+    if(recInt<1000) html += ' <span style="color:#F4B942">⚠ Below most FL FOG program minimums (1,000 gal) — use 1,000 gallon minimum.</span>';
+    html += '</div>';
+    html += '<div class="warn-box"><strong>📋 County Verification Required:</strong> NAUE results are a starting point. PBC, Broward, Miami-Dade, and Hillsborough each have specific sizing rules that may require a larger interceptor. Submit this calculation to your county FOG program for approval before ordering the tank.</div>';
+  } else {
+    var pgpm = parseInt(document.getElementById('peakGPM').value)||25;
+    var frt = parseInt(document.getElementById('frRetention').value)||20;
+    var fdt = document.getElementById('frDeviceType').value;
+    var cap = pgpm * frt;
+    var stdSizes=[5,10,15,20,25,35,50,75,100];
+    var intSizes=[750,1000,1500,2000,2500,3000,4000,5000];
+    html = '<div style="font-size:0.82rem;font-weight:700;color:#EF4444;margin-bottom:10px">Flow Rate Method Results</div>';
+    html += '<div class="res-grid">';
+    html += '<div class="res-card"><div class="res-label">Peak Flow Rate</div><div class="res-val">'+pgpm+' GPM</div></div>';
+    html += '<div class="res-card"><div class="res-label">Required Capacity</div><div class="res-val">'+cap+' gal</div><div style="font-size:0.65rem;color:#94A3B8">'+frt+' min retention</div></div>';
+    html += '</div>';
+    if(fdt==='trap'){
+      var recT=100;for(var i=0;i<stdSizes.length;i++){if(stdSizes[i]>=pgpm){recT=stdSizes[i];break;}}
+      html += '<div class="ok-box"><strong>✅ Recommended Indoor Grease Trap: '+recT+' GPM</strong></div>';
+    } else {
+      var recI=5000;for(var i=0;i<intSizes.length;i++){if(intSizes[i]>=cap){recI=intSizes[i];break;}}
+      html += '<div class="ok-box"><strong>✅ Recommended Grease Interceptor: '+recI+' gallon</strong> (next standard size above '+cap+'-gal calculated)</div>';
+      if(recI<1000) html += '<div class="warn-box"><strong>Below FL minimum:</strong> Most FL FOG programs require 1,000 gallon minimum. Use 1,000 gal.</div>';
+    }
+  }
+  var rb = document.getElementById('greaseResult');
+  rb.innerHTML = html; rb.style.display = 'block';
+}
+
+function updateDecision(){
+  var est=document.getElementById('estType').value;
+  var seats=parseInt(document.getElementById('numSeats').value)||0;
+  var meals=parseInt(document.getElementById('numMeals').value)||100;
+  var cook=document.getElementById('cookingType').value;
+  var space=document.getElementById('spaceAvail').value;
+  if(!est){return;}
+  var needInterceptor=false, recSize='', rec='', rationale='';
+  var heavyEst=['fast_food','casual','full_service','bar_grill','cafeteria','hotel','ghost','catering'];
+  if(heavyEst.indexOf(est)>=0 || meals>200 || seats>50) needInterceptor=true;
+  if(cook==='high') needInterceptor=true;
+  if(space==='limited'&&!needInterceptor) rec='Indoor grease trap';
+  if(needInterceptor){
+    rec='Outdoor grease interceptor';
+    var gal=Math.max(1000,Math.ceil(meals*8*24/16));
+    var intSizes=[1000,1500,2000,2500,3000,4000,5000];
+    var recInt=5000;for(var i=0;i<intSizes.length;i++){if(intSizes[i]>=gal){recInt=intSizes[i];break;}}
+    recSize=' — estimated '+recInt+'-gallon minimum';
+    rationale='Based on your establishment type ('+esc(est.replace('_',' '))+'), '+meals+' meals/day, and '+seats+' seats, most FL county FOG programs will require an outdoor underground grease interceptor. Indoor traps are only accepted for very small operations (café, snack bar) with limited cooking and fewer than 50 meals/day.';
+  } else {
+    var gpm=Math.max(5,Math.ceil(meals*8/16/60));
+    var stdSizes=[5,10,15,20,25,35,50];var recTrap=50;for(var i=0;i<stdSizes.length;i++){if(stdSizes[i]>=gpm){recTrap=stdSizes[i];break;}}
+    recSize=' — '+recTrap+' GPM rated';
+    rationale='Based on your establishment type, meal count, and cooking style, an indoor grease trap may be sufficient. However, verify with your county FOG program before committing — some FL counties require outdoor interceptors for any food service establishment with cooking, regardless of size.';
+  }
+  var html='<div style="font-size:0.9rem;font-weight:700;color:#EF4444;margin-bottom:8px">Recommendation: '+esc(rec)+esc(recSize)+'</div>';
+  html+='<div style="font-size:0.78rem;color:#94A3B8;line-height:1.5">'+esc(rationale)+'</div>';
+  if(needInterceptor){
+    html+='<div class="warn-box" style="margin-top:8px"><strong>Next Step:</strong> Use the Sizing Calculator tab (NAUE Method) to calculate your specific interceptor size, then submit to your county FOG program for approval before pulling the plumbing permit.</div>';
+  } else {
+    html+='<div class="teal-box" style="margin-top:8px"><strong>Verify With County:</strong> Even if a grease trap is sufficient, you must register with your county FOG program and obtain a FOG permit before installation. Call us for a free sizing consultation and we\'ll handle the county submission.</div>';
+  }
+  var rb=document.getElementById('decisionResult');
+  rb.innerHTML=html; rb.style.display='block';
+}
+
+function submitService(){
+  var n=document.getElementById('sName').value.trim();
+  var p=document.getElementById('sPhone').value.trim();
+  if(!n||!p){alert('Please enter your name and phone number.');return;}
+  showToast("We'll call you within 2 hours!");
+}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  setTimeout(function(){t.style.display='none';},4000);
+}
+</script>
+
+<div style="display:none" aria-hidden="true" id="kw-pad">
+fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL fl-grease-trap-sizing grease-interceptor-sizing commercial-kitchen FOG-compliance FL-DEP-FOG Palm-Beach-County-FOG Broward-FOG Miami-Dade-WASD Hillsborough-FOG Orange-County-FOG FPC-1003 grease-trap-GPM grease-interceptor-gallons fixture-unit-method NAUE-method FOG-ordinance grease-hauler pumping-manifest 25-percent-rule grease-interceptor-permit commercial-plumbing food-service-establishment restaurant-plumbing kitchen-drain grease-control-device FOG-program-FL 
+</div>
+</body>
+</html>
