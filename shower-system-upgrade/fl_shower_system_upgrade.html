@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Shower System Upgrade Calculator #200</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;padding:16px}
+.container{max-width:480px;margin:0 auto}
+header{text-align:center;padding:20px 0 16px}
+header h1{font-size:1.35rem;font-weight:700;color:#E2E8F0;line-height:1.3}
+header p{color:#94A3B8;font-size:0.82rem;margin-top:4px}
+.phone-link{display:inline-block;margin-top:8px;color:#00B4FF;font-weight:600;text-decoration:none;font-size:0.95rem}
+.phone-link:hover{text-decoration:underline}
+.tabs{display:flex;border-bottom:1px solid #1E2A3A;margin-bottom:0;background:#0F1629;border-radius:10px 10px 0 0;overflow:hidden}
+.tab-btn{flex:1;padding:12px 4px;background:none;border:none;color:#94A3B8;font-size:0.75rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;letter-spacing:0.02em}
+.tab-btn.active{color:#fff;border-bottom:2px solid #00B4FF}
+.tab-btn:hover:not(.active){color:#CBD5E1}
+.tab-content{display:none;background:#0F1629;border-radius:0 0 10px 10px;padding:18px 16px}
+.tab-content.active{display:block}
+h2{color:#00B4FF;font-size:1.1rem;font-weight:700;margin-bottom:14px}
+h3{color:#E2E8F0;font-size:0.95rem;font-weight:600;margin:16px 0 8px;border-left:3px solid #00B4FF;padding-left:8px}
+h4{color:#CBD5E1;font-size:0.85rem;font-weight:600;margin:12px 0 6px}
+p{color:#94A3B8;font-size:0.82rem;line-height:1.6;margin-bottom:8px}
+.card{background:#141929;border-radius:8px;padding:14px;margin-bottom:12px;border:1px solid #1E2A3A}
+label{display:block;color:#94A3B8;font-size:0.78rem;font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.04em}
+select,input[type=text],input[type=tel]{width:100%;background:#0A0E1A;border:1px solid #1E2A3A;color:#E2E8F0;border-radius:6px;padding:9px 10px;font-size:0.85rem;margin-bottom:12px;outline:none;transition:border-color 0.2s}
+select:focus,input:focus{border-color:#00B4FF}
+.form-group{margin-bottom:2px}
+.btn{width:100%;background:#00B4FF;color:#fff;border:none;border-radius:8px;padding:13px;font-size:0.95rem;font-weight:700;cursor:pointer;transition:background 0.2s;letter-spacing:0.02em}
+.btn:hover{background:#0099DD}
+.result-box{background:#141929;border:1px solid #00B4FF;border-radius:8px;padding:14px;margin-top:14px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1E2A3A;font-size:0.82rem}
+.result-row:last-child{border-bottom:none}
+.result-label{color:#94A3B8}
+.result-value{color:#E2E8F0;font-weight:600;text-align:right;max-width:55%}
+.result-value.accent{color:#00B4FF}
+.warn-box{background:#1A1200;border:1px solid #F59E0B;border-radius:8px;padding:12px;margin-top:10px;color:#FCD34D;font-size:0.82rem;line-height:1.5}
+.ok-box{background:#001A0A;border:1px solid #22C55E;border-radius:8px;padding:12px;margin-top:10px;color:#86EFAC;font-size:0.82rem;line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:0.75rem;margin-bottom:12px}
+th{background:#0A0E1A;color:#00B4FF;text-align:left;padding:7px 6px;border-bottom:1px solid #1E2A3A;font-weight:700}
+td{padding:6px 6px;border-bottom:1px solid #1A2235;color:#CBD5E1;vertical-align:top}
+tr:nth-child(even) td{background:#141929}
+.star{color:#F59E0B}
+.section-divider{height:1px;background:#1E2A3A;margin:16px 0}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.info-cell{background:#141929;border-radius:6px;padding:10px;border:1px solid #1E2A3A}
+.info-cell .val{font-size:1.1rem;font-weight:700;color:#00B4FF}
+.info-cell .lbl{font-size:0.7rem;color:#94A3B8;margin-top:2px}
+.permit-row td:nth-child(2),.permit-row td:nth-child(3){color:#22C55E;font-weight:600}
+.checklist{list-style:none;padding:0}
+.checklist li{padding:5px 0;font-size:0.82rem;color:#CBD5E1;border-bottom:1px solid #1A2235}
+.checklist li::before{content:"✓ ";color:#22C55E;font-weight:700}
+.checklist li.no::before{content:"✗ ";color:#EF4444}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:#00B4FF;color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;font-size:0.9rem;z-index:9999;transition:transform 0.3s ease;box-shadow:0 4px 20px rgba(0,180,255,0.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.contact-box{text-align:center;margin-top:18px;padding:16px;background:#141929;border-radius:8px;border:1px solid #1E2A3A}
+.contact-box .big-phone{font-size:1.3rem;font-weight:700;color:#00B4FF;text-decoration:none;display:block;margin:8px 0}
+.contact-box .sub{color:#94A3B8;font-size:0.75rem}
+.cost-range{font-size:1.0rem;font-weight:700;color:#00B4FF}
+.timeline-val{color:#F59E0B;font-weight:600}
+.section-num{display:inline-block;background:#00B4FF;color:#0A0E1A;border-radius:50%;width:20px;height:20px;text-align:center;line-height:20px;font-size:0.7rem;font-weight:700;margin-right:6px}
+ul.bullet{padding-left:16px;margin-bottom:8px}
+ul.bullet li{font-size:0.82rem;color:#94A3B8;line-height:1.6;margin-bottom:3px}
+.code-ref{background:#141929;border-left:3px solid #00B4FF;padding:8px 10px;font-size:0.78rem;color:#94A3B8;margin-bottom:8px;border-radius:0 4px 4px 0}
+.step-list{counter-reset:step;padding:0;list-style:none}
+.step-list li{counter-increment:step;padding:8px 8px 8px 36px;position:relative;font-size:0.82rem;color:#CBD5E1;border-bottom:1px solid #1A2235}
+.step-list li::before{content:counter(step);position:absolute;left:6px;top:8px;background:#00B4FF;color:#0A0E1A;border-radius:50%;width:20px;height:20px;text-align:center;line-height:20px;font-size:0.7rem;font-weight:700}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>FL Shower System Upgrade Calculator</h1>
+    <p>Florida's trusted shower upgrade resource &mdash; Tool #200</p>
+    <a href="tel:+15613167450" class="phone-link">(561) 316-7450</a>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('calc')">Calculator</button>
+    <button class="tab-btn" onclick="switchTab('guide')">FL Guide</button>
+    <button class="tab-btn" onclick="switchTab('permit')">Permit Info</button>
+    <button class="tab-btn" onclick="switchTab('quote')">Get a Quote</button>
+  </div>
+
+  <!-- TAB 1: CALCULATOR -->
+  <div id="tab-calc" class="tab-content active">
+    <h2>Shower Upgrade Cost Calculator</h2>
+
+    <div class="card">
+      <h3>Current Setup</h3>
+      <div class="form-group">
+        <label>Current Shower Type</label>
+        <select id="showerType">
+          <option value="walkin">Walk-in (no door)</option>
+          <option value="stall">Shower stall (with door)</option>
+          <option value="tub">Tub/shower combo</option>
+          <option value="master">Master suite</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Current Shower Size</label>
+        <select id="showerSize">
+          <option value="32x32">32&Prime; &times; 32&Prime;</option>
+          <option value="36x36">36&Prime; &times; 36&Prime;</option>
+          <option value="48x36">48&Prime; &times; 36&Prime;</option>
+          <option value="60x36" selected>60&Prime; &times; 36&Prime;</option>
+          <option value="custom">Custom (60&Prime;+ or walk-in)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Current Fixtures</label>
+        <select id="currentFixtures">
+          <option value="basic">Basic single valve</option>
+          <option value="pb">Pressure-balance valve</option>
+          <option value="thermo">Thermostatic valve</option>
+          <option value="rain">Rain head system</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Desired Upgrade</h3>
+      <div class="form-group">
+        <label>Upgrade Goal</label>
+        <select id="upgradeGoal">
+          <option value="pressure">Better pressure</option>
+          <option value="rain_body">Rain head + body sprays</option>
+          <option value="multi">Full multi-head system</option>
+          <option value="steam">Luxury steam system</option>
+          <option value="refresh">Simple value refresh</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Number of Body Sprays / Jets</label>
+        <select id="numSprays">
+          <option value="0">None</option>
+          <option value="2">2 jets</option>
+          <option value="4">4 jets</option>
+          <option value="6">6 jets</option>
+          <option value="8">8+ jets</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Rain Head Size</label>
+        <select id="rainHead">
+          <option value="none">None</option>
+          <option value="8">8&Prime; rain head</option>
+          <option value="12" selected>12&Prime; rain head</option>
+          <option value="16">16&Prime;+ rain head</option>
+          <option value="led">LED rain head</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Valve Type</label>
+        <select id="valveType">
+          <option value="keep">Keep existing</option>
+          <option value="thermo">Thermostatic valve</option>
+          <option value="digital">Digital / smart valve</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Water Heater Check</h3>
+      <div class="form-group">
+        <label>Current Water Heater</label>
+        <select id="waterHeater">
+          <option value="tank30">Tank (30 gal)</option>
+          <option value="tank40">Tank (40 gal)</option>
+          <option value="tank50" selected>Tank (50 gal)</option>
+          <option value="tank75">Tank (75+ gal)</option>
+          <option value="tankless">Tankless</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Household Size</label>
+        <select id="householdSize">
+          <option value="small">1 &ndash; 2 people</option>
+          <option value="med" selected>3 &ndash; 4 people</option>
+          <option value="large">5 &ndash; 6 people</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn" onclick="calcShower()">Calculate My Upgrade Cost</button>
+    <div id="calcResults" style="display:none"></div>
+  </div>
+
+  <!-- TAB 2: FL GUIDE -->
+  <div id="tab-guide" class="tab-content">
+    <h2>Florida Shower Upgrade Guide</h2>
+
+    <h3><span class="section-num">1</span>FL Water Efficiency Rules</h3>
+    <p>Florida Statute 553.9063 requires all shower fixtures to be WaterSense certified, meaning a maximum flow rate of <strong>2.0 GPM at 80 PSI</strong>. This applies to every individual shower head, rain head, and body spray installed in Florida residential construction and remodeling.</p>
+    <p>For multi-head systems, each individual fixture must comply &mdash; there is no combined total exemption under state law. Some Florida counties impose stricter local ordinances:</p>
+    <ul class="bullet">
+      <li><strong>Miami-Dade County:</strong> Enforces state WaterSense requirements at permit inspection. Inspectors may test flow rates during final inspection for new multi-head installations.</li>
+      <li><strong>Broward County:</strong> Follows FL Statute 553.9063 strictly. All submitted fixtures must show WaterSense certification paperwork at permit pull.</li>
+      <li><strong>Palm Beach County:</strong> Complies with state code. No additional county-level restrictions beyond FL Statute as of 2025.</li>
+      <li><strong>Collier County (Naples):</strong> Has additional landscaping water restrictions but shower fixture requirements follow state code.</li>
+    </ul>
+    <p>WaterSense certification is administered by the EPA. Look for the WaterSense label (blue teardrop logo) on all fixtures before purchase. Non-compliant fixtures flagged at final inspection must be replaced at contractor expense.</p>
+
+    <div class="section-divider"></div>
+    <h3><span class="section-num">2</span>FL Climate Considerations</h3>
+
+    <h4>Humidity Management</h4>
+    <p>Florida's average relative humidity runs 74&ndash;80% year-round, making shower ventilation a critical (not optional) design element. ASHRAE 62.2 governs residential ventilation requirements:</p>
+    <ul class="bullet">
+      <li>Standard shower: Exhaust fan minimum <strong>50 CFM</strong>, run for at least 60 minutes post-shower</li>
+      <li>Steam shower: Exhaust fan minimum <strong>100 CFM</strong>, dedicated exhaust duct (no shared duct runs)</li>
+      <li>Recommended: Install a humidity-sensing exhaust fan with auto-shutoff timer</li>
+      <li>Best practice: Exhaust duct must terminate outside the structure, not into attic space</li>
+    </ul>
+
+    <h4>Mold Prevention in FL</h4>
+    <p>Florida's combination of heat and humidity creates ideal mold growth conditions. Shower grout is particularly vulnerable:</p>
+    <ul class="bullet">
+      <li>Reseal grout every <strong>1&ndash;2 years</strong> in FL conditions (vs. 3&ndash;5 years in drier climates)</li>
+      <li>Strongly recommend <strong>epoxy grout</strong> (Laticrete SpectraLOCK or equivalent) &mdash; virtually waterproof and mold-resistant</li>
+      <li>Specify <strong>large-format tiles</strong> (12&Prime;&times;24&Prime; or larger) to minimize grout lines</li>
+      <li>Consider <strong>Schluter KERDI-BOARD</strong> for walls instead of cement board &mdash; provides complete waterproof membrane</li>
+    </ul>
+
+    <h4>Water Temperature Starting Point</h4>
+    <p>Florida groundwater averages <strong>72&ndash;76&deg;F</strong> entering the home &mdash; significantly warmer than northern states where groundwater can be 45&ndash;55&deg;F. This means:</p>
+    <ul class="bullet">
+      <li>Cold start lag is shorter &mdash; you get hot water faster in FL</li>
+      <li>Tankless water heaters are particularly well-suited to FL (smaller temperature rise required)</li>
+      <li>A 40-gallon tank in FL often performs like a 50-gallon tank in a northern climate</li>
+    </ul>
+
+    <h4>Hard Water and Shower Heads</h4>
+    <p>South Florida (especially Miami-Dade, Broward, Palm Beach) has notably hard water due to the limestone Biscayne Aquifer. Water hardness often runs 150&ndash;300 mg/L. Recommendations:</p>
+    <ul class="bullet">
+      <li>Install a <strong>shower head filter</strong> with KDF-55 media to reduce scale deposits</li>
+      <li>Perform quarterly descaling with white vinegar (soak shower head overnight)</li>
+      <li>Consider a whole-home water softener if hardness exceeds 200 mg/L</li>
+      <li>Choose shower heads with <strong>rubber spray nozzles</strong> (Moen, Kohler) &mdash; easy to wipe clean</li>
+    </ul>
+
+    <div class="section-divider"></div>
+    <h3><span class="section-num">3</span>Shower Valve Types for Florida</h3>
+    <table>
+      <tr><th>Valve Type</th><th>FL Rating</th><th>Pros</th><th>Cons</th><th>Installed Cost</th></tr>
+      <tr><td>Pressure-Balance<br><small style="color:#94A3B8">(code required)</small></td><td><span class="star">&#9733;&#9733;&#9733;</span></td><td>Anti-scald protection, affordable, widely available, simple to service</td><td>No precise temperature control, temp shifts with pressure changes</td><td>$350&ndash;600</td></tr>
+      <tr><td>Thermostatic</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td><td>Precise temp memory, ideal for multi-head systems, superior comfort, code-compliant</td><td>Higher upfront cost, requires licensed plumber for install</td><td>$600&ndash;1,200</td></tr>
+      <tr><td>Digital / Smart</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;</span></td><td>App control, multiple user presets, remote start, precise digital display</td><td>Requires WiFi, expensive, needs power source, tech obsolescence risk</td><td>$1,500&ndash;3,500</td></tr>
+      <tr><td>Manual Single-Handle</td><td><span class="star">&#9733;&#9733;</span></td><td>Lowest cost, simplest design, fewest parts to fail</td><td>No temperature memory, scalding risk, not permitted for new installs in FL</td><td>$250&ndash;450</td></tr>
+    </table>
+    <p>Florida plumbing code (FBC 7th Edition, Chapter 29) requires <strong>anti-scald protection</strong> on all shower valves in new installations and replacements. Both pressure-balance and thermostatic valves satisfy this requirement. Manual single-handle valves without pressure-balance are not permitted for new installs in FL.</p>
+
+    <div class="section-divider"></div>
+    <h3><span class="section-num">4</span>Multi-Head Shower Hydraulics</h3>
+    <p>Adding body sprays to a Florida home is the most common upgrade request &mdash; and the most commonly undersized. When multiple outlets run simultaneously, pressure at each outlet drops significantly. Key facts:</p>
+    <ul class="bullet">
+      <li>Each body spray draws approximately <strong>0.5 GPM</strong></li>
+      <li>A 12&Prime; rain head draws <strong>1.5&ndash;2.0 GPM</strong></li>
+      <li>A handheld unit draws <strong>1.0&ndash;1.5 GPM</strong></li>
+      <li>Running all simultaneously can require 6&ndash;10 GPM total</li>
+    </ul>
+    <p>Florida well water homes (common in Polk, Osceola, Manatee, and rural counties) often have pressure tanks set to 40&ndash;60 PSI &mdash; at the low end of what multi-head systems need. A pressure booster pump ($400&ndash;800 installed) may be required.</p>
+
+    <h4>Pressure Requirements by Configuration</h4>
+    <table>
+      <tr><th># of Heads / Sprays</th><th>Min Supply PSI</th><th>Min Supply Line</th><th>Notes</th></tr>
+      <tr><td>1 head (rain only)</td><td>40 PSI</td><td>1/2&Prime;</td><td>Standard supply adequate</td></tr>
+      <tr><td>2&ndash;3 heads</td><td>45 PSI</td><td>3/4&Prime;</td><td>Upgrade supply line if needed</td></tr>
+      <tr><td>4&ndash;6 heads</td><td>50 PSI</td><td>3/4&Prime;</td><td>Verify home pressure first</td></tr>
+      <tr><td>7+ heads</td><td>55 PSI</td><td>1&Prime;</td><td>Booster pump likely required</td></tr>
+    </table>
+    <p>Minimum 3/4&Prime; supply line is required for any system with 4 or more simultaneous outlets. Many Florida homes built before 1990 have 1/2&Prime; copper supply to bathrooms &mdash; upgrading the supply line is an additional cost of $300&ndash;700 depending on access.</p>
+
+    <div class="section-divider"></div>
+    <h3><span class="section-num">5</span>Steam Shower Specifics for Florida</h3>
+    <p>Steam showers have grown significantly in popularity in South Florida luxury homes. They add wellness value and home resale appeal, but require careful planning due to FL's unique climate conditions:</p>
+
+    <h4>Structural Requirements</h4>
+    <ul class="bullet">
+      <li>Completely sealed enclosure &mdash; glass or full tile, <strong>zero gaps</strong></li>
+      <li>Ceiling must be sloped (minimum 2&Prime; per foot pitch) so condensation drains to walls, not on bather</li>
+      <li>Door must be full-height glass (no transom gaps) with quality seal at bottom</li>
+      <li>Bench must be waterproofed with same membrane system as floor and walls</li>
+    </ul>
+
+    <h4>Electrical Requirements</h4>
+    <ul class="bullet">
+      <li>Dedicated <strong>240V / 30A circuit</strong> required (electrical permit required in FL)</li>
+      <li>Steam generator must be installed by a licensed Florida Electrical Contractor (EC)</li>
+      <li>GFCI protection required per NEC 210.8(A)(9)</li>
+      <li>Control panel wiring must be low-voltage (most brands use 24V control systems)</li>
+    </ul>
+
+    <h4>Generator Sizing for Florida</h4>
+    <table>
+      <tr><th>Steam Room Size</th><th>Generator Size</th><th>Notes</th></tr>
+      <tr><td>Up to 50 sq ft</td><td>5&ndash;6 kW</td><td>Small ensuite steam shower</td></tr>
+      <tr><td>50&ndash;70 sq ft</td><td>7.5 kW</td><td>Most common FL application</td></tr>
+      <tr><td>70&ndash;100 sq ft</td><td>9&ndash;10 kW</td><td>Luxury master suite steam room</td></tr>
+      <tr><td>100+ sq ft</td><td>12&ndash;15 kW</td><td>Full steam room, dual generators</td></tr>
+    </table>
+
+    <h4>Florida-Specific Steam Considerations</h4>
+    <ul class="bullet">
+      <li>Steam rooms in FL homes must be <strong>critically sealed</strong> &mdash; exterior humidity makes containment more difficult than northern climates</li>
+      <li>Add a dedicated exhaust fan with <strong>vapor-proof housing</strong></li>
+      <li>Chromotherapy (LED color therapy) and aromatherapy injectors are popular FL luxury additions</li>
+      <li>Average complete installation cost in FL: <strong>$3,500&ndash;8,000</strong></li>
+      <li>Resale value impact: adds estimated <strong>$5,000&ndash;15,000</strong> to FL home value (Zillow/NAR data for South FL luxury market)</li>
+    </ul>
+
+    <div class="section-divider"></div>
+    <h3><span class="section-num">6</span>Shower Pan &amp; Waterproofing</h3>
+    <p>The shower pan is the single most critical component of any shower in Florida. Pan failure leads to <strong>slab moisture infiltration</strong> &mdash; an extremely costly problem in FL's concrete slab-on-grade construction.</p>
+
+    <h4>Florida Code Requirements</h4>
+    <ul class="bullet">
+      <li>Florida Building Code requires ASTM C627 Robinson Wheel Test or equivalent certification for tile shower floors</li>
+      <li>All shower floors must be sloped minimum 1/4&Prime; per foot toward drain</li>
+      <li>Pre-slope is required beneath the waterproofing membrane in mortar bed applications</li>
+      <li>Shower curb height minimum 2&Prime; above finished floor</li>
+    </ul>
+
+    <h4>Recommended Waterproofing Systems for Florida</h4>
+    <table>
+      <tr><th>System</th><th>FL Rating</th><th>Cost Premium</th><th>Best For</th></tr>
+      <tr><td>Schluter KERDI</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td><td>+$400&ndash;700</td><td>All FL showers, mold-resistant</td></tr>
+      <tr><td>Wedi Board</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td><td>+$500&ndash;900</td><td>Full wet room, steam showers</td></tr>
+      <tr><td>Laticrete Hydro Ban</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;</span></td><td>+$250&ndash;450</td><td>Standard shower pans</td></tr>
+      <tr><td>Traditional PVC liner</td><td><span class="star">&#9733;&#9733;&#9733;</span></td><td>Standard</td><td>Budget remodels, older homes</td></tr>
+    </table>
+    <p>Slab moisture repairs in Florida typically cost <strong>$2,000&ndash;8,000</strong> when caused by shower pan failure. Investing in a premium waterproofing system is strongly recommended. In coastal areas, add waterproofing behind all niches and fixtures.</p>
+
+    <div class="section-divider"></div>
+    <h3><span class="section-num">7</span>Top FL Shower Brands</h3>
+    <table>
+      <tr><th>Brand</th><th>Product Line</th><th>FL Rating</th><th>Why Choose in FL</th></tr>
+      <tr><td>Kohler</td><td>Purist, Artifacts, DTV+</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td><td>Excellent corrosion resistance, Vibrant PVD finish holds up in coastal FL humidity and salt air. Industry-leading warranty.</td></tr>
+      <tr><td>Moen</td><td>Align, Arbor, ioDIGITAL</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td><td>Lifetime warranty including finish, widely available at FL plumbing supply houses, proven in FL climate for decades</td></tr>
+      <tr><td>Delta</td><td>Trinsic, Ara, MultiChoice</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;</span></td><td>Excellent price-to-quality ratio, DIAMOND seal technology reduces leak risk, widely stocked throughout FL</td></tr>
+      <tr><td>Grohe</td><td>Rainshower, Grohtherm</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;</span></td><td>German engineering, salt-air rated finishes, excellent for coastal FL properties. Premium positioning.</td></tr>
+      <tr><td>Hansgrohe</td><td>Axor, Croma, Raindance</td><td><span class="star">&#9733;&#9733;&#9733;&#9733;&#9733;</span></td><td>Premium German quality, Select technology, excellent corrosion resistance for FL coast. Top choice for luxury installs.</td></tr>
+    </table>
+
+    <div class="section-divider"></div>
+    <h3><span class="section-num">8</span>DIY vs. Licensed in Florida</h3>
+    <p>Florida law is clear on what requires a licensed contractor versus what homeowners can legally self-perform:</p>
+
+    <h4>What Requires a Licensed CFC Plumber in FL</h4>
+    <ul class="bullet">
+      <li>Any work connecting to or modifying supply lines</li>
+      <li>Valve replacement (pressure-balance, thermostatic, digital)</li>
+      <li>Adding body sprays or new supply outlets</li>
+      <li>Steam generator plumbing connections</li>
+      <li>Drain relocation or replacement involving rough-in changes</li>
+    </ul>
+
+    <h4>What Requires a Licensed Electrical Contractor (EC)</h4>
+    <ul class="bullet">
+      <li>Steam generator 240V/30A circuit installation</li>
+      <li>Adding or moving GFCI outlets near shower</li>
+      <li>Installing exhaust fan wiring (if new circuit required)</li>
+      <li>Any panel work (breaker addition for steam circuit)</li>
+    </ul>
+
+    <h4>What Florida Homeowners Can Legally Do</h4>
+    <ul class="bullet">
+      <li>Replace a shower head (no valve work involved)</li>
+      <li>Replace faucet handles and trim (same valve body, no supply work)</li>
+      <li>Re-tiling (no plumbing changes)</li>
+      <li>Replacing a shower door or curtain rod</li>
+      <li>Caulking and grout sealing</li>
+    </ul>
+    <p>Unlicensed plumbing work in Florida is a 2nd-degree misdemeanor under <strong>FL Statute 489.127</strong> and can void homeowner's insurance. Always verify your contractor holds an active CFC license at <strong>myfloridalicense.com</strong>.</p>
+  </div>
+
+  <!-- TAB 3: PERMIT INFO -->
+  <div id="tab-permit" class="tab-content">
+    <h2>FL Permit Requirements: Shower Upgrades</h2>
+
+    <div class="card">
+      <h3>When Permits ARE Required</h3>
+      <ul class="checklist">
+        <li>Any valve replacement (supply line work)</li>
+        <li>Adding body sprays (new supply lines required)</li>
+        <li>Steam shower system (plumbing + electrical permits)</li>
+        <li>Moving drain (pan replacement with relocated drain)</li>
+        <li>Any electrical work (GFCI, steam generator circuit)</li>
+        <li>Water heater replacement or upgrade</li>
+        <li>Enlarging shower footprint (structural/plumbing changes)</li>
+        <li>Adding exhaust fan requiring new wiring circuit</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>When Permits Are NOT Typically Required</h3>
+      <ul class="checklist">
+        <li class="no" style="color:#94A3B8">Replacing shower head only (no valve work)</li>
+        <li class="no" style="color:#94A3B8">Replacing faucet handles / trim (same valve body)</li>
+        <li class="no" style="color:#94A3B8">Re-tiling (no plumbing changes)</li>
+        <li class="no" style="color:#94A3B8">Replacing existing shower door (same opening)</li>
+        <li class="no" style="color:#94A3B8">Caulking, grout sealing, cosmetic repairs</li>
+        <li class="no" style="color:#94A3B8">Handheld shower hose replacement</li>
+      </ul>
+      <p style="margin-top:8px;font-size:0.75rem;color:#F59E0B">&#9888; When in doubt, always call your local building department before starting work. Unpermitted plumbing work can complicate home sales and insurance claims.</p>
+    </div>
+
+    <h3>Florida County Permit Reference</h3>
+    <p style="font-size:0.78rem;color:#94A3B8;margin-bottom:8px">All 15 counties listed below require permits for valve replacement and steam system work. Fees are estimates for 2025.</p>
+    <div style="overflow-x:auto">
+    <table>
+      <tr><th>County</th><th>Valve/Spray</th><th>Steam</th><th>Fee Range</th><th>Notes</th></tr>
+      <tr class="permit-row"><td>Miami-Dade</td><td>Yes</td><td>Yes (2 permits)</td><td>$175&ndash;400</td><td>Strict inspection; waterproofing inspection required</td></tr>
+      <tr class="permit-row"><td>Broward</td><td>Yes</td><td>Yes</td><td>$150&ndash;350</td><td>Fast online permit portal; ePermits system</td></tr>
+      <tr class="permit-row"><td>Palm Beach</td><td>Yes</td><td>Yes</td><td>$125&ndash;300</td><td>ePZB online portal; inspections within 48 hrs</td></tr>
+      <tr class="permit-row"><td>Orange</td><td>Yes</td><td>Yes</td><td>$100&ndash;250</td><td>Orlando permit portal; fast turnaround</td></tr>
+      <tr class="permit-row"><td>Hillsborough</td><td>Yes</td><td>Yes</td><td>$100&ndash;275</td><td>Tampa online permits; same-day approval common</td></tr>
+      <tr class="permit-row"><td>Pinellas</td><td>Yes</td><td>Yes</td><td>$75&ndash;225</td><td>St. Pete/Clearwater; online application available</td></tr>
+      <tr class="permit-row"><td>Duval</td><td>Yes</td><td>Yes</td><td>$75&ndash;200</td><td>Jacksonville; COJ online permits; fast residential</td></tr>
+      <tr class="permit-row"><td>Lee</td><td>Yes</td><td>Yes</td><td>$100&ndash;250</td><td>Fort Myers; online portal</td></tr>
+      <tr class="permit-row"><td>Collier</td><td>Yes</td><td>Yes</td><td>$125&ndash;300</td><td>Naples; strict inspection; detailed plan review</td></tr>
+      <tr class="permit-row"><td>Sarasota</td><td>Yes</td><td>Yes</td><td>$100&ndash;225</td><td>Online permits; residential same-day common</td></tr>
+      <tr class="permit-row"><td>Polk</td><td>Yes</td><td>Yes</td><td>$75&ndash;175</td><td>Lakeland area; straightforward process</td></tr>
+      <tr class="permit-row"><td>Brevard</td><td>Yes</td><td>Yes</td><td>$75&ndash;175</td><td>Space Coast; Cocoa/Melbourne; online applications</td></tr>
+      <tr class="permit-row"><td>Volusia</td><td>Yes</td><td>Yes</td><td>$75&ndash;175</td><td>Daytona/DeLand; online permit portal</td></tr>
+      <tr class="permit-row"><td>Manatee</td><td>Yes</td><td>Yes</td><td>$90&ndash;200</td><td>Bradenton; online application; residential fast-track</td></tr>
+      <tr class="permit-row"><td>St. Lucie</td><td>Yes</td><td>Yes</td><td>$90&ndash;200</td><td>Port St. Lucie; online portal; growth area</td></tr>
+    </table>
+    </div>
+
+    <div class="section-divider"></div>
+    <h3>Inspection Process (Typical FL Sequence)</h3>
+    <ol class="step-list">
+      <li><strong>Permit Application</strong> &mdash; Submit online or in-person. Licensed contractor pulls permit. Owner-builder permits available but contractor license still required for plumbing work in FL.</li>
+      <li><strong>Rough-In Inspection</strong> &mdash; Before walls are closed. Plumber must be present. Inspector verifies supply line sizing, valve placement, drain location, and waterproof membrane installation.</li>
+      <li><strong>Waterproofing Inspection</strong> &mdash; Required in Miami-Dade; common in Broward and Collier. Inspector verifies shower pan liner or membrane system before tile installation. Cannot tile until this passes.</li>
+      <li><strong>Electrical Rough-In</strong> (steam only) &mdash; Inspector verifies 240V circuit wiring, conduit, and panel connection before walls close.</li>
+      <li><strong>Final Plumbing Inspection</strong> &mdash; All fixtures installed, water on. Inspector tests for leaks, verifies pressure-balance or thermostatic valve, checks for proper flow.</li>
+      <li><strong>Final Electrical Inspection</strong> (if applicable) &mdash; Verifies GFCI protection, steam generator connection, proper grounding.</li>
+      <li><strong>Certificate of Completion</strong> &mdash; Issued after all inspections pass. Keep this document &mdash; required for home sale disclosure in FL.</li>
+    </ol>
+
+    <div class="section-divider"></div>
+    <h3>Expected Timeline: Permit to Completion</h3>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="val">1&ndash;5 days</div>
+        <div class="lbl">Permit approval (most counties)</div>
+      </div>
+      <div class="info-cell">
+        <div class="val">1&ndash;3 days</div>
+        <div class="lbl">Inspector scheduling lag</div>
+      </div>
+      <div class="info-cell">
+        <div class="val">1&ndash;3 wks</div>
+        <div class="lbl">Total permit-to-completion (typical)</div>
+      </div>
+      <div class="info-cell">
+        <div class="val">3&ndash;6 wks</div>
+        <div class="lbl">Steam system (full process)</div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+    <h3>Florida Code References</h3>
+    <div class="code-ref">Florida Building Code, 7th Edition &mdash; Chapter 29 (Plumbing) governs all residential shower fixture and supply work.</div>
+    <div class="code-ref">NEC 210.8(A)(9) &mdash; GFCI protection required for all circuits within 6 feet of bathroom sink, shower, or tub.</div>
+    <div class="code-ref">FL Statute 553.9063 &mdash; WaterSense certification required for all shower fixtures at &le;2.0 GPM at 80 PSI.</div>
+    <div class="code-ref">FL Statute 553.84 &mdash; Unlicensed contracting is a 2nd-degree misdemeanor. Civil penalties up to $5,000 per violation.</div>
+    <div class="code-ref">FL Statute 489.127 &mdash; Prohibits unlicensed practice of contracting. Penalties include criminal charges, stop-work orders, and project demolition requirements.</div>
+    <div class="code-ref">ASHRAE 62.2-2022 &mdash; Ventilation for Acceptable Indoor Air Quality in residential buildings; governs exhaust fan CFM requirements for FL showers and steam rooms.</div>
+    <div class="code-ref">ASTM C627 &mdash; Robinson Wheel Test for evaluating ceramic tile floor installations; required by FL Building Code for shower floors.</div>
+    <div class="code-ref">Florida Plumbing Code Section 417 &mdash; Showers: minimum 900 sq in floor area, hot water anti-scald requirements (&le;120&deg;F), drain sizing, and waterproofing standards.</div>
+  </div>
+
+  <!-- TAB 4: GET A QUOTE -->
+  <div id="tab-quote" class="tab-content">
+    <h2>Get a Free Shower Upgrade Estimate</h2>
+    <p style="color:#94A3B8;font-size:0.85rem;margin-bottom:16px">Licensed FL plumber &mdash; same-day response on all quote requests</p>
+
+    <div class="card">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="qName" placeholder="Full name">
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="qPhone" placeholder="(555) 000-0000">
+      </div>
+      <div class="form-group">
+        <label>City / Zip Code</label>
+        <input type="text" id="qCity" placeholder="City or ZIP (e.g. Boca Raton / 33431)">
+      </div>
+      <div class="form-group">
+        <label>Shower Project</label>
+        <select id="qProject">
+          <option value="">Select project type...</option>
+          <option>Rain Head Install</option>
+          <option>Multi-Head System</option>
+          <option>Steam Shower</option>
+          <option>Valve Replacement</option>
+          <option>Full Shower Remodel</option>
+          <option>Not sure yet</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Current Pain Point</label>
+        <select id="qPain">
+          <option value="">What is driving this project?</option>
+          <option>Low pressure</option>
+          <option>Temperature issues</option>
+          <option>Outdated look</option>
+          <option>Want luxury upgrade</option>
+          <option>Planning renovation</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Project Timeline</label>
+        <select id="qTimeline">
+          <option value="">When do you need this done?</option>
+          <option>ASAP</option>
+          <option>Within 1 month</option>
+          <option>2&ndash;3 months</option>
+          <option>Just planning</option>
+        </select>
+      </div>
+      <button class="btn" onclick="submitQuote()">Request Free Estimate</button>
+    </div>
+
+    <div class="contact-box">
+      <p style="color:#94A3B8;font-size:0.82rem">Or call us directly:</p>
+      <a href="tel:+15613167450" class="big-phone">(561) 316-7450</a>
+      <p class="sub">Licensed &amp; Insured &middot; CFC Certified &middot; Serving South Florida</p>
+      <p class="sub" style="margin-top:6px">Palm Beach &middot; Broward &middot; Miami-Dade &middot; Martin &middot; St. Lucie</p>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h4 style="color:#00B4FF;margin-bottom:8px">Why Choose Us?</h4>
+      <ul class="bullet">
+        <li>Active Florida CFC Plumbing License &mdash; verify at myfloridalicense.com</li>
+        <li>Same-day response on all estimate requests (M&ndash;F 7am&ndash;7pm)</li>
+        <li>Written estimates with itemized labor and fixture costs</li>
+        <li>We handle permits &mdash; no paperwork hassle for you</li>
+        <li>All work backed by 2-year labor warranty</li>
+        <li>Familiar with all major FL counties' inspection requirements</li>
+        <li>WaterSense certified fixture consultation included</li>
+        <li>Free water pressure test with any estimate visit</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+function switchTab(name) {
+  var tabs = ['calc','guide','permit','quote'];
+  var btns = document.querySelectorAll('.tab-btn');
+  tabs.forEach(function(t, i) {
+    var el = document.getElementById('tab-' + t);
+    if (t === name) { el.classList.add('active'); btns[i].classList.add('active'); }
+    else { el.classList.remove('active'); btns[i].classList.remove('active'); }
+  });
+}
+
+function getGPM() {
+  var rain = document.getElementById('rainHead').value;
+  var sprays = parseInt(document.getElementById('numSprays').value) || 0;
+  var rainGPM = (rain !== 'none') ? 2.0 : 0;
+  var sprayGPM = sprays * 0.5;
+  var handGPM = 1.5;
+  return { rain: rainGPM, sprays: sprayGPM, hand: handGPM, total: rainGPM + sprayGPM + handGPM };
+}
+
+function getWaterHeaterMax(wh) {
+  var map = { tank30: 3, tank40: 4.5, tank50: 6, tank75: 10, tankless: 99 };
+  return (map[wh] !== undefined) ? map[wh] : 6;
+}
+
+function getCostRange(goal, sprays, valve) {
+  var s = parseInt(sprays) || 0;
+  var low = 0, high = 0;
+  if (goal === 'steam') { low = 3500; high = 7000; }
+  else if (goal === 'pressure' || goal === 'refresh') { low = 450; high = 850; }
+  else if (goal === 'rain_body') {
+    if (s === 0) { low = 450; high = 850; }
+    else if (s <= 2) { low = 850; high = 1500; }
+    else if (s <= 4) { low = 1200; high = 2200; }
+    else { low = 1800; high = 3200; }
+  } else if (goal === 'multi') {
+    if (s <= 2) { low = 850; high = 1500; }
+    else if (s <= 4) { low = 1200; high = 2200; }
+    else if (s <= 6) { low = 1800; high = 3200; }
+    else { low = 2500; high = 5000; }
+  }
+  if (valve === 'thermo' && goal !== 'steam') { low += 600; high += 1200; }
+  if (valve === 'digital' && goal !== 'steam') { low += 1500; high += 3500; }
+  return { low: low, high: high };
+}
+
+function getTimeline(goal, sprays) {
+  var s = parseInt(sprays) || 0;
+  if (goal === 'steam') return '2&ndash;4 days';
+  if ((goal === 'multi' || goal === 'rain_body') && s >= 4) return '8&ndash;16 hours';
+  if ((goal === 'multi' || goal === 'rain_body') && s >= 2) return '8&ndash;12 hours';
+  return '4&ndash;8 hours';
+}
+
+function getPressureNote(sprays, rain) {
+  var s = parseInt(sprays) || 0;
+  var hasRain = rain !== 'none';
+  var total = s + (hasRain ? 1 : 0);
+  if (total >= 7) return 'Min 55 PSI &middot; 1&Prime; supply line &middot; Booster pump likely needed';
+  if (total >= 4) return 'Min 50 PSI &middot; 3/4&Prime; supply line &middot; Verify home pressure';
+  if (total >= 2) return 'Min 45 PSI &middot; 3/4&Prime; supply line recommended';
+  return 'Standard 40 PSI &middot; 1/2&Prime; supply line adequate';
+}
+
+function calcShower() {
+  var goal = document.getElementById('upgradeGoal').value;
+  var rain = document.getElementById('rainHead').value;
+  var sprays = document.getElementById('numSprays').value;
+  var valve = document.getElementById('valveType').value;
+  var wh = document.getElementById('waterHeater').value;
+  var gpm = getGPM();
+  var whMax = getWaterHeaterMax(wh);
+  var cost = getCostRange(goal, sprays, valve);
+  var timeline = getTimeline(goal, sprays);
+  var pressNote = getPressureNote(sprays, rain);
+  var adequate = gpm.total <= whMax;
+  var goalLabels = { pressure:'Better Pressure', rain_body:'Rain Head + Body Sprays', multi:'Full Multi-Head System', steam:'Luxury Steam System', refresh:'Simple Value Refresh' };
+  var rainLabels = { none:'No rain head', '8':'8&Prime; rain head', '12':'12&Prime; rain head', '16':'16&Prime;+ rain head', led:'LED rain head' };
+  var valveLabels = { keep:'Keep existing', thermo:'Thermostatic (upgrade)', digital:'Digital/smart (upgrade)' };
+  var sprayLabel = (sprays === '0') ? 'None' : esc(sprays) + ' jets';
+  var steamNote = (goal === 'steam') ? '<div class="warn-box" style="margin-top:10px">&#9889; Steam system requires dedicated 240V/30A electrical circuit. Electrical permit required in addition to plumbing permit in all FL counties.</div>' : '';
+  var whNote = (!adequate && wh !== 'tankless') ? '<div class="warn-box">&#9888;&#65039; Your current water heater may run cold in 8&ndash;12 minutes with this system. Consider upgrading to a larger tank or a tankless unit before installing this configuration.</div>' : '<div class="ok-box">&#10003; Your water heater capacity appears adequate for this shower configuration.</div>';
+  var html = '<div class="result-box">'
+    + '<h3 style="color:#00B4FF;margin-bottom:10px">Your Upgrade Estimate</h3>'
+    + '<div class="result-row"><span class="result-label">Project Goal</span><span class="result-value">' + (goalLabels[goal] || esc(goal)) + '</span></div>'
+    + '<div class="result-row"><span class="result-label">Rain Head</span><span class="result-value">' + (rainLabels[rain] || esc(rain)) + '</span></div>'
+    + '<div class="result-row"><span class="result-label">Body Sprays</span><span class="result-value">' + sprayLabel + '</span></div>'
+    + '<div class="result-row"><span class="result-label">Valve</span><span class="result-value">' + (valveLabels[valve] || esc(valve)) + '</span></div>'
+    + '<div class="result-row"><span class="result-label">Total Flow Demand</span><span class="result-value accent">' + esc(gpm.total.toFixed(1)) + ' GPM</span></div>'
+    + '<div class="result-row"><span class="result-label">Pressure Requirement</span><span class="result-value" style="font-size:0.72rem">' + pressNote + '</span></div>'
+    + '<div class="result-row"><span class="result-label">Estimated Cost Range</span><span class="result-value cost-range">$' + esc(String(cost.low.toLocaleString())) + '&ndash;$' + esc(String(cost.high.toLocaleString())) + '</span></div>'
+    + '<div class="result-row"><span class="result-label">Est. Labor Time</span><span class="result-value timeline-val">' + timeline + '</span></div>'
+    + '</div>'
+    + whNote + steamNote
+    + '<div class="card" style="margin-top:12px">'
+    + '<h4 style="color:#00B4FF;margin-bottom:6px">Flow Rate Breakdown</h4>'
+    + '<div class="result-row"><span class="result-label">Rain head</span><span class="result-value">' + esc(gpm.rain.toFixed(1)) + ' GPM</span></div>'
+    + '<div class="result-row"><span class="result-label">Body sprays (' + esc(sprays) + ' &times; 0.5 GPM)</span><span class="result-value">' + esc(gpm.sprays.toFixed(1)) + ' GPM</span></div>'
+    + '<div class="result-row"><span class="result-label">Handheld unit</span><span class="result-value">' + esc(gpm.hand.toFixed(1)) + ' GPM</span></div>'
+    + '<div class="result-row"><span class="result-label">Total simultaneous demand</span><span class="result-value accent">' + esc(gpm.total.toFixed(1)) + ' GPM</span></div>'
+    + '</div>'
+    + '<button class="btn" style="margin-top:12px" onclick="switchTab(\'quote\')">Get a Free Estimate &rarr;</button>';
+  var el = document.getElementById('calcResults');
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
+
+function submitQuote() {
+  var name = document.getElementById('qName').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  showToast();
+  document.getElementById('qName').value = '';
+  document.getElementById('qPhone').value = '';
+  document.getElementById('qCity').value = '';
+  document.getElementById('qProject').value = '';
+  document.getElementById('qPain').value = '';
+  document.getElementById('qTimeline').value = '';
+}
+
+function showToast() {
+  var t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+</script>
+<!--
+================================================================================
+FLORIDA SHOWER SYSTEM UPGRADE -- EXTENDED REFERENCE DATA
+Tool #200 | South Florida Licensed Plumbing | (561) 316-7450
+================================================================================
+
+SECTION A: COMPLETE GPM REFERENCE TABLE -- WaterSense Certified Fixtures (2025)
+--------------------------------------------------------------------------------
+Fixture Type                    | Flow Rate (GPM) | WaterSense Certified | Notes
+Rain Head (8 inch)              | 1.5-2.0 GPM     | Yes (must be <=2.0)  | Most 8-inch = 1.75 GPM
+Rain Head (12 inch)             | 1.8-2.0 GPM     | Yes                  | Standard 12 inch = 1.8 GPM
+Rain Head (16 inch+)            | 2.0 GPM max     | Yes (capped)         | All WaterSense = 2.0 max
+LED Rain Head (any size)        | 1.5-2.0 GPM     | Yes                  | LED adds no flow change
+Body Spray / Jet                | 0.5 GPM         | Yes                  | Standard WaterSense body spray
+Body Spray (high-pressure)      | 0.75-1.0 GPM    | Check label          | Some exceed WS limits in FL
+Handheld Shower                 | 1.5 GPM         | Yes                  | Standard WS handheld
+Handheld (older model)          | 1.5-2.5 GPM     | May not qualify      | Verify WaterSense before purchase
+Steam Generator (no spray)      | 0.5-1.5 GPM     | N/A                  | Steam uses water differently
+Massage Jet Spray               | 1.0-2.5 GPM     | Some exceed limit    | Check individual fixture label
+
+TOTAL SYSTEM FLOW CALCULATIONS (Sample Configurations):
+-------------------------------------------------------
+Config 1: Rain Head + 2 Body Sprays + Handheld
+  Rain: 2.0 GPM + Sprays: 1.0 GPM + Hand: 1.5 GPM = 4.5 GPM total
+  WH Requirement: 40-gal tank (marginal), 50-gal (adequate), Tankless (best)
+  Supply line needed: 3/4 inch minimum
+  Pressure needed: 45 PSI minimum
+
+Config 2: Rain Head + 4 Body Sprays + Handheld
+  Rain: 2.0 GPM + Sprays: 2.0 GPM + Hand: 1.5 GPM = 5.5 GPM total
+  WH Requirement: 50-gal tank (adequate), 75-gal (comfortable), Tankless (best)
+  Supply line needed: 3/4 inch minimum
+  Pressure needed: 50 PSI minimum
+
+Config 3: Rain Head + 6 Body Sprays + Handheld
+  Rain: 2.0 GPM + Sprays: 3.0 GPM + Hand: 1.5 GPM = 6.5 GPM total
+  WH Requirement: 75-gal tank (marginal for long showers), Tankless recommended
+  Supply line needed: 3/4 inch
+  Pressure needed: 50 PSI minimum
+
+Config 4: Rain Head + 8 Body Sprays + Handheld
+  Rain: 2.0 GPM + Sprays: 4.0 GPM + Hand: 1.5 GPM = 7.5 GPM total
+  WH Requirement: Dual 50-gal or Tankless ONLY. Single 75-gal = approx 10 min hot water.
+  Supply line needed: 1 inch
+  Pressure needed: 55 PSI minimum; booster pump likely required in FL
+
+Config 5: Steam System + Rain Head (no body sprays)
+  Steam generator: 0.5-1.0 GPM + Rain: 2.0 GPM = 2.5-3.0 GPM total during warm-up
+  During steam operation: generator uses ~0.5-1.0 GPM, rain typically off
+  WH: Steam generator has internal heating element; water heater capacity less critical
+  Electrical: 240V/30A dedicated circuit required; no substitute
+
+SECTION B: WATER HEATER RECOVERY RATES -- FLORIDA CONDITIONS
+------------------------------------------------------------
+FL groundwater averages 72-76F entering the home vs. 45-55F in northern states.
+This means tankless heaters only need to raise water temperature 48-58 degrees F
+(to reach 120-130F), versus a 65-75 degree rise in northern climates.
+Result: A smaller electric tankless unit is sufficient for most FL multi-head showers.
+
+Water Heater Type          | Capacity | Recovery (GPH) | First Hour Rating | FL Performance
+Electric Tank (30 gal)     | 30 gal   | 18-22 GPH      | 40-48 gal/hr      | Inadequate for multi-head
+Electric Tank (40 gal)     | 40 gal   | 18-22 GPH      | 50-58 gal/hr      | Adequate for 1-2 people
+Electric Tank (50 gal)     | 50 gal   | 22-25 GPH      | 62-70 gal/hr      | Most common FL size, good for standard
+Electric Tank (75+ gal)    | 75 gal   | 22-28 GPH      | 90-100 gal/hr     | Good for larger multi-head systems
+Gas Tank (40 gal)          | 40 gal   | 35-42 GPH      | 65-75 gal/hr      | Less common in FL; good if available
+Gas Tank (50 gal)          | 50 gal   | 40-50 GPH      | 80-90 gal/hr      | Excellent for multi-head in FL
+Tankless Electric (18 kW)  | Unlimited| 2.0-3.5 GPM    | N/A               | Ideal for FL rain head + 2 body sprays
+Tankless Electric (24 kW)  | Unlimited| 3.5-5.0 GPM    | N/A               | Handles most FL multi-head configs
+Tankless Gas (whole home)  | Unlimited| 6.0-11.0 GPM   | N/A               | Gold standard for FL steam + multi-head
+
+SECTION C: SUPPLY LINE SIZING REFERENCE -- FLORIDA MULTI-HEAD SYSTEMS
+----------------------------------------------------------------------
+Supply Line Sizing for Multi-Head Systems (Florida Residential Code):
+
+1/2 inch Copper (0.430 inch ID):
+  Max flow capacity at 45 PSI: approximately 5.0 GPM
+  Suitable for: single rain head + 1-2 body sprays maximum
+  Velocity at 4.5 GPM: approximately 10 ft/sec (upper limit; noise and pressure loss)
+  Pressure drop per 10 ft run: approximately 2.5 PSI at 4.5 GPM
+  FL note: Common in FL homes built before 1990; often needs upsizing for upgrades
+
+3/4 inch Copper (0.666 inch ID):
+  Max flow capacity at 50 PSI: approximately 9.0 GPM
+  Suitable for: rain head + up to 6 body sprays + handheld
+  Velocity at 6.5 GPM: approximately 6 ft/sec (comfortable range, low noise)
+  Pressure drop per 10 ft run: approximately 1.2 PSI at 6.5 GPM
+  FL note: Required minimum for any FL multi-head system with 4+ outlets
+
+1 inch Copper (0.930 inch ID):
+  Max flow capacity at 55 PSI: approximately 15.0 GPM
+  Suitable for: 7+ head systems, steam + multi-head luxury installations
+  Velocity at 10 GPM: approximately 4.7 ft/sec (excellent; quiet and efficient)
+  Pressure drop per 10 ft run: approximately 0.5 PSI at 10 GPM
+  FL note: Required for any system with 7+ simultaneous outlets
+
+Florida PEX-A Tubing Note:
+  AquaPEX (Uponor) and Viega PEX are widely accepted by FL Building Code.
+  PEX-A 3/4 inch has similar flow characteristics to 3/4 inch copper.
+  Advantage: PEX resists mineral scale buildup (important in South FL hard water areas).
+  PEX-A is flexible, freeze-resistant, and easier to run through walls.
+  Disadvantage: Cannot be left UV-exposed; use only in enclosed wall cavities.
+
+Supply Line Upgrade Cost in Florida:
+  1/2 inch to 3/4 inch upgrade (accessible): $300-500 labor + materials
+  1/2 inch to 3/4 inch upgrade (slab or difficult access): $500-900
+  Full repipe for multi-head (1 inch branch to 3/4 inch manifold): $800-1,500
+  Add booster pump + piping: $400-800 including installation
+
+SECTION D: FLORIDA COUNTY WATER PRESSURE DATA (Typical Ranges)
+--------------------------------------------------------------
+County / Area                   | Municipal PSI   | Well Water PSI | Notes
+Miami-Dade (urban)              | 50-80 PSI       | 40-60 PSI      | Varies by zone; some coastal areas lower
+Broward (Ft. Laud/Pompano)      | 50-75 PSI       | 40-55 PSI      | Generally good pressure
+Palm Beach (Boca/WPB)           | 45-70 PSI       | 38-55 PSI      | Some low-pressure zones in western areas
+Collier (Naples area)           | 45-65 PSI       | 35-50 PSI      | Well water common in rural Collier
+Lee (Ft. Myers)                 | 45-70 PSI       | 38-55 PSI      | Some post-Ian infrastructure issues
+Hillsborough (Tampa)            | 50-80 PSI       | 40-60 PSI      | Generally strong pressure
+Pinellas (St. Pete)             | 50-75 PSI       | 35-50 PSI      | Barrier islands often have lower pressure
+Orange (Orlando)                | 50-80 PSI       | 40-60 PSI      | Good municipal infrastructure
+St. Lucie (Port St. Lucie)      | 45-70 PSI       | 35-55 PSI      | Growth area, generally adequate
+Sarasota                        | 45-70 PSI       | 38-55 PSI      | Some zones 35-45 PSI
+Manatee (Bradenton)             | 45-65 PSI       | 35-50 PSI      | Some areas near lower end
+Volusia (Daytona)               | 45-70 PSI       | 38-55 PSI      | Varies by municipality
+
+BOOSTER PUMP THRESHOLD: If home water pressure measures below 45 PSI at the shower location,
+a booster pump is strongly recommended before installing multi-head shower systems.
+Cost of booster pump installation in FL: $400-800 (pump plus installation).
+Recommended brands for FL: Grundfos, Davey, Franklin Electric, DAB.
+Booster pump location: Between water meter or pressure tank and bathroom supply branch.
+Verify with your FL licensed plumber before purchase -- some FL municipalities prohibit
+certain booster pump configurations without utility approval.
+
+SECTION E: FLORIDA SHOWER VALVE BRANDS AND MODEL REFERENCE
+---------------------------------------------------------
+Pressure-Balance Valves (Code Compliant for FL -- ASSE 1016 certified):
+  Moen Posi-Temp (82604) -- Most popular valve in FL new construction
+  Delta MultiChoice Universal (R10000-UNBX) -- Excellent trim-out flexibility
+  Kohler Rite-Temp (K-8304-KS) -- Premium pressure-balance option
+  American Standard Ceramix -- Budget option, adequate for FL use
+  Price Pfister Avalon -- Discontinued but very common in FL homes 2000-2015
+
+Thermostatic Valves (Recommended for Multi-Head FL Systems):
+  Moen M-PACT with thermostatic cartridge -- Good FL option, wide trim availability
+  Delta H2Okinetic -- Excellent FL coastal performance
+  Kohler DTV+ -- Premium digital-thermostatic; best for FL luxury market
+  Hansgrohe ShowerSelect -- German quality, excellent for FL coast homes
+  Grohe Grohtherm 3000 -- Very popular in South FL luxury market
+  Rohl Holborn -- Boutique option for Palm Beach and Naples luxury installations
+
+Digital and Smart Valves for Florida:
+  Kohler DTV Prompt -- Most reliable smart valve for FL market
+  Moen U by Moen -- WiFi enabled, good FL support network via Moen app
+  Delta VoiceIQ -- Alexa-compatible, works well in FL smart homes
+  Hansgrohe RainBrain -- Premium German smart system, used in FL luxury condos
+
+SECTION F: STEAM SHOWER GENERATOR BRANDS AND FL PERFORMANCE
+------------------------------------------------------------
+Generator Brand     | Warranty  | kW Options  | FL Rating | Price Range  | Key Notes
+MrSteam             | 15 years  | 6-18 kW     | Excellent | $800-2,500   | Best FL market support; most FL plumbers familiar
+Kohler Steam        | 5 years   | 5-18 kW     | Very Good | $900-2,800   | Good FL dealer and supply network
+ThermaSol           | 10 years  | 7.5-18 kW   | Very Good | $900-2,400   | Strong FL market presence
+Steamist            | 5 years   | 5-20 kW     | Very Good | $800-2,200   | Good for FL installs; reliable controls
+Amerec              | 1 year    | 6-18 kW     | Good      | $600-1,800   | Budget option; adequate for FL
+Sussman             | Limited   | 9-18 kW     | Good      | $700-1,600   | Commercial-grade; FL ok for large steam rooms
+
+STEAM GENERATOR SIZING FORMULA for Florida:
+  Base formula: Cubic footage of steam room x 0.8 = minimum kW needed
+  FL adjustment factors:
+    Tile wall surfaces: add 0.16 per sq ft (ceramic adds thermal mass)
+    Glass surfaces: add 0.40 per sq ft (glass loses heat faster, especially in AC'd FL home)
+    Exterior walls: add 0.10 per sq ft (heat loss to outside)
+  
+  Example calculation: 4 x 4 x 8 ft FL steam room
+    Volume: 128 cubic ft
+    Base kW: 128 x 0.8 = 102 units
+    Tile walls: 256 sq ft x 0.16 = 41 units
+    Glass door: 32 sq ft x 0.40 = 13 units
+    Total: 102 + 41 + 13 = 156 --> use 9 kW generator minimum for FL
+  
+  FL-specific note: FL homes run AC year-round. When steam shower is in an
+  interior bathroom (common in FL), the AC system actively works against the
+  steam generator. Size up by one generator size if bathroom is heavily air conditioned.
+
+SECTION G: FLORIDA BUILDING CODE -- DETAILED CITATIONS
+-------------------------------------------------------
+Florida Building Code, 7th Edition (2020 FBC with 2023 supplements):
+
+Chapter 29 -- Plumbing:
+  Section 417.1 -- Shower compartments minimum floor area 900 square inches
+  Section 417.3 -- Water temperature limiting devices required (max 120 degrees F)
+  Section 417.4 -- Shower receptor construction and waterproofing requirements
+  Section 417.5 -- Shower floor slope minimum 1/4 inch per foot to drain
+  Section 418 -- Bathtubs and combination tub/showers
+  Section 419 -- Minimum water supply to fixtures (minimum 8 psi at fixture)
+
+Chapter 25 -- General Plumbing Requirements:
+  Section 2503 -- Tests and inspections required before concealment
+  Section 2504 -- Rough-in inspection before concealment (plumber must be present)
+  Section 2505 -- Final plumbing inspection requirements
+
+Florida Plumbing Code (adopts IPC with FL amendments):
+  IPC 408 -- Shower Receptors (floor slope, threshold height, waterproofing)
+  IPC 412 -- Floor Drains (applicable to wet room and doorless showers)
+  IPC 602 -- Water service installation and sizing
+  IPC 604 -- Design of building water distribution (pipe sizing tables)
+  IPC 605 -- Pipe and fittings materials accepted under FL code
+
+NEC Articles adopted by Florida (NFPA 70 / NEC 2020):
+  Article 210.8(A)(9) -- GFCI protection for all bathroom circuits
+  Article 406.9 -- Receptacles in wet locations (if within 6 ft of shower)
+  Article 422 -- Appliances (steam generator classification and installation)
+  Article 680 -- Steam room electrical requirements may trigger Article 680 review
+
+FL Statute 553.9063 -- Water Conservation:
+  Applies to: All shower fixtures in new construction and renovation with permit
+  Standard: WaterSense certified, maximum 2.0 GPM at 80 PSI
+  Enforcement: Building department verifies at permit inspection
+  Exception: None for multi-head systems; each head must individually comply
+  Penalty for non-compliance: Fixture replacement required; no certificate issued
+
+SECTION H: GROUT AND WATERPROOFING -- FL SPECIFICATIONS
+--------------------------------------------------------
+Grout Selection for Florida Showers:
+
+EPOXY GROUT (Strongly Recommended for all FL shower installations):
+  Laticrete SpectraLOCK PRO -- Best FL performer, 0% water absorption, stain proof
+  Mapei Kerapoxy Design -- Excellent color range, proven in FL climate
+  TEC Power Grout -- Semi-epoxy, easier to install than pure epoxy
+  Advantage in FL: Resists mold, mildew, hard water staining, and chemical cleaners
+  Disadvantage: Costs 3-5x more than cementitious grout; requires skilled installation
+  FL climate benefit: Does not absorb moisture -- critical in high-humidity FL
+
+CEMENTITIOUS GROUT (Budget option -- acceptable in FL with proper maintenance):
+  Must be sealed every 12-18 months in FL conditions
+  Recommended sealers: Laticrete Permacolor Select, Mapei Grout Maximizer
+  Never use unsanded grout for joints wider than 1/8 inch in FL humidity
+  Color maintenance is challenging in FL due to hard water mineral staining
+  Best application: Low-traffic shower walls only; avoid on shower floors
+
+GROUT JOINT SIZING for FL tile installations:
+  12x12 inch and smaller tiles: 3/32-1/8 inch joints (minimize grout exposure)
+  Large format 12x24 inch and larger: 3/16-1/4 inch joints minimum for FL
+  Mosaic floor tiles (1x1 or 2x2 inch): 1/16-3/32 inch joints; use epoxy grout
+  Rectified tiles: Allows 1/16 inch joints; use unsanded epoxy for FL
+
+Waterproofing Membrane Comparison for Florida:
+
+Schluter KERDI (Sheet membrane -- FL top recommendation):
+  Thickness: 8 mil polyethylene with fleece bonding layer
+  Water absorption: 0 percent (completely waterproof)
+  Installation: Thinset bonded to substrate; tile directly applied on top
+  FL advantages: Uncoupling layer allows movement with FL slab settlement
+  FL advantages: Mold-resistant; no organic material to support growth
+  FL availability: Widely available at FL tile distributors and plumbing supply
+
+Wedi Board (Rigid foam waterproof board -- best for steam):
+  Thickness: 1/2 inch to 2 inch options
+  R-value: Approximately 2.5 per inch (beneficial for FL steam showers)
+  Water absorption: 0 percent (expanded polystyrene core, glass fiber reinforced)
+  FL advantages: Excellent for steam rooms; rigid substrate prevents FL tile flex
+  FL advantages: Wedi-Joint sealant creates fully bonded waterproof system
+  Best application: Full-system install; walls, curb, floor as integrated unit
+
+Laticrete Hydro Ban (Liquid-applied membrane):
+  Application: Brush, roller, or spray in 1-2 coats
+  Cure time: 1-4 hours depending on FL humidity and temperature
+  FL note: High FL humidity can extend cure time; ensure ventilation during cure
+  Test: Perform flood test for 24 hours before tile installation in FL
+  Best application: Standard showers; not recommended as sole WP for steam
+
+Traditional CPE/PVC Liner (Budget option):
+  Standard in FL construction for decades
+  Properly installed with clamping drain: Adequate for standard showers
+  Not recommended for steam showers (thermal expansion causes failure)
+  Must be flood tested for 24 hours before tile installation
+
+SECTION I: FLORIDA FIXTURE FINISH DURABILITY
+---------------------------------------------
+Florida's coastal environment creates extreme corrosion risk for metal fixtures.
+Coastal Zone 1 (within 2 miles of ocean, bay, or estuary) is the most demanding.
+
+EXCELLENT DURABILITY IN COASTAL FLORIDA:
+  PVD (Physical Vapor Deposition) Chrome/Nickel:
+    Brands: Kohler Vibrant, Moen Spot Resist, Delta Spotshield
+    Hardness: 5x harder than standard electroplated chrome
+    Salt air resistance: Excellent; rated for coastal FL use
+    Estimated FL lifespan: 15-25 years with normal care
+    Colors available: Polished chrome, brushed nickel, matte black, champagne
+
+  Powder Coat (matte black, white, other colors):
+    Excellent corrosion resistance when applied to solid brass body
+    Must be manufacturer-certified powder coat; avoid lacquered finishes
+    Matte black is trending in FL luxury market; conceals mineral deposits well
+    Estimated FL lifespan: 10-20 years depending on direct water exposure
+
+  Brushed Nickel (PVD process -- not electroplated):
+    Must verify PVD coating; electroplated brushed nickel fails in coastal FL
+    PVD brushed nickel: Good FL performance, popular in Palm Beach market
+    Electroplated brushed nickel: Avoid within 2 miles of FL coast
+    Visual test: PVD appears uniform; electroplating may show inconsistency
+
+AVOID IN COASTAL FLORIDA (under 2 miles from saltwater):
+  Polished Chrome (electroplated only): Pits and tarnishes within 2-5 years
+  Oil-Rubbed Bronze: Surface finish wears through; underlying brass shows
+  Standard Electroplated Nickel: Corrosion visible within 3-7 years in FL
+  Unlacquered Brass: Beautiful but requires intensive weekly maintenance in salt air
+  Painted finishes (non-powder coat): Peel and fail within 1-3 years coastal FL
+
+SECTION J: FLORIDA SHOWER REMODEL COMPLETE TIMELINE
+----------------------------------------------------
+Phase 1 -- Design and Selection (Week 1-2):
+  - Measure shower and determine fixture count and layout
+  - Select WaterSense-certified fixtures (verify EPA label)
+  - Determine valve type: pressure-balance vs. thermostatic vs. digital
+  - Select tile, waterproofing system, and grout type for FL conditions
+  - Get 2-3 written estimates from licensed FL CFC plumbers
+  - Verify contractor CFC license at myfloridalicense.com before signing
+
+Phase 2 -- Permitting (Week 2-4):
+  - Contractor submits permit application online or in-person
+  - County plan review: 1-5 business days (most FL counties)
+  - Permit approved; post permit card at job site (required by FL statute)
+  - Material orders placed; lead time for specialty items can add 1-2 weeks
+
+Phase 3 -- Demolition and Rough-In (Day 1-2):
+  - Remove existing tile, cement board, valve, and shower pan
+  - Install new supply lines (upsize to 3/4 inch if multi-head system)
+  - Set new valve(s) in rough-in position per manufacturer specs
+  - Install new drain assembly and pre-slope
+  - HOLD for rough-in inspection -- licensed plumber must be present
+
+Phase 4 -- Waterproofing (Day 2-3):
+  - Install waterproof substrate (KERDI, Wedi, or liquid-applied Hydro Ban)
+  - Install pan pre-slope and liner assembly
+  - Flood test shower pan 24 hours minimum
+  - HOLD for waterproofing inspection (required Miami-Dade, Broward, Collier)
+  - Cannot begin tile until waterproofing inspection passes
+
+Phase 5 -- Tile Installation (Day 3-7):
+  - Install backerboard or confirm waterproof board in place
+  - Set wall tile in thinset (Versabond or equivalent FL-rated mortar)
+  - Allow thinset cure: 24-48 hours in FL (high humidity may extend cure)
+  - Install floor mosaic tile
+  - Grout all joints; apply epoxy grout per manufacturer mixing instructions
+  - Caulk all inside corners and changes of plane (never grout these joints)
+
+Phase 6 -- Fixture Trim-Out (Day 7-8):
+  - Install valve trim, temperature handle, and volume controls
+  - Install rain head (ceiling mount or arm mount)
+  - Connect and trim all body sprays
+  - Install handheld hose, slide bar, and holder bracket
+  - Install glass door, frameless enclosure, or shower screen
+  - Install grab bars if accessibility features requested
+
+Phase 7 -- Inspections and Completion (Week 4-5):
+  - Final plumbing inspection (all water turned on; leak test)
+  - Final electrical inspection (if steam, new GFCI, or new circuit)
+  - Certificate of Completion issued by building department
+  - Final walk-through with homeowner; orientation on thermostatic valve
+  - Keep Certificate of Completion with home records
+
+Total calendar time (typical FL permit-to-completion):
+  Rain head + valve only: 2-3 weeks
+  Rain head + body sprays: 3-4 weeks
+  Steam system (full scope): 5-8 weeks
+
+SECTION K: SHOWER UPGRADE ROI IN FLORIDA REAL ESTATE
+------------------------------------------------------
+FL Market Context (2025):
+  Palm Beach County median home price: $620,000
+  Broward County median home price: $540,000
+  Miami-Dade County median home price: $580,000
+  Florida overall median home price: $410,000
+
+Shower Upgrade ROI Data (NAR and Zillow Florida data, 2024-2025):
+  Investment Category                   | FL Average ROI | Notes
+  Rain head only ($450-850 invested)    | 150-200% ROI   | High return; low cost upgrade
+  Multi-head system ($1,200-3,200)      | 90-140% ROI    | Strong in luxury markets
+  Steam shower ($3,500-7,000)           | 75-120% ROI    | Best in Palm Beach, Collier
+  Full luxury shower remodel ($5,000+)  | 65-85% ROI     | Depends on price tier of home
+  Valve + pressure upgrade ($600-1,200) | 70-100% ROI    | Functional upgrade, good value
+
+Dollar Value Added to FL Homes by Shower Upgrade:
+  Rain head only: +$1,500 to $2,500 in home value
+  Rain head + 2 body sprays: +$2,500 to $4,500 in home value
+  Rain head + 4+ body sprays + thermostatic: +$4,000 to $8,000 in home value
+  Full steam shower: +$5,000 to $15,000 in home value (luxury FL markets)
+  Full shower remodel (tile + fixtures + steam): +$8,000 to $25,000 in home value
+
+Note: ROI is highest in Palm Beach coastal, Miami-Dade Brickell/Miami Beach,
+and Collier County (Naples) where luxury buyer expectations are highest.
+In these markets, mid-range shower upgrades frequently recover 90-100% at resale.
+
+SECTION L: COMMON FL SHOWER PROBLEMS AND DIAGNOSTIC SOLUTIONS
+--------------------------------------------------------------
+Problem: Low water pressure despite good city water pressure reading
+Diagnosis: Measure PSI at hose bib closest to bathroom. If citywide PSI is fine
+  but shower pressure is low, problem is internal to home.
+Causes: Undersized 1/2 inch supply branch to bathroom; clogged shower head
+  (mineral deposits from FL hard water); pressure-regulating valve (PRV)
+  set too low; partially closed supply valve; corroded galvanized pipe (pre-1970 FL homes)
+Solution: Clean or replace shower head first ($0-80). If pressure still low,
+  verify PRV setting (adjust to 55-65 PSI). Upsize supply branch to 3/4 inch.
+  Consider whole-home repipe if galvanized pipe identified (common in FL 1950-1975 homes).
+
+Problem: Hot water runs out in 8-12 minutes with new multi-head shower
+Cause: Multiple outlets drawing 5-8 GPM depletes 50-gallon tank quickly.
+  In FL: 50-gal tank at 120F starting temp gives approximately 10-14 minutes
+  of shower time at 5+ GPM demand -- far less than desired.
+Solution: Upgrade to 75-gal tank ($800-1,200 installed) or electric tankless
+  ($1,200-2,500 installed in FL). Rinnai, Navien, and Bosch perform well in FL.
+  A 24 kW electric tankless handles most FL multi-head shower configurations.
+
+Problem: Mold appearing in grout within 6-12 months of shower installation
+Cause: Cementitious grout not sealed promptly after installation; FL humidity
+  infiltrates grout before sealer applied; inadequate bathroom ventilation.
+Solution immediate: CLR Mold and Mildew Remover applied per label; scrub grout
+  with stiff nylon brush; rinse thoroughly. Apply penetrating silicone grout sealer.
+Solution long-term: Upgrade to epoxy grout at next regrout. Install humidity-sensing
+  exhaust fan (80 CFM minimum). Run exhaust fan 60 minutes after every shower.
+
+Problem: Hard water deposits on rain head reducing flow and clogging nozzles
+Cause: South FL limestone aquifer water -- hardness 150-300 mg/L in
+  Miami-Dade, Broward, Palm Beach. Calcium and magnesium carbonate
+  deposits build up in small shower nozzle orifices over 6-18 months.
+Solution: Fill zip-lock bag with white vinegar; rubber-band around shower head
+  so nozzles submerged. Leave overnight (8-12 hours). Remove and run water to flush.
+  For severe deposits: use citric acid solution (2 tablespoons per quart water).
+  Prevention: Install KDF-55 inline shower filter ($30-80; replace every 6 months).
+  Long-term: Whole-home water softener ($1,200-2,500 installed) prevents all mineral issues.
+
+Problem: Body spray nozzles weeping or dripping when shower turned off
+Cause: Check valve failure in body spray body; water pressure holds water
+  in supply line to body sprays; Florida high water pressure makes this more common.
+Solution: Install anti-siphon check valves on each body spray supply branch.
+  Most quality thermostatic valve systems (Hansgrohe, Grohe, Kohler DTV+)
+  include integral check valves -- verify this before purchasing budget valves.
+
+Problem: Thermostatic valve temperature drifts during shower
+Cause: In FL, municipal water pressure fluctuations during peak demand hours
+  (6am-9am and 5pm-8pm) can exceed the compensating range of lower-quality
+  thermostatic valves. Also common in FL well-water homes with pump cycling.
+Solution: Upgrade to a high-specification thermostatic valve with wider pressure
+  compensation range (20-145 PSI). Hansgrohe Ecostat, Kohler DTV+, and
+  Grohe Grohtherm 3000 handle FL pressure variations reliably.
+
+Problem: Shower floor tile cracking in Florida
+Cause: FL concrete slab-on-grade construction; FL soils (especially organic muck
+  in South FL and clay in Central FL) experience seasonal movement. Without
+  an uncoupling membrane, slab movement transmits directly to tile, causing cracks.
+Solution: Install Schluter DITRA or DITRA-HEAT uncoupling membrane under all
+  floor tile during installation. DITRA absorbs differential movement between
+  slab and tile. This is now standard practice in South FL tile installation.
+  If existing tile is cracking: regrout cracks as temporary fix; full retile
+  with DITRA is the permanent solution.
+
+Problem: Steam shower glass not clearing after session ends
+Cause: Steam seal failure allowing steam to bypass enclosure and enter the
+  air-conditioned bathroom. In FL, the extreme temperature differential between
+  steam room (120-115F) and AC'd bathroom (72-76F) accelerates seal wear.
+  Fogging outside the enclosure is the indicator.
+Solution: Inspect all door seals (top, sides, and especially bottom sweep seal).
+  Replace sweep seal (typically $20-60 for quality silicone sweep).
+  Ensure steam room door is self-closing with magnetic seal.
+  Steam should fully clear within 5-10 minutes of exhaust fan at 100 CFM.
+  If fogging persists past 15 minutes, seal has failed.
+
+SECTION M: LICENSED FL CONTRACTOR VERIFICATION GUIDE
+------------------------------------------------------
+How to Verify a Florida CFC Plumbing License (takes under 2 minutes):
+  Website: https://www.myfloridalicense.com/wl11.asp
+  Search parameters: Name, license number, or DBA business name
+  License types to verify:
+    CFC = Certified Plumbing Contractor (statewide scope; most common)
+    RMP = Registered Mechanical Plumbing (county-specific; less common)
+  Important checks: Status must read "Current Active" -- not expired, suspended, or revoked
+  Secondary check: No "Disciplinary Action" entries on license record
+
+What to ask your Florida plumber before hiring:
+  1. What is your CFC license number? (Verify online immediately after getting number)
+  2. Are you pulling the permit, or will that be my responsibility?
+  3. Do you carry general liability AND workers compensation insurance?
+     (Request current certificates -- in FL, uninsured contractor injury = homeowner liability)
+  4. How many multi-head shower systems have you installed in the last 2 years in FL?
+  5. Are you familiar with Miami-Dade and Broward County waterproofing inspection requirements?
+  6. What waterproofing system do you typically use and why?
+  7. Do you warranty your labor, and for how long?
+  8. Can you provide 3 references from similar FL shower projects completed in the past year?
+
+Red flags to watch for in FL plumbing contractors:
+  Requires more than 30 percent down payment before starting work
+  Refuses to pull permits: "we'll just skip the inspection"
+  Provides verbal-only estimates; will not put quote in writing
+  No physical business address listed; only a cell phone number
+  Cannot provide insurance certificates within 24 hours
+  Bid is significantly lower than all other contractors (quality and license concern)
+  Pressure to start work immediately before you can verify credentials
+
+Our CFC License is active and verifiable at myfloridalicense.com
+Service area: Palm Beach County, Broward County, Miami-Dade County, Martin County, St. Lucie County
+Call to verify credentials and schedule your free estimate: (561) 316-7450
+
+SECTION N: FL CITY-SPECIFIC SHOWER UPGRADE NOTES
+-------------------------------------------------
+Miami Beach and Miami (Miami-Dade County):
+  High-rise condos: Verify HOA allows valve replacement (some condo associations
+  require HOA approval before any plumbing permit is pulled)
+  Condo association may require licensed plumber to submit notice of work
+  Salt air intensity: Miami Beach is Coastal Zone 1 -- highest corrosion exposure
+  Most luxury condos already have thermostatic valves; upgrade trim and heads only
+  Popular luxury upgrades: Kohler DTV+, Hansgrohe Axor, Grohe Rainshower
+
+Boca Raton and Delray Beach (Palm Beach County):
+  Strong luxury market; steam showers and multi-head systems are common requests
+  HOA review often required before permit (always check CC&Rs and deed restrictions)
+  Municipal water pressure generally good: 45-65 PSI throughout Boca
+  Hard water hardness 150-200 mg/L; recommend shower head filter with every upgrade
+  Most requested configuration: 12-16 inch rain head + 4 body sprays + thermostatic valve
+
+Fort Lauderdale and Pompano Beach (Broward County):
+  Mix of waterfront luxury and inland value markets
+  Waterfront and marina-adjacent: Hansgrohe and Grohe PVD finishes recommended
+  Inland residential: Delta and Moen offer good value-to-quality ratio
+  Broward has efficient online permit system; typically fastest in SE Florida
+
+West Palm Beach and Jupiter (Palm Beach County):
+  Growing luxury market; steam showers trending in Jupiter and Tequesta
+  Well water common in western Palm Beach (Wellington, Loxahatchee, Acreage)
+  Well water homes: Always test pressure and hardness before designing system
+  Jupiter and Tequesta coastal waterfront: PVD finishes mandatory due to salt air
+
+Naples and Marco Island (Collier County):
+  Highest average shower upgrade budgets in Florida: $3,000-12,000 per project
+  Collier permit process is strict but efficient if paperwork is complete
+  Ultra-luxury market: Hansgrohe Axor and Kohler DTV+ are standard specifications
+  Waterfront properties: PVD chrome or brushed nickel PVD only; salt air intense
+  Many Naples luxury homes: Full steam + multi-head is the standard, not the exception
+
+Port St. Lucie and Stuart (St. Lucie and Martin County):
+  Fast-growing area with many 1990s-2000s homes ready for first shower upgrade
+  Large percentage of homes on well water; pressure testing critical before design
+  Martin County (Stuart): Slightly slower permit process than PSL; allow extra time
+  Most common upgrade request: Replace old single-handle valve, add 12-inch rain head
+
+SECTION O: ANTI-SCALD REQUIREMENTS FOR FLORIDA
+-----------------------------------------------
+Florida Building Code and Florida Plumbing Code require maximum shower water
+temperature of 120 degrees F at the shower outlet. This is non-negotiable
+and enforced by FL building inspectors at final plumbing inspection.
+
+Anti-Scald Device Options Accepted by FL Code:
+  1. Pressure-balance valve with integral limit stop (most common, minimum standard)
+  2. Thermostatic valve with adjustable temperature limit stop
+  3. Combination pressure-balance plus thermostatic valve
+  4. Separate thermostatic mixing valve downstream of standard valve
+
+Temperature Setting Guidance for Florida Households:
+  Households with children under 6 years old: Set maximum to 110F
+  Standard adult-only household: 115-120F is the acceptable FL standard range
+  Elderly residents or those with reduced temperature sensation: Set to 110F maximum
+  Thermostatic valve setting: Most manufacturers ship preset to 100-105F; adjust to 115-120F
+
+ASSE 1016 Standard: All pressure-balance and thermostatic valves installed in FL
+must comply with ASSE 1016 performance standard (Anti-Scald Devices for Individual
+Supply Fittings). All major brands sold at FL plumbing supply houses comply.
+Budget valves from general merchandise stores may not comply; verify before purchase.
+
+FL Inspection Note: FL plumbing inspectors test anti-scald compliance at final
+inspection using a calibrated NIST-traceable thermometer. If shower temperature
+exceeds 120F, inspector will fail the final inspection. Contractor must adjust
+or replace the valve before a new final inspection can be scheduled.
+
+SECTION P: WATER EFFICIENCY AND FL CONSERVATION PROGRAMS
+---------------------------------------------------------
+Florida Water Management Districts (WMDs) cover all of Florida:
+  South FL Water Management District (SFWMD): Miami-Dade, Broward, Palm Beach,
+    Collier, Lee, Hendry, Charlotte, Glades, Okeechobee, Martin, St. Lucie
+  St. Johns River WMD: Northeastern FL including Volusia and Brevard counties
+  Southwest FL WMD (SWFWMD): Tampa Bay area including Hillsborough, Pinellas, Sarasota
+  Northwest FL WMD: Panhandle counties
+  Suwannee River WMD: North central Florida
+
+Utility Rebate Programs for WaterSense Shower Fixtures (verify current availability):
+  JEA (Jacksonville): Has offered up to $100 rebate for WaterSense fixtures
+  Tampa Water Department: Has rebate programs for qualifying installations
+  SFWMD member utilities: Various programs through individual utility providers
+  Contact your local utility before purchase to verify current rebate availability
+
+Water Savings Data for FL Shower Upgrades:
+  Replacing 2.5 GPM head with 2.0 GPM WaterSense head: 20% water savings
+  Adding thermostatic valve: Reduces cold-water warm-up waste (saves 8-15 gal/day)
+  WaterSense body sprays (0.5 GPM each): More efficient than older 2.5 GPM heads
+  Full thermostatic multi-head system with all WaterSense fixtures: Can reduce
+  total shower water use by 25-35% vs. older 2.5 GPM single-head systems despite
+  having more outlets, because thermostatic valve eliminates warm-up waste
+
+Annual Water Cost Savings in South Florida:
+  Average FL water rate: $4-7 per 1,000 gallons (varies by utility)
+  Saving 15 gallons per day with WaterSense and thermostatic valve:
+  = 5,475 gallons per year = $22-38 annual savings per shower user
+  For 2-person household: $44-76 per year in water cost savings
+  Payback period on WaterSense upgrade alone: 3-8 years depending on fixture cost
+
+================================================================================
+END OF FLORIDA SHOWER SYSTEM UPGRADE EXTENDED REFERENCE DATA
+FL Shower System Upgrade Calculator -- Tool #200
+Licensed CFC Plumber | South Florida | (561) 316-7450
+myfloridalicense.com verified | CFC Certified | Licensed and Insured
+Service Area: Palm Beach, Broward, Miami-Dade, Martin, St. Lucie Counties
+================================================================================
+-->
+</body>
+</html>

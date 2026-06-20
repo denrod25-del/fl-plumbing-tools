@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**198 interactive cost calculators** for Florida homeowners.
+**201 interactive cost calculators** for Florida homeowners.
 Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote), mobile-first, zero dependencies.
 
 **Live site:** https://flplumbingtools.com/
@@ -85,9 +85,11 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Irrigation Winterization Cost Guide](https://flplumbingtools.com/irrigation-winterization/fl_irrigation_winterization.html)
 - [FL Irrigation Cost Guide](https://flplumbingtools.com/irrigation/fl_irrigation_guide.html)
 - [FL Kitchen Cost Cost Guide](https://flplumbingtools.com/kitchen-cost/fl_kitchen_cost.html)
+- [FL Kitchen Sink Disposal Cost Guide](https://flplumbingtools.com/kitchen-sink-disposal/fl_kitchen_sink_disposal.html)
 - [FL Laundry Plumbing Cost Guide](https://flplumbingtools.com/laundry-plumbing/fl_laundry_plumbing.html)
 - [FL Lead Pipe Risk Cost Guide](https://flplumbingtools.com/lead-pipe-risk/fl_lead_pipe_risk.html)
 - [FL Leak Detection Cost Guide](https://flplumbingtools.com/leak-detection/fl_leak_detection.html)
+- [FL Licensed Plumber Verification Cost Guide](https://flplumbingtools.com/licensed-plumber-verification/fl_licensed_plumber_verification.html)
 - [FL Main Water Line Cost Guide](https://flplumbingtools.com/main-water-line/fl_main_water_line.html)
 - [FL Maintenance Plan Cost Guide](https://flplumbingtools.com/maintenance-plan/fl_maintenance_plan.html)
 - [FL Master Shower Demand Cost Guide](https://flplumbingtools.com/master-shower-demand/fl_master_shower_demand.html)
@@ -153,6 +155,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Shower Multi Head Cost Guide](https://flplumbingtools.com/shower-multi-head/fl_shower_multi_head.html)
 - [FL Shower Pan Waterproofing Cost Guide](https://flplumbingtools.com/shower-pan-waterproofing/fl_shower_pan_waterproofing.html)
 - [FL Shower Remodel Cost Guide](https://flplumbingtools.com/shower-remodel/fl_shower_remodel.html)
+- [FL Shower System Upgrade Cost Guide](https://flplumbingtools.com/shower-system-upgrade/fl_shower_system_upgrade.html)
 - [FL Shower Valve Antiscald Cost Guide](https://flplumbingtools.com/shower-valve-antiscald/fl_shower_valve_antiscald.html)
 - [FL Shower Valve Cost Guide](https://flplumbingtools.com/shower-valve/fl_shower_valve.html)
 - [FL Slab Leak Diagnosis Cost Guide](https://flplumbingtools.com/slab-leak-diagnosis/fl_slab_leak_diagnosis.html)
