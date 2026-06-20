@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**201 interactive cost calculators** for Florida homeowners.
+**203 interactive cost calculators** for Florida homeowners.
 Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote), mobile-first, zero dependencies.
 
 **Live site:** https://flplumbingtools.com/
@@ -85,6 +85,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Irrigation Winterization Cost Guide](https://flplumbingtools.com/irrigation-winterization/fl_irrigation_winterization.html)
 - [FL Irrigation Cost Guide](https://flplumbingtools.com/irrigation/fl_irrigation_guide.html)
 - [FL Kitchen Cost Cost Guide](https://flplumbingtools.com/kitchen-cost/fl_kitchen_cost.html)
+- [FL Kitchen Faucet Replacement Cost Guide](https://flplumbingtools.com/kitchen-faucet-replacement/fl_kitchen_faucet_replacement.html)
 - [FL Kitchen Sink Disposal Cost Guide](https://flplumbingtools.com/kitchen-sink-disposal/fl_kitchen_sink_disposal.html)
 - [FL Laundry Plumbing Cost Guide](https://flplumbingtools.com/laundry-plumbing/fl_laundry_plumbing.html)
 - [FL Lead Pipe Risk Cost Guide](https://flplumbingtools.com/lead-pipe-risk/fl_lead_pipe_risk.html)
@@ -180,6 +181,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Utility Locating Cost Guide](https://flplumbingtools.com/utility-locating/fl_utility_locating.html)
 - [FL Vacation Rental Plumbing Cost Guide](https://flplumbingtools.com/vacation-rental-plumbing/fl_vacation_rental_plumbing.html)
 - [FL Warranty Claim Guide Cost Guide](https://flplumbingtools.com/warranty-claim-guide/fl_warranty_claim_guide.html)
+- [FL Washing Machine Plumbing Cost Guide](https://flplumbingtools.com/washing-machine-plumbing/fl_washing_machine_plumbing.html)
 - [FL Water Bill Cost Guide](https://flplumbingtools.com/water-bill/fl_water_bill.html)
 - [FL Water Conservation Cost Guide](https://flplumbingtools.com/water-conservation/fl_water_conservation.html)
 - [FL Water Damage Claim Cost Guide](https://flplumbingtools.com/water-damage-claim/fl_water_damage_claim.html)
