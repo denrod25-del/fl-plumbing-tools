@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**214 interactive cost calculators** for Florida homeowners.
+**216 interactive cost calculators** for Florida homeowners.
 Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote), mobile-first, zero dependencies.
 
 **Live site:** https://flplumbingtools.com/
@@ -42,6 +42,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Drain Cleaning Cost Cost Guide](https://flplumbingtools.com/drain-cleaning-cost/fl_drain_cleaning_cost.html)
 - [FL Drain Cleaning Cost Guide](https://flplumbingtools.com/drain-cleaning/fl_drain_cleaning.html)
 - [FL Drain Cost Cost Guide](https://flplumbingtools.com/drain-cost/fl_drain_cost.html)
+- [FL Drain Field Repair Cost Guide](https://flplumbingtools.com/drain-field-repair/fl_drain_field_repair.html)
 - [FL Drain Field Cost Guide](https://flplumbingtools.com/drain-field/fl_drain_field.html)
 - [FL Drain Health Cost Guide](https://flplumbingtools.com/drain-health/fl_drain_health.html)
 - [FL Drain Odor Cost Guide](https://flplumbingtools.com/drain-odor/fl_drain_odor.html)
@@ -117,6 +118,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Pipe Corrosion Cost Guide](https://flplumbingtools.com/pipe-corrosion/fl_pipe_corrosion.html)
 - [FL Pipe Identification Cost Guide](https://flplumbingtools.com/pipe-identification/fl_pipe_identification.html)
 - [FL Pipe Insulation Calc Cost Guide](https://flplumbingtools.com/pipe-insulation-calc/fl_pipe_insulation_calc.html)
+- [FL Pipe Leak Repair Cost Guide](https://flplumbingtools.com/pipe-leak-repair/fl_pipe_leak_repair.html)
 - [FL Pipe Life Expectancy Cost Guide](https://flplumbingtools.com/pipe-life-expectancy/fl_pipe_life_expectancy.html)
 - [FL Pipe Lining Vs Bursting Cost Guide](https://flplumbingtools.com/pipe-lining-vs-bursting/fl_pipe_repair_comparison.html)
 - [FL Pipe Material Comparison Cost Guide](https://flplumbingtools.com/pipe-material-comparison/fl_pipe_material_comparison.html)
