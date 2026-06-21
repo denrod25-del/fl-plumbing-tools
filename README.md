@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**206 interactive cost calculators** for Florida homeowners.
+**209 interactive cost calculators** for Florida homeowners.
 Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote), mobile-first, zero dependencies.
 
 **Live site:** https://flplumbingtools.com/
@@ -23,6 +23,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Bathroom Remodel Plumbing Cost Guide](https://flplumbingtools.com/bathroom-remodel-plumbing/fl_bathroom_remodel_plumbing.html)
 - [FL Bathroom Remodel Cost Guide](https://flplumbingtools.com/bathroom-remodel/fl_bathroom_remodel.html)
 - [FL Bathroom Rough In Calc Cost Guide](https://flplumbingtools.com/bathroom-rough-in-calc/fl_bathroom_rough_in_calc.html)
+- [FL Bathroom Sink Installation Cost Guide](https://flplumbingtools.com/bathroom-sink-installation/fl_bathroom_sink_installation.html)
 - [FL Bathroom Ventilation Cost Guide](https://flplumbingtools.com/bathroom-ventilation/fl_bathroom_ventilation.html)
 - [FL Bathtub Replacement Cost Guide](https://flplumbingtools.com/bathtub-replacement/fl_bathtub_replacement.html)
 - [FL Booster Pump Cost Guide](https://flplumbingtools.com/booster-pump/fl_booster_pump.html)
@@ -155,6 +156,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Sewer Line Cost Cost Guide](https://flplumbingtools.com/sewer-line-cost/fl_sewer_line_cost.html)
 - [FL Sewer Line Cost Guide](https://flplumbingtools.com/sewer-line/fl_sewer_line_guide.html)
 - [FL Sewer Root Inspection Cost Guide](https://flplumbingtools.com/sewer-root-inspection/fl_sewer_root_inspection.html)
+- [FL Shower Diverter Valve Cost Guide](https://flplumbingtools.com/shower-diverter-valve/fl_shower_diverter_valve.html)
 - [FL Shower Leak Cost Guide](https://flplumbingtools.com/shower-leak/fl_shower_leak.html)
 - [FL Shower Multi Head Cost Guide](https://flplumbingtools.com/shower-multi-head/fl_shower_multi_head.html)
 - [FL Shower Pan Waterproofing Cost Guide](https://flplumbingtools.com/shower-pan-waterproofing/fl_shower_pan_waterproofing.html)
@@ -176,6 +178,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Tankless Sizing Cost Guide](https://flplumbingtools.com/tankless-sizing/fl_tankless_water_heater.html)
 - [FL Tankless Venting Cost Guide](https://flplumbingtools.com/tankless-venting/fl_tankless_venting.html)
 - [FL Tankless Water Heater Cost Guide](https://flplumbingtools.com/tankless-water-heater/fl_tankless_water_heater.html)
+- [FL Toilet Flange Repair Cost Guide](https://flplumbingtools.com/toilet-flange-repair/fl_toilet_flange_repair.html)
 - [FL Toilet Repair Cost Guide](https://flplumbingtools.com/toilet-repair/fl_toilet_repair.html)
 - [FL Toilet Replacement Cost Guide](https://flplumbingtools.com/toilet-replacement/fl_toilet_replacement.html)
 - [FL Tpr Valve Guide Cost Guide](https://flplumbingtools.com/tpr-valve-guide/fl_tpr_valve_guide.html)
