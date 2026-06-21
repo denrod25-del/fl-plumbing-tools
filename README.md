@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**203 interactive cost calculators** for Florida homeowners.
+**206 interactive cost calculators** for Florida homeowners.
 Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote), mobile-first, zero dependencies.
 
 **Live site:** https://flplumbingtools.com/
@@ -19,6 +19,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Bathroom Addition Cost Cost Guide](https://flplumbingtools.com/bathroom-addition-cost/fl_bathroom_addition_cost.html)
 - [FL Bathroom Addition Cost Guide](https://flplumbingtools.com/bathroom-addition/fl_bathroom_addition.html)
 - [FL Bathroom Cost Cost Guide](https://flplumbingtools.com/bathroom-cost/fl_bathroom_cost.html)
+- [FL Bathroom Exhaust Fan Cost Guide](https://flplumbingtools.com/bathroom-exhaust-fan/fl_bathroom_exhaust_fan.html)
 - [FL Bathroom Remodel Plumbing Cost Guide](https://flplumbingtools.com/bathroom-remodel-plumbing/fl_bathroom_remodel_plumbing.html)
 - [FL Bathroom Remodel Cost Guide](https://flplumbingtools.com/bathroom-remodel/fl_bathroom_remodel.html)
 - [FL Bathroom Rough In Calc Cost Guide](https://flplumbingtools.com/bathroom-rough-in-calc/fl_bathroom_rough_in_calc.html)
@@ -33,6 +34,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Commercial Restroom Calc Cost Guide](https://flplumbingtools.com/commercial-restroom-calc/fl_commercial_restroom_calc.html)
 - [FL Condo Plumbing Cost Guide](https://flplumbingtools.com/condo-plumbing/fl_condo_plumbing.html)
 - [FL Construction Defect Cost Guide](https://flplumbingtools.com/construction-defect/fl_construction_defect.html)
+- [FL Copper Vs Pex Repiping Cost Guide](https://flplumbingtools.com/copper-vs-pex-repiping/fl_copper_vs_pex_repiping.html)
 - [FL Diy Vs Licensed Cost Guide](https://flplumbingtools.com/diy-vs-licensed/fl_diy_vs_licensed.html)
 - [FL Drain Cleaning Cost Cost Guide](https://flplumbingtools.com/drain-cleaning-cost/fl_drain_cleaning_cost.html)
 - [FL Drain Cleaning Cost Guide](https://flplumbingtools.com/drain-cleaning/fl_drain_cleaning.html)
@@ -102,6 +104,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Outdoor Kitchen Cost Guide](https://flplumbingtools.com/outdoor-kitchen/fl_outdoor_kitchen.html)
 - [FL Outdoor Plumbing Cost Guide](https://flplumbingtools.com/outdoor-plumbing/fl_outdoor_plumbing.html)
 - [FL Outdoor Shower Cost Guide](https://flplumbingtools.com/outdoor-shower/fl_outdoor_shower.html)
+- [FL Outdoor Spigot Hose Bib Cost Guide](https://flplumbingtools.com/outdoor-spigot-hose-bib/fl_outdoor_spigot_hose_bib.html)
 - [FL Permit Fee Estimator Cost Guide](https://flplumbingtools.com/permit-fee-estimator/fl_permit_fee_estimator.html)
 - [FL Permit Guide Cost Guide](https://flplumbingtools.com/permit-guide/fl_permit_guide.html)
 - [FL Permit Guide Cost Guide](https://flplumbingtools.com/permit-guide/fl_plumbing_permit_guide.html)

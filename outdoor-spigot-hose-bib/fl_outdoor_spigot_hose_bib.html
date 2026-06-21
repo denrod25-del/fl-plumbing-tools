@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL Outdoor Spigot &amp; Hose Bib Cost Calculator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;padding:16px}
+.wrap{max-width:480px;margin:0 auto}
+.hero{text-align:center;padding:24px 0 16px}
+.hero h1{font-size:1.35rem;font-weight:700;color:#E2E8F0;line-height:1.3}
+.hero p{color:#94A3B8;font-size:.85rem;margin-top:6px}
+.phone-hero{display:block;color:#22C55E;font-size:1.1rem;font-weight:700;text-decoration:none;margin-top:8px}
+.tabs{display:flex;background:#0F1629;border-radius:10px;padding:4px;gap:2px;margin-bottom:16px}
+.tab-btn{flex:1;padding:9px 4px;background:transparent;border:none;color:#94A3B8;font-size:.72rem;font-weight:600;cursor:pointer;border-radius:7px;transition:all .2s;text-align:center;line-height:1.2}
+.tab-btn.active{background:#141929;color:#22C55E;border-bottom:2px solid #22C55E}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.card{background:#0F1629;border-radius:12px;padding:18px;margin-bottom:14px}
+.card h2{color:#22C55E;font-size:1.05rem;font-weight:700;margin-bottom:14px}
+.card h3{color:#22C55E;font-size:.9rem;font-weight:600;margin-bottom:8px;margin-top:14px}
+.card h3:first-child{margin-top:0}
+label{display:block;color:#94A3B8;font-size:.78rem;margin-bottom:5px;margin-top:12px}
+label:first-of-type{margin-top:0}
+select,input,textarea{width:100%;background:#141929;border:1px solid #1E2A45;border-radius:8px;color:#E2E8F0;padding:10px 12px;font-size:.85rem;outline:none;transition:border-color .2s}
+select:focus,input:focus,textarea:focus{border-color:#22C55E}
+textarea{resize:vertical;min-height:80px}
+.btn{width:100%;background:#22C55E;color:#0A0E1A;border:none;border-radius:8px;padding:13px;font-size:.95rem;font-weight:700;cursor:pointer;transition:background .2s;margin-top:16px}
+.btn:hover{background:#16a34a}
+.result-box{background:#141929;border-radius:10px;padding:16px;margin-top:16px;border:1px solid #1E2A45}
+.result-box h3{color:#22C55E;font-size:.9rem;margin-bottom:10px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1E2A45;font-size:.82rem}
+.result-row:last-child{border-bottom:none}
+.result-label{color:#94A3B8}
+.result-value{color:#22C55E;font-weight:700}
+.total-row{margin-top:8px;padding-top:10px;border-top:2px solid #22C55E}
+.total-label{color:#E2E8F0;font-weight:700;font-size:.9rem}
+.total-value{color:#22C55E;font-size:1.15rem;font-weight:800}
+.timeline-box{background:#0A0E1A;border-radius:8px;padding:12px;margin-top:12px;font-size:.8rem;color:#94A3B8;line-height:1.6}
+.timeline-box strong{color:#E2E8F0}
+.tip-box{background:#0A2010;border:1px solid #22C55E33;border-radius:8px;padding:12px;margin-top:12px}
+.tip-box p{font-size:.78rem;color:#86efac;line-height:1.6}
+.tip-box p+p{margin-top:6px}
+.guide-section{margin-bottom:18px}
+.guide-section h3{color:#22C55E;font-size:.92rem;font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #1E2A45}
+.guide-section p{font-size:.82rem;color:#94A3B8;line-height:1.65;margin-bottom:8px}
+.guide-section p:last-child{margin-bottom:0}
+.guide-section strong{color:#E2E8F0}
+table{width:100%;border-collapse:collapse;font-size:.73rem;margin-top:8px}
+th{background:#141929;color:#22C55E;padding:7px 6px;text-align:left;font-weight:600}
+td{padding:6px;color:#94A3B8;border-bottom:1px solid #1E2A45}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#141929}
+.permit-row{padding:10px 0;border-bottom:1px solid #1E2A45;font-size:.8rem}
+.permit-row:last-child{border-bottom:none}
+.permit-county{color:#E2E8F0;font-weight:600;margin-bottom:3px}
+.permit-detail{color:#94A3B8;font-size:.75rem;line-height:1.5}
+.code-ref{background:#141929;border-radius:6px;padding:10px;margin-top:10px;font-size:.75rem;color:#94A3B8}
+.code-ref span{color:#22C55E;font-weight:600}
+.permit-need{padding:8px 0;font-size:.82rem;color:#94A3B8;border-bottom:1px solid #1E2A45;line-height:1.5}
+.permit-need:last-child{border-bottom:none}
+.permit-need strong{color:#E2E8F0}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#22C55E;color:#0A0E1A;padding:12px 24px;border-radius:8px;font-weight:700;font-size:.9rem;transition:transform .3s ease;z-index:999;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.contact-strip{text-align:center;padding:16px;background:#0F1629;border-radius:10px;margin-top:14px}
+.contact-strip a{color:#22C55E;font-size:1.2rem;font-weight:800;text-decoration:none;display:block}
+.contact-strip p{color:#94A3B8;font-size:.77rem;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>FL Outdoor Spigot &amp;<br>Hose Bib Cost Calculator</h1>
+    <p>Instant estimates for South Florida homeowners</p>
+    <a href="tel:+15613167450" class="phone-hero">(561) 316-7450</a>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('calc')">Calculator</button>
+    <button class="tab-btn" onclick="showTab('guide')">FL Guide</button>
+    <button class="tab-btn" onclick="showTab('permit')">Permit Info</button>
+    <button class="tab-btn" onclick="showTab('quote')">Get a Quote</button>
+  </div>
+
+  <!-- TAB 1: CALCULATOR -->
+  <div id="tab-calc" class="tab-panel active">
+    <div class="card">
+      <h2>Estimate Your Project Cost</h2>
+
+      <label for="spigot-type">Spigot / Hose Bib Type</label>
+      <select id="spigot-type" onchange="calcCost()">
+        <option value="standard">Standard Hose Bib</option>
+        <option value="frostfree">Frost-Free Sillcock</option>
+        <option value="quarter">Quarter-Turn Ball Valve</option>
+        <option value="antisiphon">Anti-Siphon Hose Bib</option>
+        <option value="commercial">Commercial Heavy Duty</option>
+      </select>
+
+      <label for="num-spigots">Number of Spigots</label>
+      <select id="num-spigots" onchange="calcCost()">
+        <option value="1">1 Spigot</option>
+        <option value="2">2 Spigots</option>
+        <option value="3">3 Spigots</option>
+        <option value="4">4+ Spigots</option>
+      </select>
+
+      <label for="location">Location / Access Difficulty</label>
+      <select id="location" onchange="calcCost()">
+        <option value="easy">Under Eave (Easy Access)</option>
+        <option value="bushes">Behind Bushes / Landscaping</option>
+        <option value="block">Through Block Wall</option>
+        <option value="stucco">Through Stucco Exterior</option>
+        <option value="remote">Remote Zone (&gt;25 ft Run)</option>
+      </select>
+
+      <label for="condition">Current Condition</label>
+      <select id="condition" onchange="calcCost()">
+        <option value="dripping">Dripping / Leaking</option>
+        <option value="stripped">Stripped Handle</option>
+        <option value="newinst">New Install (None Existing)</option>
+        <option value="preventive">Preventive Replacement</option>
+        <option value="broken">Broken Off</option>
+      </select>
+
+      <label for="water-src">Water Source</label>
+      <select id="water-src" onchange="calcCost()">
+        <option value="city">City Water</option>
+        <option value="well">Well Water</option>
+      </select>
+
+      <label for="backflow">Backflow Protection</label>
+      <select id="backflow" onchange="calcCost()">
+        <option value="existing">Already Has One</option>
+        <option value="avb">Add Inline Vacuum Breaker (+$40-80)</option>
+        <option value="dual">Add Dual-Check Preventer (+$100-200)</option>
+      </select>
+    </div>
+
+    <div class="result-box" id="result-box">
+      <h3>Estimated Cost Breakdown</h3>
+      <div id="result-rows"></div>
+      <div class="timeline-box" id="timeline-box"></div>
+      <div class="tip-box" id="tip-box"></div>
+    </div>
+
+    <div class="contact-strip">
+      <a href="tel:+15613167450">(561) 316-7450</a>
+      <p>Licensed CFC &middot; Bonded &amp; Insured &middot; Serving South Florida</p>
+    </div>
+  </div>
+
+  <!-- TAB 2: FL GUIDE -->
+  <div id="tab-guide" class="tab-panel">
+    <div class="card">
+      <h2>Florida Outdoor Spigot Guide</h2>
+
+      <div class="guide-section">
+        <h3>1. Why FL Spigots Fail Faster</h3>
+        <p>Florida's climate is uniquely harsh on outdoor plumbing. With <strong>UV index readings regularly hitting 11+</strong>, humidity averaging 74-90% year-round, and coastal salt air in nearly every county, spigot materials degrade far faster than the national average.</p>
+        <p><strong>Zinc alloy (pot metal)</strong> spigots — common on builder-grade homes — have a realistic lifespan of just <strong>3-5 years</strong> in South Florida before corrosion causes weeping, handle seizure, or complete failure. <strong>Brass body spigots</strong> last <strong>15-25 years</strong> even in coastal environments, and stainless steel can exceed 25 years.</p>
+        <p>Year-round irrigation use means FL spigots are operated far more frequently than in northern climates. A spigot that turns on 200 times per year in Minnesota may see 800+ uses per year in Florida, compressing the wear cycle dramatically. Salt air accelerates galvanic corrosion, especially where dissimilar metals meet — such as a zinc spigot on a copper supply line. Always request <strong>full-brass body construction</strong> when replacing.</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>2. Frost-Free Sillcocks in Florida</h3>
+        <p>Frost-free sillcocks — where the shutoff valve seat is located 8"-12" inside the warm wall — are <strong>not required in South Florida</strong> (USDA Hardiness Zones 10-11, including Miami-Dade, Broward, Palm Beach, Collier, and Lee counties). Hard freezes essentially never occur at ground level.</p>
+        <p><strong>North Florida is a different story.</strong> Zone 8-9 areas including Gainesville (Alachua County), Tallahassee (Leon County), Jacksonville (Duval County), and Pensacola see occasional hard freezes that can burst exposed supply lines and standard hose bibs. A frost-free sillcock adds $30-70 in material cost but provides real freeze protection.</p>
+        <p><strong>Critical caution:</strong> A frost-free sillcock loses its freeze protection entirely if a garden hose is left attached. On any night below 32 degrees F, disconnect all hoses — even if you have frost-free sillcocks installed. This is the most common cause of freeze damage even on properly installed frost-free units.</p>
+        <p>South FL homeowners near the Treasure Coast (Indian River, St. Lucie) occasionally experience frost events during strong cold fronts. A frost-free unit there is inexpensive insurance and often adds value at home inspection.</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>3. FL Vacuum Breaker Requirements</h3>
+        <p>Florida Building Code <strong>Section 608.16.5</strong> requires backflow protection on all outdoor hose connections. This is one of the most commonly violated plumbing code provisions in the state — the majority of older FL homes are non-compliant. Non-compliance is frequently flagged during home sales inspections and permit inspections.</p>
+        <p><strong>Atmospheric Vacuum Breaker (AVB) — $8-20 retail, $40-80 installed:</strong> Hose-end or outlet-mounted. Must be installed at least 6 inches above the highest point of use. Cannot be under continuous pressure. Simplest and least expensive option for a basic garden hose connection.</p>
+        <p><strong>Pressure Vacuum Breaker (PVB) — $80-200 installed:</strong> Can be under continuous pressure, making it suitable for automatic irrigation systems. Must be installed at least 12 inches above the highest downstream point. Requires annual testing by a licensed CLIA contractor.</p>
+        <p><strong>Double Check Valve Assembly (DCVA):</strong> Required for chemical injection systems (fertilizer injectors, pool chemical lines). Typically $150-350 installed. Must be tested annually.</p>
+        <p>A hose-end vacuum breaker screws directly onto spigot threads in under 2 minutes and costs under $15 — one of the easiest code compliance fixes a homeowner can perform without a license.</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>4. Outdoor Spigot Types: FL Comparison</h3>
+        <table>
+          <tr><th>Type</th><th>FL Durability</th><th>Freeze Prot.</th><th>Backflow</th><th>Cost Installed</th><th>Best For</th></tr>
+          <tr><td>Standard Brass Hose Bib</td><td>15-20 yrs</td><td>None</td><td>Add AVB</td><td>$120-250</td><td>General use, South FL</td></tr>
+          <tr><td>Frost-Free Sillcock</td><td>15-20 yrs</td><td>Yes (8-12")</td><td>Add AVB</td><td>$150-300</td><td>North FL, Zone 8-9</td></tr>
+          <tr><td>Quarter-Turn Ball Valve</td><td>20-25 yrs</td><td>None</td><td>Add AVB</td><td>$140-280</td><td>Irrigation feeds, quick shutoff</td></tr>
+          <tr><td>Anti-Siphon Hose Bib</td><td>12-18 yrs</td><td>None</td><td>Built-in</td><td>$150-290</td><td>Simple backflow compliance</td></tr>
+          <tr><td>Wall Hydrant (recessed)</td><td>20-30 yrs</td><td>Optional</td><td>Optional</td><td>$250-450</td><td>High-traffic, HOA</td></tr>
+          <tr><td>Commercial Heavy Duty</td><td>25-30 yrs</td><td>Optional</td><td>Add PVB</td><td>$200-400</td><td>Irrigation, commercial</td></tr>
+        </table>
+      </div>
+
+      <div class="guide-section">
+        <h3>5. FL Irrigation System Backflow: Critical</h3>
+        <p><strong>A simple hose bib AVB is NOT sufficient for an irrigation system.</strong> Florida law — Florida Statute Chapter 373 and SFWMD Rule 40E-2 — requires a <strong>testable backflow preventer</strong> (PVB or RPZ) on all irrigation systems connected to potable water supplies.</p>
+        <p>The risk: irrigation systems operate under continuous pressure and spray heads can be submerged in lawn chemicals, fertilizers, and pesticides. A simple atmospheric vacuum breaker cannot prevent backflow under these conditions.</p>
+        <p><strong>Fines can reach $10,000 per day</strong> for non-compliant irrigation systems, particularly in SFWMD-regulated areas. Installation of a testable backflow preventer requires a <strong>Licensed CLIA contractor</strong>. Annual testing is required in most FL jurisdictions, with results submitted to the local water utility.</p>
+        <p>If you are adding a new spigot to feed an existing irrigation system, budget an additional $200-500 for proper PVB installation and testing.</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>6. Outdoor Spigot Placement Best Practices</h3>
+        <p><strong>Height:</strong> Install spigots 12-18 inches above finished grade. Too low and they sit in standing water during rain events, accelerating corrosion. Too high reduces convenience for hose connections.</p>
+        <p><strong>Clearances:</strong> Avoid placement near A/C condensate lines, pool chemical storage areas, or in depressions that collect standing water. Salt water pool splash zones are particularly corrosive.</p>
+        <p><strong>Zoning for irrigation:</strong> If you have multiple irrigation zones, consider dedicated spigots per zone rather than tee-ing off a single supply. This allows independent pressure testing and simplifies repairs.</p>
+        <p><strong>Adding a spigot to an older FL block home with no exterior spigot:</strong> This requires penetrating CBS (concrete block/stucco) construction, running new supply line, and meeting current code. Budget <strong>$400-700</strong> for a straightforward installation; up to $900 if the supply run is long or access is difficult.</p>
+        <p><strong>Wrapping supply lines:</strong> Any supply line running through exterior block or stucco should be sleeved in foam pipe insulation or PVC conduit. This prevents condensation damage and makes future access far easier.</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>7. FL Well Water Outdoor Spigot Considerations</h3>
+        <p><strong>Pressure drop under extended hose use:</strong> Running a garden hose for extended periods can draw the pressure tank below the pump cut-in pressure, causing the well pump to cycle rapidly ("short cycling") which damages the pump motor. Consider upgrading to a larger pressure tank (80-120 gallon) or a variable speed (VFD) pump system.</p>
+        <p><strong>Iron staining:</strong> Florida well water commonly contains elevated iron (0.5-5 mg/L or higher). Extended hose use leaves orange-red staining on driveways, sidewalks, homes, and landscaping. Solutions include a whole-home iron filter (Birm or greensand, $800-2,000 installed) or a dedicated outdoor filter inline with the spigot supply ($150-300).</p>
+        <p><strong>pH and corrosion:</strong> FL well water is often slightly acidic (pH 6.0-6.8) due to carbonic acid in the aquifer. Acidic water accelerates corrosion of brass and copper. Consider a pH neutralizer if your water tests below 7.0, or specify marine-grade brass fittings for outdoor connections.</p>
+        <p><strong>Sulfur odor:</strong> Hydrogen sulfide in well water creates a "rotten egg" smell. This is primarily aesthetic but can affect some plants. A dripping spigot on a well system may indicate a pressure switch issue — have the pressure tank and switch inspected.</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>8. DIY vs. Licensed Plumber in Florida</h3>
+        <p><strong>What a homeowner CAN do without a license (owner-builder):</strong> Florida Statute 489.103(7) allows property owners to perform plumbing work on their own single-family residence. This includes replacing a hose bib in the same location, adding a hose-end vacuum breaker, and replacing handles, packing nuts, or washers.</p>
+        <p><strong>What REQUIRES a licensed CFC plumber:</strong> Any new rough-in (new hole through wall, new supply line branch), irrigation system backflow preventer installation, any work in a flood zone, and any work done for compensation. The owner-builder exemption does not apply if you are selling within one year of completion.</p>
+        <p><strong>DIY torque tip:</strong> When installing a brass hose bib on a copper stub, hand-tighten plus 1/4 turn only. Over-tightening brass on brass will crack the spigot body or strip threads. Use thread sealant tape (PTFE) — 2-3 wraps clockwise on male threads.</p>
+        <p><strong>Shutoff first:</strong> Always turn off the main supply or zone shutoff and open the old spigot to relieve pressure before removal. Have a bucket ready — there is always residual water in the line.</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>9. Florida Spigot Maintenance Schedule</h3>
+        <p><strong>Quarterly:</strong> Check for drips. A single dripping spigot losing 1 drop per second wastes approximately 3,000 gallons per year — and in drought-restricted FL counties, this may trigger water authority notices. A $3 washer often fixes it.</p>
+        <p><strong>Annually (spring):</strong> Turn the handle fully open and fully closed to prevent valve seat corrosion. Clean and test the vacuum breaker — remove, shake to confirm float moves freely, reinstall. Inspect supply line penetration through wall for sealant cracks (recaulk as needed).</p>
+        <p><strong>Every 5 years:</strong> Rebuild the packing nut and stem washer. For a quarter-turn ball valve, lubricate the ball with silicone-safe grease. Replace hose-end vacuum breakers even if they appear functional — internal springs fatigue over time.</p>
+        <p><strong>Every 10-15 years:</strong> Full spigot replacement, regardless of apparent condition. At this age, the seat, packing, and body are all worn. A $180 replacement now prevents a costly water damage claim later.</p>
+        <p><strong>After a hurricane or tropical storm:</strong> Inspect all exterior penetrations for shifted supply lines. Storm surge or ground movement can micro-crack solder joints inside the wall without any visible exterior damage. If you notice intermittent low pressure after a storm, have a plumber pressure-test the outdoor supply lines.</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>10. FL Outdoor Spigot Code History</h3>
+        <p><strong>2001:</strong> Florida adopted the Uniform Plumbing Code (UPC), establishing the first statewide requirement for atmospheric vacuum breakers on all outdoor hose connections. This made most pre-2001 FL homes technically non-compliant overnight.</p>
+        <p><strong>2004 (Post-Hurricane Season):</strong> Following the devastating 2004 hurricane season (Charley, Frances, Ivan, Jeanne), the FBC added requirements for sealing all exterior wall penetrations including spigot supply line penetrations, to prevent wind-driven rain intrusion.</p>
+        <p><strong>2007:</strong> SFWMD began active enforcement of backflow preventer requirements on irrigation systems, conducting field inspections in response to aquifer contamination concerns. Fines and mandatory retrofit orders increased significantly.</p>
+        <p><strong>2010:</strong> FL statute updated to clarify the owner-builder exemption applies only to primary residences, closing a loophole used by landlords performing unlicensed plumbing on rental properties.</p>
+        <p><strong>2017:</strong> FBC flood zone provisions added requirements for exterior plumbing components located below the Base Flood Elevation (BFE) in FEMA-mapped flood zones. Spigots in flood zones now require flood-resistant installation methods.</p>
+        <p><strong>2023 (FBC 7th Edition):</strong> Current edition references ASSE 1011 for vacuum breakers and AWWA C511 for double check valve assemblies. Updated energy provisions include requirements for insulation on supply lines in unconditioned spaces.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: PERMIT INFO -->
+  <div id="tab-permit" class="tab-panel">
+    <div class="card">
+      <h2>Florida Permit Requirements</h2>
+
+      <h3>When a Permit IS Required</h3>
+      <div class="permit-need"><strong>New spigot installation</strong> — any new hole through exterior wall, new supply line branch off existing plumbing</div>
+      <div class="permit-need"><strong>New supply line run</strong> — adding copper or PEX supply line to reach a new location</div>
+      <div class="permit-need"><strong>Irrigation backflow preventer</strong> — PVB or RPZ installation requires separate backflow permit in most counties</div>
+      <div class="permit-need"><strong>Flood zone work below BFE</strong> — any plumbing work below Base Flood Elevation in FEMA Zone AE/VE requires permit and flood-resistant materials certification</div>
+      <div class="permit-need"><strong>Work on rental or commercial property</strong> — owner-builder exemption does not apply; licensed CFC required plus permit</div>
+
+      <h3 style="margin-top:14px">When NO Permit is Needed</h3>
+      <div class="permit-need">Same-location hose bib replacement using existing supply stub</div>
+      <div class="permit-need">Adding a hose-end inline vacuum breaker to existing spigot</div>
+      <div class="permit-need">Handle replacement, packing nut rebuild, washer replacement</div>
+      <div class="permit-need">Owner-performed same-location swap on own primary residence</div>
+
+      <h3 style="margin-top:14px">15-County FL Permit Reference</h3>
+
+      <div class="permit-row">
+        <div class="permit-county">Miami-Dade County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Separate permit via WASD | Fee: $75-150 | Processing: 5-10 business days (online portal available)</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Broward County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Separate Broward County permit | Fee: $65-130 | Processing: 3-7 business days (e-permit system)</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Palm Beach County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: City/town jurisdiction (varies) | Fee: $60-125 | Processing: 5-8 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Orange County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Separate Orange County Utilities permit | Fee: $55-115 | Processing: 4-7 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Hillsborough County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Tampa Bay Water jurisdiction | Fee: $50-110 | Processing: 5-10 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Pinellas County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Pinellas County Utilities separate process | Fee: $55-120 | Processing: 4-8 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Duval County (Jacksonville)</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: JEA permit required | Fee: $45-100 | Processing: 3-6 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Lee County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Lee County Utilities | Fee: $50-110 | Processing: 5-9 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Collier County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Collier County Water-Sewer District | Fee: $60-130 | Processing: 6-10 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Sarasota County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Sarasota County Utilities | Fee: $50-105 | Processing: 4-7 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Polk County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: City jurisdiction varies | Fee: $40-90 | Processing: 4-8 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Volusia County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Volusia County Utilities | Fee: $45-95 | Processing: 4-7 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Brevard County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: City jurisdiction varies | Fee: $40-90 | Processing: 3-7 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">Manatee County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: Manatee County Utilities | Fee: $45-100 | Processing: 4-8 business days</div>
+      </div>
+      <div class="permit-row">
+        <div class="permit-county">St. Johns County</div>
+        <div class="permit-detail">Permit: Required for new install | Backflow: St. Johns County Utility | Fee: $45-95 | Processing: 5-9 business days</div>
+      </div>
+
+      <div class="code-ref" style="margin-top:16px">
+        <strong>FL Code References:</strong><br>
+        <span>FBC Section 608.16.5</span> — Backflow protection, outdoor hose connections<br>
+        <span>FBC Section 608.1</span> — General backflow prevention requirements<br>
+        <span>Florida Statute 373</span> — Water Resources Act (irrigation backflow)<br>
+        <span>SFWMD Rule 40E-2</span> — Water use permitting and backflow<br>
+        <span>ASSE 1011</span> — Standard for hose connection vacuum breakers<br>
+        <span>AWWA C511</span> — Double check valve backflow prevention assemblies<br>
+        <span>FS 489.103(7)</span> — Owner-builder exemption provisions
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: GET A QUOTE -->
+  <div id="tab-quote" class="tab-panel">
+    <div class="card">
+      <h2>Get a Free Outdoor Spigot Estimate</h2>
+
+      <label for="q-name">Full Name</label>
+      <input type="text" id="q-name" placeholder="Your name">
+
+      <label for="q-phone">Phone Number</label>
+      <input type="tel" id="q-phone" placeholder="(561) 555-0100">
+
+      <label for="q-city">City &amp; ZIP Code</label>
+      <input type="text" id="q-city" placeholder="e.g. Boca Raton, FL 33431">
+
+      <label for="q-project">Project Type</label>
+      <select id="q-project">
+        <option value="">Select project type...</option>
+        <option value="replace">Replace Leaking / Dripping Spigot</option>
+        <option value="add">Add New Outdoor Spigot</option>
+        <option value="backflow">Add / Upgrade Backflow Preventer</option>
+        <option value="multiple">Multiple Spigots / Full Property</option>
+        <option value="unsure">Not Sure -- Need Assessment</option>
+      </select>
+
+      <label for="q-exterior">Exterior Wall Type</label>
+      <select id="q-exterior">
+        <option value="">Select exterior type...</option>
+        <option value="stucco">Stucco (over frame or block)</option>
+        <option value="cbs">CBS Block (concrete/masonry)</option>
+        <option value="brick">Brick</option>
+        <option value="wood">Wood Siding / Hardiplank</option>
+        <option value="metal">Metal / Panel</option>
+        <option value="unknown">Unknown / Need to Check</option>
+      </select>
+
+      <label for="q-timeline">Project Timeline</label>
+      <select id="q-timeline">
+        <option value="">When do you need this done?</option>
+        <option value="asap">ASAP -- Active Leak</option>
+        <option value="week">Within This Week</option>
+        <option value="month">Within This Month</option>
+        <option value="planning">Planning Ahead (1-3 months)</option>
+      </select>
+
+      <label for="q-notes">Additional Notes</label>
+      <textarea id="q-notes" placeholder="Any details about your spigot, location, access, or concerns..."></textarea>
+
+      <button class="btn" onclick="submitQuote()">Get My Free Estimate</button>
+    </div>
+
+    <div class="contact-strip">
+      <a href="tel:+15613167450">(561) 316-7450</a>
+      <p>Licensed CFC &middot; Bonded &amp; Insured &middot; Serving South Florida</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">We'll call you within 2 hours!</div>
+
+<script>
+var esc = function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
+
+function showTab(name) {
+  var panels = document.querySelectorAll('.tab-panel');
+  var btns = document.querySelectorAll('.tab-btn');
+  panels.forEach(function(p){ p.classList.remove('active'); });
+  btns.forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('tab-' + name);
+  if (panel) panel.classList.add('active');
+  var idx = {calc:0,guide:1,permit:2,quote:3}[name];
+  if (idx !== undefined && btns[idx]) btns[idx].classList.add('active');
+}
+
+var BASE_COSTS = {
+  standard:   [120, 250],
+  frostfree:  [150, 300],
+  quarter:    [140, 280],
+  antisiphon: [150, 290],
+  commercial: [200, 400]
+};
+
+var SPIGOT_LABELS = {
+  standard:   'Standard Hose Bib',
+  frostfree:  'Frost-Free Sillcock',
+  quarter:    'Quarter-Turn Ball Valve',
+  antisiphon: 'Anti-Siphon Hose Bib',
+  commercial: 'Commercial Heavy Duty'
+};
+
+function calcCost() {
+  var type     = document.getElementById('spigot-type').value;
+  var num      = document.getElementById('num-spigots').value;
+  var loc      = document.getElementById('location').value;
+  var cond     = document.getElementById('condition').value;
+  var water    = document.getElementById('water-src').value;
+  var backflow = document.getElementById('backflow').value;
+
+  var base = BASE_COSTS[type].slice();
+  var rows = [];
+  var isNew = (cond === 'newinst');
+  var lo = base[0], hi = base[1];
+
+  rows.push({label: esc(SPIGOT_LABELS[type]) + ' (base labor + material)', lo: base[0], hi: base[1]});
+
+  if (isNew) {
+    lo += 150; hi += 300;
+    rows.push({label: 'New Install (rough-in &amp; supply line)', lo: 150, hi: 300});
+  }
+
+  if (loc === 'block') {
+    lo += 100; hi += 200;
+    rows.push({label: 'Through Block Wall Access', lo: 100, hi: 200});
+  } else if (loc === 'stucco') {
+    lo += 100; hi += 200;
+    rows.push({label: 'Through Stucco Exterior Access', lo: 100, hi: 200});
+  } else if (loc === 'remote') {
+    lo += 200; hi += 500;
+    rows.push({label: 'Remote Zone (&gt;25 ft supply run)', lo: 200, hi: 500});
+  }
+
+  if (backflow === 'avb') {
+    lo += 40; hi += 80;
+    rows.push({label: 'Add Inline Vacuum Breaker (AVB)', lo: 40, hi: 80});
+  } else if (backflow === 'dual') {
+    lo += 100; hi += 200;
+    rows.push({label: 'Add Dual-Check Backflow Preventer', lo: 100, hi: 200});
+  }
+
+  if (water === 'well') {
+    lo += 50; hi += 100;
+    rows.push({label: 'Well Water Supply (additional labor)', lo: 50, hi: 100});
+  }
+
+  var mult = 1;
+  var multLabel = '';
+  if (num === '2') { mult = 1.7; multLabel = 'x1.7 (2 spigots)'; }
+  else if (num === '3') { mult = 2.3; multLabel = 'x2.3 (3 spigots)'; }
+  else if (num === '4') { mult = 2.8; multLabel = 'x2.8 (4+ spigots)'; }
+
+  if (mult > 1) {
+    lo = Math.round(lo * mult);
+    hi = Math.round(hi * mult);
+    rows.push({label: 'Multiple Spigot Multiplier (' + esc(multLabel) + ')', lo: null, hi: null, note: 'Applied to running total above'});
+  }
+
+  var html = '';
+  rows.forEach(function(r) {
+    if (r.lo !== null) {
+      html += '<div class="result-row"><span class="result-label">' + r.label + '</span><span class="result-value">$' + esc(String(r.lo)) + ' - $' + esc(String(r.hi)) + '</span></div>';
+    } else {
+      html += '<div class="result-row"><span class="result-label">' + r.label + '</span><span style="color:#94A3B8;font-size:.75rem">' + esc(r.note) + '</span></div>';
+    }
+  });
+
+  html += '<div class="result-row total-row"><span class="result-label total-label">TOTAL ESTIMATE</span><span class="total-value">$' + esc(String(lo)) + ' - $' + esc(String(hi)) + '</span></div>';
+
+  document.getElementById('result-rows').innerHTML = html;
+
+  var timeText = '<strong>Estimated Time on Site: </strong>';
+  if (isNew || loc === 'block' || loc === 'stucco' || loc === 'remote') {
+    timeText += '3-5 hours (new install / penetration work required)';
+  } else {
+    timeText += '1-2 hours (standard same-location swap)';
+  }
+  if (num === '3' || num === '4') { timeText += ' &mdash; add 1-2 hrs for multiple spigot work'; }
+  document.getElementById('timeline-box').innerHTML = timeText;
+
+  var tips = [];
+  tips.push('Always specify <strong>brass body</strong> construction &mdash; not zinc or pot metal. Zinc fails in 3-5 years in FL.');
+  tips.push('FL Code 608.16.5 requires a vacuum breaker on all outdoor hose connections.');
+  if (loc === 'remote') tips.push('Remote runs over 25 ft: use 3/4" supply line to maintain adequate working pressure at the spigot.');
+  if (water === 'well') tips.push('Well water drip may indicate a pressure switch issue &mdash; ask your plumber to check pressure tank cut-in.');
+  if (cond === 'newinst') tips.push('New installs on CBS block homes: sleeve the supply line through the wall for ease of future repairs.');
+  if (backflow === 'existing') tips.push('Verify existing vacuum breaker is ASSE 1011 compliant &mdash; many pre-2001 units are not approved.');
+  var tipHtml = tips.map(function(t){ return '<p>&#9654; ' + t + '</p>'; }).join('');
+  document.getElementById('tip-box').innerHTML = tipHtml;
+}
+
+function submitQuote() {
+  var name = document.getElementById('q-name').value.trim();
+  var phone = document.getElementById('q-phone').value.trim();
+  if (!name || !phone) {
+    alert('Please enter your name and phone number so we can reach you.');
+    return;
+  }
+  document.getElementById('q-name').value = '';
+  document.getElementById('q-phone').value = '';
+  document.getElementById('q-city').value = '';
+  document.getElementById('q-project').value = '';
+  document.getElementById('q-exterior').value = '';
+  document.getElementById('q-timeline').value = '';
+  document.getElementById('q-notes').value = '';
+  var toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 3000);
+}
+
+calcCost();
+</script>
+
+<!--
+================================================================================
+FLORIDA OUTDOOR SPIGOT AND HOSE BIB — EXTENDED TECHNICAL REFERENCE DATA
+For FL licensed plumbing professionals, inspectors, and informed homeowners
+================================================================================
+
+SECTION A: PIPE SIZING TABLES FOR OUTDOOR SUPPLY RUNS IN FLORIDA
+
+A.1 RECOMMENDED PIPE SIZES BY RUN LENGTH AND FLOW DEMAND
+
+Outdoor supply lines for hose bibs must be sized to maintain adequate working
+pressure at point of use. Florida homes typically operate 45-80 PSI at the meter.
+
+Run Length   | 1/2" Pipe  | 3/4" Pipe | 1" Pipe   | Notes
+Under 10 ft  | Acceptable | Optimal   | Overkill  | Short under-eave runs
+10 to 25 ft  | Marginal   | Optimal   | Fine      | Standard yard installation
+25 to 50 ft  | Undersized | Optimal   | Optimal   | Back fence spigot location
+50 to 100 ft | Avoid      | Marginal  | Optimal   | Outbuildings, pool area
+Over 100 ft  | Never use  | Undersized| Required  | Irrigation mains
+
+Hazen-Williams Pressure Drop Estimate (FL typical):
+For 3/4 inch copper Type L, 50 ft run, 5 GPM flow:
+  Velocity head loss approximately 2 PSI per 10 ft equivalent length
+  50 ft actual plus fittings (elbows, valves) equals approximately 80 ft equivalent
+  Pressure drop equals approximately 16 PSI
+  If inlet pressure is 65 PSI, outlet is approximately 49 PSI (acceptable)
+
+For 1/2 inch copper under same scenario:
+  Pressure drop approximately 38 PSI
+  If inlet pressure is 65 PSI, outlet approximately 27 PSI (too low for irrigation heads)
+
+RECOMMENDATION: Use 3/4 inch minimum for all runs exceeding 25 feet in Florida.
+Use 1 inch for irrigation mains and runs exceeding 75 feet.
+
+A.2 MATERIAL OPTIONS FOR FL OUTDOOR SUPPLY LINES
+
+Copper Type L (most common FL standard):
+- Best corrosion resistance in FL soil (neutral pH, clay/sand mix)
+- Expected lifespan: 40-70 years underground, 25-40 years exposed
+- Soldered joints: use lead-free solder meeting NSF 61
+- Cost: $3.50-5.50 per foot installed
+
+CPVC (Chlorinated PVC):
+- FL Building Code approved for hot and cold water
+- Not recommended for UV-exposed sections (becomes brittle in 3-5 years)
+- Lower cost: $1.50-2.50 per foot installed
+- Lifespan: 25-40 years when properly protected from UV
+
+PEX (Cross-linked Polyethylene):
+- Increasingly popular in FL new construction (2015 onward)
+- Must be sleeved or buried — NOT approved for continuous UV exposure
+- Push-fit fittings may be restricted in buried/concealed applications in some FL counties
+- Cost: $2.00-3.50 per foot installed
+
+Galvanized Steel:
+- AVOID in Florida. High-humidity FL environments corrode galvanized pipe from inside out.
+- Lifespan 10-20 years, then internal tuberculation restricts flow and
+  rust particles damage fixtures and vacuum breakers.
+- Many FL homes built before 1975 still have galvanized supply lines.
+- Whole-house re-pipe cost: $3,500-8,000 to CPVC or PEX.
+
+================================================================================
+SECTION B: FLORIDA BACKFLOW TESTING PROCEDURES (ASSE/AWWA STANDARD)
+
+B.1 ANNUAL TESTING REQUIREMENTS
+
+Florida Administrative Code Rule 62-555 and local utility requirements mandate
+annual testing of all testable backflow prevention assemblies. Testable assemblies include:
+- Reduced Pressure Zone (RPZ) assemblies (ASSE 1013)
+- Pressure Vacuum Breaker (PVB) assemblies (ASSE 1020)
+- Double Check Valve assemblies (DCVA) (AWWA C511)
+
+Hose-end atmospheric vacuum breakers (AVB, ASSE 1011) are NOT testable assemblies
+and do not require annual testing, but should be inspected and replaced every 3-5 years.
+
+B.2 PVB TEST PROCEDURE
+
+Equipment required:
+- Differential pressure gauge (calibrated within past 12 months)
+- Two bleed/needle valves connected to test cocks
+- Bleed tube and collection container
+
+Procedure:
+1. Connect differential gauge to test cocks TC1 and TC2
+2. Open TC1 slowly, then TC2
+3. With water flowing downstream, close downstream shutoff valve
+4. Read gauge: air inlet must open at minimum 1.0 PSI differential (ASSE 1020)
+5. Check poppet valve: must hold check against back pressure
+6. Record inlet pressure, differential pressure, and air gap observation
+7. Passing result: differential greater than or equal to 1.0 PSI, check valve holds, no leakage
+
+Common failure modes for PVB assemblies:
+- Fouled seat: debris prevents seating. Clean with vinegar, retest, or replace seat.
+- Failed diaphragm: leaking around body. Rebuild kit required.
+- Broken spring: check valve fails to hold under back pressure. Rebuild required.
+- Corroded body: replace entire assembly, rebuild not cost-effective.
+
+B.3 RPZ (REDUCED PRESSURE ZONE) ASSEMBLY TEST PROCEDURE
+
+RPZ assemblies are required for high-hazard cross-connections including chemical injection,
+reclaimed water, and fire suppression. They consist of two check valves with a pressure
+differential relief valve (PDRV) between them.
+
+RPZ Test (AWWA M14 procedure):
+Step 1 — Test First Check: must hold minimum 5.0 PSI differential
+Step 2 — Test PDRV: must open when differential drops below 2.0 PSI, must fully close at 2.0 PSI+
+Step 3 — Test Second Check: must hold against full back pressure
+All tests performed with calibrated differential pressure gauge
+Test report submitted to local water utility within 30 days of testing date
+
+Florida licensed CLIA (Cross Connection and Backflow Prevention) testers are required
+for all PVB and RPZ testing. CLIA certification issued by FL Dept of Environmental Protection,
+DEP Form 62-555.900(8), annual recertification required. Verify tester license at
+MyFloridaLicense.com before hiring.
+
+================================================================================
+SECTION C: SFWMD RULE 40E-2 KEY EXCERPTS AND INTERPRETATIONS
+
+C.1 RESIDENTIAL OUTDOOR WATER USE PROVISIONS
+
+South Florida Water Management District Rule 40E-2 governs water use throughout
+the SFWMD jurisdiction covering Miami-Dade, Broward, Palm Beach, Collier, Lee,
+Hendry, Glades, Charlotte, Sarasota, Okeechobee, Martin, St. Lucie, Indian River,
+and Highlands counties (approximately 16 counties).
+
+Typical Phase 1 Restriction Summary (invoked during drought conditions):
+- Landscape irrigation: Maximum 2 days per week, before 10am or after 4pm only
+- Hose watering of landscaping: Same 2-day-per-week schedule applies
+- Vehicle washing: Any day, using bucket or hose with automatic shutoff nozzle only
+- Pool filling (new pool, initial fill): Exempt from restrictions
+- Pool top-off for evaporation: Exempt up to 2 inches per week loss compensation
+
+Cross-Connection Control Requirements (Rule 40E-2.091):
+All public water supply connections to irrigation systems within SFWMD territory require:
+1. Backflow prevention assembly meeting applicable ASSE or AWWA standard
+2. Annual testing by CLIA-certified tester
+3. Test report submitted to utility of record on required form
+4. Failure to test: notice of violation, civil penalty $100-500 per day continuing
+
+Well Water Consumptive Use Permits (Rule 40E-2.101):
+- Consumptive Use Permit (CUP) required for irrigating more than 2 acres from private well
+- Average annual withdrawal exceeding 100,000 gallons per day requires individual permit
+- Residential landscape irrigation wells below this threshold: generally exempt
+- Iron bacteria treatment chemicals discharged to ground: may require separate permit
+
+C.2 DROUGHT DECLARATION ESCALATION (SFWMD PHASES)
+
+During declared water shortage emergencies, outdoor restrictions escalate:
+Phase 2: Maximum 1 day per week irrigation, no daytime washing of any surface
+Phase 3: No landscape irrigation permitted, emergency vehicle and structure washing only
+Phase 4: All non-essential outdoor water use prohibited, including garden hoses
+
+Civil penalties for violation:
+First offense: $250 civil penalty plus mandatory correction
+Second offense within 12 months: $500 civil penalty
+Third offense within 12 months: $1,000 or more plus potential service disconnection
+
+================================================================================
+SECTION D: FROST LINE DATA AND FREEZE RISK BY FLORIDA COUNTY
+
+Florida is unique in that frost penetration depths are effectively zero for nearly
+all of the state. The IPC/UPC tables for frost depth protection are not applicable
+south of the I-4 corridor. USDA hardiness zone data provides practical guidance.
+
+County               | Zone | Record Low F | Avg Freeze Days/Yr | Frost-Free Rec
+Miami-Dade           | 11a  | 27 degrees   | Less than 0.5      | Not required
+Broward              | 10b  | 28 degrees   | Less than 0.5      | Not required
+Palm Beach           | 10b  | 26 degrees   | Less than 1        | Not required
+Monroe (Florida Keys)| 11b  | 41 degrees   | 0                  | Not required
+Collier              | 10a  | 24 degrees   | 1-2                | Not required
+Lee                  | 10a  | 22 degrees   | 1-3                | Not required
+Charlotte            | 9b   | 18 degrees   | 2-5                | Consider
+Sarasota             | 10a  | 22 degrees   | 2-4                | Not required
+Hillsborough         | 9b   | 18 degrees   | 3-6                | Consider
+Pinellas             | 10a  | 22 degrees   | 2-4                | Not required
+Orange               | 9b   | 16 degrees   | 4-7                | Consider
+Polk                 | 9a   | 14 degrees   | 5-9                | Consider
+Volusia              | 9b   | 17 degrees   | 3-7                | Consider
+Brevard              | 10a  | 22 degrees   | 2-4                | Not required
+Indian River         | 9b   | 20 degrees   | 3-6                | Consider
+St. Lucie            | 9b   | 20 degrees   | 3-6                | Consider
+Manatee              | 9b   | 20 degrees   | 3-6                | Consider
+Alachua (Gainesville)| 8b   | 8 degrees    | 15-25              | YES - Required
+Leon (Tallahassee)   | 8b   | 7 degrees    | 18-28              | YES - Required
+Duval (Jacksonville) | 9a   | 10 degrees   | 8-15               | YES - Strongly
+Escambia (Pensacola) | 8b   | 4 degrees    | 15-25              | YES - Required
+Marion (Ocala)       | 9a   | 13 degrees   | 7-12               | Consider
+Lake County          | 9a   | 14 degrees   | 6-10               | Consider
+Highlands            | 9a   | 15 degrees   | 5-9                | Consider
+
+Notes on frost-free sillcock installation for consideration counties:
+Adding a frost-free sillcock costs $30-70 more than a standard hose bib in materials only.
+The extra cost provides protection against the occasional hard freeze events that occur
+in Zone 9 areas. During the rare freeze event in these counties, unprotected standard
+hose bibs and their interior supply line stubs (if in unconditioned space) can freeze.
+Recommended stem length for FL use: 8 inch minimum, 12 inch preferred for thick wall
+construction (CBS block with interior furring wall).
+
+Climate trend note: South FL hardiness zones have been shifting approximately one
+half zone warmer per decade. Areas historically classified as Zone 9a now experience
+winters more consistent with Zone 9b. However, individual cold events (polar vortex
+dips) can still bring record low temperatures to any FL county, so historical record
+lows remain the appropriate planning standard for plumbing installations.
+
+================================================================================
+SECTION E: MATERIAL SPECIFICATIONS FOR FL HUMIDITY AND UV RESISTANCE
+
+E.1 BRASS ALLOY SPECIFICATIONS FOR OUTDOOR PLUMBING IN FLORIDA
+
+Not all brass alloys perform equally in Florida's coastal, high-humidity environment.
+
+Red Brass (Alloy C23000, composition 85 percent copper / 15 percent zinc):
+- Excellent dezincification resistance due to low zinc content
+- Best choice for South FL outdoor use, especially within one mile of ocean
+- Tensile strength: 40,000 PSI minimum (ASTM B43)
+- Cost premium: approximately 15-20 percent over yellow brass
+- Expected lifespan in FL outdoor environment: 20-30 years
+
+Yellow Brass (Alloy C26000, composition 70 percent copper / 30 percent zinc):
+- Standard builder-grade material, commonly used in production homes
+- Susceptible to dezincification in FL water systems with high chloramine content
+- Dezincification process selectively leaches zinc, leaving porous copper shell
+  that fails catastrophically under normal working pressure
+- Expected lifespan in FL outdoor environment: 8-15 years
+- NOT recommended for coastal properties (within 1 mile of ocean/saltwater)
+  or for systems using high-chloramine municipal treatment (common in South FL)
+
+Lead-Free Brass (per ASTM B584 and NSF 61, less than 0.25 percent lead by weight):
+- Required by Florida Statute 386.30 and federal Safe Drinking Water Act (SDWA)
+  for all wetted components in potable water systems
+- All replacement hose bibs and spigots installed in FL must be lead-free certified
+- Verify "lead-free" certification (NSF 61/372 logo) before purchasing any hose bib
+- Most quality brands now comply; verify at point of purchase
+
+Silicone Bronze (Alloy C65500, approximately 97 percent copper / 3 percent silicon):
+- Superior corrosion resistance, originally developed for marine applications
+- Cost: approximately 3 times brass cost
+- Suitable for extreme coastal exposure (oceanfront properties, dockside applications)
+- Expected lifespan in FL coastal environment: 30 plus years
+- Rarely stocked at retail; typically special order
+
+E.2 THREAD SEALANT MATERIALS FOR FL OUTDOOR PLUMBING CONNECTIONS
+
+PTFE Thread Tape (Polytetrafluoroethylene):
+- White tape: standard grade, for all water service connections
+- Yellow tape: gas service only (do not use on water lines)
+- Pink tape: heavy-duty grade, for stainless steel and larger diameter fittings
+- Application method: 2-3 wraps clockwise (viewed from threaded end) on male threads
+- Critical: Do NOT over-apply. Excess tape can ball up and block the small orifice
+  inside atmospheric vacuum breakers (common installation error)
+
+Pipe Thread Compound (Dope):
+- Rectorseal No. 5 or equivalent: approved for all metal fittings, water and gas
+- Do not use petroleum-based compounds on plastic (CPVC or PVC) fittings
+- Best practice for FL outdoor metallic connections: PTFE tape plus pipe dope together
+
+Silicone Caulk (exterior wall penetration sealing):
+- Use 100 percent silicone (not vinyl latex or acrylic) for exterior wall penetrations
+- DAP Silicone Plus, GE Advanced, or Momentive RTV for FL climate performance
+- Apply AFTER fitting installation, fully sealing around supply line sleeve or pipe body
+- Replacement interval: every 5-7 years in FL (UV degrades caulk faster than northern climates)
+- Color: clear or white standard; paintable silicone available if aesthetic matching needed
+
+E.3 HANDLE AND COMPONENT MATERIALS — FL UV PERFORMANCE RATINGS
+
+Zinc die-cast handles: 3-5 years before surface pitting and structural fracture in FL sun
+ABS plastic handles: 5-8 years (UV yellowing begins at 2-3 years in direct sun exposure)
+UV-stabilized nylon: 8-12 years in direct FL sun
+Solid brass handles: 20 or more years with minimal maintenance
+Stainless steel handles: 25 or more years even in coastal salt air environments
+
+When purchasing replacement hose bibs in Florida, specify "solid brass handle" explicitly.
+Chrome-plated zinc handles are the most common failure point — chrome plating delaminates
+within 2-3 FL seasons, exposing zinc that then pits and seizes the valve stem.
+
+================================================================================
+SECTION F: WELL PUMP PRESSURE SPECIFICATIONS AND OUTDOOR USE ANALYSIS
+
+F.1 PRESSURE TANK SIZING FOR HOMES WITH OUTDOOR WATER USE
+
+Standard residential pressure tanks in FL are typically sized for indoor demand only.
+When outdoor spigots add sustained flow demand (garden watering, irrigation), undersizing
+causes short cycling (rapid pump on/off), which is the leading cause of premature
+well pump motor failure in Florida.
+
+Recommended pressure tank sizes by application:
+  Indoor only (2-3 bath, no outdoor): 20-32 gallon tank
+  Indoor plus 1-2 outdoor hose bibs: 44-86 gallon tank
+  Indoor plus irrigation system: 86-120 gallon tank
+  Full property irrigation plus outdoor hose use: 120 gallon or larger,
+    OR variable speed (VFD) constant pressure pump system
+
+Standard FL residential pressure settings:
+- 40/60 PSI cut-in/cut-out: standard entry-level residential
+- 50/70 PSI: better performance, requires motor rated for higher pressure
+- Verify pump motor nameplate rating before increasing pressure switch setting
+
+F.2 PRESSURE TANK DRAWDOWN CALCULATION
+
+Tank drawdown is the usable water volume between cut-out and cut-in pressures.
+
+For a standard 30-gallon tank at 40/60 PSI setting:
+  Approximately 11 gallons of drawdown (usable water before pump re-starts)
+
+At typical garden hose flow rate of 5 GPM:
+  Tank empties in approximately 2.2 minutes before pump must cycle
+
+At typical lawn irrigation demand of 15 GPM:
+  Tank empties in approximately 44 seconds before pump must cycle
+
+Pump cycling more than 6 times per hour is considered excessive short cycling.
+At 15 GPM demand with 30-gallon tank: cycling occurs every 44 seconds — well over limit.
+This explains why FL well-water homeowners often notice pump running continuously
+during irrigation, with pressure fluctuating dramatically at indoor fixtures.
+
+Variable frequency drive (VFD) constant pressure pump systems:
+- Maintain constant 50 PSI regardless of flow demand fluctuation
+- Require only small 4-6 gallon expansion tank (no large pressure tank needed)
+- Eliminate short cycling entirely; significantly extend pump motor lifespan
+- Typical installed cost: $1,200-2,500 for residential replacement
+- Increasingly specified by FL plumbers for new construction and replacements
+- Makes outdoor hose bibs and irrigation systems significantly more practical
+
+F.3 FL GROUNDWATER IRON AND MINERAL DATA BY AQUIFER
+
+Floridan Aquifer System (primary source for most of Florida):
+- Iron concentration: typically 0.1-3.0 mg/L (EPA secondary maximum: 0.3 mg/L)
+- Total hardness: typically 100-300 mg/L as calcium carbonate (hard to very hard)
+- Sulfate: variable, 0-400 mg/L
+- Manganese: 0-0.5 mg/L
+- pH: 7.0-8.5 (generally neutral to mildly alkaline)
+- Radon: may be present; test recommended for indoor air quality assessment
+
+Shallow Surficial Aquifer (Southeast FL, near coastal areas):
+- Iron: often 0.5-5.0 mg/L (commonly causes staining on driveways and homes)
+- Total hardness: 200-500 mg/L (very hard)
+- Chlorides: elevated near coast; may exceed secondary maximum of 250 mg/L
+- pH: 6.5-7.5
+- Tannins: present in some inland SE FL wells, causing yellow-brown color
+
+Biscayne Aquifer (SE FL, Miami-Dade and Broward):
+- Very sensitive to saltwater intrusion from Atlantic and Everglades
+- Iron: typically low, 0.1-0.5 mg/L
+- Very hard water due to high limestone dissolution
+- Used as primary source by Miami-Dade Water and Sewer and Broward County Water Authority
+
+Iron treatment recommendations by measured concentration:
+  Less than 0.3 mg/L: No treatment required (below EPA secondary standard)
+  0.3-1.0 mg/L: Oxidizing filter (Birm media) or aeration system
+  1.0-3.0 mg/L: Greensand filter with potassium permanganate regeneration
+  Greater than 3.0 mg/L: Aeration plus filtration, or dedicated iron removal system;
+    consult licensed water treatment specialist
+
+================================================================================
+SECTION G: AVB vs PVB vs RPZ — COMPLETE TECHNICAL COMPARISON
+
+G.1 ATMOSPHERIC VACUUM BREAKER (AVB) — ASSE 1011 Standard
+
+Operating principle:
+Float-actuated air inlet valve mounted at or downstream of hose bib outlet.
+When downstream pressure drops below upstream pressure (or when flow stops and
+system drains), float drops and opens air vent port, preventing siphonage backflow.
+
+Technical specifications:
+- Maximum working pressure: 125 PSI typical (125-200 PSI depending on manufacturer)
+- Maximum temperature: 140 degrees F (some rated to 180 degrees F)
+- Must NOT be installed under continuous pressure (must be downstream of shutoff)
+- Installation height: minimum 6 inches above the highest downstream point of use
+- Cannot be in a parallel bypass configuration around any shutoff valve
+
+FL code status: Approved per FBC Section 608.16.5 for outdoor hose connections
+Retail cost: $8-20 for hose-end type
+Installed cost (screwed onto existing spigot): $40-80
+Annual testing: NOT required (non-testable assembly per ASSE)
+Recommended replacement interval: Every 3-5 years; float seats deteriorate with use
+
+Known failure modes:
+1. Float seat mineral buildup (sticking open): continuous drip from air vent during use
+2. Float corrosion or structural failure: no backflow protection without visible sign of failure
+3. Debris fouling float seat: intermittent or absent function
+4. UV degradation of plastic body: cracking and leakage (common in FL direct sun)
+5. Freeze damage (North FL): splits plastic body if left installed through freeze event
+
+G.2 PRESSURE VACUUM BREAKER (PVB) — ASSE 1020 Standard
+
+Operating principle:
+Spring-loaded check valve combined with a differential pressure-operated air inlet.
+Unlike the AVB, the PVB operates under continuous system pressure, making it suitable
+for automatic irrigation systems that remain pressurized between cycles.
+
+Technical specifications:
+- Maximum working pressure: 150 PSI
+- Maximum temperature: 110 degrees F (not suitable for hot water line applications)
+- Installation height: minimum 12 inches above highest downstream outlet point
+- Must be accessible for annual testing (cannot be enclosed, buried, or obscured)
+- Requires individual shutoff valves above (upstream) and below (downstream)
+
+FL code status: Required for irrigation systems served from potable water supply.
+Acceptable alternative to AVB where continuous pressure exists.
+Installed cost: $80-200 (includes shutoffs, unions, test cocks)
+Annual testing: Required; CLIA-certified tester; $35-75 per test
+Test report: Submit to local water utility within 30 days of test
+Recommended lifespan: 7-15 years with annual maintenance and periodic rebuild
+
+Advantages over AVB:
+- Suitable for continuous pressure applications (automatic timers, drip systems)
+- Higher reliability for high-frequency use applications
+- Testable and documentable compliance record
+- Single assembly serves multiple downstream connections
+
+Disadvantages compared to AVB:
+- Higher initial installation cost
+- Annual testing required and must be properly documented
+- Must remain permanently accessible (a common violation: landscaping obscures PVB)
+- Freeze risk in North FL: must be insulated or removed before freeze events
+
+G.3 REDUCED PRESSURE ZONE ASSEMBLY (RPZ) — ASSE 1013 / AWWA C511
+
+Operating principle:
+Two independently-acting spring-loaded check valves separated by a reduced pressure zone.
+The pressure differential relief valve (PDRV) continuously maintains the zone between
+the two checks at a lower pressure than both supply and downstream. Contamination
+cannot backflow under any pressure condition — including back-siphonage AND backpressure.
+This is the highest level of backflow protection recognized under FL plumbing code.
+
+Technical specifications:
+- Maximum working pressure: 175 PSI (residential standard models)
+- Maximum temperature: 110 degrees F standard models; 180 degrees F high-temp models
+- Standard installation: horizontal only (some models available for vertical)
+- Must be installed above grade level (cannot be buried below grade without special vault)
+- Approved ASSE 1013 vaults available for at-grade installation where clearance is an issue
+- Requires two test cocks and individual isolation valves above and below
+
+FL code requirement: Required for high-hazard cross connections per FBC 608.1 and local utility rules.
+Mandatory for: Chemical fertilizer injection, pesticide injection, pool chemical feed lines,
+reclaimed water cross-connections, fire suppression systems, food service connections.
+Installed cost: $300-600 residential; $600-2,000 commercial / large diameter
+Annual testing: Mandatory in all FL jurisdictions; CLIA-certified tester
+Test fee: $75-150 per assembly per year
+Recommended lifespan: 15-25 years with annual testing and periodic internal rebuild
+
+RPZ vs PVB decision guide for FL applications:
+Use PVB when: Standard residential irrigation from potable supply, no chemical injection,
+  low to moderate hazard, continuous pressure required, below $200 budget for assembly
+Use RPZ when: Any chemical injection into irrigation (fertilizers, pesticides), reclaimed water
+  connection present, fire suppression, pool fill lines, commercial applications, any high-hazard
+  situation where backpressure as well as back-siphonage must be protected against
+
+Critical FL installation note for RPZ:
+Many FL irrigation contractors improperly install RPZ assemblies in underground vaults or
+pit enclosures that do not meet ASSE/AWWA clearance requirements. The PDRV must be able
+to discharge freely to atmosphere; buried RPZ units that flood during rain events cannot
+discharge and fail to provide protection. FL plumbing inspectors specifically look for this
+violation. Proper solution: relocate RPZ above grade or install in approved pre-cast
+above-grade vault with proper drainage.
+
+================================================================================
+SECTION H: FLORIDA WATER HARDNESS DATA BY COUNTY (mg/L as CaCO3)
+
+Hard water is nearly universal in Florida due to the karst (limestone) geology of the
+Florida Platform. Hard water accelerates scale (calcium carbonate) buildup inside hose
+bib bodies, vacuum breaker float chambers, and irrigation heads, reducing flow and
+eventually causing failure. Annual maintenance with diluted white vinegar (5 percent
+acetic acid) dissolves calcium carbonate scale without damaging brass.
+
+County               | Primary Source     | Typical Hardness | Classification
+Miami-Dade           | Biscayne Aquifer   | 250-350 mg/L     | Very Hard
+Broward              | Biscayne Aquifer   | 220-320 mg/L     | Very Hard
+Palm Beach           | Floridan Aquifer   | 180-280 mg/L     | Hard to Very Hard
+Monroe (Keys)        | Aquifer plus RO    | Less than 50     | Soft (treated)
+Collier              | Floridan Aquifer   | 200-350 mg/L     | Very Hard
+Lee                  | Floridan Aquifer   | 180-300 mg/L     | Hard to Very Hard
+Charlotte            | Floridan Aquifer   | 150-250 mg/L     | Hard
+Sarasota             | Floridan Aquifer   | 150-250 mg/L     | Hard
+Hillsborough         | Floridan Aquifer   | 180-300 mg/L     | Hard to Very Hard
+Pinellas             | Floridan Aquifer   | 160-260 mg/L     | Hard to Very Hard
+Orange               | Floridan Aquifer   | 120-220 mg/L     | Hard
+Polk                 | Floridan Aquifer   | 130-230 mg/L     | Hard
+Alachua (Gainesville)| Floridan Aquifer   | 150-250 mg/L     | Hard
+Leon (Tallahassee)   | Floridan Aquifer   | 100-180 mg/L     | Moderate to Hard
+Duval (Jacksonville) | Floridan Aquifer   | 80-150 mg/L      | Moderate to Hard
+
+Scale buildup note: Water hardness above 180 mg/L will cause visible white scale deposits
+on spigot bodies and vacuum breakers within 6-12 months of installation. Annual cleaning
+procedure: Remove AVB, soak in undiluted white vinegar for 30 minutes, rinse with clean
+water, inspect float movement, reinstall. Replace every 3-5 years regardless of appearance.
+
+Water softener note for outdoor irrigation use:
+Ion exchange water softeners add sodium chloride to treated water. High sodium levels in
+irrigation water can damage salt-sensitive Florida landscaping including sago palms,
+crotons, hibiscus, and many native species. Best practice: install a bypass valve on the
+irrigation supply line so softened water does not reach landscape irrigation, or use a
+potassium chloride-regenerated softener which has lower salt loading on landscaping.
+
+================================================================================
+SECTION I: MANUFACTURER SPECIFICATIONS — FL-RECOMMENDED HOSE BIB MODELS
+
+I.1 RESIDENTIAL GRADE — MOST COMMON FL RESIDENTIAL REPLACEMENTS
+
+Watts 8A Series (3/4 inch Loose Key Hose Bib):
+- Body material: Red brass (C23000, dezincification resistant)
+- Lead-free status: Yes, NSF 61 and NSF 372 certified
+- Maximum working pressure: 200 PSI
+- Temperature rating: 0-140 degrees F
+- Handle: Solid brass loose key (removable to prevent unauthorized use)
+- Warranty: Lifetime limited warranty from Watts
+- Retail price range: $25-45
+- Recommendation: Best overall value for Florida residential applications.
+  Red brass body provides superior dezincification resistance for FL water chemistry.
+
+BrassCraft SH1-12 (Standard Hose Bib, 3/4 inch):
+- Body material: Forged brass
+- Lead-free status: Yes, NSF certified
+- Maximum working pressure: 125 PSI
+- Florida suitability: Good for inland applications; fair for coastal properties
+- Available at most FL plumbing supply houses
+
+Mueller Industries A-904 (3/4 inch Hose Bib):
+- Body material: Brass
+- Lead-free status: Yes
+- Maximum working pressure: 150 PSI
+- Notes: Common in FL new construction spec packages;
+  adequate quality for standard applications
+
+I.2 COMMERCIAL AND HEAVY DUTY — FL COMMERCIAL AND HIGH-USE RESIDENTIAL
+
+Woodford Model 17 (Commercial Wall Hydrant):
+- Body material: Brass with stainless steel stem
+- Vacuum breaker: Optional integrated or field-add
+- Maximum working pressure: 200 PSI
+- Temperature rating: -40 to 180 degrees F
+- Warranty: 5 year commercial warranty
+- Best applications: Commercial properties, HOA common areas, high-use residential
+- Installed cost: $200-450 depending on wall construction
+
+Zurn Wilkins 34-70XL (3/4 inch Anti-Siphon Hose Bib):
+- Integrated ASSE 1011 vacuum breaker (FL code 608.16.5 compliant out of box)
+- Lead-free brass body
+- Maximum working pressure: 200 PSI
+- Advantage: Eliminates need for separate vacuum breaker purchase and installation
+- Retail price: $35-65
+
+I.3 FROST-FREE MODELS FOR NORTH FLORIDA APPLICATIONS
+
+Woodford Model 22 (Frost-Free Sillcock, multiple lengths):
+- Available stem lengths: 4 inch, 6 inch, 8 inch, 10 inch, 12 inch
+- Recommended for FL Zone 8-9: 8 inch minimum stem length
+- Recommended for thick CBS/ICF wall construction: 12 inch stem
+- Body material: Brass
+- Vacuum breaker: Available as optional add-on (add for FL FBC 608.16.5 compliance)
+- Maximum working pressure: 125 PSI
+
+Arrowhead 850-12LF (12 inch Frost-Free Sillcock, Lead-Free):
+- Specifically designed for Zone 8-9 climate applications
+- Red brass body for superior corrosion resistance
+- Integrated vacuum breaker available as factory option
+- Best applications: Tallahassee, Gainesville, Jacksonville, Pensacola installations
+- NSF 61 certified for potable water contact
+
+================================================================================
+SECTION J: FL PLUMBING INSPECTION CHECKLIST FOR OUTDOOR SPIGOT WORK
+
+This checklist mirrors criteria used by FL licensed plumbers and building inspectors
+when inspecting outdoor hose bib and spigot installations:
+
+PRE-WORK CHECKLIST:
+[ ] Permit obtained if new installation, new rough-in, or irrigation backflow work
+[ ] Main supply or zone supply valve confirmed off before any work
+[ ] Line pressure fully relieved (open existing spigot to drain after shutoff)
+[ ] Existing pipe material and condition assessed at connection point
+[ ] No active corrosion, green patina, or pitting at existing stub or tee
+
+INSTALLATION VERIFICATION:
+[ ] Lead-free, NSF 61 certified brass body used (verify marking on fitting)
+[ ] Thread sealant applied per code: PTFE tape plus pipe thread compound
+[ ] Proper installation torque: hand tight plus 1/4 turn maximum (do not over-torque)
+[ ] Wall penetration sleeved with schedule 40 PVC or equivalent sleeve
+[ ] Sleeve penetration sealed with 100 percent silicone caulk, full circumference
+[ ] Spigot installed at 12-18 inches above finished grade
+[ ] No interference with A/C equipment, electrical panels, or pool chemistry storage
+
+BACKFLOW PROTECTION VERIFICATION:
+[ ] Vacuum breaker present: AVB, anti-siphon type, or PVB as appropriate
+[ ] AVB installation: minimum 6 inches above highest downstream use point
+[ ] PVB installation: minimum 12 inches above highest downstream use point
+[ ] Backflow device is ASSE 1011 certified (AVB) or ASSE 1020 certified (PVB)
+[ ] No continuous pressure condition exists on installed AVB (downstream of shutoff only)
+[ ] If PVB: test cocks accessible, isolation valves above and below, clear of landscaping
+
+FINAL OPERATIONAL CHECKS:
+[ ] Turn on water supply slowly; observe 2 minutes for drips at wall penetration
+[ ] Test vacuum breaker function: turn on, then off; observe for drip from vent (should stop)
+[ ] Handle turns full range open and full range closed without binding or excessive force
+[ ] Spigot fully shuts off — verify no drip after waiting 30 seconds with valve closed
+[ ] Photograph installation for permit closeout documentation if required by jurisdiction
+
+POST-INSTALLATION HOMEOWNER BRIEFING:
+[ ] Showed homeowner location of shutoff valve serving this spigot
+[ ] Advised: remove hoses when not in use to prevent avb bypass and wear
+[ ] Advised: inspect and clean vacuum breaker annually (more often in hard water areas)
+[ ] Advised: in North FL (Zone 8-9), prepare to winterize on freeze warning nights
+[ ] Provided contact for licensed CFC plumber for future service needs
+
+================================================================================
+END OF FLORIDA OUTDOOR SPIGOT TECHNICAL REFERENCE DATA
+Tool #205 — FL Outdoor Spigot and Hose Bib Cost Calculator
+(561) 316-7450 | Licensed CFC | Bonded and Insured | Serving South Florida
+================================================================================
+-->
+</body>
+</html>
