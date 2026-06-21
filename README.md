@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**209 interactive cost calculators** for Florida homeowners.
+**212 interactive cost calculators** for Florida homeowners.
 Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote), mobile-first, zero dependencies.
 
 **Live site:** https://flplumbingtools.com/
@@ -10,6 +10,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Ada Aging In Place Cost Guide](https://flplumbingtools.com/ada-aging-in-place/fl_ada_aging.html)
 - [FL Adu Plumbing Cost Guide](https://flplumbingtools.com/adu-plumbing/fl_adu_plumbing.html)
 - [FL Anode Rod Guide Cost Guide](https://flplumbingtools.com/anode-rod-guide/fl_anode_rod_guide.html)
+- [FL Anode Rod Replacement Cost Guide](https://flplumbingtools.com/anode-rod-replacement/fl_anode_rod_replacement.html)
 - [FL Anti Scald Valve Cost Guide](https://flplumbingtools.com/anti-scald-valve/fl_anti_scald_valve.html)
 - [FL Backflow Compliance Cost Guide](https://flplumbingtools.com/backflow-compliance/fl_backflow_compliance.html)
 - [FL Backflow Preventer Cost Guide](https://flplumbingtools.com/backflow-preventer/fl_backflow_preventer.html)
@@ -57,6 +58,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Flood Zone Plumbing Cost Guide](https://flplumbingtools.com/flood-zone-plumbing/fl_flood_zone_plumbing.html)
 - [FL Floor Drain Install Cost Guide](https://flplumbingtools.com/floor-drain-install/fl_floor_drain_install.html)
 - [FL Food Truck Plumbing Cost Guide](https://flplumbingtools.com/food-truck-plumbing/fl_food_truck_plumbing.html)
+- [FL Garbage Disposal Installation Cost Guide](https://flplumbingtools.com/garbage-disposal-installation/fl_garbage_disposal_installation.html)
 - [FL Garbage Disposal Cost Guide](https://flplumbingtools.com/garbage-disposal/fl_garbage_disposal.html)
 - [FL Gas Leak Detection Cost Guide](https://flplumbingtools.com/gas-leak-detection/fl_gas_leak_detection.html)
 - [FL Gas Line Generator Cost Guide](https://flplumbingtools.com/gas-line-generator/fl_gas_line_generator.html)
@@ -129,6 +131,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Pool Plumbing Calculator Cost Guide](https://flplumbingtools.com/pool-plumbing-calculator/fl_pool_plumbing_calculator.html)
 - [FL Pool Pump Sizing Cost Guide](https://flplumbingtools.com/pool-pump-sizing/fl_pool_pump_sizing.html)
 - [FL Presale Inspection Cost Guide](https://flplumbingtools.com/presale-inspection/fl_presale_inspection.html)
+- [FL Pressure Reducing Valve Cost Guide](https://flplumbingtools.com/pressure-reducing-valve/fl_pressure_reducing_valve.html)
 - [FL Prv Replacement Cost Guide](https://flplumbingtools.com/prv-replacement/fl_prv_replacement.html)
 - [FL Radiant Floor Cost Guide](https://flplumbingtools.com/radiant-floor/fl_radiant_floor.html)
 - [FL Rainwater Harvesting Cost Guide](https://flplumbingtools.com/rainwater-harvesting/fl_rainwater_harvesting.html)
