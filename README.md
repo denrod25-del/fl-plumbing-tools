@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**216 interactive cost calculators** for Florida homeowners.
+**219 interactive cost calculators** for Florida homeowners.
 Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote), mobile-first, zero dependencies.
 
 **Live site:** https://flplumbingtools.com/
@@ -28,6 +28,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Bathroom Sink Installation Cost Guide](https://flplumbingtools.com/bathroom-sink-installation/fl_bathroom_sink_installation.html)
 - [FL Bathroom Ventilation Cost Guide](https://flplumbingtools.com/bathroom-ventilation/fl_bathroom_ventilation.html)
 - [FL Bathtub Replacement Cost Guide](https://flplumbingtools.com/bathtub-replacement/fl_bathtub_replacement.html)
+- [FL Bidet Installation Cost Guide](https://flplumbingtools.com/bidet-installation/fl_bidet_installation.html)
 - [FL Booster Pump Cost Guide](https://flplumbingtools.com/booster-pump/fl_booster_pump.html)
 - [FL Cast Iron Drain Cost Guide](https://flplumbingtools.com/cast-iron-drain/fl_cast_iron_drain.html)
 - [FL Code Violations Cost Guide](https://flplumbingtools.com/code-violations/fl_code_violations.html)
@@ -81,6 +82,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Hard Water Cost Cost Guide](https://flplumbingtools.com/hard-water-cost/fl_hard_water_cost.html)
 - [FL Home Addition Plumbing Cost Guide](https://flplumbingtools.com/home-addition-plumbing/fl_home_addition_plumbing.html)
 - [FL Home Buyer Cost Guide](https://flplumbingtools.com/home-buyer/fl_home_buyer_plumbing.html)
+- [FL Hose Bib Replacement Cost Guide](https://flplumbingtools.com/hose-bib-replacement/fl_hose_bib_replacement.html)
 - [FL Hot Tub Spa Cost Guide](https://flplumbingtools.com/hot-tub-spa/fl_hot_tub_spa.html)
 - [FL Hot Water Recirculation Cost Guide](https://flplumbingtools.com/hot-water-recirculation/fl_hot_water_recirculation.html)
 - [FL Hurricane Prep Cost Guide](https://flplumbingtools.com/hurricane-prep/fl_hurricane_prep.html)
@@ -124,6 +126,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Pipe Material Comparison Cost Guide](https://flplumbingtools.com/pipe-material-comparison/fl_pipe_material_comparison.html)
 - [FL Pipe Material Guide Cost Guide](https://flplumbingtools.com/pipe-material-guide/fl_pipe_material_guide.html)
 - [FL Plumbing Emergency Cost Guide](https://flplumbingtools.com/plumbing-emergency/fl_plumbing_emergency.html)
+- [FL Plumbing Inspection Failures Cost Guide](https://flplumbingtools.com/plumbing-inspection-failures/fl_plumbing_inspection_failures.html)
 - [FL Plumbing Inspection Cost Guide](https://flplumbingtools.com/plumbing-inspection/fl_plumbing_inspection.html)
 - [FL Plumbing Leak Repair Cost Cost Guide](https://flplumbingtools.com/plumbing-leak-repair-cost/fl_plumbing_leak_repair_cost.html)
 - [FL Plumbing Noise Cost Guide](https://flplumbingtools.com/plumbing-noise/fl_plumbing_noise.html)
