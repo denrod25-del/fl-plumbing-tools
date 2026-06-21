@@ -1,6 +1,6 @@
 # FL Plumbing Lead-Gen Tools
 
-**212 interactive cost calculators** for Florida homeowners.
+**214 interactive cost calculators** for Florida homeowners.
 Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote), mobile-first, zero dependencies.
 
 **Live site:** https://flplumbingtools.com/
@@ -21,6 +21,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Bathroom Addition Cost Guide](https://flplumbingtools.com/bathroom-addition/fl_bathroom_addition.html)
 - [FL Bathroom Cost Cost Guide](https://flplumbingtools.com/bathroom-cost/fl_bathroom_cost.html)
 - [FL Bathroom Exhaust Fan Cost Guide](https://flplumbingtools.com/bathroom-exhaust-fan/fl_bathroom_exhaust_fan.html)
+- [FL Bathroom Faucet Replacement Cost Guide](https://flplumbingtools.com/bathroom-faucet-replacement/fl_bathroom_faucet_replacement.html)
 - [FL Bathroom Remodel Plumbing Cost Guide](https://flplumbingtools.com/bathroom-remodel-plumbing/fl_bathroom_remodel_plumbing.html)
 - [FL Bathroom Remodel Cost Guide](https://flplumbingtools.com/bathroom-remodel/fl_bathroom_remodel.html)
 - [FL Bathroom Rough In Calc Cost Guide](https://flplumbingtools.com/bathroom-rough-in-calc/fl_bathroom_rough_in_calc.html)
@@ -96,6 +97,7 @@ Each tool: 4-tab interface (Calculator · FL Guide · Permit Info · Get a Quote
 - [FL Lead Pipe Risk Cost Guide](https://flplumbingtools.com/lead-pipe-risk/fl_lead_pipe_risk.html)
 - [FL Leak Detection Cost Guide](https://flplumbingtools.com/leak-detection/fl_leak_detection.html)
 - [FL Licensed Plumber Verification Cost Guide](https://flplumbingtools.com/licensed-plumber-verification/fl_licensed_plumber_verification.html)
+- [FL Main Shutoff Valve Cost Guide](https://flplumbingtools.com/main-shutoff-valve/fl_main_shutoff_valve.html)
 - [FL Main Water Line Cost Guide](https://flplumbingtools.com/main-water-line/fl_main_water_line.html)
 - [FL Maintenance Plan Cost Guide](https://flplumbingtools.com/maintenance-plan/fl_maintenance_plan.html)
 - [FL Master Shower Demand Cost Guide](https://flplumbingtools.com/master-shower-demand/fl_master_shower_demand.html)
