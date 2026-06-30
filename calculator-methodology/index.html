@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculator Methodology — How Our Estimates Are Calculated</title>
+<meta name="description" content="How FL Plumbing Tools generates Florida plumbing estimates: inputs, cost ranges, code references, assumptions, and why we use ranges not quotes.">
+<meta name="theme-color" content="#0f3d57">
+<link rel="canonical" href="https://flplumbingtools.com/calculator-methodology/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FL Plumbing Tools">
+<meta property="og:title" content="Calculator Methodology — How Our Estimates Are Calculated">
+<meta property="og:description" content="How FL Plumbing Tools generates Florida plumbing estimates: inputs, cost ranges, code references, assumptions, and why we use ranges not quotes.">
+<meta property="og:url" content="https://flplumbingtools.com/calculator-methodology/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Calculator Methodology — How Our Estimates Are Calculated">
+<meta name="twitter:description" content="How FL Plumbing Tools generates Florida plumbing estimates: inputs, cost ranges, code references, assumptions, and why we use ranges not quotes.">
+<style>
+:root{
+  --navy:#0f3d57; --navy-deep:#0a2c40; --teal:#0d9488; --teal-dark:#0b7d73;
+  --ink:#10283a; --muted:#5a7184; --line:#e2e8ee; --bg:#f6f9fb; --card:#ffffff;
+  --card-hover:#f0f9f8; --accent-soft:#e6f4f2; --focus:#0d9488;
+  --shadow:0 1px 2px rgba(15,61,87,.06),0 4px 14px rgba(15,61,87,.06);
+  --shadow-lg:0 2px 6px rgba(15,61,87,.08),0 18px 40px rgba(15,61,87,.12);
+  --radius:12px; --radius-lg:18px; --maxw:1120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);margin:0;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--teal-dark);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px}
+img{max-width:100%}
+h1,h2,h3{letter-spacing:-.02em;color:var(--navy);line-height:1.18}
+.section{padding:46px 0}
+.section-head{max-width:62ch;margin:0 0 26px}
+.section-head .eyebrow{display:inline-block;font-size:.78rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--teal-dark);background:var(--accent-soft);padding:4px 10px;border-radius:999px;margin-bottom:10px}
+.section-head h2{font-size:1.7rem;margin:0 0 8px}
+.section-head p{color:var(--muted);font-size:1.04rem;margin:0}
+.skip-link{position:absolute;left:-999px;top:0;background:var(--teal);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;z-index:200;font-weight:700}
+.skip-link:focus{left:0}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);border:0}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;font-weight:700;border-radius:9px;
+  padding:11px 18px;font-size:.95rem;cursor:pointer;border:1px solid transparent;
+  transition:transform .04s ease,background .15s ease,box-shadow .15s ease}
+.btn:hover{text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-dark);color:#fff}
+.btn-ghost{background:#fff;color:var(--navy);border-color:var(--line)}
+.btn-ghost:hover{background:var(--accent-soft)}
+.btn-lg{padding:13px 22px;font-size:1rem}
+
+/* Header / nav */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--line)}
+.nav-wrap{display:flex;align-items:center;gap:12px;min-height:60px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;color:var(--navy);font-size:1.05rem;letter-spacing:-.01em}
+.brand:hover{text-decoration:none}
+.brand .dot{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,var(--teal),var(--navy));display:inline-block;flex:0 0 auto}
+.nav-toggle{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;
+  width:42px;height:42px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--navy);cursor:pointer}
+.nav-toggle svg{width:22px;height:22px}
+.primary-nav{display:none}
+.primary-nav.open{display:block}
+.nav-list{list-style:none;margin:0;padding:8px 0 4px;display:flex;flex-direction:column;gap:2px}
+.navlink{display:flex;align-items:center;gap:5px;width:100%;color:var(--navy);font-weight:600;font-size:.98rem;
+  padding:11px 12px;border-radius:9px;background:none;border:none;cursor:pointer;font-family:inherit;text-align:left}
+.navlink:hover{background:var(--accent-soft);text-decoration:none}
+.dd-toggle .caret{margin-left:auto;width:16px;height:16px;transition:transform .15s}
+.has-dd.open .dd-toggle .caret{transform:rotate(180deg)}
+.dd-menu{list-style:none;margin:2px 0 4px;padding:0 0 0 8px;display:none;flex-direction:column;gap:1px;border-left:2px solid var(--line)}
+.has-dd.open .dd-menu{display:flex}
+.dd-menu a{display:block;color:var(--muted);font-weight:600;font-size:.92rem;padding:9px 12px;border-radius:8px}
+.dd-menu a:hover{background:var(--accent-soft);color:var(--navy);text-decoration:none}
+.nav-cta-li{margin-top:6px}
+.nav-cta-li .btn{width:100%;justify-content:center}
+@media(min-width:900px){
+  .nav-toggle{display:none}
+  .primary-nav{display:block;margin-left:auto}
+  .nav-list{flex-direction:row;align-items:center;gap:2px;padding:0}
+  .navlink{width:auto;padding:9px 11px;font-size:.92rem}
+  .has-dd{position:relative}
+  .dd-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:230px;background:#fff;
+    border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);padding:7px;border-left:1px solid var(--line);z-index:120}
+  .has-dd:hover .dd-menu,.has-dd:focus-within .dd-menu{display:flex}
+  .nav-cta-li{margin-top:0;margin-left:6px}
+  .nav-cta-li .btn{width:auto}
+}
+
+/* Footer */
+.site-footer{margin-top:0;background:var(--navy-deep);color:#b9d3e0;padding:42px 0 26px;border-top:4px solid var(--teal)}
+.footer-grid{display:grid;grid-template-columns:1fr;gap:26px 32px}
+@media(min-width:620px){.footer-grid{grid-template-columns:1.4fr 1fr 1fr 1fr}}
+.site-footer h3{color:#fff;font-size:.82rem;text-transform:uppercase;letter-spacing:.07em;margin:0 0 12px}
+.site-footer .f-blurb p{margin:0 0 10px;max-width:42ch}
+.site-footer strong{color:#fff}
+.f-col a{display:block;color:#9fd0c9;font-weight:600;font-size:.92rem;padding:5px 0}
+.f-col a:hover{color:#7fe3d8}
+.f-reassure{display:inline-flex;align-items:center;gap:7px;font-size:.9rem;margin-top:6px;color:#9fd0c9}
+.f-reassure svg{width:16px;height:16px;flex:0 0 auto}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:28px;padding-top:18px;
+  display:flex;flex-wrap:wrap;gap:10px 24px;align-items:flex-start;justify-content:space-between}
+.footer-bottom .copy{font-size:.86rem;color:#8fb6c5}
+.footer-bottom .disclaimer{font-size:.8rem;color:#7fa0b0;max-width:74ch;line-height:1.5}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.btn:focus-visible,.navlink:focus-visible,a:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+
+/* Content / article pages */
+.page-hero{background:linear-gradient(180deg,#ffffff 0%,var(--bg) 100%);border-bottom:1px solid var(--line);padding:40px 0 30px}
+.page-hero .crumbs{font-size:.85rem;color:var(--muted);margin:0 0 12px}
+.page-hero .crumbs a{color:var(--teal-dark);font-weight:600}
+.page-hero h1{font-size:2rem;margin:0 0 12px;max-width:22ch}
+@media(min-width:720px){.page-hero h1{font-size:2.4rem}}
+.page-hero .lede{color:var(--muted);font-size:1.1rem;margin:0;max-width:64ch}
+.prose{max-width:760px;margin:0 auto;padding:38px 0 10px}
+.prose h2{font-size:1.45rem;margin:34px 0 12px}
+.prose h3{font-size:1.12rem;margin:24px 0 8px}
+.prose p{margin:0 0 15px;font-size:1.03rem;color:#243648}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{margin:0 0 8px;font-size:1.02rem;color:#243648}
+.prose a{font-weight:600}
+.callout{background:var(--accent-soft);border:1px solid #cfeae6;border-left:4px solid var(--teal);
+  border-radius:12px;padding:16px 18px;margin:0 0 22px}
+.callout strong{color:var(--navy)}
+.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:22px 0;
+  font-size:.94rem;color:var(--muted)}
+.placeholder-tag{display:inline-block;background:#fff7e6;border:1px solid #f0d9a8;color:#8a6d2f;
+  font-weight:700;font-size:.78rem;padding:2px 8px;border-radius:6px}
+.contact-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);padding:22px;margin:0 0 18px}
+.contact-card .big{font-size:1.5rem;font-weight:800;color:var(--navy);letter-spacing:-.01em}
+.updated{font-size:.84rem;color:var(--muted);margin:0 0 18px}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How FL Plumbing Tools calculates a Florida plumbing estimate",
+  "description": "The inputs, Florida cost ranges, code references and assumptions behind our calculators, and why we show ranges instead of quotes.",
+  "url": "https://flplumbingtools.com/calculator-methodology/",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Gather inputs",
+      "text": "Collect the job details that drive price: scope, fixture count, pipe material, system size and home characteristics."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Apply Florida cost ranges",
+      "text": "Apply inputs against documented Florida labor and material cost ranges from public cost research and manufacturer specifications."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add code and permit references",
+      "text": "Factor in Florida Building Code (Plumbing) requirements and typical local permit and inspection costs."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Produce a planning range",
+      "text": "Total a realistic low and high into an informational planning range, not a fixed quote."
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "FL Plumbing Tools"
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://flplumbingtools.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Methodology",
+        "item": "https://flplumbingtools.com/calculator-methodology/"
+      }
+    ]
+  }
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap nav-wrap">
+    <a class="brand" href="/"><span class="dot"></span>FL Plumbing Tools</a>
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+      <ul class="nav-list">
+        <li><a class="navlink" href="/">Home</a></li>
+        <li class="has-dd">
+          <button type="button" class="navlink dd-toggle" aria-expanded="false" aria-controls="dd-calc">Calculators
+            <svg class="caret" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></button>
+          <ul class="dd-menu" id="dd-calc">
+            <li><a href="/?cat=water-heaters#tool-list">Water Heaters</a></li>
+            <li><a href="/?cat=leaks#tool-list">Leaks</a></li>
+            <li><a href="/?cat=water-quality#tool-list">Water Quality</a></li>
+            <li><a href="/?cat=permits#tool-list">Permits</a></li>
+            <li><a href="/?cat=commercial#tool-list">Commercial</a></li>
+          </ul>
+        </li>
+        <li class="has-dd">
+          <button type="button" class="navlink dd-toggle" aria-expanded="false" aria-controls="dd-res">Resources
+            <svg class="caret" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></button>
+          <ul class="dd-menu" id="dd-res">
+            <li><a href="/about/">About</a></li>
+            <li><a href="/editorial-policy/">Editorial Policy</a></li>
+            <li><a href="/calculator-methodology/">Calculator Methodology</a></li>
+            <li><a href="/vetting/">How Plumbers Are Vetted</a></li>
+          </ul>
+        </li>
+        <li><a class="navlink" href="/about/">About</a></li>
+        <li><a class="navlink" href="/contact/">Contact</a></li>
+        <li class="nav-cta-li"><a class="btn btn-primary" href="/get-matched/">Get matched</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<section class="page-hero"><div class="wrap">
+<p class="crumbs"><a href="/">Home</a> &rsaquo; Calculator Methodology</p>
+<h1>Calculator Methodology</h1>
+<p class="lede">How our calculators turn your inputs into an honest Florida planning range.</p>
+</div></section>
+<main id="main"><div class="wrap"><article class="prose">
+
+<p class="updated">Last reviewed: June 2026.</p>
+<p>This page explains how our calculators turn your inputs into a cost estimate, what data those estimates are built from, and why we present ranges instead of quotes.</p>
+
+<h2>The inputs we use</h2>
+<p>Each calculator asks for the details that most affect price for that job&mdash;for example:</p>
+<ul>
+<li>Project scope (repair vs. replacement vs. new installation).</li>
+<li>Fixture count, pipe material, run length or system size, depending on the tool.</li>
+<li>Home characteristics such as age, foundation type (slab vs. crawlspace) or number of bathrooms.</li>
+<li>Florida-specific factors such as permit requirements and, where relevant, well or septic systems.</li>
+</ul>
+
+<h2>The Florida cost ranges behind the math</h2>
+<p>Inputs are applied against documented Florida cost ranges for labor and materials. Those ranges come from publicly available cost research, current market pricing for fixtures and equipment sold in Florida, and manufacturer specifications for sizing. We combine a typical low and high for each cost driver, then total them into an overall planning range.</p>
+
+<h2>Code and permitting references</h2>
+<p>Where a job is governed by code&mdash;gas line sizing, backflow prevention, fixture units, water heater installation, permit fees&mdash;we reference the Florida Building Code (Plumbing) and typical local permitting and inspection requirements. Permit fees and inspection rules vary by jurisdiction, so we flag where you should confirm specifics with your local building department.</p>
+
+<h2>Our assumptions</h2>
+<p>Every estimate assumes standard, accessible working conditions unless you tell us otherwise. Real jobs differ. The most common reasons your actual cost lands above or below our range include difficult access, unexpected damage discovered mid-job, premium fixtures or brands, code upgrades triggered by the work, emergency or after-hours service, and regional labor differences across Florida.</p>
+
+<h2>Why ranges, not quotes</h2>
+<p>A quote requires a licensed contractor to see your specific site. Because we cannot do that, an honest tool gives you a planning range&mdash;wide enough to be realistic, specific enough to budget against. A range also helps you sanity-check the quotes you do receive: a bid far outside a reasonable range is worth a second opinion.</p>
+
+<h2>How we generate and review content</h2>
+<p>Calculator content is generated with AI assistance and reviewed for accuracy by a human before publishing. A human editor checks the cost assumptions, sizing logic and code references. See our <a href="/editorial-policy/">Editorial Policy</a> for review and correction details.</p>
+
+<h2>Update cadence</h2>
+<p>We review cost assumptions and code references on a recurring basis and update tools as Florida pricing and requirements change.</p>
+
+<div class="note">Results are informational planning estimates, not quotes, bids or guarantees. Confirm permit requirements with your local building department and get a written quote from a licensed Florida plumber before committing to work.</div>
+
+<h2>From estimate to a real quote</h2>
+<p>When you want a firm number, <a href="/get-matched/">get matched with a licensed Florida plumber</a> who can assess your site in person.</p>
+
+</article></div></main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="f-col f-blurb">
+        <p><strong>FL Plumbing Tools</strong> offers free, Florida-specific cost calculators and permit guides to help homeowners plan plumbing projects with confidence.</p>
+        <p class="f-reassure"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>No signup, no email required to use a calculator.</p>
+      </div>
+      <div class="f-col">
+        <h3>Company</h3>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        <a href="/editorial-policy/">Editorial Policy</a>
+        <a href="/calculator-methodology/">Calculator Methodology</a>
+      </div>
+      <div class="f-col">
+        <h3>Legal</h3>
+        <a href="/privacy/">Privacy Policy</a>
+        <a href="/terms/">Terms of Service</a>
+        <a href="/accessibility/">Accessibility</a>
+        <a href="/vetting/">License Verification Process</a>
+      </div>
+      <div class="f-col">
+        <h3>Resources</h3>
+        <a href="/calculator-methodology/">How Estimates Are Calculated</a>
+        <a href="https://flplumbingguides.com">In-depth Florida Guides</a>
+        <a href="/get-matched/">Get Matched With a Plumber</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="copy">&copy; 2026 FL Plumbing Tools. Operated by [Company/Operator Name]. Florida-licensed plumbing &mdash; CFC reference on file.</span>
+      <span class="disclaimer">Florida service notice: All calculator results are informational planning estimates generated from Florida cost research and code references &mdash; they are not quotes, bids, or guarantees. Always hire a licensed Florida plumber and verify permit requirements with your local building department before starting work.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  "use strict";
+  var toggle=document.getElementById('nav-toggle');
+  var nav=document.getElementById('primary-nav');
+  if(toggle&&nav){
+    toggle.addEventListener('click',function(){
+      var open=nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded',open?'true':'false');
+    });
+  }
+  var ddToggles=Array.prototype.slice.call(document.querySelectorAll('.dd-toggle'));
+  ddToggles.forEach(function(btn){
+    var li=btn.parentNode;
+    btn.addEventListener('click',function(e){
+      e.preventDefault();
+      var open=li.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+      ddToggles.forEach(function(o){ if(o!==btn){o.parentNode.classList.remove('open');o.setAttribute('aria-expanded','false');} });
+    });
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      ddToggles.forEach(function(o){o.parentNode.classList.remove('open');o.setAttribute('aria-expanded','false');});
+      if(nav&&nav.classList.contains('open')&&window.innerWidth<900){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');}
+    }
+  });
+  document.addEventListener('click',function(e){
+    if(!e.target.closest('.has-dd')){
+      ddToggles.forEach(function(o){o.parentNode.classList.remove('open');o.setAttribute('aria-expanded','false');});
+    }
+  });
+})();
+</script>
+</body></html>
