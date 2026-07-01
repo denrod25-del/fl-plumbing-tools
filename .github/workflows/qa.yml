@@ -1,0 +1,152 @@
+name: Site QA (AuditScout)
+
+# Additive QA tooling. Does not build, deploy, or modify any site page.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Job 1: static audit engine. Fast, deterministic, gates the pipeline.
+  # ---------------------------------------------------------------------------
+  audit:
+    name: Static audit (node qa/audit.mjs)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run AuditScout (writes qa/report.json)
+        # The engine exits non-zero on Critical issues; we defer gating to a
+        # dedicated step so the report artifact is always uploaded first.
+        run: node qa/audit.mjs
+        continue-on-error: true
+
+      - name: Upload report.json artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report
+          path: qa/report.json
+          if-no-files-found: error
+
+      - name: Gate on Critical issues and score threshold
+        run: |
+          node -e '
+            const r = require("./qa/report.json");
+            const THRESHOLD = 80;
+            const crit = (r.severityTotals && r.severityTotals.Critical) || 0;
+            const high = (r.severityTotals && r.severityTotals.High) || 0;
+            console.log("Overall score:", r.overallScore, "| Critical:", crit, "| High:", high);
+            let fail = false;
+            if (crit > 0) { console.error("FAIL: " + crit + " Critical issue(s) found."); fail = true; }
+            if (r.overallScore < THRESHOLD) { console.error("FAIL: score " + r.overallScore + " < threshold " + THRESHOLD + "."); fail = true; }
+            process.exit(fail ? 1 : 0);
+          '
+
+  # ---------------------------------------------------------------------------
+  # Job 2: browser checks (console errors + Lighthouse). Best-effort only —
+  # never blocks the pipeline, but always surfaces findings as artifacts.
+  # ---------------------------------------------------------------------------
+  browser:
+    name: Browser checks (Playwright console + Lighthouse)
+    runs-on: ubuntu-latest
+    needs: audit
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install tooling (Playwright + Lighthouse + static server)
+        run: |
+          npm init -y >/dev/null 2>&1 || true
+          npm install --no-save playwright lighthouse http-server || true
+          npx playwright install --with-deps chromium || npx playwright install chromium || true
+
+      - name: Serve the site locally
+        run: |
+          npx http-server . -p 8080 -s -c-1 >/dev/null 2>&1 &
+          echo "SERVER_PID=$!" >> "$GITHUB_ENV"
+          # wait for the server to accept connections
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8080/ >/dev/null; then echo "server up"; break; fi
+            sleep 1
+          done
+
+      - name: Capture console errors on key URLs (Playwright)
+        continue-on-error: true
+        run: |
+          mkdir -p qa-artifacts
+          cat > /tmp/console-check.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import { writeFileSync } from 'node:fs';
+          const base = 'http://127.0.0.1:8080';
+          const urls = [
+            '/',
+            '/water-heater-sizing/fl_water_heater_sizing.html',
+            '/get-matched/',
+            '/water-heater/jupiter/',
+            '/about/'
+          ];
+          const results = [];
+          const browser = await chromium.launch();
+          for (const u of urls) {
+            const page = await browser.newPage();
+            const errors = [];
+            page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+            page.on('pageerror', e => errors.push('pageerror: ' + e.message));
+            let status = null;
+            try { const resp = await page.goto(base + u, { waitUntil: 'networkidle', timeout: 30000 }); status = resp && resp.status(); }
+            catch (e) { errors.push('navigation: ' + e.message); }
+            results.push({ url: u, status, consoleErrors: errors });
+            await page.close();
+          }
+          await browser.close();
+          writeFileSync('qa-artifacts/console-errors.json', JSON.stringify(results, null, 2));
+          const totalErrors = results.reduce((n, r) => n + r.consoleErrors.length, 0);
+          console.log('Console error report written. Pages:', results.length, 'Total console errors:', totalErrors);
+          for (const r of results) console.log(' ', r.url, '->', r.consoleErrors.length, 'error(s)');
+          JS
+          node /tmp/console-check.mjs || echo "console check finished with a non-zero code (non-blocking)"
+
+      - name: Run Lighthouse on key URLs
+        continue-on-error: true
+        run: |
+          mkdir -p qa-artifacts/lighthouse
+          for path in "/" "/water-heater-sizing/fl_water_heater_sizing.html" "/get-matched/" "/water-heater/jupiter/"; do
+            name=$(echo "$path" | sed 's#[/]#_#g; s#^_#home#'); name=${name:-home}
+            npx lighthouse "http://127.0.0.1:8080$path" \
+              --quiet --output json --output html \
+              --output-path "qa-artifacts/lighthouse/$name" \
+              --chrome-flags="--headless --no-sandbox" \
+              --only-categories=performance,accessibility,best-practices,seo || \
+              echo "Lighthouse failed for $path (non-blocking)"
+          done
+          echo "Lighthouse pass complete."
+
+      - name: Upload browser-check artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-browser-checks
+          path: qa-artifacts/
+          if-no-files-found: warn
+
+      - name: Stop server
+        if: always()
+        run: kill "${SERVER_PID}" 2>/dev/null || true

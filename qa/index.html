@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#0f3d57">
+<title>AuditScout — Internal Site QA Dashboard</title>
+<style>
+  :root{
+    --bg:#eef3f8; --panel:#ffffff; --navy:#0f3d57; --navy-2:#12496a;
+    --teal:#0f9b8e; --teal-d:#0c7d72; --ink:#1e293b; --muted:#5b6b7d;
+    --line:#dce5ee; --pass:#16a34a; --warn:#d97706; --fail:#dc2626;
+    --pass-bg:#e8f6ec; --warn-bg:#fdf3e3; --fail-bg:#fbe9e9;
+    --shadow:0 1px 3px rgba(15,61,87,.08),0 1px 2px rgba(15,61,87,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.5;padding:20px}
+  a{color:var(--teal-d)}
+  .wrap{max-width:1080px;margin:0 auto}
+  .banner{background:var(--navy);color:#dbeafe;border-radius:10px;padding:10px 16px;font-size:.82rem;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .banner strong{color:#fff}
+  .pill{background:var(--teal);color:#fff;border-radius:20px;padding:2px 10px;font-size:.72rem;font-weight:700;letter-spacing:.3px}
+  header.top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+  header.top h1{color:var(--navy);font-size:1.6rem;font-weight:800;letter-spacing:-.3px}
+  header.top p{color:var(--muted);font-size:.85rem;margin-top:2px}
+  .meta{font-size:.78rem;color:var(--muted);text-align:right}
+  .grid{display:grid;gap:14px}
+  .cols{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px}
+  .overall{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-bottom:16px}
+  .gauge{width:132px;height:132px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;flex:0 0 auto}
+  .gauge b{font-size:2.5rem;line-height:1;font-weight:800}
+  .gauge span{font-size:.72rem;opacity:.8;margin-top:2px}
+  .overall .info h2{color:var(--navy);font-size:1.05rem;margin-bottom:6px}
+  .sev{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .sev .chip{font-size:.74rem;padding:3px 10px;border-radius:6px;font-weight:700;border:1px solid var(--line)}
+  .chip.c{background:var(--fail-bg);color:var(--fail)}
+  .chip.h{background:var(--fail-bg);color:var(--fail)}
+  .chip.m{background:var(--warn-bg);color:var(--warn)}
+  .chip.l{background:#eef2f7;color:var(--muted)}
+  .catcard h3{font-size:.9rem;color:var(--navy);display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .score-num{font-size:1.15rem;font-weight:800}
+  .bar{height:8px;border-radius:5px;background:#e7eef5;overflow:hidden;margin-bottom:8px}
+  .bar>i{display:block;height:100%;border-radius:5px}
+  .badge{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:2px 8px;border-radius:5px}
+  .badge.pass{background:var(--pass-bg);color:var(--pass)}
+  .badge.warn{background:var(--warn-bg);color:var(--warn)}
+  .badge.fail{background:var(--fail-bg);color:var(--fail)}
+  .catcard .n{font-size:.77rem;color:var(--muted)}
+  details{margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+  details>summary{cursor:pointer;font-size:.8rem;font-weight:600;color:var(--teal-d);list-style:none}
+  details>summary::-webkit-details-marker{display:none}
+  details>summary::before{content:'▸ ';color:var(--teal)}
+  details[open]>summary::before{content:'▾ '}
+  .issue{font-size:.76rem;color:var(--ink);padding:5px 0;border-bottom:1px solid #f1f5f9}
+  .issue:last-child{border-bottom:none}
+  .issue .u{color:var(--navy-2);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.72rem}
+  .issue .s{font-weight:700;margin-right:6px}
+  .s.Critical,.s.High{color:var(--fail)} .s.Medium{color:var(--warn)} .s.Low{color:var(--muted)}
+  .sec-title{color:var(--navy);font-size:1.1rem;font-weight:700;margin:22px 0 10px}
+  table{width:100%;border-collapse:collapse;font-size:.78rem}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600}
+  td.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.72rem;color:var(--navy-2)}
+  .live-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:.86rem;font-weight:700;cursor:pointer;transition:background .15s}
+  .btn:hover{background:var(--teal-d)}
+  .btn:disabled{background:#9fb4c2;cursor:not-allowed}
+  .btn.sec{background:#fff;color:var(--navy);border:1px solid var(--line)}
+  input[type=number]{width:72px;padding:7px 8px;border:1px solid var(--line);border-radius:7px;font-size:.85rem}
+  label.fld{font-size:.8rem;color:var(--muted);display:flex;gap:6px;align-items:center}
+  .progress{height:7px;background:#e7eef5;border-radius:5px;overflow:hidden;margin:8px 0;display:none}
+  .progress>i{display:block;height:100%;background:var(--teal);width:0;transition:width .2s}
+  .note{background:#f8fafc;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:12px 14px;font-size:.82rem;color:var(--muted);margin-top:10px}
+  .note strong{color:var(--navy)}
+  .ci-only{background:#f8fafc;border:1px dashed var(--line);border-radius:8px;padding:12px 14px;font-size:.8rem;color:var(--muted);margin-top:12px}
+  .ci-only h4{color:var(--navy);font-size:.85rem;margin-bottom:6px}
+  .src{font-size:.74rem;color:var(--muted);margin-top:6px}
+  .flag-live{display:inline-block;background:var(--teal);color:#fff;font-size:.66rem;font-weight:700;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .flag-ci{display:inline-block;background:#94a3b8;color:#fff;font-size:.66rem;font-weight:700;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  footer{margin-top:26px;font-size:.75rem;color:var(--muted);text-align:center;border-top:1px solid var(--line);padding-top:14px}
+  .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="banner">
+    <span class="pill">INTERNAL QA</span>
+    <span><strong>AuditScout</strong> — not part of the public site. This page is <strong>noindex</strong> and blocked in <code>robots.txt</code> (<code>Disallow: /qa/</code>). For internal review only.</span>
+  </div>
+
+  <header class="top">
+    <div>
+      <h1>Site QA Dashboard</h1>
+      <p>Static + live quality audit for FL Plumbing Tools</p>
+    </div>
+    <div class="meta" id="meta">Loading report…</div>
+  </header>
+
+  <div class="card overall" id="overall"><div class="muted">Loading latest audit…</div></div>
+
+  <div class="sec-title">Category scores</div>
+  <div class="grid cols" id="categories"></div>
+
+  <div id="dupes"></div>
+  <div id="largest"></div>
+
+  <div class="sec-title">Live audit <span class="flag-live">IN-BROWSER</span></div>
+  <div class="card">
+    <p class="muted" style="font-size:.83rem;margin-bottom:10px">Runs the browser-checkable audits on-demand against live pages via same-origin <code>fetch()</code> of URLs in <code>/sitemap.xml</code>. Results below reflect the <em>currently deployed</em> pages, independent of the last CI run.</p>
+    <div class="live-controls">
+      <button class="btn" id="runBtn">▶ Run live audit</button>
+      <label class="fld">Sample size <input type="number" id="sampleN" value="25" min="1" max="300"></label>
+      <label class="fld"><input type="checkbox" id="allPages"> all pages</label>
+      <span class="src" id="liveStatus"></span>
+    </div>
+    <div class="progress" id="prog"><i id="progBar"></i></div>
+    <div id="liveResults"></div>
+    <div class="ci-only">
+      <h4>Checks that require CI / a real browser <span class="flag-ci">CI ONLY</span></h4>
+      <p><strong>Console errors &amp; runtime JS failures</strong> and <strong>Lighthouse / Core Web Vitals</strong> cannot be measured by static or same-origin fetch analysis. They are produced by the GitHub Actions workflow (Playwright + Lighthouse jobs) and uploaded as build artifacts. <strong>HTTP/security headers, redirects and TLS</strong> are enforced at the host/Cloudflare layer and are not visible from repo files.</p>
+    </div>
+  </div>
+
+  <div class="note" id="howto">
+    <strong>How to use.</strong> The top of the page shows the last audit committed to <code>qa/report.json</code> (falls back to <code>qa/report.sample.json</code>) — this is produced by <code>node qa/audit.mjs</code> in CI or locally. Expand any category card to see the offending URLs and severities. Click <strong>Run live audit</strong> to re-check the deployed pages in your browser right now (broken links, duplicate titles/descriptions, JSON-LD validity, placeholder text, and static accessibility). Live checks are labelled <span class="flag-live">IN-BROWSER</span>; checks that need CI are labelled <span class="flag-ci">CI ONLY</span>.
+  </div>
+
+  <footer>
+    AuditScout · internal QA tooling · additive to the site (files under <code>/qa/</code> and <code>.github/</code>) · does not affect any public page, calculator, form, or the sitemap.
+  </footer>
+</div>
+
+<script>
+/* ==================================================================== */
+/*  AuditScout dashboard — self-contained, no external dependencies.    */
+/* ==================================================================== */
+const CANONICAL_HOST = 'flplumbingtools.com';
+
+function scoreClass(s){ return s>=90?'pass':s>=75?'warn':'fail'; }
+function scoreColor(s){ return s>=90?getCSS('--pass'):s>=75?getCSS('--warn'):getCSS('--fail'); }
+function getCSS(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function esc(t){ const d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
+
+/* ---------- render the committed report ---------- */
+async function loadReport(){
+  let data=null, src='';
+  for(const f of ['report.json','report.sample.json']){
+    try{ const r=await fetch(f,{cache:'no-store'}); if(r.ok){ data=await r.json(); src=f; break; } }catch(e){}
+  }
+  if(!data){ document.getElementById('overall').innerHTML='<div class="badge fail">No report found</div><p class="muted" style="margin-top:8px">Run <code>node qa/audit.mjs</code> to generate <code>qa/report.json</code>.</p>'; return; }
+  renderReport(data, src);
+}
+
+function renderReport(d, src){
+  document.getElementById('meta').innerHTML =
+    esc(d.scanned.totalPages)+' pages · '+esc(d.scanned.toolPages)+' tool pages<br>'+
+    'generated '+esc((d.generatedAt||'').replace('T',' ').replace(/\..*/,' UTC'))+'<br><span class="muted">source: '+esc(src)+'</span>';
+
+  const oc=scoreClass(d.overallScore);
+  const col=scoreColor(d.overallScore);
+  const st=d.severityTotals||{};
+  document.getElementById('overall').innerHTML =
+    '<div class="gauge" style="background:conic-gradient('+col+' '+(d.overallScore*3.6)+'deg,#e7eef5 0)">'+
+      '<div style="background:#fff;width:104px;height:104px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+        '<b style="color:'+col+'">'+esc(d.overallScore)+'</b><span class="muted">of 100</span></div></div>'+
+    '<div class="info"><h2>Overall QA score <span class="badge '+oc+'">'+oc+'</span></h2>'+
+      '<p class="muted" style="font-size:.82rem">Weighted across '+Object.keys(d.weighting||{}).length+' categories. '+esc(d.scoringModel||'')+'</p>'+
+      '<div class="sev">'+
+        '<span class="chip c">Critical: '+(st.Critical||0)+'</span>'+
+        '<span class="chip h">High: '+(st.High||0)+'</span>'+
+        '<span class="chip m">Medium: '+(st.Medium||0)+'</span>'+
+        '<span class="chip l">Low: '+(st.Low||0)+'</span></div></div>';
+
+  const cats=d.categories||{};
+  const box=document.getElementById('categories'); box.innerHTML='';
+  for(const key of Object.keys(cats)){
+    const c=cats[key]; const w=(d.weighting||{})[key];
+    const cls=scoreClass(c.score);
+    const issues=(c.issues||[]);
+    let list='';
+    if(issues.length){
+      list='<details><summary>'+issues.length+' issue'+(issues.length>1?'s':'')+'</summary>'+
+        issues.slice(0,200).map(function(i){
+          let dt=''; if(i.detail){ dt=' <span class="muted">— '+esc(Array.isArray(i.detail)?i.detail.join(', '):(typeof i.detail==='object'?JSON.stringify(i.detail):i.detail)).slice(0,180)+'</span>'; }
+          return '<div class="issue"><span class="s '+esc(i.severity)+'">'+esc(i.severity)+'</span>'+esc(i.issue)+'<br><span class="u">'+esc(i.url)+'</span>'+dt+'</div>';
+        }).join('')+ (issues.length>200?'<div class="issue muted">…and '+(issues.length-200)+' more</div>':'') +'</details>';
+    } else {
+      list='<div class="n" style="margin-top:6px;color:var(--pass)">✓ No issues</div>';
+    }
+    box.insertAdjacentHTML('beforeend',
+      '<div class="card catcard"><h3>'+esc(c.label||key)+'<span class="score-num" style="color:'+scoreColor(c.score)+'">'+esc(c.score)+'</span></h3>'+
+      '<div class="bar"><i style="width:'+c.score+'%;background:'+scoreColor(c.score)+'"></i></div>'+
+      '<span class="badge '+cls+'">'+cls+'</span> <span class="n">weight '+esc(w!=null?w:'–')+(c.checkedInBrowser?' · live-checkable':' · CI only')+'</span>'+
+      list+'</div>');
+  }
+
+  // duplicates
+  const md=cats.metadata||{};
+  let dh='';
+  if((md.duplicateTitles||[]).length){ dh+='<div class="sec-title">Duplicate titles</div><div class="card"><table><tr><th>Title</th><th>URLs</th></tr>'+
+    md.duplicateTitles.map(function(x){return '<tr><td>'+esc(x.title)+'</td><td class="mono">'+x.urls.map(esc).join('<br>')+'</td></tr>';}).join('')+'</table></div>'; }
+  if((md.duplicateDescriptions||[]).length){ dh+='<div class="sec-title">Duplicate descriptions</div><div class="card"><table><tr><th>Description</th><th>URLs</th></tr>'+
+    md.duplicateDescriptions.map(function(x){return '<tr><td>'+esc(x.description)+'…</td><td class="mono">'+x.urls.map(esc).join('<br>')+'</td></tr>';}).join('')+'</table></div>'; }
+  if(!dh) dh='<div class="sec-title">Duplicate titles / descriptions</div><div class="card"><span class="n" style="color:var(--pass)">✓ None found — every page has a unique title and meta description.</span></div>';
+  document.getElementById('dupes').innerHTML=dh;
+
+  // largest pages
+  const lp=(cats.performance&&cats.performance.largestPages)||[];
+  if(lp.length){
+    document.getElementById('largest').innerHTML='<div class="sec-title">Largest pages (byte weight)</div><div class="card"><table><tr><th>#</th><th>URL</th><th>Size</th></tr>'+
+      lp.map(function(p,i){return '<tr><td>'+(i+1)+'</td><td class="mono">'+esc(p.url)+'</td><td>'+esc(p.kb)+' KB</td></tr>';}).join('')+'</table><p class="src">Static signal only — real Core Web Vitals come from the Lighthouse CI job.</p></div>';
+  }
+}
+
+/* ---------- live in-browser audit ---------- */
+const PLACEHOLDER_RE=[
+  {n:'bracket-token',re:/\[\s*(company|company name|business name|license[^\]]*|licence[^\]]*|email|e-mail|phone[^\]]*|address|effective date|insert[^\]]*|your [a-z]+|full name|first name|last name|city name|zip[^\]]*|placeholder[^\]]*|tbd|xxx+)\s*[^\]]*\]/i},
+  {n:'lorem-ipsum',re:/lorem\s+ipsum/i},
+  {n:'todo',re:/\bTODO\b/},
+  {n:'fixme',re:/\bFIXME\b/},
+  {n:'mustache',re:/\{\{[^}]{1,60}\}\}/},
+  {n:'percent-token',re:/%%[A-Z0-9_]{2,40}%%/}
+];
+function visibleText(doc){
+  const clone=doc.cloneNode(true);
+  clone.querySelectorAll('script,style,template').forEach(function(n){n.remove();});
+  return (clone.body?clone.body.textContent:clone.textContent||'').replace(/\s+/g,' ').trim();
+}
+function analyzeDoc(doc, url){
+  const out={url:url, issues:[]};
+  const add=function(sev,issue,detail){ out.issues.push({severity:sev,issue:issue,detail:detail}); };
+  // metadata
+  const title=(doc.querySelector('title')||{}).textContent; out.title=title?title.trim():null;
+  const dm=doc.querySelector('meta[name="description"]'); out.desc=dm?(dm.getAttribute('content')||'').trim():null;
+  if(!out.title) add('High','Missing <title>');
+  if(!doc.querySelector('link[rel="canonical"]')) add('High','Missing canonical link');
+  if(!out.desc) add('Medium','Missing meta description');
+  if(doc.querySelectorAll('meta[property^="og:"]').length===0) add('Medium','Missing Open Graph tags');
+  // structured data
+  const lds=doc.querySelectorAll('script[type="application/ld+json"]');
+  if(lds.length===0){ add('Medium','No JSON-LD structured data'); }
+  else { lds.forEach(function(s){ try{ JSON.parse(s.textContent); }catch(e){ add('Critical','JSON-LD parse error',e.message); } }); }
+  // placeholders (visible text only)
+  const vt=visibleText(doc);
+  for(const p of PLACEHOLDER_RE){ const m=vt.match(p.re); if(m){ add('High','Placeholder / template text',p.n+': '+m[0].slice(0,50)); break; } }
+  // a11y
+  const h1=doc.querySelectorAll('h1').length;
+  if(h1===0) add('High','No <h1> on page'); else if(h1>1) add('Medium','Multiple <h1> ('+h1+')');
+  if(!doc.documentElement.getAttribute('lang')) add('High','Missing lang attribute on <html>');
+  let noAlt=0; doc.querySelectorAll('img').forEach(function(im){ if(im.getAttribute('alt')===null) noAlt++; });
+  if(noAlt) add('High',noAlt+' <img> without alt');
+  // controls (implicit label + tabindex=-1 exclusion, matching engine)
+  let ctrlNoName=0;
+  doc.querySelectorAll('input,select,textarea').forEach(function(el){
+    const type=(el.getAttribute('type')||'').toLowerCase();
+    if(['hidden','submit','button','reset','image'].includes(type)) return;
+    if(el.getAttribute('tabindex')==='-1') return;
+    const id=el.getAttribute('id');
+    const hasName=(id&&doc.querySelector('label[for="'+CSS.escape(id)+'"]'))||el.getAttribute('aria-label')||el.getAttribute('aria-labelledby')||el.getAttribute('title')||el.closest('label');
+    if(!hasName) ctrlNoName++;
+  });
+  if(ctrlNoName) add('Medium',ctrlNoName+' form control(s) without accessible name');
+  // heading order
+  const seq=[...doc.querySelectorAll('h1,h2,h3,h4,h5,h6')].map(function(h){return +h.tagName[1];});
+  for(let i=1;i<seq.length;i++){ if(seq[i]-seq[i-1]>1){ add('Low','Heading level skipped'); break; } }
+  // internal links on this page (for broken-link pass)
+  out.links=[];
+  doc.querySelectorAll('a[href]').forEach(function(a){
+    let h=a.getAttribute('href')||''; if(!h||/^(mailto:|tel:|javascript:|data:|#)/i.test(h)) return;
+    if(/\$\{|\{\{|%%/.test(h)) return;
+    try{ const u=new URL(h, location.origin+url); if(u.host.replace(/^www\./,'')!==location.host.replace(/^www\./,'')&&u.host.replace(/^www\./,'')!==CANONICAL_HOST) return; out.links.push(u.pathname+u.search); }catch(e){}
+  });
+  return out;
+}
+
+async function runLive(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true;
+  const status=document.getElementById('liveStatus'); const prog=document.getElementById('prog'); const bar=document.getElementById('progBar');
+  const res=document.getElementById('liveResults'); res.innerHTML='';
+  prog.style.display='block'; bar.style.width='0';
+  status.textContent='Fetching sitemap…';
+  let urls=[];
+  try{
+    const r=await fetch('/sitemap.xml',{cache:'no-store'});
+    if(!r.ok) throw new Error('sitemap HTTP '+r.status);
+    const xml=new DOMParser().parseFromString(await r.text(),'application/xml');
+    urls=[...xml.querySelectorAll('loc')].map(function(l){ try{ return new URL(l.textContent.trim()).pathname; }catch(e){ return null; } }).filter(Boolean);
+  }catch(e){
+    prog.style.display='none'; btn.disabled=false; status.textContent='';
+    res.innerHTML='<div class="note" style="border-left-color:var(--fail)"><strong>Could not load sitemap.</strong> '+esc(e.message)+'. Live audit needs to run from the deployed origin (same-origin fetch). Open this dashboard at <code>https://'+CANONICAL_HOST+'/qa/</code>.</div>';
+    return;
+  }
+  const all=document.getElementById('allPages').checked;
+  const n=all?urls.length:Math.max(1,Math.min(urls.length, parseInt(document.getElementById('sampleN').value)||25));
+  const sample=all?urls:urls.slice(0,n);
+
+  const pages=[]; const titleMap={}; const descMap={}; const linkSet=new Set(); let done=0;
+  for(const u of sample){
+    status.textContent='Auditing '+(done+1)+'/'+sample.length+'  '+u;
+    try{
+      const rr=await fetch(u,{cache:'no-store'});
+      if(!rr.ok){ pages.push({url:u,issues:[{severity:'Critical',issue:'Page returned HTTP '+rr.status}],links:[]}); }
+      else{
+        const doc=new DOMParser().parseFromString(await rr.text(),'text/html');
+        const a=analyzeDoc(doc,u); pages.push(a);
+        if(a.title){ (titleMap[a.title]=titleMap[a.title]||[]).push(u); }
+        if(a.desc){ (descMap[a.desc]=descMap[a.desc]||[]).push(u); }
+        (a.links||[]).forEach(function(l){ linkSet.add(l); });
+      }
+    }catch(e){ pages.push({url:u,issues:[{severity:'High',issue:'Fetch failed',detail:e.message}],links:[]}); }
+    done++; bar.style.width=(done/sample.length*70)+'%';
+  }
+
+  // duplicate detection across the sample
+  Object.keys(titleMap).forEach(function(t){ if(titleMap[t].length>1) titleMap[t].forEach(function(u){ pageBy(pages,u).issues.push({severity:'High',issue:'Duplicate <title> within sample'}); }); });
+  Object.keys(descMap).forEach(function(t){ if(descMap[t].length>1) descMap[t].forEach(function(u){ pageBy(pages,u).issues.push({severity:'Medium',issue:'Duplicate meta description within sample'}); }); });
+
+  // bounded broken-link pass (dedup internal links from sampled pages)
+  const links=[...linkSet]; const cap=Math.min(links.length, all?400:80);
+  const broken=[]; status.textContent='Checking '+cap+' internal links…';
+  for(let i=0;i<cap;i++){
+    const l=links[i];
+    try{ let rr=await fetch(l,{method:'HEAD',cache:'no-store'});
+      if(rr.status===405||rr.status===501){ rr=await fetch(l,{cache:'no-store'}); }
+      if(!rr.ok) broken.push({l:l,code:rr.status});
+    }catch(e){ broken.push({l:l,code:'ERR'}); }
+    bar.style.width=(70+(i+1)/cap*30)+'%';
+  }
+
+  prog.style.display='none'; bar.style.width='100%'; btn.disabled=false; status.textContent='Done — '+sample.length+' pages, '+cap+' links checked.';
+  renderLive(pages, broken, sample.length, cap, links.length, urls.length, all);
+}
+function pageBy(pages,u){ return pages.find(function(p){return p.url===u;}); }
+
+function renderLive(pages, broken, nPages, nLinks, totalLinks, totalUrls, all){
+  const counts={Critical:0,High:0,Medium:0,Low:0};
+  pages.forEach(function(p){ p.issues.forEach(function(i){ counts[i.severity]=(counts[i.severity]||0)+1; }); });
+  const clean=pages.filter(function(p){return p.issues.length===0;}).length;
+  let html='<div class="note"><strong>Live results</strong> <span class="flag-live">IN-BROWSER</span> — audited '+nPages+' page(s)'+(all?'':' (sample of '+totalUrls+')')+', checked '+nLinks+' of '+totalLinks+' unique internal links. '+clean+' page(s) fully clean.</div>';
+  html+='<div class="sev" style="margin:10px 0">'+
+    '<span class="chip c">Critical: '+(counts.Critical||0)+'</span>'+
+    '<span class="chip h">High: '+(counts.High||0)+'</span>'+
+    '<span class="chip m">Medium: '+(counts.Medium||0)+'</span>'+
+    '<span class="chip l">Low: '+(counts.Low||0)+'</span></div>';
+
+  html+='<div class="card"><h3 style="color:var(--navy);font-size:.9rem;margin-bottom:6px">Broken internal links '+(broken.length?'<span class="badge fail">'+broken.length+'</span>':'<span class="badge pass">0</span>')+'</h3>';
+  html+= broken.length? '<table><tr><th>URL</th><th>Status</th></tr>'+broken.map(function(b){return '<tr><td class="mono">'+esc(b.l)+'</td><td>'+esc(b.code)+'</td></tr>';}).join('')+'</table>' : '<span class="n" style="color:var(--pass)">✓ All checked links resolve (2xx/3xx).</span>';
+  html+='</div>';
+
+  const withIssues=pages.filter(function(p){return p.issues.length;});
+  html+='<div class="card" style="margin-top:12px"><h3 style="color:var(--navy);font-size:.9rem;margin-bottom:6px">Per-page findings</h3>';
+  if(!withIssues.length){ html+='<span class="n" style="color:var(--pass)">✓ No page-level issues in the audited set.</span>'; }
+  else{
+    html+='<details open><summary>'+withIssues.length+' page(s) with findings</summary>'+
+      withIssues.map(function(p){ return '<div class="issue"><span class="u">'+esc(p.url)+'</span><br>'+
+        p.issues.map(function(i){return '<span class="s '+esc(i.severity)+'">'+esc(i.severity)+'</span>'+esc(i.issue)+(i.detail?' <span class="muted">— '+esc(typeof i.detail==='object'?JSON.stringify(i.detail):i.detail).slice(0,120)+'</span>':'');}).join('<br>')+
+        '</div>'; }).join('')+'</details>';
+  }
+  html+='</div>';
+  document.getElementById('liveResults').innerHTML=html;
+}
+
+document.getElementById('runBtn').addEventListener('click',runLive);
+loadReport();
+</script>
+</body>
+</html>
