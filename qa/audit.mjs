@@ -271,7 +271,15 @@ function analyzePage(rel, html, fileSet) {
   // Headings/controls are evaluated on the script/style-stripped body so that
   // markup embedded in JS template strings (dynamically injected at runtime) is
   // not counted by static analysis — consistent with how links are handled.
-  const headingSeq = (htmlNoScript.match(/<h([1-6])\b/ig) || []).map((t) => parseInt(t.match(/h([1-6])/i)[1], 10));
+  const headingTags = htmlNoScript.match(/<h[1-6]\b[^>]*>/ig) || [];
+  const headingSeq = headingTags.map((t) => {
+    const lvl = parseInt(t.match(/<h([1-6])/i)[1], 10);
+    if (/role\s*=\s*["']heading["']/i.test(t)) {
+      const m = t.match(/aria-level\s*=\s*["']?([1-6])/i);
+      if (m) return parseInt(m[1], 10);
+    }
+    return lvl;
+  });
   let headingSkip = false;
   for (let i = 1; i < headingSeq.length; i++) {
     if (headingSeq[i] - headingSeq[i - 1] > 1) { headingSkip = true; break; }
