@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex,follow">
+<title>Your Saved Tools | FL Plumbing Tools</title>
+<link rel="stylesheet" href="/assets/premium.css">
+<style>
+  body{background:#0A0E1A;color:#E2E8F0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;margin:0;padding:0 0 60px;}
+  .elb-saved-wrap{max-width:480px;margin:0 auto;padding:22px 16px;}
+  .elb-saved-wrap h1{font-size:1.25rem;color:#5EEAD4;margin:0 0 6px;}
+  .elb-saved-wrap p.lead{color:#94A3B8;font-size:.9rem;margin:0 0 16px;}
+  .elb-saved{margin:0;}
+  .elb-back{display:inline-block;margin-top:18px;color:#38BDF8;text-decoration:none;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="elb-saved-wrap">
+  <h1>Your saved tools</h1>
+  <p class="lead">Saved shortcuts are stored only in this browser (no account, nothing sent to a server).</p>
+  <div class="elb-saved" id="elb-saved"></div>
+  <a class="elb-back" href="/">&larr; Back to FL Plumbing Tools</a>
+</div>
+<script>
+(function(){
+  var KEY="flpt_saved", panel=document.getElementById("elb-saved");
+  function read(){try{var v=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(v)?v:[];}catch(e){return[];}}
+  function write(l){try{localStorage.setItem(KEY,JSON.stringify(l));}catch(e){}}
+  function esc(t){return String(t).replace(/[<>&]/g,function(m){return{"<":"&lt;",">":"&gt;","&":"&amp;"}[m];});}
+  function render(){
+    var list=read().slice().sort(function(a,b){return (b.timestamp||0)-(a.timestamp||0);});
+    if(!list.length){panel.innerHTML='<p class="elb-empty">Nothing saved yet. Open any calculator and tap &ldquo;Save this tool&rdquo;.</p>';return;}
+    var h="<ul>";
+    for(var i=0;i<list.length;i++){var it=list[i],t=esc(it.title||it.slug||it.url);
+      h+='<li><a href="'+it.url+'">'+t+'</a><button type="button" class="elb-rm" data-url="'+it.url+'" aria-label="Remove '+t+'">&times;</button></li>';}
+    panel.innerHTML=h+"</ul>";
+    var rm=panel.querySelectorAll(".elb-rm");
+    for(var j=0;j<rm.length;j++){rm[j].addEventListener("click",function(){var u=this.getAttribute("data-url");write(read().filter(function(x){return x.url!==u;}));render();});}
+  }
+  render();
+})();
+</script>
+</body>
+</html>
